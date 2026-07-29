@@ -99,6 +99,17 @@ a.card .now{display:inline-block;font-size:10.5px;font-weight:800;text-transform
 .repcard a.btn{display:inline-block;text-decoration:none;text-align:center}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.rpth{margin:22px 0 8px;font-size:1.05rem}
+table.rpt{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 8px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+table.rpt td.dim,.dim{color:#98917f}
+.vc{letter-spacing:1px}
+@media print{
+  .noprint,#topMini{display:none !important}
+  body{background:#fff}
+  .wrap,.card{box-shadow:none;border:0;max-width:none;padding:0}
+}
 </style>
 </head>
 <body>
@@ -120,6 +131,7 @@ function writeProfile(p){ try{ localStorage.setItem(PKEY, JSON.stringify(Object.
 
 let P = readProfile() || { fname:"", lname:"", sid:"", eal:null, lang:"", chapter:null };
 let step = (P.sid && P.eal!==null && P.chapter) ? 3 : 1;
+if(location.hash==="#report" && P.sid) step="reports";
 
 /* Vocab Hub sets. "Before you read" is always open; each chapter set opens
    once you've read to (pre - 1), so the words come just before the chapters. */
@@ -262,61 +274,80 @@ function renderStep3(){
   $("editMe").onclick = ()=>{ step=1; render(); };
 }
 
-/* ---------------- REPORTS — a snapshot pulled from both hubs' own storage,
-   plus deep links into each hub's full printable report (#report opens
-   straight there). This page never duplicates the hubs' scoring data —
-   it only reads their totals, so there is one source of truth per hub. */
+/* ---------------- THE REPORT — one combined report for everything.
+   Reads both hubs' own storage directly (they stay the single source of
+   truth for their scoring), lays it out as one printable page with one
+   verification code. Every "My report" button in the suite lands here. */
 function readJSON(key){ try{ return JSON.parse(localStorage.getItem(key)); }catch(e){ return null; } }
 const READING_MODULES = [
   ["qr1","Quickread: the Night Sea"],["qr2","Quickread: caught by Beaver"],
   ["fig","Figurative → literal"],["voice","Voice fingerprint"],
   ["ev","Evidence builder"],["wk","Analysis workshop"]
 ];
+function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
 function renderReports(){
-  const R = readJSON("bonesparrow.readinghub.v2");
-  const V = readJSON("bonesparrow.vocabhub.v1");
-  let readingBlock;
-  if(R && R.first && Object.keys(R.first).length){
-    const total=Object.keys(R.first).length, got=Object.values(R.first).filter(Boolean).length;
-    const done=READING_MODULES.filter(([id])=>R.done && R.done[id]).map(([,t])=>t);
-    readingBlock=`<div class="repcard">
-      <div class="rt">Reading &amp; Evidence Hub</div>
-      <div class="rscore">${got}/${total}<span>first attempt</span></div>
-      <div class="rd">${done.length?"Finished: "+done.map(esc).join(", "):"Nothing finished yet."}</div>
-      <a class="btn btn-ghost" href="BoneSparrowReadingHub.html#report">Open full report →</a></div>`;
-  } else {
-    readingBlock=`<div class="repcard empty">
-      <div class="rt">Reading &amp; Evidence Hub</div>
-      <div class="rd">Nothing recorded yet on this device.</div>
-      <a class="btn btn-ghost" href="BoneSparrowReadingHub.html">Go there →</a></div>`;
-  }
-  let vocabBlock;
-  if(V && V.wstat && Object.keys(V.wstat).length){
-    const drilled=Object.keys(V.wstat).length;
-    const mastered=Object.values(V.wstat).filter(w=>w.mastered).length;
-    const studiedIds=V.lessons?Object.keys(V.lessons).filter(id=>V.lessons[id]&&V.lessons[id].studied):[];
-    const setNames=studiedIds.map(id=>{ const st=VOCAB_SETS.find(x=>x.id===id); return st?st.title:id; });
-    vocabBlock=`<div class="repcard">
-      <div class="rt">Vocab Hub</div>
-      <div class="rscore">${mastered}/${drilled}<span>words mastered</span></div>
-      <div class="rd">${setNames.length?"Sets started: "+setNames.map(esc).join(", "):"No sets started yet."}</div>
-      <a class="btn btn-ghost" href="BoneSparrowVocabHub.html#report">Open full report →</a></div>`;
-  } else {
-    vocabBlock=`<div class="repcard empty">
-      <div class="rt">Vocab Hub</div>
-      <div class="rd">Nothing recorded yet on this device.</div>
-      <a class="btn btn-ghost" href="BoneSparrowVocabHub.html">Go there →</a></div>`;
-  }
+  const R = readJSON("bonesparrow.readinghub.v2")||{};
+  const V = readJSON("bonesparrow.vocabhub.v1")||{};
+  const dt = new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
+
+  /* ---- reading hub: first-attempt per activity ---- */
+  const first=R.first||{}; let rrows="", rGot=0, rTot=0, rAny=false;
+  READING_MODULES.forEach(([id,label])=>{
+    const ks=Object.keys(first).filter(k=>k.split(".")[0]===id);
+    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim">—</td><td class="dim">not started</td></tr>`; return; }
+    rAny=true;
+    const got=ks.filter(k=>first[k]).length;
+    rGot+=got; rTot+=ks.length;
+    rrows+=`<tr><td>${esc(label)}</td><td><b>${got} / ${ks.length}</b></td><td>${R.done&&R.done[id]?"finished":"in progress"}</td></tr>`;
+  });
+
+  /* ---- vocab hub: first-attempt per chapter set ---- */
+  const lessons=V.lessons||{}; let vrows="", vGot=0, vTot=0, vAny=false;
+  const cnt=m=>{ const ks=Object.keys(m||{}); return {got:ks.filter(k=>m[k]).length, tot:ks.length}; };
+  VOCAB_SETS.forEach(st=>{
+    const L=lessons[st.id];
+    if(!L){ vrows+=`<tr><td>${esc(st.title)}</td><td class="dim">—</td><td class="dim">—</td><td class="dim">not started</td></tr>`; return; }
+    vAny=true;
+    const b=cnt(L.buildFirst), a=cnt(L.applyFirst);
+    vGot+=b.got+a.got; vTot+=b.tot+a.tot;
+    vrows+=`<tr><td>${esc(st.title)}</td><td>${b.tot?`<b>${b.got} / ${b.tot}</b>`:"—"}</td><td>${a.tot?`<b>${a.got} / ${a.tot}</b>`:"—"}</td>
+      <td>${L.applyDone?"finished":(L.studied?"in progress":"met the words")}</td></tr>`;
+  });
+
+  /* ---- word list + reviews ---- */
+  const wstat=V.wstat||{}; const wk=Object.keys(wstat);
+  const mastered=wk.filter(w=>wstat[w].mastered);
+  const working=wk.filter(w=>wstat[w].seen&&!wstat[w].mastered);
+  const revs=V.reviews||[];
+  const revFirst=revs.reduce((s,r)=>s+(r.got||0),0), revAtt=revs.reduce((s,r)=>s+(r.total||0),0);
+
+  const code=vcode(JSON.stringify(first)+"|"+rGot+"/"+rTot+"|"+vGot+"/"+vTot+"|"+revFirst+"/"+revAtt+"|"+mastered.length+"|"+(P.fname||"")+(P.lname||"")+(P.sid||""));
+
   $("app").innerHTML=`
-  <h1>Your reports</h1>
-  <p class="sub">A quick snapshot from both hubs, read from this device. Each hub keeps the full first-attempt breakdown with a verification code — open it to print or save as a PDF for your teacher.</p>
-  <div class="repgrid">${readingBlock}${vocabBlock}</div>
-  <div class="btnrow"><button class="btn btn-ghost" id="backRep">← back to my tasks</button></div>`;
+  <div class="noprint btnrow" style="justify-content:space-between;margin:0 0 10px">
+    <button class="btn btn-ghost" id="backRep">← back to my tasks</button>
+    <button class="btn btn-primary" onclick="window.print()">Print / save as PDF</button>
+  </div>
+  <h1 style="margin-bottom:2px">The Bone Sparrow — my report</h1>
+  <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
+  <p class="sub">One report for everything. Every score is a <b>first attempt</b> — wrong answers came back until they were mastered, but the honest first go is what's shown here.</p>
+
+  <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt`:""}</h2>
+  <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rrows}</table>
+  ${rAny?"":`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowReadingHub.html">go do an activity</a>.</p>`}
+
+  <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items`:""}</h2>
+  <table class="rpt"><tr><th>Chapter set</th><th>Build (1st try)</th><th>Use (1st try)</th><th>Status</th></tr>${vrows}</table>
+  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them.`:"none yet — reviews are what make the words stick."}</p>
+  <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
+  :`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowVocabHub.html">go meet some words</a>.</p>`}
+
+  <p class="sub">Verification code: <b class="vc">${code}</b> · changes if any name, ID or score changes — so a report can't be quietly edited after printing.</p>`;
   $("backRep").onclick=()=>{ step=3; render(); };
 }
 function renderTopMini(){
   const bar=$("topMini"); if(!bar) return;
-  bar.innerHTML = P.sid ? `<button class="linkbtn2" id="reportsLink">📊 My reports</button>` : "";
+  bar.innerHTML = P.sid ? `<button class="linkbtn2" id="reportsLink">📊 My report</button>` : "";
   if(P.sid) $("reportsLink").onclick=()=>{ step="reports"; render(); };
 }
 
