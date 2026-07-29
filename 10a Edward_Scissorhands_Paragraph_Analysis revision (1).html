@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edward Scissorhands — Analysing Paragraphs</title>
+<style>
+  :root{
+    --slate:#1F3A4D; --slate-dk:#162A38; --pale:#DCE9F2; --pale-2:#EEF4F9;
+    --line:#B7CFE0; --amber:#E08E45; --amber-pale:#F7E3D0; --ink:#222B30;
+    --muted:#5A6B75; --green:#2E7D52; --green-bg:#E3F3EA; --red:#C0392B;
+    --red-bg:#FBE6E3; --white:#FFFFFF; --c-prep:#1565C0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
+    color:var(--ink); background:var(--slate);
+    background-image:radial-gradient(circle at 20% 0%,#27475c 0%,var(--slate) 45%,var(--slate-dk) 100%);
+    line-height:1.5; -webkit-font-smoothing:antialiased; padding:24px 16px; min-height:100vh;
+  }
+  .wrap{max-width:860px;margin:0 auto;}
+  .card{background:var(--white);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden;}
+  .topbar{background:var(--slate);color:var(--white);padding:18px 26px 16px;}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--amber);}
+  .topbar h1{font-family:Georgia,serif;font-size:23px;font-weight:700;margin-top:3px;}
+  .progwrap{margin-top:14px;display:flex;align-items:center;gap:12px;}
+  .progress{flex:1;height:8px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden;}
+  .progress>span{display:block;height:100%;width:0;background:var(--amber);border-radius:99px;transition:width .35s ease;}
+  .progtext{font-size:12.5px;color:var(--pale);white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .body{padding:24px 26px 28px;}
+  .section-tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    color:var(--amber);background:var(--amber-pale);padding:4px 11px;border-radius:99px;margin-bottom:12px;}
+  .qtext{font-size:20px;font-weight:600;color:var(--slate);line-height:1.4;font-family:Georgia,serif;}
+  .qsub{font-size:14.5px;color:var(--muted);margin-top:7px;}
+  .para{background:var(--pale-2);border:2px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:14px;}
+  .para .plabel{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .para .ptheme{color:var(--amber);}
+  .para .ptext{font-size:16.5px;line-height:1.95;color:var(--ink);}
+  .para.strong{border-color:#8fc4a6;background:#F1F8F4;}
+  .chunk{cursor:pointer;padding:2px 4px;border-radius:6px;transition:background .12s,color .12s;}
+  .chunk:hover:not(.done){background:var(--amber-pale);}
+  .chunk.hit{background:var(--green-bg);color:var(--green);font-weight:600;box-shadow:inset 0 -2px 0 var(--green);}
+  .chunk.miss{background:var(--red-bg);color:var(--red);text-decoration:line-through;opacity:.75;}
+  .chunk.done{cursor:default;}
+  .rankcard{background:var(--pale-2);border:2px solid var(--line);border-radius:12px;padding:15px 17px;margin-top:14px;}
+  .rankcard.locked{border-color:var(--green);background:var(--green-bg);}
+  .rankcard .rlabel{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+  .rankcard .rtext{font-size:15px;line-height:1.7;color:var(--ink);margin-bottom:11px;}
+  .levelbtns{display:flex;gap:8px;flex-wrap:wrap;}
+  .levelbtn{font-size:13px;font-weight:600;border:2px solid var(--line);background:#fff;color:var(--slate);
+    border-radius:8px;padding:9px 13px;cursor:pointer;transition:border-color .12s,background .12s;text-align:left;flex:1;min-width:200px;}
+  .levelbtn:hover:not(:disabled){border-color:var(--amber);}
+  .levelbtn:disabled{cursor:default;opacity:.55;}
+  .levelbtn.gotit{background:var(--green);border-color:var(--green);color:#fff;opacity:1;}
+  .counters{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .counter{background:var(--slate);color:#fff;border-radius:9px;padding:8px 14px;font-size:13.5px;font-weight:600;}
+  .counter b{font-family:Georgia,serif;font-size:17px;margin-left:4px;}
+  .fbline{margin-top:14px;border-radius:10px;padding:13px 15px;font-size:14.5px;display:none;border-left:5px solid var(--muted);background:var(--pale-2);}
+  .fbline.show{display:block;animation:rise .2s ease;}
+  .fbline.good{border-left-color:var(--green);background:var(--green-bg);}
+  .fbline.bad{border-left-color:var(--red);background:var(--red-bg);}
+  .fbline .lhint{font-weight:700;}
+  .fbline a{color:var(--c-prep);font-weight:700;text-decoration:none;border-bottom:2px solid var(--c-prep);}
+  @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .actions{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .hint{font-size:13.5px;color:var(--muted);}
+  .btn{font-size:15px;font-weight:700;border:none;border-radius:10px;padding:12px 24px;cursor:pointer;background:var(--slate);color:#fff;transition:transform .08s,background .15s,opacity .15s;}
+  .btn:hover:not(:disabled){background:var(--slate-dk);}
+  .btn:active:not(:disabled){transform:scale(.97);}
+  .btn:disabled{opacity:.35;cursor:not-allowed;}
+  .btn.amber{background:var(--amber);} .btn.amber:hover:not(:disabled){background:#cf7d33;}
+  .center{text-align:center;padding:6px 4px;}
+  .center h2{font-family:Georgia,serif;font-size:27px;color:var(--slate);margin-bottom:10px;}
+  .center p{color:var(--muted);font-size:15.5px;max-width:600px;margin:0 auto 8px;}
+  .flow{display:flex;flex-direction:column;gap:10px;max-width:580px;margin:22px auto;text-align:left;}
+  .flowstep{display:flex;gap:13px;align-items:flex-start;background:var(--pale-2);border-radius:10px;padding:12px 15px;}
+  .flowstep .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--slate);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .flowstep span{font-size:14.5px;color:var(--ink);}
+  .ring{width:140px;height:140px;border-radius:50%;margin:4px auto 14px;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--amber) var(--deg,0deg),var(--pale) 0deg);}
+  .ring .inner{width:112px;height:112px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .inner b{font-family:Georgia,serif;font-size:30px;color:var(--slate);}
+  .ring .inner span{font-size:11px;color:var(--muted);}
+  .revise{background:var(--amber-pale);border:1px solid var(--amber);border-radius:12px;padding:16px 18px;margin:16px 0;text-align:left;}
+  .revise h3{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#b9712f;margin-bottom:8px;}
+  .revise a{color:#a85d1f;font-weight:700;}
+  .linklist{text-align:left;background:var(--pale-2);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;}
+  .linklist h3{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+  .linklist li{list-style:none;padding:7px 0;font-size:14.5px;border-top:1px solid #e3edf4;}
+  .linklist li:first-child{border-top:none;}
+  .linklist a{color:var(--c-prep);font-weight:600;text-decoration:none;}
+  .footer-note{color:var(--pale);font-size:12.5px;text-align:center;margin-top:16px;opacity:.85;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="topbar">
+      <div class="kicker">Reading a Film &nbsp;•&nbsp; Edward Scissorhands</div>
+      <h1 id="topTitle">Analysing Paragraphs</h1>
+      <div class="progwrap" id="progWrap" style="display:none;">
+        <div class="progress"><span id="progBar"></span></div>
+        <div class="progtext" id="progText"></div>
+      </div>
+    </div>
+    <div class="body" id="body"></div>
+  </div>
+  <div class="footer-note">Tip: click something that isn't what we're hunting and it'll tell you what that bit actually is — and link the lesson to revise.</div>
+</div>
+
+<script>
+const LESSONS = {
+  L04:  { name:"Lesson 04 — Literary, Dramatic & Cinematic elements", url:"https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/_layouts/Doc.aspx?sourcedoc=%7B46BB68A4-4B45-4C0A-A56A-4DA7C259DCA1%7D&wd=target%28_Content%20Library%2FReading%20a%20Film.one%7CD5BEBD99-395D-4228-B7F0-9804399295BC%2FLesson%2004%20-%20Analysing%20a%20scene%7CDC98DD1D-8C06-4330-B632-7A7AB5B40581%2F%29&wdpartid=%7B4308E1DF-C9C7-45AC-9839-4ECE46DD1BD0%7D%7B1%7D&wdsectionfileid=%7B3F5A70FE-DB31-4B7C-91FF-B369E40682BA%7D&end%20onenote:https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/SiteAssets/7ENG.D-2026%20Notebook/_Content%20Library/Reading%20a%20Film.one" },
+  L061: { name:"Lesson 06.1 — Camera shot types", url:"https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/_layouts/Doc.aspx?sourcedoc=%7B46BB68A4-4B45-4C0A-A56A-4DA7C259DCA1%7D&wd=target%28_Content%20Library%2FReading%20a%20Film.one%7CD5BEBD99-395D-4228-B7F0-9804399295BC%2FLesson%2006.1%20-%20Cameras%20and%20the%20journey%7C7780B379-87C0-46DD-BACC-1FF7C37C7FD0%2F%29&wdpartid=%7BBF1ABDE4-22F0-4D24-8CB4-66ED39764C88%7D%7B1%7D&wdsectionfileid=%7B3F5A70FE-DB31-4B7C-91FF-B369E40682BA%7D&end%20onenote:https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/SiteAssets/7ENG.D-2026%20Notebook/_Content%20Library/Reading%20a%20Film.one" },
+  L08:  { name:"Lesson 08 — Writing better sentences (subjects, verbs, prepositional phrases)", url:"https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/_layouts/Doc.aspx?sourcedoc=%7B46BB68A4-4B45-4C0A-A56A-4DA7C259DCA1%7D&wd=target%28_Content%20Library%2FReading%20a%20Film.one%7CD5BEBD99-395D-4228-B7F0-9804399295BC%2FLesson%2008%20-%20Writing%20better%20sentences%7CD36D4128-744D-4F55-AF35-0BA0AAA8174F%2F%29&wdpartid=%7B838450F9-DA34-4F5F-BDAF-2912F07BFBD6%7D%7B1%7D&wdsectionfileid=%7B3F5A70FE-DB31-4B7C-91FF-B369E40682BA%7D&end%20onenote:https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/SiteAssets/7ENG.D-2026%20Notebook/_Content%20Library/Reading%20a%20Film.one" },
+  L09:  { name:"Lesson 09 — Writing about ideas", url:"https://kewhighschool.sharepoint.com/sites/Section_7ENG.D-2026/_layouts/Doc.aspx?sourcedoc=%7b46BB68A4-4B45-4C0A-A56A-4DA7C259DCA1%7d&wd=target%28_Content%20Library%2FReading%20a%20Film.one%7CD5BEBD99-395D-4228-B7F0-9804399295BC%2FLesson%2009%20-%20Writing%20about%20ideas%7C48AEBB4E-8041-4628-97A7-A97774711E7F%2F%29&wdpartid=%7bCF86746B-6021-4C5F-B443-C5388D0763C7%7d%7b1%7d&wdsectionfileid=%7b3F5A70FE-DB31-4B7C-91FF-B369E40682BA%7d&end" },
+};
+
+/* ===== Paragraphs: each chunk carries one OR MORE tags ===== */
+const PARA_HIGH = { cls:"strong", label:"Stronger response", theme:"Conformity & difference", chunks:[
+ {t:"At the start of the film,", tags:["prep"]},
+ {t:"an establishing shot", tags:["camera","subject"]},
+ {t:"reveals", tags:["verb"], v:"analysis"},
+ {t:"rows of identical pastel houses", tags:["cine"]},
+ {t:"behind neat green hedges.", tags:["prep"]},
+ {t:"The tidy, matching gardens", tags:["subject"]},
+ {t:"suggest", tags:["verb"], v:"analysis"},
+ {t:"a world", tags:["plain"]},
+ {t:"where everyone must look the same.", tags:["lit"]},
+ {t:"When Edward appears, his", tags:["plain"]},
+ {t:"pale skin, wild hair and scissor-hands", tags:["cine","subject"]},
+ {t:"set him apart as", tags:["verb"], v:"action"},
+ {t:"an outsider.", tags:["lit"]},
+ {t:"In one quiet moment,", tags:["prep"]},
+ {t:"a close-up", tags:["camera","subject"]},
+ {t:"captures", tags:["verb"], v:"analysis"},
+ {t:"his nervous, downcast eyes,", tags:["drama"]},
+ {t:"while", tags:["plain"]},
+ {t:"his stiff, awkward movements", tags:["drama","subject"]},
+ {t:"show", tags:["verb"], v:"analysis"},
+ {t:"his fear of being rejected.", tags:["lit"]},
+ {t:"The cold blue lighting", tags:["cine","subject"]},
+ {t:"of the empty mansion and the", tags:["plain"]},
+ {t:"warm pastel colours", tags:["cine","subject"]},
+ {t:"of the busy street", tags:["plain"]},
+ {t:"highlight the gap between", tags:["verb"], v:"analysis"},
+ {t:"the lonely individual and the conforming crowd.", tags:["lit"]},
+ {t:"Soft, melancholy music", tags:["cine","subject"]},
+ {t:"plays", tags:["verb"], v:"action"},
+ {t:"as he watches", tags:["plain"]},
+ {t:"from a distance,", tags:["prep"]},
+ {t:"suggesting that", tags:["verb"], v:"analysis"},
+ {t:"difference is feared even when it is gentle.", tags:["lit"]},
+]};
+const PARA_LOW = { cls:"weak", label:"Weaker response", theme:"Fear & acceptance", chunks:[
+ {t:"Edward", tags:["subject"]},
+ {t:"looks", tags:["verb"], v:"being"},
+ {t:"scary and", tags:["plain"]},
+ {t:"everyone", tags:["subject"]},
+ {t:"is", tags:["verb"], v:"being"},
+ {t:"afraid of him.", tags:["plain"]},
+ {t:"Jim", tags:["subject"]},
+ {t:"is", tags:["verb"], v:"being"},
+ {t:"mean to him and", tags:["plain"]},
+ {t:"turns", tags:["verb"], v:"action"},
+ {t:"the town against him.", tags:["plain"]},
+ {t:"At the end,", tags:["prep"]},
+ {t:"everyone", tags:["subject"]},
+ {t:"is", tags:["verb"], v:"being"},
+ {t:"scared again and", tags:["plain"]},
+ {t:"Edward", tags:["subject"]},
+ {t:"leaves.", tags:["verb"], v:"action"},
+ {t:"It", tags:["subject"]},
+ {t:"feels", tags:["verb"], v:"being"},
+ {t:"sad", tags:["plain"]},
+ {t:"because he just wanted to be liked.", tags:["lit"]},
+ {t:"I", tags:["subject"]},
+ {t:"think", tags:["verb"], v:"being"},
+ {t:"the film is about being kind.", tags:["lit"]},
+]};
+
+const LEVELS = [
+  {v:0, label:"Mostly retells the story and gives a general opinion"},
+  {v:1, label:"Describes some film techniques and links them to an idea"},
+  {v:2, label:"Explains how several techniques work together to shape meaning"},
+];
+const RESPONSES = [
+  { id:"B", correct:1, theme:"Beauty & ugliness",
+    text:"In the suburb, the houses are painted in bright pastel colours, but Edward wears dark, messy clothes that make him look different. A close-up shows his sad face. The pretty colours suggest the town looks nice on the outside, even though some people are unkind. This shows that beauty is not only about how things look.",
+    why:"This one DESCRIBES a few techniques (colour, costume, a close-up) and links them to an idea — but it doesn't dig into how they work together." },
+  { id:"A", correct:0, theme:"Fear & acceptance",
+    text:"Edward looks scary and everyone is afraid of him. Jim is mean to him and turns the town against him. At the end, everyone is scared again and Edward leaves. It feels sad because he just wanted to be liked. I think the film is about being kind.",
+    why:"This one mostly RETELLS what happens and gives a general feeling. It names no film techniques at all." },
+  { id:"C", correct:2, theme:"Conformity & difference",
+    text:"At the start of the film, an establishing shot reveals rows of identical pastel houses behind neat green hedges, suggesting a world where everyone must look the same. A close-up captures Edward's nervous, downcast eyes while his stiff movements show his fear. The cold blue lighting of the mansion and the warm colours of the street highlight the gap between the lonely individual and the conforming crowd.",
+    why:"This one EXPLAINS how several techniques (camera, lighting, colour, acting) work together to shape meaning for the audience." },
+];
+
+const FIND_TASKS = [
+  { key:"cine",  tag:"Cinematic elements", title:"Find the cinematic elements",
+    instr:"Click every cinematic element — what we SEE and HEAR: lighting, colour, costume / make-up, music, and the camera shots.",
+    accept:["cine","camera"], lesson:"L04" },
+  { key:"drama", tag:"Dramatic elements", title:"Find the dramatic elements",
+    instr:"Click every dramatic element — the ACTING: facial expressions and body language.",
+    accept:["drama"], lesson:"L04" },
+  { key:"lit",   tag:"Literary elements", title:"Find the literary elements",
+    instr:"Click every literary element — the ideas about CHARACTER and THEME.",
+    accept:["lit"], lesson:"L04" },
+  { key:"subject", tag:"Sentence skills", title:"Find the subjects",
+    instr:"Click the subject of each sentence — the person, thing or technique the sentence is built around.",
+    accept:["subject"], lesson:"L08" },
+  { key:"verb", tag:"Sentence skills", title:"Find the verbs",
+    instr:"Click every main verb — the action, process or 'being' word. Watch which KIND of verb each writer uses.",
+    accept:["verb"], lesson:"L08" },
+  { key:"prep",  tag:"Sentence skills", title:"Find the prepositional phrases",
+    instr:"Click every prepositional phrase — a part that tells you WHERE, WHEN or HOW something happens.",
+    accept:["prep"], lesson:"L08" },
+];
+
+/* ===== STATE ===== */
+let stage = 0;
+const totalStages = 1 + FIND_TASKS.length; // rank + finds
+const stats = { rankTries:0, find:{} };
+FIND_TASKS.forEach(t=>{
+  stats.find[t.key]={correct:0, wrong:0, total:0};
+  [PARA_HIGH,PARA_LOW].forEach(p=>p.chunks.forEach(ch=>{ if(ch.tags.some(tg=>t.accept.includes(tg))) stats.find[t.key].total++; }));
+});
+
+const bodyEl=document.getElementById('body');
+const progWrap=document.getElementById('progWrap');
+const progBar=document.getElementById('progBar');
+const progText=document.getElementById('progText');
+const topTitle=document.getElementById('topTitle');
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function lessonLink(key){const L=LESSONS[key];return `<a href="${L.url}" target="_blank" rel="noopener">Revise: ${esc(L.name)}</a>`;}
+
+/* describe a chunk for "what you clicked" feedback */
+function lessonForTag(tag){
+  if(tag==='camera') return 'L061';
+  if(tag==='cine'||tag==='drama'||tag==='lit') return 'L04';
+  if(tag==='prep'||tag==='subject'||tag==='verb') return 'L08';
+  return null;
+}
+function describe(ch){
+  const t=ch.tags;
+  const order=[
+    ['camera','a camera shot'],
+    ['cine','a cinematic element'],
+    ['drama','a dramatic element (the acting)'],
+    ['lit','a literary element (character / theme)'],
+    ['prep','a prepositional phrase'],
+    ['verb', ch.v ? ('a '+ch.v+' verb') : 'a verb'],
+  ];
+  let primary=null, ptag=null;
+  for(const [tag,label] of order){ if(t.includes(tag)){ primary=label; ptag=tag; break; } }
+  if(!primary && t.includes('subject')){ primary='the subject of its sentence'; ptag='subject'; }
+  if(!primary){ primary='just connecting words / plot'; ptag='plain'; }
+  const extra = (t.includes('subject') && ptag!=='subject') ? ', and the subject of its sentence' : '';
+  return { text: primary+extra, lesson: lessonForTag(ptag) };
+}
+function correctMsg(taskKey, ch){
+  if(taskKey==='verb'){
+    const tail = ch.v==='analysis' ? " — an analysis verb, the kind strong analysis uses."
+              : ch.v==='being' ? " — a being verb (swap these for analysis verbs like reveals / suggests to sound stronger)."
+              : " — an action verb.";
+    return `"${esc(ch.t)}" is a verb${tail}`;
+  }
+  if(taskKey==='subject'){
+    const isTech = ch.tags.some(tg=>['camera','cine','drama'].includes(tg));
+    return `"${esc(ch.t)}" is the subject.` + (isTech ? " Notice the strong writer makes a film technique the subject — that's the trick." : "");
+  }
+  if(taskKey==='cine'){ return `"${esc(ch.t)}" is ` + (ch.tags.includes('camera') ? "a camera shot (cinematic)." : "a cinematic element."); }
+  if(taskKey==='drama'){ return `"${esc(ch.t)}" is a dramatic element (the acting).`; }
+  if(taskKey==='lit'){ return `"${esc(ch.t)}" is a literary element (character / theme).`; }
+  if(taskKey==='prep'){ return `"${esc(ch.t)}" is a prepositional phrase (tells where / when / how).`; }
+  return `"${esc(ch.t)}" — yes.`;
+}
+
+/* ===== INTRO ===== */
+function renderIntro(){
+  topTitle.textContent="Analysing Paragraphs";
+  progWrap.style.display="none";
+  bodyEl.innerHTML=`
+   <div class="center">
+     <h2>What makes a strong analysis?</h2>
+     <p>Compare three responses about <em>Edward Scissorhands</em>, then hunt for the exact features that separate a strong paragraph from a weak one.</p>
+     <div class="flow">
+       <div class="flowstep"><div class="n">1</div><span><b>Rank</b> three responses from weakest to strongest using the rubric.</span></div>
+       <div class="flowstep"><div class="n">2</div><span>Take the <b>strongest</b> and <b>weakest</b> and click to find the <b>cinematic</b>, <b>dramatic</b> and <b>literary</b> elements, then the <b>subjects</b>, <b>verbs</b> and <b>prepositional phrases</b>.</span></div>
+       <div class="flowstep"><div class="n">3</div><span>See what the strong paragraph is <b>packed with</b> that the weak one is missing.</span></div>
+     </div>
+     <p style="font-size:13.5px;">Click the wrong thing and it tells you what that bit actually is, and links the lesson — but you work out the answer yourself.</p>
+     <div style="margin-top:20px;"><button class="btn amber" onclick="go(1)">Start →</button></div>
+   </div>`;
+}
+
+function setProg(n){
+  progWrap.style.display="flex";
+  progBar.style.width=((n-1)/totalStages*100)+"%";
+  progText.textContent="Step "+n+" of "+totalStages;
+}
+
+/* ===== RANK ===== */
+let rankState={};
+function renderRank(){
+  topTitle.textContent="Step 1 — Rank the responses";
+  setProg(1);
+  rankState={};
+  let cards=RESPONSES.map((r,i)=>{
+    let btns=LEVELS.map(lv=>`<button class="levelbtn" data-r="${i}" data-v="${lv.v}" onclick="pickLevel(${i},${lv.v})">${esc(lv.label)}</button>`).join("");
+    return `<div class="rankcard" id="rc${i}">
+       <div class="rlabel">Response ${i+1} &nbsp;·&nbsp; theme: ${esc(r.theme)}</div>
+       <div class="rtext">${esc(r.text)}</div>
+       <div class="levelbtns">${btns}</div></div>`;
+  }).join("");
+  bodyEl.innerHTML=`
+    <span class="section-tag">Using the rubric</span>
+    <div class="qtext">Match each response to the rubric description it fits best.</div>
+    <div class="qsub">Choosing wrong tells you what that response really does — without telling you the answer.</div>
+    ${cards}
+    <div class="fbline" id="fb"></div>
+    <div class="actions"><span class="hint" id="hint">Match all three to continue.</span>
+      <button class="btn" id="nextBtn" disabled onclick="go(2)">Next →</button></div>`;
+}
+function pickLevel(i,v){
+  if(rankState[i]==='ok') return;
+  const r=RESPONSES[i]; const fb=document.getElementById('fb');
+  if(v===r.correct){
+    rankState[i]='ok';
+    document.querySelectorAll(`.levelbtn[data-r="${i}"]`).forEach(b=>{b.disabled=true; if(+b.dataset.v===v) b.classList.add('gotit');});
+    document.getElementById('rc'+i).classList.add('locked');
+    fb.className='fbline show good'; fb.innerHTML=`<span class="lhint">✓ Response ${i+1} placed.</span>`;
+    if(RESPONSES.every((_,j)=>rankState[j]==='ok')){
+      const nb=document.getElementById('nextBtn'); nb.disabled=false; nb.classList.add('amber');
+      document.getElementById('hint').style.display='none';
+      fb.innerHTML=`<span class="lhint">✓ All three ranked.</span> The strongest explains how techniques build meaning; the weakest just retells the story. Now let's see exactly why.`;
+    }
+  } else {
+    stats.rankTries++;
+    fb.className='fbline show bad';
+    fb.innerHTML=`<span class="lhint">✗ Look again at Response ${i+1}.</span> ${esc(r.why)} &nbsp; ${lessonLink('L09')}`;
+  }
+}
+
+/* ===== FIND ===== */
+let findKey=null, foundCount={HIGH:0,LOW:0}, clickedSet=null;
+function renderFind(taskIndex){
+  const task=FIND_TASKS[taskIndex];
+  findKey=task.key;
+  clickedSet=new Set();
+  foundCount={HIGH:0,LOW:0};
+  topTitle.textContent="Step "+(taskIndex+2)+" — "+task.title;
+  setProg(taskIndex+2);
+  const renderPara=(p,pid)=>{
+    let inner=p.chunks.map((ch,ci)=>`<span class="chunk" id="${pid}_${ci}" onclick="clickChunk('${pid}',${ci},${taskIndex})">${esc(ch.t)}</span>`).join(" ");
+    return `<div class="para ${p.cls}"><div class="plabel">${esc(p.label)} <span class="ptheme">· ${esc(p.theme)}</span></div><div class="ptext">${inner}</div></div>`;
+  };
+  const isLast=taskIndex+1>=FIND_TASKS.length;
+  const nextArg=isLast?"'end'":String(stage+1);
+  const nextLabel=isLast?'See results →':'Next task →';
+  bodyEl.innerHTML=`
+    <span class="section-tag">${esc(task.tag)}</span>
+    <div class="qtext">${esc(task.title)}</div>
+    <div class="qsub">${esc(task.instr)}</div>
+    <div class="counters">
+      <div class="counter">Stronger response found:<b id="cHIGH">0</b></div>
+      <div class="counter">Weaker response found:<b id="cLOW">0</b></div>
+    </div>
+    ${renderPara(PARA_HIGH,'HIGH')}
+    ${renderPara(PARA_LOW,'LOW')}
+    <div class="fbline" id="fb"></div>
+    <div class="actions">
+      <span class="hint">Click what you can find, then move on. Missed ones stay hidden — that's for you to spot.</span>
+      <button class="btn amber" id="nextBtn" onclick="go(${nextArg})">${nextLabel}</button>
+    </div>`;
+}
+function clickChunk(pid,ci,taskIndex){
+  const key=pid+'_'+ci;
+  if(clickedSet.has(key)) return;   // hard guard: a chunk can only ever score once
+  clickedSet.add(key);
+  const task=FIND_TASKS[taskIndex];
+  const para=pid==='HIGH'?PARA_HIGH:PARA_LOW;
+  const ch=para.chunks[ci];
+  const el=document.getElementById(pid+'_'+ci);
+  if(!el || el.classList.contains('done')) return;
+  el.classList.add('done');
+  const fb=document.getElementById('fb');
+  const isCorrect=ch.tags.some(tg=>task.accept.includes(tg));
+  if(isCorrect){
+    el.classList.add('hit');
+    foundCount[pid]++;
+    document.getElementById('c'+pid).textContent=foundCount[pid];
+    stats.find[task.key].correct++;
+    fb.className='fbline show good';
+    fb.innerHTML=`<span class="lhint">✓ Yes —</span> ${correctMsg(task.key,ch)}`;
+  } else {
+    el.classList.add('miss');
+    stats.find[task.key].wrong++;
+    const d=describe(ch);
+    const link=d.lesson ? ' &nbsp; '+lessonLink(d.lesson) : '';
+    const targetName={cine:'a cinematic element',drama:'a dramatic element',lit:'a literary element',subject:'a subject',verb:'a verb',prep:'a prepositional phrase'}[task.key];
+    fb.className='fbline show bad';
+    fb.innerHTML=`<span class="lhint">✗ Not this one.</span> "${esc(ch.t)}" is ${d.text} — not ${targetName}.${link}`;
+  }
+}
+
+/* ===== END ===== */
+function renderEnd(){
+  topTitle.textContent="Done!";
+  progWrap.style.display="flex"; progBar.style.width="100%"; progText.textContent="Complete";
+  let totCorrect=0, totTargets=0;
+  FIND_TASKS.forEach(t=>{const s=stats.find[t.key];totCorrect+=s.correct;totTargets+=s.total;});
+  const findAcc=totTargets?Math.min(100,Math.round(totCorrect/totTargets*100)):0;
+
+  // recommendation = the skill they were LEAST accurate at (by wrong-click rate), needs >=2 clicks
+  let worst=null, worstErr=-1;
+  FIND_TASKS.forEach(t=>{
+    const s=stats.find[t.key]; const clicks=s.correct+s.wrong;
+    if(clicks>=2){ const err=s.wrong/clicks; if(err>worstErr){worstErr=err; worst={lesson:t.lesson, label:t.title};} }
+  });
+  if(stats.rankTries>=2){
+    const rErr=stats.rankTries/(stats.rankTries+2);
+    if(rErr>worstErr){worstErr=rErr; worst={lesson:'L09', label:'Ranking responses with the rubric'};}
+  }
+  let recKey, clean=false;
+  if(!worst || worstErr<=0){ recKey='L061'; clean=true; } else { recKey=worst.lesson; }
+
+  const deg=Math.round(findAcc/100*360);
+  let rows=FIND_TASKS.map(t=>{
+    const s=stats.find[t.key]; const ratio=s.total?Math.min(100,Math.round(s.correct/s.total*100)):0;
+    const colour=ratio>=80?'var(--green)':(ratio>=50?'var(--amber)':'var(--red)');
+    return `<li style="display:flex;gap:10px;align-items:center;">
+       <span style="flex:0 0 150px;font-weight:600;">${esc(t.title.replace('Find the ',''))}</span>
+       <span style="flex:1;height:9px;background:var(--pale);border-radius:99px;overflow:hidden;"><span style="display:block;height:100%;width:${ratio}%;background:${colour};"></span></span>
+       <span style="flex:0 0 96px;text-align:right;color:var(--muted);font-size:13.5px;">${s.correct}/${s.total} found</span></li>`;
+  }).join("");
+  let links=Object.keys(LESSONS).map(k=>`<li><a href="${LESSONS[k].url}" target="_blank" rel="noopener">${esc(LESSONS[k].name)}</a></li>`).join("");
+  const recMsg = clean
+    ? `Clean run — no wrong clicks! Since this week's homework is all about camera, keep sharp with <a href="${LESSONS.L061.url}" target="_blank" rel="noopener" style="font-weight:700;">${esc(LESSONS.L061.name)}</a>.`
+    : `You made the most slips on <b>${esc(worst.label.replace('Find the ',''))}</b>, so spend some time on <a href="${LESSONS[recKey].url}" target="_blank" rel="noopener" style="font-weight:700;">${esc(LESSONS[recKey].name)}</a>.`;
+
+  bodyEl.innerHTML=`
+    <div class="center">
+      <div class="ring" style="--deg:${deg}deg;"><div class="inner"><b>${findAcc}%</b><span>features found</span></div></div>
+      <h2>Nice analysing!</h2>
+      <p>You found ${totCorrect} of ${totTargets} features. Look how the stronger paragraph fills up with techniques, subjects built on those techniques, and analysis verbs — while the weaker one stays almost empty. That's the difference between retelling and analysing.</p>
+      <div class="linklist"><h3>How you went</h3><ul style="padding:0;">${rows}</ul></div>
+      <div class="revise"><h3>Revise this next</h3><div style="font-size:15px;color:var(--ink);">${recMsg}</div></div>
+      <div class="linklist"><h3>All lesson links</h3><ul style="padding:0;">${links}</ul></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px;">
+        <button class="btn amber" onclick="go(0)">Start again</button></div>
+    </div>`;
+}
+
+/* ===== ROUTER ===== */
+function go(s){
+  stage=s;
+  if(s===0) renderIntro();
+  else if(s===1) renderRank();
+  else if(s==='end' || s===totalStages+1) renderEnd();
+  else renderFind(s-2);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+go(0);
+</script>
+</body>
+</html>

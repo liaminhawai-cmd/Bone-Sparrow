@@ -1,0 +1,927 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wattle Bay -- coastal manager</title><style>
+:root{--ink:#23202b;--muted:#6f6a78;--line:#e3e0e8;--paper:#fff;--bg:#eef0f3;
+--amber:#cf8336;--blue:#3d7fb8;--ok:#3a8a4e;--okb:#e7f1e8;--no:#b1492f;--nob:#f6e3de;--accent:#3a566b;--neutral:#c9c6d0;}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.5;font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:15px;display:flex;flex-direction:column;overflow:hidden}
+header{background:#1d2a33;color:#fff;padding:8px 18px;display:flex;align-items:baseline;gap:14px;flex:0 0 auto;border-bottom:4px solid var(--amber)}
+header h1{margin:0;font-size:18px}
+header .sub{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10.5px;color:#a9c2d0;text-transform:uppercase;letter-spacing:.08em}
+.game-wrap{flex:1 1 auto;display:flex;gap:12px;padding:12px;min-height:0;overflow:hidden}
+/* ---- map column ---- */
+.mapcol{flex:1.7 1 0;min-width:0;min-height:0;display:flex;flex-direction:column;gap:6px}
+.hint{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--ink);min-height:17px;flex:0 0 auto}
+.mapwrap{flex:1 1 auto;min-height:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#bcd9e6;display:flex}
+svg{display:block;width:100%;height:100%}
+.legend-box{flex:0 0 auto;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:7px 11px 7px}
+.legend-head{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:5px}
+.legend{display:flex;flex-wrap:wrap;gap:5px 15px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;color:var(--ink)}
+.legend span{display:inline-flex;align-items:center;gap:5px}.sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid #0003}
+/* ---- right column ---- */
+.rightcol{flex:1 1 0;min-width:340px;max-width:460px;min-height:0;display:flex;flex-direction:column;gap:10px}
+.chars{flex:0 0 auto;max-height:56%;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+.char-card{position:relative;background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--neutral);border-radius:9px;padding:8px 11px;transition:box-shadow .15s}
+.char-card:hover{box-shadow:0 2px 8px #0001}
+.char-card.on{box-shadow:0 0 0 2px var(--accent)}
+.cc-top{display:flex;align-items:center;gap:9px;cursor:pointer}
+.cc-face{width:32px;height:32px;flex:0 0 auto;display:flex}
+.cc-namewrap{flex:1 1 auto;display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.cc-name{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;font-weight:700}
+.cc-role{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.cc-mood{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#fff;border-radius:11px;padding:2px 9px;white-space:nowrap}
+.cc-mood{min-width:46px;text-align:center}
+.cc-shortrole{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10px;color:var(--muted);font-style:italic;margin-top:1px;line-height:1.2}
+.cc-bar{height:6px;background:#ece9f0;border-radius:4px;margin:7px 0 4px;overflow:hidden}
+.cc-bar span{display:block;height:100%;border-radius:4px;transition:width .45s}
+.cc-consult{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--accent);background:var(--paper);color:var(--accent);border-radius:14px;padding:4px 13px;margin-top:5px;display:inline-block}
+.cc-consult.open{background:var(--accent);color:#fff}
+.cc-line{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;color:var(--ink);margin:6px 0 0;line-height:1.4}
+.cc-more{margin-top:8px;border-top:1px solid var(--line);padding-top:8px}
+#stip{position:fixed;z-index:999;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 20px #0003;padding:10px 13px;max-width:270px;pointer-events:none;display:none}
+.stip-head{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:7px}
+.stip-adv{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;color:var(--ok);margin:7px 0 4px;line-height:1.4}
+.stip-dis{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;color:var(--no);margin:0;line-height:1.4}
+.cc-more p{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;margin:0 0 6px;color:var(--ink)}
+.cc-more .gh{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin:2px 0 3px}
+.cc-more ul{margin:0;padding-left:17px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px}
+.cc-more li{margin-bottom:2px}
+/* ---- action panel ---- */
+.action{flex:1 1 auto;min-height:0;overflow-y:auto;background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:12px}
+.budget-row{display:flex;align-items:center;gap:10px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;padding:7px 10px;background:#f7fafb;border:1px solid var(--line);border-radius:6px;margin:0 0 10px}
+.budget-bar-wrap{flex:1;height:8px;background:#e3e0e8;border-radius:4px;overflow:hidden}
+.budget-bar-fill{height:100%;border-radius:4px;transition:width .25s}
+.pickhint{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);background:#f7fafb;border:1px dashed var(--line);border-radius:8px;padding:12px;margin-bottom:10px;text-align:center}
+.spot{position:relative;border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:10px;overflow:hidden}
+.spot.house.on{border-color:var(--ok);background:#f4faf5}
+.spot-h{font-family:ui-sans-serif,system-ui,sans-serif;font-size:15px;font-weight:700;margin-bottom:7px}
+.spot-sub{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;color:var(--muted);margin:8px 0 4px}
+.eng-box{border-left:3px solid var(--blue);background:#eef5f9;border-radius:0 6px 6px 0;padding:7px 11px;margin-bottom:4px}
+.eng-who{font-family:ui-sans-serif,system-ui,sans-serif;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--blue)}
+.eng-box p{margin:3px 0 0;font-size:13px}
+.stratgrid{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.sbtn{cursor:pointer;font-family:ui-sans-serif,system-ui,sans-serif;border:1px solid var(--line);background:#fff;border-radius:16px;padding:6px 11px;font-size:12.5px}
+.sbtn.on{background:#fbf1e4;border-color:var(--amber);font-weight:600}.sbtn.locked{opacity:.45;cursor:not-allowed}
+.advdis{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;margin-top:4px}.advdis .a{color:var(--ok)}.advdis .d{color:var(--no)}
+.bmsg{color:var(--no);font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;min-height:0;margin-top:3px}
+.bonus{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;color:var(--ok);font-weight:700;margin:6px 0}
+.risknote{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;font-weight:700;border-radius:6px;padding:5px 9px;margin-bottom:9px;display:inline-block}
+.risknote.cliff{background:var(--nob);color:var(--no)}.risknote.beach{background:#fbe6cf;color:#9a5a16}.risknote.safe{background:var(--okb);color:var(--ok)}
+.hbtn{cursor:pointer;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:7px;padding:7px 14px}
+.hbtn.off{background:#fff;color:var(--accent)}.hbtn.locked{opacity:.4;cursor:not-allowed}
+@keyframes stampDown{0%{transform:rotate(-20deg) scale(2.6);opacity:0}55%{transform:rotate(5deg) scale(.92);opacity:1}78%{transform:rotate(-2deg) scale(1.05)}100%{transform:rotate(-5deg) scale(1);opacity:.92}}
+.stamp-mark{position:absolute;top:10px;right:12px;transform-origin:top right;pointer-events:none;font-family:ui-sans-serif,system-ui,sans-serif;font-size:15px;font-weight:900;letter-spacing:.12em;padding:3px 10px;border-radius:3px;border:3px solid var(--ok);color:var(--ok);background:rgba(58,138,78,.07);animation:stampDown .4s cubic-bezier(.2,.6,.3,1) forwards}
+.runbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
+.decades{display:flex;align-items:center;gap:6px}
+.dot{width:13px;height:13px;border-radius:50%;background:#dcd9e2;border:2px solid #c4c0cc;display:inline-block}
+.dot.done{background:var(--amber);border-color:var(--amber)}
+.dlabel{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;font-weight:700;color:var(--muted)}
+button.run{font-family:ui-sans-serif,system-ui,sans-serif;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:7px;padding:10px 18px;font-size:14px;font-weight:700}button.run:disabled{opacity:.4;cursor:not-allowed}
+.note{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;color:var(--muted);margin-top:6px}
+.review{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.bigtrouble{border:2px solid var(--no);background:var(--nob);color:var(--no);border-radius:8px;padding:9px 12px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:600;margin-bottom:9px}
+.stamp{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;font-weight:700;color:var(--accent);margin:2px 0 8px}
+.btn2{font-family:ui-sans-serif,system-ui,sans-serif;cursor:pointer;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:7px;padding:8px 13px;font-size:13px;font-weight:600;margin-top:6px}
+.reflect-toggle{cursor:pointer;width:100%;text-align:left;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:700;color:var(--accent);background:#f3f6f8;border:1px solid var(--line);border-radius:7px;padding:9px 12px;margin-top:12px}
+.reflect{margin-top:8px}
+.saq{border:1px solid var(--line);border-radius:7px;padding:11px 13px;margin-bottom:10px;background:#fff}
+.saq .tie{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);margin-bottom:4px}
+.saq .q{font-size:14px;margin:0 0 6px}
+textarea{width:100%;min-height:58px;font:inherit;font-size:13.5px;padding:8px;border:1px solid var(--line);border-radius:6px;resize:vertical;margin-top:6px}
+.saqrow{display:flex;align-items:center;gap:10px;margin-top:7px}
+.cbtn{font-family:ui-sans-serif,system-ui,sans-serif;cursor:pointer;background:#eef1f4;border:1px solid var(--line);border-radius:6px;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink)}
+.wc{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;color:var(--muted)}
+.sc{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px;margin-top:9px;padding:9px 11px;border-radius:6px;background:#f7fafb;border:1px solid var(--line);display:none}
+.sc.show{display:block}.sc.warn{background:#fdeccd}
+.sc .miss{color:var(--no);margin-top:3px}.sc .ok{color:var(--ok)}
+@media(max-width:880px){
+  body{overflow:auto}
+  .game-wrap{flex-direction:column;overflow:visible;height:auto}
+  .mapcol{min-height:58vh}
+  .rightcol{max-width:none}
+  .action{overflow:visible}
+}
+</style></head><body>
+<header><h1>Wattle Bay -- coastal manager</h1><div class="sub">Year 7 Geography · Coasts · a living coastline</div></header>
+<div class="game-wrap">
+  <div class="mapcol">
+    <div id="hint" class="hint"></div>
+    <div class="mapwrap"><div id="map" style="width:100%;height:100%"></div></div>
+    <div class="legend-box">
+      <div class="legend-head">Map key</div>
+      <div class="legend">
+        <span><i class="sw" style="background:#bcd9e6"></i>sea</span>
+        <span><i class="sw" style="background:#f2c543"></i>beach sand</span>
+        <span><i class="sw" style="background:#7a9b5e"></i>dunes</span>
+        <span><i class="sw" style="background:#d7cfb8"></i>land / cliff</span>
+        <span><i class="sw" style="background:#3d7fb8"></i>river mouth</span>
+        <span><i class="sw" style="background:#cf8336"></i>your measure</span>
+        <span>&#8226;&#8226;&#8226; old coastline</span>
+        <span>&#9675; - - tap a coast node to manage it</span>
+      </div>
+    </div>
+  </div>
+  <div class="rightcol">
+    <div id="chars" class="chars"></div>
+    <div id="action" class="action"></div>
+  </div>
+</div>
+<div id="stip"></div>
+<script>
+const D={"META": {"title": "Wattle Bay -- coastal manager", "subtitle": "Year 7 Geography · Coasts · a living coastline", "intro": "You look after Wattle Bay, a made-up coast. Waves roll in from the open ocean (the arrows). Where they hit straight on, like the headland, they wear it away fast. Where the bay shelters them, they drop their sand and the beach grows. Decide where new houses can go, protect the coast, then run the years ten at a time and watch what your three advisers think.", "driftNote": "Waves push sand left to right along the shore (longshore drift). The headland and the bay change how hard the waves hit."}, "SWELL": [0.45, 0.89], "SEG": [{"id": 0, "name": "Wattle Head", "bx": 55, "by": 132, "soft": 0.05, "energy": 0.95, "sand": 0.0, "dune": 0.0, "asset": null, "cliff": true, "kind": "headland"}, {"id": 1, "name": "The Shoulder", "bx": 138, "by": 190, "soft": 0.72, "energy": 0.82, "sand": 0.03, "dune": 0.0, "asset": null, "cliff": true, "kind": "cliff"}, {"id": 2, "name": "Cliff Road", "bx": 215, "by": 238, "soft": 0.8, "energy": 0.78, "sand": 0.05, "dune": 0.0, "asset": "road", "cliff": true, "kind": "cliff"}, {"id": 3, "name": "Clifftop houses", "bx": 300, "by": 255, "soft": 0.85, "energy": 0.75, "sand": 0.05, "dune": 0.0, "asset": "houses", "cliff": true, "kind": "cliff"}, {"id": 4, "name": "The Steps", "bx": 378, "by": 228, "soft": 0.4, "energy": 0.68, "sand": 0.02, "dune": 0.0, "asset": null, "cliff": true, "kind": "headland"}, {"id": 5, "name": "Main Beach", "bx": 455, "by": 328, "soft": 0.2, "energy": 0.28, "sand": 0.72, "dune": 0.3, "asset": null, "cliff": false, "kind": "beach"}, {"id": 6, "name": "Dune Reserve", "bx": 545, "by": 362, "soft": 0.2, "energy": 0.22, "sand": 0.82, "dune": 0.7, "asset": null, "cliff": false, "kind": "dune"}, {"id": 7, "name": "Wattle Bay township", "bx": 635, "by": 338, "soft": 0.3, "energy": 0.32, "sand": 0.52, "dune": 0.1, "asset": "town", "cliff": false, "kind": "town"}, {"id": 8, "name": "River mouth", "bx": 725, "by": 294, "soft": 0.3, "energy": 0.25, "sand": 0.34, "dune": 0.2, "asset": null, "cliff": false, "kind": "estuary"}, {"id": 9, "name": "The Spit", "bx": 822, "by": 252, "soft": 0.2, "energy": 0.3, "sand": 0.62, "dune": 0.4, "asset": null, "cliff": false, "kind": "spit"}, {"id": 10, "name": "Far Beach", "bx": 910, "by": 228, "soft": 0.25, "energy": 0.58, "sand": 0.42, "dune": 0.2, "asset": null, "cliff": false, "kind": "beach"}], "STRAT": {"none": {"name": "Do nothing", "letter": "·", "cost": 0, "adv": "Lets nature take its course; no cost.", "dis": "The coast keeps wearing away where the waves are strong."}, "seawall": {"name": "Sea wall", "letter": "W", "cost": 16, "adv": "Protects the cliff, land and buildings behind it; can stop the sea flooding in.", "dis": "Bounces wave energy back, so the waves stay strong and wash the beach in front away. Costs a lot."}, "groyne": {"name": "Groynes", "letter": "G", "cost": 10, "adv": "Catches sand moving along the shore, building up the beach on one side.", "dis": "Starves the beach further along the coast. Costs money to build and keep up."}, "nourish": {"name": "Beach nourishment", "letter": "N", "cost": 6, "adv": "Adds new sand to make a wide, natural, tourist-friendly beach.", "dis": "The new sand washes away, so you have to top it up every few years."}, "retreat": {"name": "Managed retreat", "letter": "M", "cost": 8, "adv": "Moves buildings back and lets the beach and dunes grow; cheap; good for wildlife.", "dis": "People have to be paid for the buildings or land they give up."}}, "HOUSING": [{"id": "clifftop", "name": "Clifftop homes", "node": 1, "bonus": 22, "risk": "cliff", "blurb": "Right on the cliff edge. Best views and the most money, but the soft cliff is wearing back fast."}, {"id": "beachfront", "name": "Beachfront homes", "node": 5, "bonus": 12, "risk": "beach", "blurb": "Just behind the beach. Good money. Safe only while the beach and dunes stay wide."}, {"id": "setback", "name": "Set-back homes", "node": 7, "bonus": 5, "risk": "safe", "blurb": "Back from the shore near the town. Safe from the wearing coast, but the block sits right beside the river-mouth significant site."}], "VOICES": [{"id": "engineer", "name": "Coastal engineer", "role": "explains what the waves and the sand did", "colour": "#146c94", "focus": [0, 1, 2, 3, 4], "concern": "Watch where the waves hit hardest -- the headland and the soft cliffs. A thin beach there means the coast wears away fast.", "view": "My job is to explain how this coast works, not to take a side. The headland is hard rock taking the full force of the waves; the soft cliffs next to it wear back quickly wherever the beach in front of them gets thin. The sheltered bay collects sand and the beach grows; the spit builds up from sand carried along the shore past the river mouth. Anything hard you build changes how the sand moves, which can help one spot and starve another further along."}, {"id": "owners", "name": "Traditional Owners", "person": "Wattle Bay Traditional Owners", "avatar": "country", "colour": "#7c3aed", "focus": [8], "shortRole": "Speaks for Country and the significant site", "concern": "The river mouth is a significant site. Tap to see what matters to us.", "view": "This place has been known and cared for by our community for a very long time. The river mouth is a significant site, and any work near it requires genuine consultation with us from the start -- not a notification after decisions are already made. We are not against the coast being managed; we need to be part of that conversation. In real life this is called Free, Prior and Informed Consent: we are spoken with early, given the full picture, and have a real say.", "goals": ["Be consulted before any work begins, with a genuine say", "Protect the river-mouth significant site from disturbance", "Keep hard walls and structures away from the estuary", "Keep the river and estuary healthy for future generations"]}, {"id": "eco", "name": "Marine ecologist", "person": "Dr Hannah Cole", "avatar": "eco", "colour": "#237a3b", "focus": [6, 8, 9], "shortRole": "Monitors the coast's natural health", "concern": "The dunes, the estuary and the spit are habitat and natural defence -- not empty space waiting to be developed. Keep them intact.", "view": "I look at this coast as a living system. The dune plants hold the sand in place; strip them and the dunes collapse. The estuary is a nursery for young fish and a feeding ground for birds; it depends on clean water and the sand brought in by longshore drift. Hard walls are the fastest way to break this system -- they cut off the natural sand supply and scrape the life out of the shore.", "goals": ["Protect the dune plants at the Dune Reserve", "Keep the river-mouth estuary healthy", "Avoid hard walls that cut off natural sand movement", "Maintain the spit as shorebird habitat"]}, {"id": "town", "name": "Tourism and residents", "person": "Sam Doyle", "avatar": "town", "colour": "#b35a1f", "focus": [3, 5, 7], "shortRole": "Runs the beach cafe; speaks for locals", "concern": "I run the beach cafe. The wide beach is what brings people here, but the road and the houses have to stay safe too. It is a real balancing act.", "view": "The beach is what makes this town. Visitors come for the sand, the water, and the feel of a working coast -- that is my livelihood and everyone else's here. Locals also need the road and the clifftop houses to stay safe. A sea wall protects what sits behind it, but it scours the beach in front, and a beach without sand is not what anyone came here for. Save the buildings, yes, but do not bury the coast in concrete.", "goals": ["Keep Main Beach wide and attractive for visitors and locals", "Protect Cliff Road and the clifftop houses from the eroding cliff", "Avoid turning the coast into a wall of concrete", "Keep the town somewhere people want to live and visit"]}], "VLINES": {"owners": {"good": "The river mouth was kept healthy, with sand still reaching it and no hard walls forced onto the significant site. Caring for this place this way respects how this Country has always been looked after.", "mixed": "The river mouth is holding on, but the natural sand reaching it has thinned. Keep the significant site in mind before the next round of work, and keep hard structures away from it.", "bad": "The river mouth, a significant site, has been damaged -- starved of its sand or walled off. This is the harm we asked you to avoid, and it cannot simply be undone."}, "eco": {"good": "The dune plants are holding the sand, the estuary is healthy and the beach is doing its natural job as a defence. Wildlife still has somewhere to live. This is a coast working with nature, not against it.", "mixed": "It is a mixed picture. Some habitat is hanging on, but a few choices are putting pressure on the dunes or the estuary, and the system is less resilient than it was.", "bad": "The dunes are breaking down and the estuary is in trouble. Hard structures have cut the natural sand supply and stripped the life out of this coast. Recovery will take decades, if it comes at all."}, "town": {"good": "The beach is still wide and inviting, the road and the homes are safe, and the coast looks like somewhere people want to come. That is good for business and good for the people who live here.", "mixed": "We are safe enough, but the beach has thinned or the coast is turning into concrete. Visitors notice, and a thin beach is a poorer draw than a wide one.", "bad": "We have lost beach, or buildings, or both. The shoreline is either washing away or buried in hard defences, and the visitors who keep this town alive are starting to go elsewhere."}}, "VDETAIL": {"owners": {"respected": "You listened to what we asked for: hard structures kept off the river mouth and the sand still reaching it. Our significant site has been respected.", "setbackBuilt": "New homes have been approved right beside the river-mouth significant site. That land matters to us and development that close changes it.", "wallOnSite": "A hard wall has been put right on the river mouth, our significant site. That should never have happened.", "starved": "The sand that keeps the estuary alive has been cut off up the coast, and the river mouth is suffering for it."}, "eco": {"dunesStripped": "The dune plants have been cleared, so the dunes can no longer hold their sand.", "estuaryStarved": "The estuary is being starved of the sand that longshore drift should bring it.", "hardWalls": "Too much hard concrete -- every wall and groyne breaks the natural movement of sand a little more.", "natural": "You have mostly let the coast keep working the way it naturally does, and the habitat shows it."}, "town": {"assetLost": "And we lost a building to the sea -- exactly what we were afraid of.", "roadRetreated": "We had to give up Cliff Road -- moved back, or just gone. The community built that road and people depend on it.", "beachWide": "The beach is wider than ever, and the visitors love it.", "beachThin": "The beach in front has worn thin, and a thin beach keeps the crowds away.", "tooManyWalls": "The whole front is turning into a wall of concrete, which is not the seaside people come for."}}, "Q": [{"n": 1, "tie": "Processes (4.2 / 4.3)", "q": "Which parts of the coastline changed the most over the 30 years? Explain why those places changed faster than others.", "lookFor": ["headland", "bay", "cliff", "wave energy", "sheltered", "exposed", "erosion", "deposition", "longshore", "drift", "beach"], "selfcheck": "A strong answer points to specific features (exposed headland or cliff versus sheltered bay) and links the shape of the coast to how hard the waves hit -- not just names the place, but explains the process."}, {"n": 2, "tie": "Trade-offs (4.2)", "q": "Describe the hardest choice you had to make. What did you gain from that decision, and what did you give up?", "lookFor": ["wall", "retreat", "nourish", "protect", "beach", "sand", "natural", "cost", "concrete", "erosion", "damage"], "selfcheck": "A strong answer names the decision, explains what it protected or improved, and is honest about the downside -- not just what worked, but what it cost or what it harmed."}, {"n": 3, "tie": "Competing values (4.2 / 4.5)", "q": "Your three advisers did not always agree. What made it hard to keep all of them happy at the same time?", "lookFor": ["traditional owners", "ecology", "town", "river mouth", "wall", "beach", "concrete", "natural", "estuary", "habitat", "sand"], "selfcheck": "A strong answer identifies at least two competing interests and explains why satisfying one made it harder to satisfy another -- not just lists them, but shows the actual conflict."}, {"n": 4, "tie": "Advice and reasoning (4.5)", "q": "Based on what you saw, what is the most important piece of advice you would give a real coastal council? Explain your reasoning.", "lookFor": ["risk", "erosion", "distance", "setback", "build", "cliff", "natural", "long", "future", "community", "plan"], "selfcheck": "A strong answer draws directly on what happened in the simulation to support the advice -- not a general statement, but something specific that the 30 years showed."}], "C": {"KFLUX": 0.13, "MOVEFRAC": 0.9, "STORM_P": 0.18, "STORM_MULT": 1.7, "CLIFF_K": 0.048, "BEACH_BUFFER": 0.85, "ASSET_LIMIT": 0.62, "STORM_LOSS": 0.05, "NOURISH": 0.06, "NOURISH_WEAR": 0.5, "SUPPLY": 0.3, "EXPORT_SCALE": 0.35, "DRIFT_FLOOR": 0.18, "FOCUS_LO": 0.75, "FOCUS_HI": 1.3, "OFF_SAND": 34, "OFF_RET": 70, "BEACH_LOST": 0.12, "BUDGET": 60, "APP_LIMIT": 2}}, C=D.C, SW=norm(D.SWELL), $=id=>document.getElementById(id);
+const BEACH_SEGS=[5,6,7,9,10];
+const START_BEACH = BEACH_SEGS.reduce((a,i)=>a+D.SEG[i].sand,0)/BEACH_SEGS.length;
+function norm(v){const m=Math.hypot(v[0],v[1])||1;return [v[0]/m,v[1]/m];}
+function dot(a,b){return a[0]*b[0]+a[1]*b[1];}
+
+/* ===== geometry from base positions (sea is up; seaward normal points to smaller y) ===== */
+function geom(){
+  const P=D.SEG.map(s=>[s.bx,s.by]), N=P.length, g=[];
+  for(let i=0;i<N;i++){
+    const a=P[Math.max(0,i-1)], b=P[Math.min(N-1,i+1)];
+    let t=norm([b[0]-a[0], b[1]-a[1]]);
+    let n=[-t[1],t[0]]; if(n[1]>0) n=[-n[0],-n[1]];     // seaward = up (y<0)
+    const inward=[-n[0],-n[1]];
+    const facing=Math.max(0, dot(SW, inward));           // faces the incoming swell?
+    const avgBy=(a[1]+b[1])/2, d=avgBy-P[i][1];
+    const focus=clamp(C.FOCUS_LO + (d+40)/80*(C.FOCUS_HI-C.FOCUS_LO), C.FOCUS_LO, C.FOCUS_HI);
+    g.push({t,n,inward,facing,focus});
+  }
+  return g;
+}
+function energyOf(st,i,emult){
+  const s=st.seg[i], gg=st.g[i];
+  let e=s.energyBase*(0.55+0.45*gg.facing)*gg.focus*emult;
+  return e;
+}
+
+/* ===== housing helpers ===== */
+function houseOn(st,id){return st.apps[id]==="approve";}
+function approvedCount(st){return D.HOUSING.filter(h=>houseOn(st,h.id)).length;}
+
+/* ===== pure sim ===== */
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function initState(){
+  return {seg:D.SEG.map(s=>({...s,energyBase:s.energy,sand:s.sand,dune:s.dune,retreat:0,lost:false})),
+          g:geom(), meas:D.SEG.map(()=> "none"),
+          apps:{clifftop:null,beachfront:null,setback:null}, houseLost:{}, stake:null,
+          spend:0, year:0};
+}
+function applyApprovals(st){
+  // clifftop homes: built on the soft cliff at The Shoulder, at risk from cliff retreat
+  if(houseOn(st,'clifftop')) st.seg[1].asset='houses';
+  // beachfront homes: clearing the land thins the dune vegetation buffer
+  if(houseOn(st,'beachfront')) st.seg[6].dune=Math.max(0,st.seg[6].dune-0.25);
+}
+function stepYear(st, stormR){
+  const N=st.seg.length, s=st.seg, m=st.meas, P=s.map(x=>[x.bx,x.by]);
+  const storm=stormR<C.STORM_P, emult=storm?C.STORM_MULT:1;
+  const E=[]; for(let i=0;i<N;i++) E[i]=energyOf(st,i,emult);
+  for(let i=0;i<N;i++) if(m[i]==="seawall"){const nb=i+1; if(nb<N) E[nb]+=0.18*emult;}
+  const move=s.map(()=>0);
+  for(let i=0;i<N-1;i++){
+    const dir=norm([P[i+1][0]-P[i][0], P[i+1][1]-P[i][1]]);
+    let along=dot(SW,dir); if(along>0) along=Math.max(along,C.DRIFT_FLOOR);   // shore keeps feeding sand east even where it turns away
+    const Eb=(E[i]+E[i+1])/2;
+    let Q=C.KFLUX*Eb*along;
+    if(Q>0 && m[i]==="groyne") Q*=0.2;
+    if(Q<0 && m[i+1]==="groyne") Q*=0.2;
+    if(Q>0){const amt=Math.min(Q, s[i].sand*C.MOVEFRAC); move[i]-=amt; move[i+1]+=amt;}
+    else   {const amt=Math.min(-Q, s[i+1].sand*C.MOVEFRAC); move[i+1]-=amt; move[i]+=amt;}
+  }
+  move[0]+=C.KFLUX*E[0]*C.SUPPLY;
+  move[N-1]-=C.EXPORT_SCALE*Math.min(C.KFLUX*E[N-1]*Math.max(dot(SW,norm([P[N-1][0]-P[N-2][0],P[N-1][1]-P[N-2][1]])),0), s[N-1].sand*C.MOVEFRAC);
+  for(let i=0;i<N;i++){
+    s[i].sand+=move[i];
+    if(m[i]==="nourish") s[i].sand+=C.NOURISH-C.NOURISH*C.NOURISH_WEAR;
+    if(storm && !s[i].cliff && E[i]>0.4) s[i].sand-=C.STORM_LOSS;
+    if(m[i]==="seawall") s[i].sand=Math.min(s[i].sand,0.05);
+    const cap=s[i].kind==="spit"?1.25:1.0;
+    s[i].sand=clamp(s[i].sand,0,cap);
+  }
+  for(let i=0;i<N;i++){ if(s[i].cliff && s[i].soft>0.1){
+    const excess=Math.max(0, E[i]*(1-C.BEACH_BUFFER*Math.min(s[i].sand,1)));
+    let add=C.CLIFF_K*excess*s[i].soft;
+    if(m[i]==="seawall") add=0;
+    s[i].retreat+=add;
+    if(s[i].asset && !s[i].lost && m[i]!=="retreat" && s[i].retreat>=C.ASSET_LIMIT) s[i].lost=true;
+  }}
+  // beachfront homes are flooded if the beach in front washes away
+  if(houseOn(st,'beachfront') && s[5].sand < C.BEACH_LOST) st.houseLost.beachfront=true;
+  st.year++;
+}
+function run(st,years,rng){ for(let y=0;y<years;y++) stepYear(st,rng()); }
+function outcome(st){
+  const s=st.seg;
+  const beach=BEACH_SEGS.reduce((a,i)=>a+s[i].sand,0)/BEACH_SEGS.length;
+  const dunes=(s[5].dune+s[6].dune)/2, assetsLost=s.filter(x=>x.lost).length;
+  const estuary=clamp((s[8].sand/0.34)*0.55+(s[9].sand/0.62)*0.45,0,1);
+  const walled=st.meas.filter(x=>x==="seawall"||x==="groyne").length;
+  const clifftopLost=houseOn(st,'clifftop')&&s[1].lost, beachLost=!!st.houseLost.beachfront;
+  const housesLost=(clifftopLost?1:0)+(beachLost?1:0);
+  return {beach,dunes,assetsLost,estuary,walled,startBeach:START_BEACH,clifftopLost,beachLost,housesLost};
+}
+/* Each adviser gets a happiness score out of 10. A balanced plan tops out around 8 each;
+   you can push one adviser higher only by upsetting the others. */
+function voiceScores(st,o){
+  const m=st.meas, sb=o.startBeach||1;
+  const hard=m.filter(x=>x==="seawall"||x==="groyne").length;
+  const wallSite=[7,8].some(i=>m[i]==="seawall"||m[i]==="groyne");          // hard structure on township / river mouth
+  const retreatedN=st.seg.filter((s,i)=>s.asset&&(s.cliff||s.kind==="beach")&&m[i]==="retreat").length;
+  const setback=houseOn(st,'setback'), growth=approvedCount(st)>=1;
+  const beachR=o.beach/sb;
+  // ---- Town: wide beach, assets kept safe, some growth; dislikes losing/retreating assets and a wall of concrete
+  let town=2.4;
+  town+=clamp(beachR/1.12,0,1)*3.6;
+  town+=o.assetsLost===0?2.4:0;  town-=o.assetsLost*2.2;
+  town-=o.housesLost*1.6;        town-=retreatedN*1.5;
+  town+=growth?1.3:0;           town-=Math.max(0,hard-3)*1.3;
+  // ---- Eco: healthy dunes and estuary, and as little concrete as possible. One or two structures
+  // are tolerated; the penalty grows fast after that, so a wall-heavy coast collapses their score.
+  let eco=5.1;
+  eco+=clamp(o.dunes/0.52,0,1)*2.5;
+  eco+=clamp(o.estuary/0.27,0,1)*2.6;
+  eco-=(0.4*hard + 0.3*hard*hard);  eco-=setback?0.4:0;
+  // ---- Owners: respecting the site (healthy estuary, no wall on it, no development against it)
+  // sits around 8; actively keeping the estuary thriving can lift them higher.
+  let owners=3.9;
+  owners+=clamp(o.estuary/0.28,0,1.35)*4.8;
+  owners-=wallSite?6.5:0;  owners-=setback?2.0:0;  owners-=o.estuary<0.20?2.5:0;
+  const r=v=>Math.round(clamp(v,0,10));
+  return {town:r(town),eco:r(eco),owners:r(owners)};
+}
+function scoreTier(s){return s>=8?"good":s>=5?"mixed":"bad";}
+function voiceStates(st,o){
+  const sc=voiceScores(st,o);
+  return {owners:scoreTier(sc.owners),eco:scoreTier(sc.eco),town:scoreTier(sc.town)};
+}
+function engineerText(st,o){
+  const s=st.seg, b=[];
+  const dB=o.beach-o.startBeach;
+  b.push(dB>0.06
+    ? "Overall the beaches built out. Sand drifting along the shore piled up in the sheltered bay even as the exposed headland and cliffs wore back -- a coast like this rarely thins evenly, the waves just move sand from the exposed spots and drop it where it is sheltered."
+    : dB<-0.06
+    ? "Overall the beaches lost a little sand: some washed off the downdrift end and storms carried some out to sea, faster than the updrift supply could replace it. Even so the coast did not thin evenly -- the exposed cliffs and headland gave up sand while the sheltered bay held on to more of it."
+    : "Overall the beaches roughly held their own. What the exposed cliffs and headland lost, the sheltered bay and the spit mostly gained: the sand was reshuffled along the coast rather than simply vanishing.");
+  const lost=s.filter(x=>x.lost && x.asset!=="houses").map(x=>x.asset);
+  if(lost.length) b.push("The "+lost.join(" and the ")+" "+(lost.length>1?"have":"has")+" gone over the wearing cliff.");
+  if(o.clifftopLost) b.push("The new clifftop homes have fallen over the cliff -- a costly mistake.");
+  if(o.beachLost) b.push("The beachfront homes have been flooded after the beach in front washed away.");
+  if(st.meas.includes("seawall")) b.push("Where sea walls were built the cliff is held, but the beach in front has been washed down.");
+  if((st.meas.includes("groyne")||st.meas.includes("seawall")) && s[10].sand<0.30)
+    b.push("Starved of sand by the structures up the coast, Far Beach has worn away.");
+  if(st.meas.includes("nourish")) b.push("The added sand makes the beaches wider, but it keeps washing away and needs topping up.");
+  if(st.meas.includes("retreat")) b.push("Where buildings were moved back, the shore was left to find its own line.");
+  if(s[9].sand>0.85) b.push("The spit has grown as sand drifting along the shore drops past the river mouth.");
+  return b.join(" ");
+}
+const Sim={initState,stepYear,run,outcome,voiceStates,voiceScores,engineerText,applyApprovals,geom,energyOf,START_BEACH,houseOn,approvedCount};
+if(typeof window!=="undefined"){ window.Sim=Sim; window._drawSVG=drawSVG; }
+
+/* ===== MAP (pure: state -> SVG) ===== */
+const MW=960, MH=560;
+function coastPts(st){
+  return st.seg.map((s,i)=>{
+    const off=(s.sand-D.SEG[i].sand)*C.OFF_SAND - s.retreat*C.OFF_RET;
+    return [s.bx+st.g[i].n[0]*off, s.by+st.g[i].n[1]*off];
+  });
+}
+function coastYat(pts,x){
+  for(let i=0;i<pts.length-1;i++){ if(x>=pts[i][0]&&x<=pts[i+1][0]){
+    const t=(x-pts[i][0])/((pts[i+1][0]-pts[i][0])||1); return pts[i][1]+t*(pts[i+1][1]-pts[i][1]); }}
+  return x<pts[0][0]?pts[0][1]:pts[pts.length-1][1];
+}
+function nearest(st,pt){let bi=0,bd=1e9; st.seg.forEach((s,i)=>{const d=Math.hypot(s.bx-pt[0],s.by-pt[1]); if(d<bd){bd=d;bi=i;}}); return {i:bi,d:bd};}
+function fx(n){return (+n).toFixed(1);}
+function house(cx,gy,w,h,wall,opa){
+  const x=cx-w/2;
+  return `<rect x="${fx(x)}" y="${fx(gy-h)}" width="${fx(w)}" height="${fx(h)}" fill="${wall}" opacity="${opa}"/>`+
+         `<path d="M${fx(x-2)} ${fx(gy-h)} L${fx(cx)} ${fx(gy-h-w*0.55)} L${fx(x+w+2)} ${fx(gy-h)} Z" fill="#6e3522" opacity="${opa}"/>`+
+         `<rect x="${fx(cx-1.6)}" y="${fx(gy-h*0.62)}" width="3.2" height="${fx(h*0.5)}" fill="#5a4636" opacity="${opa}"/>`;
+}
+function alabel(cx,y,txt,col){return `<text x="${fx(cx)}" y="${fx(y)}" font-size="10.5" text-anchor="middle" font-weight="600" fill="${col||'#3a3226'}">${txt}</text>`;}
+function drawSVG(st, sel, stake){
+  const pts=coastPts(st), N=st.seg.length, ran=st.year>0;
+  let o=`<svg viewBox="0 0 ${MW} ${MH}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,sans-serif">`;
+  o+=`<rect x="0" y="0" width="${MW}" height="${MH}" fill="#bcd9e6"/>`;            // sea (waves drawn on canvas overlay)
+  // land polygon (top edge = coastline)
+  let land=`M 0 ${pts[0][1].toFixed(1)} `;
+  pts.forEach(p=>land+=`L ${p[0].toFixed(1)} ${p[1].toFixed(1)} `);
+  land+=`L ${MW} ${pts[N-1][1].toFixed(1)} L ${MW} ${MH} L 0 ${MH} Z`;
+  o+=`<path d="${land}" fill="#d7cfb8"/>`;
+  let grass=`M 0 ${(pts[0][1]+24).toFixed(1)} `;
+  pts.forEach(p=>grass+=`L ${p[0].toFixed(1)} ${(p[1]+24).toFixed(1)} `);
+  grass+=`L ${MW} ${(pts[N-1][1]+24).toFixed(1)} L ${MW} ${MH} L 0 ${MH} Z`;
+  o+=`<path d="${grass}" fill="#cdc9ac" opacity="0.55"/>`;
+  // beach band (sand) seaward of the coastline -- strong sand colour
+  let beachOuter=[];
+  for(let i=0;i<N;i++){const bp=3+st.seg[i].sand*38; beachOuter.push([pts[i][0]+st.g[i].n[0]*bp, pts[i][1]+st.g[i].n[1]*bp]);}
+  let bp=`M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)} `;
+  for(let i=1;i<N;i++) bp+=`L ${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)} `;
+  for(let i=N-1;i>=0;i--) bp+=`L ${beachOuter[i][0].toFixed(1)} ${beachOuter[i][1].toFixed(1)} `;
+  o+=`<path d="${bp} Z" fill="#f2c543"/>`;
+  // dunes (green) just landward at dune-bearing nodes
+  for(let i=0;i<N;i++){ if(st.seg[i].dune>0.25){const x=pts[i][0], y=pts[i][1];
+    o+=`<circle cx="${x.toFixed(1)}" cy="${(y+16).toFixed(1)}" r="${(7+st.seg[i].dune*9).toFixed(1)}" fill="#7a9b5e" opacity="0.9"/>`;}}
+  // river mouth channel
+  const ex8=pts[8][0];
+  o+=`<path d="M ${(ex8-16)} ${pts[8][1].toFixed(1)} q 18 60 6 120 l 22 0 q 10 -60 4 -120 z" fill="#3d7fb8"/>`;
+  // ===== old coastline as a dotted shadow (only after the years have run) =====
+  if(ran){
+    let op0=`M ${D.SEG[0].bx} ${D.SEG[0].by} `;
+    D.SEG.forEach(s=>op0+=`L ${s.bx} ${s.by} `);
+    o+=`<path d="${op0}" fill="none" stroke="#3a2f22" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round" opacity="0.55"/>`;
+    o+=`<path d="${op0}" fill="none" stroke="#3a2f22" stroke-width="2.4" stroke-dasharray="9 7" opacity="0.7"/>`;
+    o+=`<text x="${D.SEG[2].bx+6}" y="${D.SEG[2].by-34}" font-size="11" font-weight="700" fill="#3a2f22" opacity="0.85">- - - where the coast started</text>`;
+  }
+  // ===== assets (drawn landward) =====
+  st.seg.forEach((s,i)=>{ if(!s.asset) return;
+    const bx0=D.SEG[i].bx, by0=D.SEG[i].by;                 // assets stay at a fixed spot; the coastline erodes toward them
+    const cx=bx0, gy=by0+42, lost=s.lost, opa=lost?0.4:1;
+    if(s.asset==="road"){
+      const tg=st.g[i].t, hw=44, ly=by0+20;
+      const ax=cx-tg[0]*hw, ay=ly-tg[1]*hw, bxr=cx+tg[0]*hw, byr=ly+tg[1]*hw;
+      o+=`<line x1="${fx(ax)}" y1="${fx(ay)}" x2="${fx(bxr)}" y2="${fx(byr)}" stroke="${lost?'#b3a99a':'#6b6258'}" stroke-width="9" stroke-linecap="round" opacity="${opa}"/>`;
+      o+=`<line x1="${fx(ax)}" y1="${fx(ay)}" x2="${fx(bxr)}" y2="${fx(byr)}" stroke="#f2e9d0" stroke-width="1.4" stroke-dasharray="6 6" opacity="${opa}"/>`;
+      o+=alabel(cx, gy, lost?"Cliff Road (lost)":"Cliff Road", lost?'#b1492f':'#3a3226');
+      if(lost) o+=`<text x="${fx(cx)}" y="${fx(by0+8)}" font-size="14" text-anchor="middle" fill="#b1492f">&#10005;</text>`;
+    }
+    if(s.asset==="houses"){
+      const label=i===1?(lost?"Clifftop homes (lost!)":"Clifftop homes"):(lost?"Clifftop houses (lost)":"Clifftop houses");
+      for(let k=-1;k<2;k++) o+=house(cx+k*21, gy, 16, 13, lost?'#c9b7a8':'#c46a4a', opa);
+      o+=alabel(cx, gy+12, label, lost?'#b1492f':'#3a3226');
+      if(lost) o+=`<text x="${fx(cx)}" y="${fx(gy-26)}" font-size="15" text-anchor="middle" fill="#b1492f">&#10005;</text>`;
+    }
+    if(s.asset==="town"){
+      const n=st.g[i].n, jx=bx0, jy=by0;
+      const exj=jx+n[0]*48, eyj=jy+n[1]*48;
+      o+=`<line x1="${fx(jx)}" y1="${fx(jy)}" x2="${fx(exj)}" y2="${fx(eyj)}" stroke="#8a6d4b" stroke-width="4"/>`;
+      for(let p=1;p<=3;p++){const px=jx+n[0]*12*p, py=jy+n[1]*12*p;
+        o+=`<line x1="${fx(px-3)}" y1="${fx(py)}" x2="${fx(px+3)}" y2="${fx(py)}" stroke="#6f5538" stroke-width="2"/>`;}
+      o+=`<ellipse cx="${fx(exj)}" cy="${fx(eyj-2)}" rx="9" ry="3.6" fill="#33414b"/>`;
+      o+=`<line x1="${fx(exj)}" y1="${fx(eyj-2)}" x2="${fx(exj)}" y2="${fx(eyj-15)}" stroke="#33414b" stroke-width="1.4"/>`;
+      o+=`<path d="M${fx(exj)} ${fx(eyj-14)} L${fx(exj+8)} ${fx(eyj-6)} L${fx(exj)} ${fx(eyj-5)} Z" fill="#e7e2d6"/>`;
+      const hh=[15,22,13,18,14,20], wl=['#7d7787','#9a6440','#646f78','#86745c','#74707c','#8a5a3c'];
+      for(let k=0;k<6;k++){ const bxk=cx+(k-2.5)*16, h=hh[k];
+        o+=`<rect x="${fx(bxk-6)}" y="${fx(gy-h)}" width="12" height="${fx(h)}" fill="${wl[k]}"/>`;
+        o+=`<path d="M${fx(bxk-7)} ${fx(gy-h)} L${fx(bxk)} ${fx(gy-h-6)} L${fx(bxk+7)} ${fx(gy-h)} Z" fill="#46414c"/>`;
+        o+=`<rect x="${fx(bxk-3.2)}" y="${fx(gy-h+3)}" width="2.4" height="2.4" fill="#ffe7a8"/><rect x="${fx(bxk+0.8)}" y="${fx(gy-h+3)}" width="2.4" height="2.4" fill="#ffe7a8"/>`;
+      }
+      o+=`<line x1="${fx(cx-0.5)}" y1="${fx(gy-22)}" x2="${fx(cx-0.5)}" y2="${fx(gy-34)}" stroke="#46414c" stroke-width="2"/>`;
+      o+=`<rect x="${fx(cx-3)}" y="${fx(gy-39)}" width="5" height="5" fill="#cf8336"/>`;
+      o+=alabel(cx, gy+12, "Wattle Bay township", '#3a3226');
+    }
+  });
+  // small dock at The Steps headland
+  {const dk=pts[4], dn=st.g[4].n;
+    const dex=dk[0]+dn[0]*38, dey=dk[1]+dn[1]*38;
+    o+=`<line x1="${fx(dk[0])}" y1="${fx(dk[1])}" x2="${fx(dex)}" y2="${fx(dey)}" stroke="#7a6448" stroke-width="4" stroke-linecap="round"/>`;
+    for(let p=1;p<=3;p++){const px=dk[0]+dn[0]*12*p, py=dk[1]+dn[1]*12*p;
+      o+=`<line x1="${fx(px-3)}" y1="${fx(py)}" x2="${fx(px+3)}" y2="${fx(py)}" stroke="#5e4d38" stroke-width="2.5"/>`;}
+    o+=`<ellipse cx="${fx(dex)}" cy="${fx(dey)}" rx="8" ry="3" fill="#2d3a42" opacity="0.9"/>`;
+    o+=`<line x1="${fx(dex)}" y1="${fx(dey-3)}" x2="${fx(dex)}" y2="${fx(dey-14)}" stroke="#2d3a42" stroke-width="1.2"/>`;
+    o+=`<path d="M${fx(dex)} ${fx(dey-13)} L${fx(dex+8)} ${fx(dey-7)} L${fx(dex)} ${fx(dey-6)} Z" fill="#e0dbd0"/>`;}
+  // ===== feature name labels on the coast =====
+  // sea label + wave hint
+  o+=`<text x="72" y="58" font-size="12.5" font-weight="700" fill="#1e5a7a" opacity="0.75">Open ocean</text>`;
+  o+=`<text x="72" y="73" font-size="10" fill="#1e5a7a" opacity="0.65">Moving waves push sand along the shore</text>`;
+  // headland
+  o+=`<text x="${fx(pts[0][0]+4)}" y="${fx(pts[0][1]-46)}" font-size="12" font-weight="700" text-anchor="middle" fill="#3a2a1a">Wattle Head</text>`;
+  o+=`<text x="${fx(pts[0][0]+4)}" y="${fx(pts[0][1]-33)}" font-size="10" text-anchor="middle" fill="#7a5238">(hard rock headland)</text>`;
+  // cliffs
+  o+=`<text x="${fx((pts[1][0]+pts[3][0])/2)}" y="${fx(pts[2][1]-42)}" font-size="11.5" font-weight="700" text-anchor="middle" fill="#8b3a1f">Soft limestone cliffs</text>`;
+  o+=`<text x="${fx((pts[1][0]+pts[3][0])/2)}" y="${fx(pts[2][1]-29)}" font-size="10" text-anchor="middle" fill="#8b3a1f">(wear back fast)</text>`;
+  // main beach
+  o+=`<text x="${fx(pts[5][0])}" y="${fx(pts[5][1]+58)}" font-size="12" font-weight="700" text-anchor="middle" fill="#3a566b">Main Beach</text>`;
+  // dune reserve
+  o+=`<text x="${fx(pts[6][0])}" y="${fx(pts[6][1]+70)}" font-size="11" font-weight="700" text-anchor="middle" fill="#2a6b2a">Dune Reserve</text>`;
+  o+=`<text x="${fx(pts[6][0])}" y="${fx(pts[6][1]+83)}" font-size="9.5" text-anchor="middle" fill="#2a6b2a">(plants hold the sand)</text>`;
+  // river mouth -- significant site callout
+  {const rx=pts[8][0], ry=pts[8][1];
+    o+=`<rect x="${fx(rx-52)}" y="${fx(ry+36)}" width="104" height="36" rx="5" fill="#7c3aed" opacity="0.1" stroke="#7c3aed" stroke-width="1.5"/>`;
+    o+=`<text x="${fx(rx)}" y="${fx(ry+51)}" font-size="11" font-weight="700" text-anchor="middle" fill="#7c3aed">River mouth</text>`;
+    o+=`<text x="${fx(rx)}" y="${fx(ry+63)}" font-size="9.5" text-anchor="middle" fill="#7c3aed">significant site</text>`;}
+  // spit
+  o+=`<text x="${fx(pts[9][0])}" y="${fx(pts[9][1]-24)}" font-size="11" font-weight="700" text-anchor="middle" fill="#3a566b">The Spit</text>`;
+  o+=`<text x="${fx(pts[9][0])}" y="${fx(pts[9][1]-12)}" font-size="9.5" text-anchor="middle" fill="#3a566b">(sand builds up here)</text>`;
+  // longshore drift arrow label across the bay
+  {const bx=(pts[5][0]+pts[7][0])/2, by=pts[6][1]-10;
+    o+=`<text x="${fx(bx)}" y="${fx(by)}" font-size="10" text-anchor="middle" fill="#3a566b" opacity="0.7">--&gt; sand moves this way (longshore drift) --&gt;</text>`;}
+
+  // ===== housing plot markers (tap to approve) =====
+  D.HOUSING.forEach(h=>{
+    const node=h.node, off=h.risk==='cliff'?74:h.risk==='beach'?78:90;
+    const mx=D.SEG[node].bx, my=D.SEG[node].by+off, on=houseOn(st,h.id);
+    const col=h.risk==='cliff'?'#b1492f':h.risk==='beach'?'#cf8336':'#3a8a4e';
+    const W=72, H=60, bgFill=on?"#f4fff6":"#fffef2";
+    // shadow
+    o+=`<rect x="${fx(mx-W/2+2)}" y="${fx(my-6)}" width="${W}" height="${H}" rx="7" fill="#0002"/>`;
+    // main box
+    o+=`<rect x="${fx(mx-W/2)}" y="${fx(my-8)}" width="${W}" height="${H}" rx="7" fill="${bgFill}" stroke="${col}" stroke-width="${on?3:2}" stroke-dasharray="${on?'':'6 4'}"/>`;
+    // house art inside
+    if(on){o+=house(mx-12,my+32,15,12,'#c46a4a',1)+house(mx+5,my+32,14,12,'#7d7787',1)+house(mx+20,my+32,13,11,'#9a6440',1);}
+    else  {o+=house(mx-8,my+32,14,11,'#b9b2a6',0.7)+house(mx+8,my+32,14,11,'#b9b2a6',0.7);}
+    // money badge
+    o+=`<rect x="${fx(mx-22)}" y="${fx(my-4)}" width="44" height="16" rx="4" fill="${col}"/>`;
+    o+=`<text x="${fx(mx)}" y="${fx(my+8)}" font-size="11" font-weight="800" text-anchor="middle" fill="#fff">+${h.bonus} money</text>`;
+    // status text
+    if(on){ o+=`<text x="${fx(mx)}" y="${fx(my+48)}" font-size="11.5" font-weight="800" text-anchor="middle" fill="${col}">&#10003; APPROVED</text>`; }
+    else  { o+=`<text x="${fx(mx)}" y="${fx(my+48)}" font-size="10.5" font-weight="700" text-anchor="middle" fill="${col}">tap to approve</text>`; }
+    // site name label below box
+    o+=alabel(mx, my+H+4, h.name, col);
+    // big invisible click target
+    o+=`<rect x="${fx(mx-W/2)}" y="${fx(my-8)}" width="${W}" height="${H}" rx="7" fill="#000" opacity="0" style="cursor:pointer" onclick="toggleHouse('${h.id}')"/>`;
+  });
+  // measure badges + click hotspots on coast nodes
+  const _nk={headland:'#3d6a8a',cliff:'#8b3a1f',beach:'#3a566b',dune:'#237a3b',estuary:'#7c3aed',spit:'#3a566b',town:'#b35a1f'};
+  st.seg.forEach((s,i)=>{const x=pts[i][0], y=pts[i][1];
+    // visible interaction ring: shows when no measure set and not selected, so students see where to click
+    if(st.meas[i]==="none"&&sel!==i){
+      const nc=_nk[s.kind]||'#3a566b';
+      o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="19" fill="${nc}" opacity="0.13" stroke="${nc}" stroke-width="2" stroke-dasharray="5 3" pointer-events="none"/>`;
+      o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${nc}" opacity="0.42" pointer-events="none"/>`;
+    }
+    // name tags for nodes without a pre-existing label
+    if(i===1) o+=`<text x="${x.toFixed(1)}" y="${(y-25).toFixed(1)}" font-size="9.5" text-anchor="middle" font-weight="700" fill="#8b3a1f" pointer-events="none">The Shoulder</text>`;
+    if(i===4) o+=`<text x="${(x+24).toFixed(1)}" y="${(y-22).toFixed(1)}" font-size="9.5" text-anchor="start" font-weight="700" fill="#3d6a8a" pointer-events="none">The Steps</text>`;
+    if(i===10) o+=`<text x="${x.toFixed(1)}" y="${(y-25).toFixed(1)}" font-size="9.5" text-anchor="middle" font-weight="700" fill="#3a566b" pointer-events="none">Far Beach</text>`;
+    if(st.meas[i]!=="none"){o+=`<circle cx="${x.toFixed(1)}" cy="${(y-16).toFixed(1)}" r="11" fill="#cf8336" stroke="#fff" stroke-width="2"/>`+
+       `<text x="${x.toFixed(1)}" y="${(y-12).toFixed(1)}" font-size="12" text-anchor="middle" fill="#fff" font-weight="700">${D.STRAT[st.meas[i]].letter}</text>`;}
+    if(sel===i) o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="23" fill="#cf8336" opacity="0.14"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="23" fill="none" stroke="#cf8336" stroke-width="2.5"/>`;
+    o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="26" fill="#000" opacity="0" style="cursor:pointer" onclick="clickCoast(${i})"/>`;
+  });
+  // stakeholder focus highlight -- pointer-events:none so the click targets underneath still work
+  if(stake){const v=D.VOICES.find(x=>x.id===stake);
+    if(v&&v.focus) v.focus.forEach(i=>{const x=pts[i][0],y=pts[i][1];
+      o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="21" fill="${v.colour}" opacity="0.14" pointer-events="none"/>`+
+         `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="21" fill="none" stroke="${v.colour}" stroke-width="2.5" opacity="0.9" pointer-events="none"/>`;});}
+  o+=`<g stroke="#1d2a33" stroke-width="1.5" fill="#1d2a33"><line x1="${MW-30}" y1="42" x2="${MW-30}" y2="18"/><path d="M${MW-30} 18 l-4 7 l4 -2 l4 2 z"/><text x="${MW-34}" y="56" font-size="10">N</text></g>`;
+  o+=`<rect x="24" y="${MH-26}" width="72" height="5" fill="#1d2a33"/><text x="24" y="${MH-30}" font-size="10" fill="#1d2a33">0&#160;&#160;&#160;&#160;1 km</text>`;
+  return o+`</svg>`;
+}
+
+/* ===== WAVE CANVAS (sits on top of SVG; pointer-events:none) ===== */
+let _wc=null, _wx=null, _wt=0;
+function initWaveCanvas(){
+  if(typeof document==='undefined') return;
+  const wrap=document.querySelector&&document.querySelector('.mapwrap');
+  if(!wrap||_wc) return;
+  _wc=document.createElement('canvas');
+  _wc.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2';
+  wrap.style.position='relative';
+  wrap.appendChild(_wc);
+  _wx=_wc.getContext('2d');
+  function sizeWave(){_wc.width=wrap.offsetWidth||640;_wc.height=wrap.offsetHeight||400;}
+  sizeWave();
+  window.addEventListener('resize',sizeWave);
+  waveFrame();
+}
+/* Wave refraction: far out the crests are straight lines square to the deep-water swell.
+   As they reach shallow water near the coast they slow and bend to lie parallel to the
+   shoreline -- so they wrap around the headlands (focusing energy there) and curve into
+   the bay. We get that by blending each crest, point by point, from its straight deep-water
+   position toward a line that hugs the coast, weighted by how close to shore it is. */
+function waveFrame(){
+  requestAnimationFrame(waveFrame);
+  _wt+=0.7;
+  if(!_wc||!_wx) return;
+  const W=_wc.width, H=_wc.height;
+  _wx.clearRect(0,0,W,H);
+  // match the SVG's preserveAspectRatio="xMidYMid meet" so the waves sit on the coastline
+  const scl=Math.min(W/960,H/560), oX=(W-960*scl)/2, oY=(H-560*scl)/2;
+  const sx=SW[0], sy=SW[1];                              // swell travel direction (down-right)
+  const pts=(typeof st!=='undefined'&&st)?coastPts(st):null;
+  if(!pts) return;
+  const SPACING=44, Dref=190, phase=(_wt*0.6)%SPACING;   // Dref = depth over which waves refract
+  for(let k=0;k<30;k++){
+    const Cc=phase + k*SPACING - 150;                    // crest phase: increasing = closer to shore
+    _wx.beginPath(); let started=false, shMax=0;
+    for(let x=-30;x<=995;x+=8){
+      const coastY=coastYat(pts,x);
+      const deepY=(Cc - x*sx)/sy;                        // straight deep-water crest
+      const shoreY=coastY-8;                             // a line that hugs the shore
+      const sh=clamp(1-(coastY-deepY)/Dref,0,1);         // 0 far out .. 1 at the shore
+      const y=deepY*(1-sh)+shoreY*sh;                    // bend toward shore-parallel as it shoals
+      if(y<coastY-5 && y>-60){
+        const cx=oX+x*scl, cy=oY+y*scl;
+        if(!started){_wx.moveTo(cx,cy);started=true;}else _wx.lineTo(cx,cy);
+        if(sh>shMax) shMax=sh;
+      } else started=false;
+    }
+    const a=0.14*(1-0.5*shMax);                          // crests fade as they pile up and break on the shore
+    _wx.strokeStyle='rgba(22,92,132,'+Math.max(0,a).toFixed(3)+')';
+    _wx.lineWidth=1.5; _wx.stroke();
+  }
+}
+
+/* ===== UI ===== */
+const TOTAL_DECADES=3;
+let st, sel=null, selHouse=null, decadesRun=0, reflectOpen=false, animating=false;
+function redraw(disp){ $("map").innerHTML=drawSVG(disp||st, sel, st.stake); }
+
+function availBudget(){
+  return C.BUDGET + D.HOUSING.reduce((a,h)=>a+(houseOn(st,h.id)?(h.bonus||0):0),0);
+}
+function computeSpend(meas){return (meas||st.meas).reduce((a,k)=>a+((D.STRAT[k]&&D.STRAT[k].cost)||0),0);}
+function budgetRowHTML(){
+  const avail=availBudget(), spent=computeSpend(), rem=avail-spent;
+  const pct=Math.min(Math.round(spent/avail*100),100);
+  const col=pct>=90?"#b1492f":pct>=65?"#cf8336":"#3a8a4e";
+  return `<div class="budget-row"><span><strong>Money:</strong> ${rem} of ${avail} left</span><div class="budget-bar-wrap"><div class="budget-bar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+}
+
+/* ===== STRATEGY TOOLTIP DIAGRAMS ===== */
+const _STSVG={
+seawall:`<svg viewBox="0 0 192 80" width="192" height="80" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,sans-serif">
+<rect width="192" height="80" fill="#bcd9e6"/>
+<rect x="143" y="22" width="49" height="58" fill="#d7cfb8"/>
+<rect x="108" y="48" width="35" height="32" fill="#f2c543" opacity="0.7"/>
+<rect x="0" y="62" width="108" height="18" fill="#7aafcc" opacity="0.45"/>
+<rect x="139" y="18" width="10" height="62" rx="2" fill="#808080"/>
+<polygon points="132,78 141,78 141,71 150,78" fill="#909090"/>
+<path d="M4 28 q16-12 32 0 t32 0 t26 0" fill="none" stroke="#1d5f8a" stroke-width="2.2"/>
+<path d="M4 43 q16-9 32 0 t32 0 t26 0" fill="none" stroke="#1d5f8a" stroke-width="1.3" opacity="0.6"/>
+<polygon points="124,34 133,37 124,41" fill="#1d5f8a"/>
+<line x1="92" y1="37" x2="123" y2="37" stroke="#1d5f8a" stroke-width="1.8"/>
+<text x="4" y="14" font-size="9" fill="#1a4060" font-weight="700">Sea</text>
+<text x="144" y="14" font-size="9" fill="#555" font-weight="700">Wall</text>
+<text x="145" y="66" font-size="8.5" fill="#5a4a2a">land</text>
+<text x="145" y="75" font-size="8.5" fill="#5a4a2a">protected</text>
+<text x="110" y="71" font-size="8" fill="#9a6a00">beach</text>
+<text x="108" y="79" font-size="8" fill="#9a6a00">wears away</text>
+</svg>`,
+groyne:`<svg viewBox="0 0 192 80" width="192" height="80" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,sans-serif">
+<rect width="192" height="80" fill="#bcd9e6"/>
+<rect x="0" y="50" width="192" height="30" fill="#f2c543"/>
+<rect x="0" y="44" width="192" height="6" fill="#e0aa20"/>
+<rect x="58" y="12" width="8" height="40" rx="2" fill="#7a6448"/>
+<rect x="130" y="12" width="8" height="40" rx="2" fill="#7a6448"/>
+<path d="M2 48 q28-10 56 0" fill="#f5d050" stroke="none"/>
+<path d="M66 48 q30 8 64 0" fill="#c0a428" stroke="none"/>
+<path d="M138 48 q28-8 54 0" fill="#f5d050" stroke="none"/>
+<line x1="5" y1="30" x2="187" y2="30" stroke="#1d5f8a" stroke-width="1.3" stroke-dasharray="6 4" opacity="0.7"/>
+<polygon points="182,26 191,30 182,34" fill="#1d5f8a" opacity="0.7"/>
+<text x="5" y="22" font-size="8.5" fill="#1a4060">longshore drift --&gt;</text>
+<text x="10" y="42" font-size="8" fill="#8b6a00">sand builds</text>
+<text x="74" y="42" font-size="8" fill="#7a5a18">starved</text>
+<text x="140" y="42" font-size="8" fill="#8b6a00">builds</text>
+<text x="50" y="68" font-size="8.5" fill="#5a4a2a" font-weight="700">groyne</text>
+<text x="120" y="68" font-size="8.5" fill="#5a4a2a" font-weight="700">groyne</text>
+</svg>`,
+nourish:`<svg viewBox="0 0 192 80" width="192" height="80" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,sans-serif">
+<rect width="192" height="80" fill="#bcd9e6"/>
+<rect x="132" y="14" width="60" height="66" fill="#d7cfb8"/>
+<path d="M0 52 Q42 44 78 48 Q102 52 132 44 L132 80 L0 80 Z" fill="#f2c543"/>
+<path d="M0 60 Q42 53 78 57 Q102 60 132 53" fill="none" stroke="#6a5a00" stroke-width="1.3" stroke-dasharray="5 4" opacity="0.7"/>
+<path d="M4 26 q18-12 36 0 t36 0 t36 0" fill="none" stroke="#1d5f8a" stroke-width="2.2"/>
+<path d="M4 39 q18-9 36 0 t36 0 t36 0" fill="none" stroke="#1d5f8a" stroke-width="1.3" opacity="0.6"/>
+<text x="4" y="14" font-size="9" fill="#1a4060" font-weight="700">Sea</text>
+<text x="136" y="32" font-size="8.5" fill="#5a4a2a">land</text>
+<text x="4" y="70" font-size="8.5" fill="#9a7000">wide beach added (washes away over time)</text>
+<text x="6" y="58" font-size="7.5" fill="#6a5a00" opacity="0.8">old shore - - -</text>
+</svg>`,
+retreat:`<svg viewBox="0 0 192 80" width="192" height="80" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,sans-serif">
+<rect width="192" height="80" fill="#bcd9e6"/>
+<rect x="150" y="12" width="42" height="68" fill="#d7cfb8"/>
+<path d="M0 54 Q52 44 92 50 Q112 56 150 46 L150 80 L0 80 Z" fill="#f2c543"/>
+<circle cx="6" cy="66" r="4" fill="#7a9b5e"/><circle cx="16" cy="68" r="5" fill="#7a9b5e"/><circle cx="28" cy="65" r="4" fill="#7a9b5e"/>
+<path d="M0 38 Q52 28 92 34 Q112 38 150 30" fill="none" stroke="#3a2f22" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.65"/>
+<polygon points="98,8 108,8 103,2" fill="#c46a4a"/>
+<rect x="95" y="8" width="18" height="14" fill="#c46a4a"/>
+<polygon points="126,16 136,16 131,10" fill="#c46a4a" opacity="0.35"/>
+<rect x="123" y="16" width="18" height="14" fill="#c46a4a" opacity="0.35"/>
+<line x1="113" y1="15" x2="122" y2="15" stroke="#444" stroke-width="1.5"/>
+<polygon points="120,12 128,15 120,18" fill="#444"/>
+<path d="M4 28 q18-11 36 0 t36 0" fill="none" stroke="#1d5f8a" stroke-width="2.2"/>
+<text x="4" y="14" font-size="9" fill="#1a4060" font-weight="700">Sea</text>
+<text x="4" y="38" font-size="7.5" fill="#3a2f22" opacity="0.72">old coast - - -</text>
+<text x="4" y="70" font-size="8" fill="#3a566b">new beach + dunes grow</text>
+<text x="154" y="36" font-size="8" fill="#5a4a2a">building</text>
+<text x="154" y="44" font-size="8" fill="#5a4a2a">moved back</text>
+</svg>`
+};
+function _buildStratTips(){
+  const t={};
+  ['seawall','groyne','nourish','retreat'].forEach(k=>{
+    const s=D.STRAT[k];
+    t[k]=`<div class="stip-head">${s.name}</div>${_STSVG[k]}<p class="stip-adv">+ ${s.adv}</p><p class="stip-dis">&#8722; ${s.dis}</p>`;
+  });
+  return t;
+}
+const _STIPS=_buildStratTips();
+let _stTm=null;
+function showStratTip(evt,k){
+  if(k==="none") return;
+  clearTimeout(_stTm);
+  const tip=document.getElementById("stip"); if(!tip) return;
+  tip.innerHTML=_STIPS[k]||""; tip.style.display="block";
+  const r=evt.currentTarget.getBoundingClientRect();
+  const tw=tip.offsetWidth||250;
+  let lx=r.left, ty=r.bottom+5;
+  if(lx+tw>window.innerWidth-8) lx=window.innerWidth-tw-8;
+  if(ty+tip.offsetHeight>window.innerHeight-8) ty=r.top-tip.offsetHeight-5;
+  tip.style.left=Math.max(4,lx)+"px"; tip.style.top=Math.max(4,ty)+"px";
+}
+function hideStratTip(){ _stTm=setTimeout(()=>{const t=document.getElementById("stip");if(t)t.style.display="none";},80); }
+
+/* ---- always-visible adviser cards (right column, top) ---- */
+function avatarSVG(key,col,mood){
+  const bg=col+"22";
+  if(key==="country"){   // Traditional Owners: Country / river-mouth emblem, not a fabricated portrait
+    const sunR=mood==="good"?4.8:mood==="bad"?2.2:3.4;
+    const sunCol=mood==="good"?"#f5c530":mood==="bad"?"#a08050":"#e7a33e";
+    return `<svg viewBox="0 0 34 34" width="32" height="32"><circle cx="17" cy="17" r="17" fill="${bg}"/>`+
+      `<circle cx="24.5" cy="9.5" r="${sunR}" fill="${sunCol}"/>`+
+      `<path d="M2 14 q8 -6 15 0 t15 0" fill="none" stroke="#b9863f" stroke-width="2.2"/>`+
+      `<path d="M2 22 q8 5 15 0 t15 0 V34 H2 Z" fill="#3d7fb8" opacity="0.9"/></svg>`;
+  }
+  const skin=key==="eco"?"#e7b48f":"#edc6a4", hair=key==="eco"?"#332016":"#5a3a1c";
+  const mouth=mood==="good"?`<path d="M13.5 21 q3.5 3.5 7 0" fill="none" stroke="#7a4a2a" stroke-width="1.3" stroke-linecap="round"/>`
+             :mood==="bad"?`<path d="M13.5 23 q3.5 -3 7 0" fill="none" stroke="#7a4a2a" stroke-width="1.3" stroke-linecap="round"/>`
+             :mood==="mixed"?`<path d="M13.5 22 h7" stroke="#7a4a2a" stroke-width="1.2" stroke-linecap="round" fill="none"/>`
+             :"";
+  return `<svg viewBox="0 0 34 34" width="32" height="32"><circle cx="17" cy="17" r="17" fill="${bg}"/>`+
+    `<path d="M4 34 q13 -13 26 0 Z" fill="${col}"/>`+
+    `<circle cx="17" cy="15" r="7.4" fill="${skin}"/>`+
+    `<path d="M9.6 13 q0.4 -9 7.4 -9 t7.4 9 q-3 -4.5 -7.4 -4.5 t-7.4 4.5" fill="${hair}"/>`+
+    mouth+`</svg>`;
+}
+function moodBits(m){
+  if(m==="good") return ["happy","var(--ok)"];
+  if(m==="bad") return ["unhappy","var(--no)"];
+  if(m==="mixed") return ["so-so","var(--amber)"];
+  return ["listening","var(--neutral)"];
+}
+function reactionLine(id,o,vs){
+  const m=st.meas, sb=o.startBeach, hard=m.filter(x=>x==="seawall"||x==="groyne").length;
+  const wallSite=[7,8].some(i=>m[i]==="seawall"||m[i]==="groyne");
+  const retreatedAsset=st.seg.some((s,i)=>s.asset&&(s.cliff||s.kind==="beach")&&m[i]==="retreat");
+  const DT=D.VDETAIL[id];
+  let bits=[];
+  if(id==="town"){
+    if(o.assetsLost>0) bits.push(DT.assetLost);
+    else if(retreatedAsset) bits.push(DT.roadRetreated);
+    else if(o.beach>=0.9*sb) bits.push(DT.beachWide);
+    else if(o.beach<0.6*sb) bits.push(DT.beachThin);
+    if(hard>=4) bits.push(DT.tooManyWalls);
+  } else if(id==="eco"){
+    if(o.dunes<0.45) bits.push(DT.dunesStripped);
+    if(o.estuary<0.25) bits.push(DT.estuaryStarved);
+    if(hard>=1) bits.push(DT.hardWalls);
+    if(!bits.length) bits.push(DT.natural);
+  } else if(id==="owners"){
+    if(wallSite) bits.push(DT.wallOnSite);
+    else if(o.estuary<0.20) bits.push(DT.starved);
+    else if(houseOn(st,'setback')) bits.push(DT.setbackBuilt);
+    else if(vs.owners==="good") bits.push(DT.respected);
+  }
+  bits.push(D.VLINES[id][vs[id]]);
+  return bits.join(" ");
+}
+function renderChars(){
+  const html=D.VOICES.filter(v=>v.id!=="engineer").map(v=>{
+    const mood=st._vs?st._vs[v.id]:null;
+    const score=st._sc?st._sc[v.id]:null;
+    const [word,col]=moodBits(mood);
+    const on=st.stake===v.id;
+    const ran=mood!==null;
+    const pill=score!=null?`${score}/10`:``;
+    const bar=score!=null?`<div class="cc-bar"><span style="width:${score*10}%;background:${col}"></span></div>`:``;
+    const sr=v.shortRole?`<span class="cc-shortrole">${v.shortRole}</span>`:``;
+    let body=``;
+    if(!ran) body+=`<p class="cc-line">${v.concern}</p>`;
+    else body+=bar;
+    body+=`<button class="cc-consult${on?" open":""}" onclick="setStake('${v.id}')">${on?`&#9660;&nbsp;Close`:`&#9658;&nbsp;Consult`}</button>`;
+    if(on){
+      body+=`<div class="cc-more">`;
+      body+=`<p>${ran?reactionLine(v.id,st._o,st._vs):v.view}</p>`;
+      if(v.goals&&v.goals.length) body+=`<div class="gh">What they want</div><ul>${v.goals.map(g=>`<li>${g}</li>`).join("")}</ul>`;
+      body+=`</div>`;
+    }
+    return `<div class="char-card${on?" on":""}" style="border-left-color:${col}">
+      <div class="cc-top" onclick="setStake('${v.id}')">
+        <span class="cc-face">${avatarSVG(v.avatar,v.colour,mood)}</span>
+        <span class="cc-namewrap"><span class="cc-name">${v.person||v.name}</span><span class="cc-role">${v.name}</span>${sr}</span>
+        ${pill?`<span class="cc-mood" style="background:${col}" title="${word}">${pill}</span>`:``}
+      </div>${body}</div>`;
+  }).join("");
+  $("chars").innerHTML=html;
+}
+function setStake(id){ if(animating) return; st.stake = st.stake===id? null : id; renderChars(); updateHint(); redraw(); }
+function updateHint(){
+  const v=st.stake&&D.VOICES.find(x=>x.id===st.stake);
+  $("hint").innerHTML = v
+    ? `<span style="color:${v.colour}">&#9679;</span> <b>${v.person||v.name}:</b> ${v.concern}`
+    : (decadesRun>=TOTAL_DECADES
+        ? "Thirty years done. See how each adviser feels, then open Reflect like a geographer below."
+        : "Tap each adviser to hear what they want, then tap a spot on the coast to inspect and protect it.");
+}
+
+/* ---- engineer's plain-language insight for a clicked spot ---- */
+function energyWord(e){return e>0.7?"high":e>0.4?"medium":"low";}
+function nodeEnergyWord(i){return energyWord(st.seg[i].energyBase*(0.55+0.45*st.g[i].facing)*st.g[i].focus);}
+function nodeEngText(i){
+  const s=st.seg[i], ew=nodeEnergyWord(i); let b=[];
+  if(s.kind==="headland"){
+    b.push(`This is a hard-rock headland that sticks out into the sea, so it takes the full force of the waves -- wave energy here is ${ew}. Hard rock barely wears, but a headland bends the waves and throws extra energy onto the softer coast next to it.`);
+  } else if(s.cliff){
+    const rock=s.soft>0.6?"soft rock that wears back fast":s.soft>0.3?"medium-hard rock":"fairly hard rock";
+    b.push(`These are cliffs of ${rock}, and the waves hitting them carry ${ew} energy. With little beach in front to soak up the waves, the cliff keeps wearing back toward the land.`);
+    if(s.asset) b.push(`The ${s.asset==="road"?"road":"houses"} sit right on top, so if the cliff retreats far enough they go over the edge.`);
+    b.push(`A sea wall would hold this cliff but bounce the waves back and scrape away the beach in front. Managed retreat moves things back and lets the shore settle naturally.`);
+  } else if(s.kind==="dune"){
+    b.push(`This is the dune reserve. Plants hold the sand together, so the dunes store it and shield the land behind them. Wave energy here is ${ew}. Strip the plants and the dunes fall apart; nourishment can top the sand up.`);
+  } else if(s.kind==="estuary"){
+    b.push(`This is the river mouth. Sand drifting along the coast keeps the estuary healthy, and it shelters young fish and birds. Wave energy is ${ew}. It is a significant site for the Traditional Owners, so a hard wall here causes real harm.`);
+    b.push(`In real life, rivers also carry sediment down from the land and pump it out to sea -- that is a major source of beach sand worldwide. Dams built on rivers cut off that supply, which is one reason many real beaches are shrinking. In this simulation the sand comes from longshore drift, not the river, to keep things simple.`);
+  } else if(s.kind==="spit"){
+    b.push(`This is a spit -- a finger of sand built up where drifting sand drops past the river mouth. Wave energy is ${ew}. It grows while sand keeps moving along the coast, and shrinks if structures up the coast trap that sand.`);
+  } else if(s.kind==="town"){
+    b.push(`The township sits just behind the beach. Wave energy here is ${ew}. A wide beach is its best protection; lose the beach and the buildings are exposed.`);
+  } else {
+    b.push(`A sandy beach. Wave energy here is ${ew}, so it ${ew==="low"?"tends to collect sand and grow wide":"can lose sand in storms"}. Nourishment adds sand for a wide, tourist-friendly beach, but the new sand keeps washing away and needs topping up.`);
+  }
+  if(!s.cliff){ b.push(s.sand>0.6?"Right now the beach here is wide.":s.sand<0.2?"Right now there is very little sand here.":"Right now the beach here is middling."); }
+  return b.join(" ");
+}
+
+/* ---- the action panel (right column, scrolls) ---- */
+function spotHTML(i){
+  const s=st.seg[i];
+  const built=(decadesRun>0 && ["seawall","groyne"].includes(st.meas[i]));
+  const noNourish=s.cliff&&s.kind!=="headland"; // nourishment is for sandy beaches, not cliff bases
+  const opts=Object.keys(D.STRAT).map(k=>{
+    const on=st.meas[i]===k?" on":"";
+    const lock=(built&&k!==st.meas[i])||(k==="nourish"&&noNourish)?" locked":"";
+    const cost=D.STRAT[k].cost>0?` (${D.STRAT[k].cost})`:"";
+    const click=(built&&k!==st.meas[i])||(k==="nourish"&&noNourish)?'':`setMeasure('${k}')`;
+    return `<button class="sbtn${on}${lock}" onclick="${click}" onmouseenter="showStratTip(event,'${k}')" onmouseleave="hideStratTip()">${D.STRAT[k].name}${cost}</button>`;
+  }).join("");
+  const cur=D.STRAT[st.meas[i]];
+  return `<div class="spot">
+    <div class="spot-h">${s.name}</div>
+    <div class="eng-box"><div class="eng-who">Coastal engineer</div><p>${nodeEngText(i)}</p></div>
+    <div class="spot-sub">Choose how to manage this spot:</div>
+    <div class="stratgrid">${opts}</div>
+    ${noNourish?'<div class="note">Beach nourishment is designed for sandy shores -- it does not work on a rocky cliff base.</div>':''}
+    <div class="advdis"><span class="a">+ ${cur.adv}</span><br><span class="d">&minus; ${cur.dis}</span></div>
+    <div id="budgetMsg" class="bmsg"></div>
+    ${built?'<div class="note">A hard wall is built here and cannot be taken out cheaply.</div>':''}
+  </div>`;
+}
+function houseCardHTML(id){
+  const h=D.HOUSING.find(x=>x.id===id), on=houseOn(st,id), locked=decadesRun>0;
+  const atLim=Sim.approvedCount(st)>=C.APP_LIMIT, blk=!on&&atLim;
+  const risk=h.risk==="cliff"?["risknote cliff","High risk: built on the wearing cliff. Protect it or it falls into the sea."]
+            :h.risk==="beach"?["risknote beach","Some risk: only safe while the beach in front stays wide."]
+            :["risknote safe","Safe: set well back from the wearing coast."];
+  let btn;
+  if(locked) btn=`<div class="note" style="margin:0">Locked in: ${on?'approved':'not approved'}</div>`;
+  else if(on) btn=`<button class="hbtn" onclick="toggleHouse('${id}')">Approved &middot; tap to cancel</button>`;
+  else if(blk) btn=`<button class="hbtn off locked">No slots left (max ${C.APP_LIMIT})</button>`;
+  else btn=`<button class="hbtn off" onclick="toggleHouse('${id}')">Approve this site</button>`;
+  return `<div class="spot house${on?' on':''}">
+    <div class="spot-h">${h.name}</div>
+    <p class="cc-line" style="margin-top:0">${h.blurb}</p>
+    <div class="bonus">+${h.bonus} money if approved</div>
+    <div class="${risk[0]}">${risk[1]}</div>
+    <div>${btn}</div>
+    ${on&&!locked?'<div class="stamp-mark">APPROVED</div>':''}
+  </div>`;
+}
+function runHTML(){
+  const done=decadesRun>=TOTAL_DECADES;
+  const dots=Array.from({length:TOTAL_DECADES},(_,k)=>`<span class="dot${k<decadesRun?' done':''}"></span>`).join("");
+  let s=`<div class="runbar"><div class="decades">${dots}<span class="dlabel">${done?"30 years done":`Decade ${decadesRun+1} of ${TOTAL_DECADES}`}</span></div>`;
+  if(!done) s+= animating ? `<button class="run" disabled>Running...</button>` : `<button class="run" onclick="runDecade()">Run 10 years &#9654;</button>`;
+  s+=`</div>`;
+  if(decadesRun===0) s+=`<p class="note">Set up your plan, then run the first ten years. New housing locks in after that.</p>`;
+  else if(!done) s+=`<p class="note">Adjust your measures, then run the next ten years. Housing is locked in now.</p>`;
+  if(done) s+=`<button class="btn2" onclick="downloadReport()">Download the plan</button>`;
+  return s;
+}
+function reflectHTML(){
+  let s=`<button class="reflect-toggle" onclick="toggleReflect()">${reflectOpen?"▾":"▸"} Reflect like a geographer</button>`;
+  if(reflectOpen){
+    s+=`<div class="reflect">`+D.Q.map(q=>
+      `<div class="saq"><div class="tie">${q.tie}</div><p class="q">${q.n}. ${q.q}</p>`+
+      `<textarea id="ta${q.n}" placeholder="Write your answer...">${st._ans&&st._ans[q.n]||""}</textarea>`+
+      `<div class="saqrow"><button class="cbtn" onclick="checkA(${q.n})">Check my answer</button><span class="wc" id="wc${q.n}">0 words</span></div>`+
+      `<div class="sc" id="sc${q.n}"></div></div>`).join("")+`</div>`;
+  }
+  return s;
+}
+function renderAction(){
+  let out=budgetRowHTML();
+  if(selHouse) out+=houseCardHTML(selHouse);
+  else if(sel!==null) out+=spotHTML(sel);
+  else out+=`<div class="pickhint">Tap the <b>coast</b> to inspect a spot and protect it, or tap a <b>house plot</b> on the map to approve new homes.</div>`;
+  out+=runHTML();
+  if(st._reviewHTML) out+=`<div class="review">${st._reviewHTML}</div>`;
+  out+=reflectHTML();
+  $("action").innerHTML=out;
+  bindReflect();
+}
+function toggleReflect(){ reflectOpen=!reflectOpen; renderAction(); }
+function bindReflect(){
+  if(!reflectOpen) return;
+  D.Q.forEach(q=>{const ta=$("ta"+q.n); if(ta){const upd=()=>{const t=ta.value.trim();const n=t?t.split(/\s+/).length:0;$("wc"+q.n).textContent=n+" word"+(n===1?"":"s");st._ans=st._ans||{};st._ans[q.n]=ta.value;};ta.addEventListener('input',upd);upd();}});
+}
+
+/* ---- interactions ---- */
+function clickCoast(i){ if(animating) return; sel=i; selHouse=null; renderAction(); redraw(); }
+function setMeasure(k){
+  if(animating) return;
+  const test=[...st.meas]; test[sel]=k;
+  if(computeSpend(test)>availBudget()){ const msg=$("budgetMsg"); if(msg) msg.textContent="Not enough money. Take out or change another measure first."; return; }
+  st.meas[sel]=k; st.spend=computeSpend();
+  renderAction(); redraw();
+}
+function toggleHouse(id){
+  if(animating) return;
+  if(decadesRun>0){ selHouse=id; sel=null; renderAction(); return; }   // locked: just show it
+  if(houseOn(st,id)){ st.apps[id]=null; }
+  else{
+    if(Sim.approvedCount(st)>=C.APP_LIMIT){ selHouse=id; sel=null; renderAction(); return; }
+    st.apps[id]="approve";
+  }
+  selHouse=id; sel=null; renderAction(); redraw();
+}
+
+/* ---- run logic: three ten-year decades, played out year by year so the sand visibly drifts ---- */
+function mkRng(seed){let s=seed>>>0;return ()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function snap(){return {sand:st.seg.map(s=>s.sand), ret:st.seg.map(s=>s.retreat), lost:st.seg.map(s=>s.lost)};}
+function dispState(A,B,f){
+  return {...st, seg: st.seg.map((s,i)=>({...s,
+    sand:A.sand[i]+(B.sand[i]-A.sand[i])*f,
+    retreat:A.ret[i]+(B.ret[i]-A.ret[i])*f,
+    lost:B.lost[i]}))};
+}
+function playSnaps(snaps,done){
+  if(typeof requestAnimationFrame==="undefined" || typeof performance==="undefined"){
+    animating=false; redraw(); done&&done(); return;
+  }
+  animating=true;
+  const perYear=170, total=Math.max(1,(snaps.length-1)*perYear), t0=performance.now();
+  let finished=false;
+  function finish(){ if(finished) return; finished=true; animating=false; redraw(); done&&done(); }
+  function frame(now){
+    if(finished) return;
+    try{
+      const k=Math.min(1,(now-t0)/total)*(snaps.length-1);
+      const a=Math.min(Math.floor(k),snaps.length-2), f=k-a;
+      redraw(dispState(snaps[a],snaps[a+1],f));
+    }catch(e){ finish(); return; }              // a bad frame must never leave the UI locked
+    if((now-t0)<total) requestAnimationFrame(frame); else finish();
+  }
+  requestAnimationFrame(frame);
+  setTimeout(finish, total+1200);               // watchdog: if rAF stalls (e.g. backgrounded tab), recover
+}
+function runDecade(){
+  if(animating||decadesRun>=TOTAL_DECADES) return;
+  if(decadesRun===0) Sim.applyApprovals(st);
+  const rng=mkRng(4242+st.year), snaps=[snap()];
+  for(let y=0;y<10;y++){ Sim.stepYear(st,rng()); snaps.push(snap()); }
+  decadesRun++;
+  const o=Sim.outcome(st), vs=Sim.voiceStates(st,o), sc=Sim.voiceScores(st,o);
+  st._o=o; st._vs=vs; st._sc=sc;
+  let h="";
+  if(o.housesLost>0){ h+=`<div class="bigtrouble">Big trouble: ${o.housesLost===1?"a set of new homes has":"new homes have"} been lost to the sea. Building too close to the water has cost the council dearly.</div>`; }
+  h+=`<div class="stamp">After ${st.year} years</div>`;
+  h+=`<div class="eng-box"><div class="eng-who">Coastal engineer</div><p>${Sim.engineerText(st,o)}</p></div>`;
+  h+=`<p class="note" style="margin-top:6px">Each adviser now has a happiness score out of 10 (in the cards above). No plan keeps everyone at the top: around 8 out of 10 each is about the best shared balance, and pushing one higher usually pulls another down.</p>`;
+  st._reviewHTML=h;
+  sel=null; selHouse=null;
+  animating=true;
+  $("hint").innerHTML="The years are passing -- watch the sand drift and the cliffs wear back...";
+  renderAction();
+  playSnaps(snaps, ()=>{ renderChars(); renderAction(); updateHint(); });
+}
+
+function checkA(n){
+  const q=D.Q.find(x=>x.n===n), t=($("ta"+n).value||"").toLowerCase(), box=$("sc"+n);
+  box.classList.add("show");
+  if(t.trim().length<30){ box.className="sc show warn"; box.innerHTML="Have a proper go first, then press Check and I will tell you which ideas you have used."; return; }
+  box.className="sc show";
+  const hit=q.lookFor.filter(k=>t.includes(k)), miss=q.lookFor.filter(k=>!t.includes(k));
+  let h=`<div>${q.selfcheck}</div><div style="margin-top:6px"><span class="ok">Ideas you used:</span> ${hit.length?hit.join(", "):"none of the key ideas yet"}.</div>`;
+  if(miss.length) h+=`<div class="miss">You could also bring in: ${miss.slice(0,6).join(", ")}.</div>`;
+  else h+=`<div class="ok" style="margin-top:3px">Good range of ideas. Now make sure each one is explained, not just named.</div>`;
+  h+=`<div style="margin-top:6px;color:var(--muted)">This checks which ideas you used, not whether your reasoning is correct.</div>`;
+  box.innerHTML=h;
+}
+
+function downloadReport(){
+  const o=Sim.outcome(st), vs=Sim.voiceStates(st,o), sc=Sim.voiceScores(st,o);
+  const dec=D.HOUSING.map(h=>`  ${h.name}: ${houseOn(st,h.id)?"approved":"not approved"}`).join("\n");
+  const mez=st.seg.map((s,i)=>st.meas[i]!=="none"?`  ${s.name}: ${D.STRAT[st.meas[i]].name}`:null).filter(Boolean).join("\n")||"  (none)";
+  const vlines=D.VOICES.filter(v=>v.id!=="engineer").map(v=>`  ${v.name} (${sc[v.id]}/10): ${D.VLINES[v.id][vs[v.id]]}`).join("\n");
+  const txt=`WATTLE BAY COASTAL PLAN, year ${st.year}\n\nMONEY: ${computeSpend()} of ${availBudget()} spent\n\nHOUSING DECISIONS\n${dec}\n\nPROTECTION MEASURES\n${mez}\n\nHOW THE ADVISERS SCORED IT (out of 10)\n${vlines}\n\nWHAT HAPPENED\n  Coastal engineer: ${Sim.engineerText(st,o)}\n`;
+  const b=new Blob([txt],{type:"text/plain"}); const u=URL.createObjectURL(b);
+  const a=document.createElement("a"); a.href=u; a.download="wattle-bay-plan.txt"; a.click(); URL.revokeObjectURL(u);
+}
+
+function init(){ st=Sim.initState(); renderChars(); renderAction(); updateHint(); redraw(); initWaveCanvas(); }
+if(typeof document!=="undefined") init();
+</script></body></html>
