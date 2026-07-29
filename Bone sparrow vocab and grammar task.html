@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bone Sparrow — Pre-reading Trainer</title>
+<style>
+  /* Palette matches Grammar Hub / Aussie Phonics Trainer so the suite reads as one. */
+  :root{
+    --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+    --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
+    --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+       min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
+  .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+       max-width:860px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  h1{text-align:center;font-size:23px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.5px}
+  h2{font-family:Georgia,serif;font-size:18px;margin:4px 0 10px}
+  h3{font-family:Georgia,serif;font-size:15px;margin:18px 0 8px}
+  .subtitle{color:var(--muted);text-align:center;margin:6px 0 18px;font-size:13px}
+  .muted{color:var(--muted);font-size:13px;line-height:1.5}
+  .screen{display:none}.screen.active{display:block}
+  button{font-family:inherit}
+  .btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+       cursor:pointer;background:var(--paper);color:var(--ink);transition:all .15s ease}
+  .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn-primary:hover:not(:disabled){background:#8c2828}
+  .btn-primary:disabled{background:var(--line);border-color:var(--line);color:var(--muted);cursor:not-allowed}
+  .btn-ghost{background:var(--bg);color:var(--muted)}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+  .linkbtn{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:4px 8px}
+  .linkbtn:hover{text-decoration:underline}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .progress{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px}
+
+  /* home step cards */
+  .steps{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+  .step{display:flex;align-items:center;gap:14px;border:1px solid var(--line-soft);border-radius:10px;
+        padding:14px 16px;background:var(--paper);text-align:left;cursor:pointer;width:100%}
+  .step:hover:not(:disabled){border-color:var(--accent)}
+  .step:disabled{opacity:.55;cursor:not-allowed}
+  .step .num{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+  .step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+  .step .t{font-weight:700;font-size:15px}
+  .step .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .step .tag{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted);flex-shrink:0}
+  .step.done .tag{color:var(--correct)}
+
+  /* vocab study cards */
+  .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+  .vcard .w{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .vcard .pos{font-size:12px;color:var(--muted);font-style:italic;margin-left:6px}
+  .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
+  .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
+  .vcard .morph b{color:var(--ink)}
+
+  /* task shell */
+  .prompt{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+  .qtext{font-size:17px;line-height:1.6;margin-bottom:16px}
+  .qtext .gap{display:inline-block;min-width:110px;border-bottom:2px solid var(--ink);text-align:center;font-weight:700;color:var(--accent)}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:15px;
+       text-align:left;cursor:pointer;line-height:1.5}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:disabled{cursor:default}
+  .opt.right{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:700}
+  .opt.wrongpick{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips .opt{flex:0 0 auto;padding:9px 16px}
+  .words{display:flex;flex-wrap:wrap;gap:6px;font-size:17px;line-height:2}
+  .wordbtn{border:1px solid transparent;background:none;font-size:17px;padding:2px 4px;border-radius:6px;cursor:pointer}
+  .wordbtn:hover{border-color:var(--accent)}
+  .wordbtn.right{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:700}
+  .wordbtn.wrongpick{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
+  .feedback{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.55;display:none}
+  .feedback.ok{display:block;background:var(--okbg);border:1px solid var(--correct)}
+  .feedback.bad{display:block;background:var(--badbg);border:1px solid var(--wrong)}
+  .nextrow{margin-top:16px;display:flex;justify-content:flex-end;gap:8px}
+
+  /* teach cards */
+  .teach{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;
+         background:var(--bg);padding:16px 18px;margin-bottom:16px;font-size:14.5px;line-height:1.65}
+  .teach b{color:var(--accent)}
+  .teach ul{margin:8px 0 0 20px}
+  .teach li{margin-bottom:6px}
+  .teach .ex{font-style:italic}
+
+  /* section summary */
+  .sumbox{border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0;text-align:center}
+  .sumbox .big{font-family:Georgia,serif;font-size:30px;font-weight:700}
+  .sumbox .big.good{color:var(--correct)} .sumbox .big.mid{color:#9a6b1f} .sumbox .big.low{color:var(--wrong)}
+
+  /* report */
+  .repgrid{width:100%;border-collapse:collapse;margin:12px 0}
+  .repgrid th,.repgrid td{border:1px solid var(--line);padding:8px 10px;font-size:13.5px;text-align:left}
+  .repgrid th{background:var(--bg);font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+  .repgrid td.score{font-weight:700}
+  .idrow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .idrow label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+  .idrow input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;background:#fff}
+  .vcode{font-family:monospace;font-size:13px;letter-spacing:2px}
+  @media print{
+    body{background:#fff;padding:0}
+    .container{border:none;box-shadow:none;max-width:100%;padding:8px}
+    .noprint{display:none !important}
+    .screen{display:none}.screen.active{display:block}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ================= HOME ================= -->
+<div class="screen active" id="scr-home">
+  <h1>The Bone Sparrow</h1>
+  <p class="subtitle">Pre-reading trainer · vocabulary &amp; sentence types · Lessons 1–3</p>
+  <div class="steps" id="home-steps"></div>
+  <p class="muted" style="text-align:center">Work top to bottom. Your first attempt at each question is what goes on your report, so read the vocabulary carefully before you start the challenges.</p>
+  <div class="nextrow noprint" style="justify-content:center">
+    <button class="linkbtn" onclick="resetAll()">start over (clears everything)</button>
+  </div>
+</div>
+
+<!-- ================= STUDY ================= -->
+<div class="screen" id="scr-study">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress">STEP 1 · STUDY</span></div>
+  <h2>Unit vocabulary</h2>
+  <p class="muted" style="margin-bottom:14px">Read every word: its meaning, and how its <b>morphemes</b> (prefix + root + suffix) build that meaning. The quiz uses close look-alike words — the morphemes are how you tell them apart.</p>
+  <div id="vocab-list"></div>
+  <div class="nextrow noprint">
+    <button class="btn btn-primary" onclick="markStudied()">I've read them all — start the word challenge &rarr;</button>
+  </div>
+</div>
+
+<!-- ================= MATCH ================= -->
+<div class="screen" id="scr-match">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="match-prog">STEP 2 · WORD CHALLENGE</span></div>
+  <div id="match-body"></div>
+</div>
+
+<!-- ================= GAP FILL ================= -->
+<div class="screen" id="scr-gap">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="gap-prog">STEP 3 · GAP FILL</span></div>
+  <div id="gap-body"></div>
+</div>
+
+<!-- ================= GRAMMAR ================= -->
+<div class="screen" id="scr-grammar">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="gram-prog">STEP 4 · SENTENCE GYM</span></div>
+  <div id="gram-body"></div>
+</div>
+
+<!-- ================= EXTENSION ================= -->
+<div class="screen" id="scr-ext">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="ext-prog">EXTENSION · CLAUSES</span></div>
+  <div id="ext-body"></div>
+</div>
+
+<!-- ================= REPORT ================= -->
+<div class="screen" id="scr-report">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress">REPORT</span></div>
+  <div id="report-body"></div>
+</div>
+
+</div>
+<script>
+"use strict";
+/* ============================================================
+   THE BONE SPARROW — PRE-READING TRAINER
+   Companion mini-app to Grammar Hub. Covers Lessons 01–03:
+   unit vocabulary (with morphology) and sentence types
+   (simple / compound / run-on), with reteach loops and a
+   clause-types extension. Report prints to PDF.
+   ============================================================ */
+
+/* ---------------- VOCABULARY (from the unit vocab sheet) ---------------- */
+const VOCAB = [
+  { w:"Immigration", pos:"noun", meaning:"The process of coming to live permanently in a foreign country.",
+    morph:"Root <b>immigr-</b> (to move into) + suffix <b>-ation</b> (process). Latin <i>im-</i> (into) + <i>migrare</i> (to move). Compare: <i>emigration</i> = moving OUT of a country." },
+  { w:"Refugee", pos:"noun", meaning:"A person forced to leave their country to escape war, persecution, or natural disaster.",
+    morph:"Root <b>refuge</b> (shelter) + suffix <b>-ee</b> (a person receiving an action). From Latin <i>re-</i> (back) + <i>fugere</i> (to flee)." },
+  { w:"Asylum seeker", pos:"noun phrase", meaning:"A person seeking refuge in another country whose claim for refugee status has NOT yet been assessed.",
+    morph:"<b>Asylum</b>: Greek <i>ásylon</i> — a place of safety beyond the reach of law. <b>Seeker</b>: <i>-er</i> = one who does. The key difference from <i>refugee</i>: the claim is still waiting." },
+  { w:"Persecution", pos:"noun", meaning:"Hostility and ill-treatment, especially because of race, political or religious beliefs, or ethnicity.",
+    morph:"Prefix <b>per-</b> (thoroughly) + root <b>-secut-</b> (to follow/pursue) + <b>-ion</b>. Literally 'to pursue relentlessly'. Don't confuse with <i>prosecution</i> (taking someone to court)." },
+  { w:"Inmate", pos:"noun", meaning:"A person confined to an institution such as a prison or a detention centre.",
+    morph:"Compound: <b>in-</b> (inside) + <b>mate</b> (companion). Originally 'one who shares a house'. Related: roommate, classmate. Don't confuse with <i>intimate</i>." },
+  { w:"Incarceration", pos:"noun", meaning:"The state of being imprisoned or confined.",
+    morph:"Prefix <b>in-</b> (into) + root <b>carcer</b> (prison) + <b>-ation</b> (state). Don't confuse with <i>incineration</i> (burning) or <i>incarnation</i> (taking bodily form)." },
+  { w:"Bureaucracy", pos:"noun", meaning:"A system of administration with many complex rules and processes, often slow and frustrating.",
+    morph:"<b>Bureau</b> (desk/office) + <b>-cracy</b> (rule, power — Greek <i>kratos</i>). Related: demo<i>cracy</i>, auto<i>cracy</i>." },
+  { w:"Off-shore detention", pos:"noun phrase", meaning:"Holding asylum seekers in detention centres in other countries (e.g. Nauru, Manus Island) while claims are processed.",
+    morph:"<b>Off-shore</b>: away from the mainland. <b>Detention</b>: Latin <i>de-</i> (away) + <i>tenere</i> (to hold) — 'held back'." },
+  { w:"Trauma", pos:"noun", meaning:"A deeply distressing experience, or the lasting psychological harm it causes.",
+    morph:"Greek <b>trauma</b> = wound. Originally a physical injury; extended to harm you can't see. Related: traumatic, post-traumatic." },
+  { w:"Identification", pos:"noun", meaning:"Establishing who someone is, or the documents that prove a person's identity.",
+    morph:"Latin <b>idem</b> (the same) + <b>facere</b> (to make): 'to make the same as' a record. Related: identity, identical." },
+  { w:"Dislocation", pos:"noun", meaning:"Being removed from a familiar place, community or sense of belonging; an order disrupted.",
+    morph:"Prefix <b>dis-</b> (apart, away) + root <b>loc-</b> (place) + <b>-ation</b>. Literally 'put out of place'. Compare: <i>relocation</i> = moving to a new place on purpose." },
+  { w:"Disheartened", pos:"adjective", meaning:"Having lost determination or confidence; discouraged.",
+    morph:"Prefix <b>dis-</b> (removal) + root <b>heart</b> (courage) + <b>-en</b> + <b>-ed</b>. To have the courage taken out of you. It's about how you FEEL." },
+  { w:"Dispossessed", pos:"adjective", meaning:"Having had property, land, rights, or a sense of home taken away.",
+    morph:"Prefix <b>dis-</b> (removal) + <b>possess</b> (to own) + <b>-ed</b>. It's about what you've HAD TAKEN — not how you feel. Compare <i>disheartened</i>." },
+  { w:"Bystander", pos:"noun", meaning:"A person present at an event who does not take part; an onlooker who doesn't intervene.",
+    morph:"<b>by</b> (near) + <b>stand</b> + <b>-er</b> (one who): one who stands by without acting. Opposite idea: <i>upstander</i> — someone who steps in." },
+  { w:"Grief", pos:"noun", meaning:"Intense sorrow, especially caused by someone's death or a significant loss.",
+    morph:"From Latin <b>gravis</b> (heavy) via French <i>grever</i> (to burden) — grief is a 'heaviness' of feeling. Grief is the FEELING; loss is the FACT." },
+  { w:"Loss", pos:"noun", meaning:"The fact of losing someone or something; being deprived of something valued.",
+    morph:"Old English <b>losian</b> (to perish). Watch the spelling family: <i>lose</i> (verb), <i>loss</i> (noun), <i>lost</i> (past) — and <i>loose</i> is a different word (not tight)." },
+  { w:"Friendship", pos:"noun", meaning:"A close relationship marked by mutual affection, trust, and support.",
+    morph:"Root <b>friend</b> (Old English <i>freond</i>, 'one who loves') + suffix <b>-ship</b> (condition, state of being). Related: kinship, companionship." },
+];
+
+/* ---------------- WORD CHALLENGE: hard matching (close distractors) ---------------- */
+const MATCH_ITEMS = [
+  { id:"m1", q:"Hostility and ill-treatment, especially because of race, political or religious beliefs.",
+    a:"persecution", opts:["persecution","prosecution","execution","preservation"],
+    explain:"<b>Persecution</b> = per- (thoroughly) + -secut- (pursue): pursued relentlessly. <i>Prosecution</i> is taking someone to court." },
+  { id:"m2", q:"A person who has left their country seeking refuge, but whose claim has NOT yet been assessed.",
+    a:"asylum seeker", opts:["asylum seeker","refugee","immigrant","evacuee"],
+    explain:"An <b>asylum seeker</b> is still waiting for a decision. Once the claim is accepted, they are recognised as a refugee." },
+  { id:"m3", q:"The state of being imprisoned or confined.",
+    a:"incarceration", opts:["incarceration","incineration","incarnation","interrogation"],
+    explain:"Root <b>carcer</b> = prison. <i>Incineration</i> is burning; <i>incarnation</i> is taking bodily form." },
+  { id:"m4", q:"A system of administration with many complex rules and processes, often slow and frustrating.",
+    a:"bureaucracy", opts:["bureaucracy","democracy","autocracy","meritocracy"],
+    explain:"<b>Bureau</b> (office) + <b>-cracy</b> (rule): rule by offices and paperwork." },
+  { id:"m5", q:"Being removed from a familiar place, community or sense of belonging.",
+    a:"dislocation", opts:["dislocation","relocation","allocation","designation"],
+    explain:"<b>dis-</b> (apart) + <b>loc</b> (place): put out of place. <i>Relocation</i> is a deliberate move; dislocation is being torn out." },
+  { id:"m6", q:"A person present at an event who watches but does not take part.",
+    a:"bystander", opts:["bystander","upstander","outsider","understudy"],
+    explain:"One who <b>stands by</b> without acting. An <i>upstander</i> is the opposite — someone who steps in." },
+  { id:"m7", q:"Having had property, land, rights, or a sense of home taken away.",
+    a:"dispossessed", opts:["dispossessed","disheartened","repossessed","dispassionate"],
+    explain:"<b>dis-</b> (removal) + <b>possess</b>: what you owned was taken. <i>Disheartened</i> is about how you feel." },
+  { id:"m8", q:"Having lost determination or confidence; discouraged.",
+    a:"disheartened", opts:["disheartened","dispossessed","heartless","dispassionate"],
+    explain:"The <b>heart</b> (courage) has been taken out of you — a feeling. <i>Dispossessed</i> is about things taken from you." },
+  { id:"m9", q:"A deeply distressing experience, or the lasting psychological harm it causes.",
+    a:"trauma", opts:["trauma","drama","tremor","trance"],
+    explain:"Greek <b>trauma</b> = wound. A wound you can't always see." },
+  { id:"m10", q:"Which meaning matches <b>refugee</b>?",
+    a:"a person forced to leave their country to escape war, persecution or disaster",
+    opts:["a person forced to leave their country to escape war, persecution or disaster",
+          "a person whose claim for protection has not yet been assessed",
+          "a person who moves to another country for work or family reasons",
+          "a person confined to an institution such as a detention centre"],
+    explain:"Forced to flee = <b>refugee</b>. Claim not yet assessed = asylum seeker. Moving by choice = migrant/immigrant. Confined = inmate." },
+  { id:"m11", q:"Which meaning matches <b>inmate</b>?",
+    a:"a person confined to an institution such as a prison or detention centre",
+    opts:["a person confined to an institution such as a prison or detention centre",
+          "a person who works inside a detention centre",
+          "a close companion who shares your room",
+          "a person born inside a detention centre"],
+    explain:"<b>in</b> + <b>mate</b>: originally 'one who shares a house', now a person held inside an institution." },
+  { id:"m12", q:"The suffix <b>-ee</b> in <i>refugee</i> means…",
+    a:"a person receiving an action", opts:["a person receiving an action","a person doing an action","a small version of something","a place where something happens"],
+    explain:"<b>-ee</b> = receiver (employee, trainee, refugee). The doer is <b>-er</b> (employer, trainer)." },
+  { id:"m13", q:"The root <b>carcer</b> in <i>incarceration</i> means…",
+    a:"prison or enclosure", opts:["prison or enclosure","fire","flesh","chain"],
+    explain:"Latin <b>carcer</b> = prison. Fire → incinerate; flesh → incarnate." },
+  { id:"m14", q:"The prefix <b>dis-</b> in <i>dispossessed</i> and <i>dislocation</i> means…",
+    a:"apart, away, removal", opts:["apart, away, removal","into or inside","thoroughly","twice"],
+    explain:"<b>dis-</b> = apart/away/removal. 'Into' is in-; 'thoroughly' is per-; 'twice' is bi-." },
+  { id:"m15", q:"The suffix <b>-cracy</b> in <i>bureaucracy</i> means…",
+    a:"rule or power", opts:["rule or power","desk or office","paperwork","slowness"],
+    explain:"Greek <b>kratos</b> = rule/power. The 'desk/office' part is <i>bureau</i>." },
+  { id:"m16", q:"The prefix <b>per-</b> in <i>persecution</i> means…",
+    a:"thoroughly, all the way through", opts:["thoroughly, all the way through","before","against","around"],
+    explain:"<b>per-</b> = thoroughly (persecute = pursue relentlessly). 'Before' is pre-, 'around' is peri-." },
+];
+
+/* ---------------- GAP FILL: pick the word that truly fits ---------------- */
+const GAP_ITEMS = [
+  { id:"g1", before:"Maá fled Burma to escape the", after:"of the Rohingya people.",
+    a:"persecution", opts:["persecution","prosecution","incarceration","identification","immigration"],
+    explain:"Ill-treatment because of ethnicity = <b>persecution</b>. <i>Prosecution</i> happens in a courtroom." },
+  { id:"g2", before:"Because their claims have not yet been assessed, the family are", after:"rather than recognised refugees.",
+    a:"asylum seekers", opts:["asylum seekers","immigrants","inmates","bystanders","citizens"],
+    explain:"Waiting on a claim = <b>asylum seekers</b>. That waiting is exactly what the word marks." },
+  { id:"g3", before:"The guards check the family's", after:"before they can collect their meal tokens.",
+    a:"identification", opts:["identification","immigration","incarceration","indemnification","dislocation"],
+    explain:"Documents proving who you are = <b>identification</b> (idem = the same: matching you to a record)." },
+  { id:"g4", before:"Years of forms and waiting taught Subhi how slowly", after:"moves.",
+    a:"bureaucracy", opts:["bureaucracy","democracy","autocracy","hierarchy","aristocracy"],
+    explain:"Rule by offices and paperwork = <b>bureaucracy</b> (bureau = desk, -cracy = rule)." },
+  { id:"g5", before:"Holding people on Nauru while their claims are processed is called", after:".",
+    a:"off-shore detention", opts:["off-shore detention","incarceration","immigration","dislocation","persecution"],
+    explain:"Detention <b>away from the mainland</b> = off-shore detention. Incarceration is confinement generally." },
+  { id:"g6", before:"Their land and home taken from them, the family arrived", after:".",
+    a:"dispossessed", opts:["dispossessed","disheartened","dislocated","repossessed","dispassionate"],
+    explain:"Things TAKEN = <b>dispossessed</b>. Feeling discouraged = disheartened." },
+  { id:"g7", before:"After the tenth rejected application, even Queeny grew", after:".",
+    a:"disheartened", opts:["disheartened","dispossessed","dislocated","dispassionate","heartless"],
+    explain:"Losing hope and confidence = <b>disheartened</b> — the heart (courage) taken out of you." },
+  { id:"g8", before:"Watching the fight without stepping in, he realised he had become a", after:".",
+    a:"bystander", opts:["bystander","upstander","outsider","inmate","spectre"],
+    explain:"Standing by without acting = <b>bystander</b>. An upstander is the one who steps in." },
+  { id:"g9", before:"The nightmares that follow such violence are signs of lasting", after:".",
+    a:"trauma", opts:["trauma","grief","drama","tremor","trance"],
+    explain:"A wound to the mind = <b>trauma</b> (Greek: wound). Grief is sorrow after a loss." },
+  { id:"g10", before:"Her heart felt heavy with", after:"after her father died.",
+    a:"grief", opts:["grief","grievance","loss","gravity","relief"],
+    explain:"<b>Grief</b> comes from gravis = heavy: the heaviness of sorrow. A grievance is a complaint." },
+  { id:"g11", before:"The", after:"of his notebook — his only possession — hit Subhi hard.",
+    a:"loss", opts:["loss","lose","loose","lost","grief"],
+    explain:"The noun is <b>loss</b>. Lose = verb, lost = past, loose = not tight." },
+  { id:"g12", before:"Subhi has spent his whole life as an", after:"of the detention centre.",
+    a:"inmate", opts:["inmate","intimate","roommate","inpatient","immigrant"],
+    explain:"Confined inside an institution = <b>inmate</b>. Watch the look-alike <i>intimate</i>!" },
+  { id:"g13", before:"", after:"is the process of coming to live permanently in a foreign country.",
+    a:"Immigration", opts:["Immigration","Emigration","Migration","Immersion","Integration"],
+    explain:"<b>Im-</b> = into: immigration is moving IN. Emigration is moving OUT (e-/ex- = out)." },
+  { id:"g14", before:"Losing streets, language and neighbours all at once, the family's sense of", after:"was complete.",
+    a:"dislocation", opts:["dislocation","relocation","allocation","dedication","designation"],
+    explain:"Torn out of place = <b>dislocation</b> (dis- apart + loc place). Relocation is a chosen move." },
+  { id:"g15", before:"His unlikely", after:"with Jimmie began through a hole in the fence.",
+    a:"friendship", opts:["friendship","relationship","kinship","membership","hardship"],
+    explain:"<b>friend</b> + <b>-ship</b> (state of being). Kinship is family; hardship is difficulty." },
+];
+
+/* ---------------- SENTENCE GYM: staged, with reteach ----------------
+   kinds: classify (fixed option set), clickword (click the conjunction), mcq  */
+const SENT_OPTS = ["Simple sentence","Compound sentence","Run-on sentence"];
+const GRAM_STAGES = [
+  { id:"s1", title:"Sort the sentence types",
+    teach:`<b>Three kinds of sentence</b> (write these in your book if you haven't):
+      <ul>
+      <li><b>Simple sentence</b> — a single clause: one subject and one verb making a complete idea. No conjunction needed. <span class="ex">Subhi waits.</span> A simple sentence can still contain a comma if it has a list!</li>
+      <li><b>Compound sentence</b> — TWO clauses (each with its own subject + verb) joined by a coordinating conjunction — <b>FANBOYS</b>: for, and, nor, but, or, yet, so. <span class="ex">Subhi waits, and Queeny draws.</span></li>
+      <li><b>Run-on sentence</b> — an ERROR: two clauses, but the writer forgot the full stop or conjunction. <span class="ex">Subhi waits Queeny draws.</span> ✗</li>
+      </ul>
+      <b>The trick:</b> count the subject–verb pairs, then look for the joiner.`,
+    reteach:`<b>Let's slow it down.</b> Find every <b>subject + verb</b> pair.
+      <ul>
+      <li>"<u>Subhi</u> <u>was born</u> in the camp." — ONE pair → <b>simple</b>.</li>
+      <li>"<u>Subhi</u> <u>sings</u>, and <u>Queeny</u> <u>rolls</u> her eyes." — TWO pairs, joined by <b>and</b> → <b>compound</b>.</li>
+      <li>"<u>Subhi</u> <u>sings</u> <u>Queeny</u> <u>rolls</u> her eyes." — TWO pairs, NO joiner → <b>run-on</b>. It needs a full stop or a FANBOYS conjunction.</li>
+      </ul>
+      Commas alone do NOT join clauses. If you see two subject–verb pairs and no FANBOYS word, it's a run-on.`,
+    kind:"classify",
+    itemsA:[
+      { id:"s1a1", q:"Subhi was born in an Australian detention centre.", a:"Simple sentence",
+        explain:"One clause: <u>Subhi</u> <u>was born</u>. One subject–verb pair, no joiner needed." },
+      { id:"s1a2", q:"Australia detains asylum seekers, and some are held off-shore.", a:"Compound sentence",
+        explain:"Two clauses joined by <b>and</b>: <u>Australia detains</u>… + <u>some are held</u>…" },
+      { id:"s1a3", q:"Most refugees flee war they leave everything behind.", a:"Run-on sentence",
+        explain:"Two clauses (<u>refugees flee</u> / <u>they leave</u>) with no full stop or conjunction between them." },
+      { id:"s1a4", q:"Refugees leave behind homes, friends, and familiar streets.", a:"Simple sentence",
+        explain:"Tricky! The commas are just a LIST. There's only one clause: <u>Refugees</u> <u>leave</u>." },
+      { id:"s1a5", q:"Subhi has never seen the ocean, but he dreams about it every night.", a:"Compound sentence",
+        explain:"Two clauses joined by the FANBOYS conjunction <b>but</b>." },
+      { id:"s1a6", q:"Jimmie lives outside the fence she has never been inside the camp.", a:"Run-on sentence",
+        explain:"<u>Jimmie lives</u>… <u>she has been</u>… — two clauses crashed together with nothing joining them." },
+    ],
+    itemsB:[
+      { id:"s1b1", q:"The Bone Sparrow tells Subhi's story.", a:"Simple sentence",
+        explain:"One subject–verb pair: <u>The Bone Sparrow</u> <u>tells</u>." },
+      { id:"s1b2", q:"Maá tells stories, and Queeny draws pictures.", a:"Compound sentence",
+        explain:"Two clauses joined by <b>and</b>." },
+      { id:"s1b3", q:"The fence is high it cuts them off from the world.", a:"Run-on sentence",
+        explain:"<u>The fence is</u> / <u>it cuts</u> — two clauses, no joiner. Needs a full stop or conjunction." },
+      { id:"s1b4", q:"Some families wait years for an answer.", a:"Simple sentence",
+        explain:"One clause: <u>families</u> <u>wait</u>." },
+      { id:"s1b5", q:"Jimmie cannot read her mother's book, so Subhi reads it to her.", a:"Compound sentence",
+        explain:"Two clauses joined by FANBOYS conjunction <b>so</b>." },
+      { id:"s1b6", q:"The night sea whispers to Subhi it brings him treasures.", a:"Run-on sentence",
+        explain:"<u>The sea whispers</u> / <u>it brings</u> — no full stop, no conjunction: run-on." },
+    ]},
+  { id:"s2", title:"Spot the conjunction",
+    teach:`<b>Coordinating conjunctions — FANBOYS:</b> <b>f</b>or, <b>a</b>nd, <b>n</b>or, <b>b</b>ut, <b>o</b>r, <b>y</b>et, <b>s</b>o.
+      They connect two ideas in a sequence and each carries its own meaning: <i>and</i> adds, <i>but</i>/<i>yet</i> contrast, <i>or</i> offers a choice, <i>so</i> shows a result, <i>for</i> gives a reason.
+      <br><br><b>Your task:</b> click the conjunction that joins the two clauses.`,
+    reteach:`<b>Finding the joiner.</b> A coordinating conjunction sits BETWEEN the two clauses, usually right after a comma:
+      <br><span class="ex">I need to bring the book to class<b>, but</b> we might not read every lesson.</span>
+      <br>Everything before <i>but</i> could stand alone; everything after could stand alone. The FANBOYS word is the hinge in the middle. Watch out: words like <i>then</i>, <i>also</i> and <i>very</i> are NOT conjunctions.`,
+    kind:"clickword",
+    itemsA:[
+      { id:"s2a1", q:"We are going to read The Bone Sparrow, but we are not expected to have read it yet.", a:"but",
+        explain:"<b>but</b> joins the two clauses with a contrast." },
+      { id:"s2a2", q:"I might find the language easy or I might find it challenging.", a:"or",
+        explain:"<b>or</b> offers a choice between the two clauses." },
+      { id:"s2a3", q:"We will read a section at a time and we will discuss the ideas in the story.", a:"and",
+        explain:"<b>and</b> adds the second clause to the first." },
+      { id:"s2a4", q:"He has never seen the sea, so he imagines it instead.", a:"so",
+        explain:"<b>so</b> shows a result: because he hasn't seen it, he imagines it." },
+    ],
+    itemsB:[
+      { id:"s2b1", q:"I need to bring the book to class, but we might not read every lesson.", a:"but",
+        explain:"<b>but</b> is the hinge between the two clauses." },
+      { id:"s2b2", q:"Subhi wants to follow Queeny, yet he stays inside the tent.", a:"yet",
+        explain:"<b>yet</b> works like but — a contrast between the clauses." },
+      { id:"s2b3", q:"Jimmie can visit at night or she can wait until morning.", a:"or",
+        explain:"<b>or</b> gives the choice between the two clauses." },
+      { id:"s2b4", q:"The duck argues with Subhi and it always thinks it wins.", a:"and",
+        explain:"<b>and</b> joins the two clauses." },
+    ]},
+  { id:"s3", title:"Fix the run-on",
+    teach:`<b>Two ways to fix a run-on:</b>
+      <ul>
+      <li>Split it with a <b>full stop</b> — two clean simple sentences.</li>
+      <li>Join it properly with a <b>comma + FANBOYS conjunction</b> — one compound sentence that SHOWS how the ideas connect.</li>
+      </ul>
+      <b>Trap to avoid:</b> a comma on its own can NOT join two clauses — that's still an error (a comma splice). And the conjunction has to make sense: <i>so</i> = result, <i>but</i> = contrast, <i>and</i> = addition.`,
+    reteach:`<b>Worked example.</b> Run-on: <span class="ex">The cover is blue this can represent sadness.</span>
+      <ul>
+      <li>Step 1 — find the two clauses: <u>The cover is blue</u> | <u>this can represent sadness</u>.</li>
+      <li>Fix A (full stop): <span class="ex">The cover is blue. This can represent sadness.</span></li>
+      <li>Fix B (comma + conjunction): <span class="ex">The cover is blue<b>, and</b> this can represent sadness.</span></li>
+      <li>Still WRONG: <span class="ex">The cover is blue<b>,</b> this can represent sadness.</span> — a comma alone can't do the job.</li>
+      </ul>`,
+    kind:"mcq",
+    itemsA:[
+      { id:"s3a1", q:"Fix the run-on: <i>“The cover shows a boy sitting alone the story is probably about loneliness.”</i>",
+        a:"The cover shows a boy sitting alone, so the story is probably about loneliness.",
+        opts:["The cover shows a boy sitting alone, so the story is probably about loneliness.",
+              "The cover shows a boy sitting alone, the story is probably about loneliness.",
+              "The cover shows a boy sitting alone so, the story is probably about loneliness.",
+              "The cover shows a boy sitting, alone the story is probably about loneliness."],
+        explain:"Comma + <b>so</b> joins the clauses and shows the result. A comma alone (option 2) is a comma splice — still an error." },
+      { id:"s3a2", q:"Fix the run-on: <i>“There is barbed wire that turns into birds these are symbols of prisons and freedom.”</i>",
+        a:"There is barbed wire that turns into birds. These are symbols of prisons and freedom.",
+        opts:["There is barbed wire that turns into birds. These are symbols of prisons and freedom.",
+              "There is barbed wire that turns into birds, these are symbols of prisons and freedom.",
+              "There is barbed wire that turns into birds and, these are symbols of prisons and freedom.",
+              "There is barbed wire that turns, into birds these are symbols of prisons and freedom."],
+        explain:"A full stop cleanly splits the two clauses. The comma alone is a splice; 'and,' puts the comma on the wrong side." },
+      { id:"s3a3", q:"Fix the run-on: <i>“The cover is blue this can represent the ocean and also sadness.”</i>",
+        a:"The cover is blue, and this can represent the ocean and also sadness.",
+        opts:["The cover is blue, and this can represent the ocean and also sadness.",
+              "The cover is blue, this can represent the ocean and also sadness.",
+              "The cover is blue, but this can represent the ocean and also sadness.",
+              "The cover is, blue and this can represent the ocean and also sadness."],
+        explain:"Comma + <b>and</b> adds the second idea. <b>But</b> would signal a contrast that isn't there; the comma alone is a splice." },
+      { id:"s3a4", q:"When would you choose a <b>conjunction</b> rather than a full stop?",
+        a:"When you want to show HOW the two ideas are connected (result, contrast, choice)",
+        opts:["When you want to show HOW the two ideas are connected (result, contrast, choice)",
+              "When the sentence is getting too short",
+              "Whenever both clauses mention the same person",
+              "When you have already used too many full stops"],
+        explain:"A conjunction carries meaning: <i>so</i> = result, <i>but</i> = contrast, <i>or</i> = choice. A full stop keeps ideas separate and punchy — the choice changes the feel." },
+    ],
+    itemsB:[
+      { id:"s3b1", q:"Fix the run-on: <i>“Subhi collects treasures from the night sea he keeps them in a box.”</i>",
+        a:"Subhi collects treasures from the night sea. He keeps them in a box.",
+        opts:["Subhi collects treasures from the night sea. He keeps them in a box.",
+              "Subhi collects treasures from the night sea, he keeps them in a box.",
+              "Subhi collects treasures from the night sea he keeps, them in a box.",
+              "Subhi collects treasures, from the night sea he keeps them in a box."],
+        explain:"Full stop between the clauses. The comma alone is a comma splice." },
+      { id:"s3b2", q:"Fix the run-on: <i>“Jimmie cannot read the notebook she asks Subhi for help.”</i>",
+        a:"Jimmie cannot read the notebook, so she asks Subhi for help.",
+        opts:["Jimmie cannot read the notebook, so she asks Subhi for help.",
+              "Jimmie cannot read the notebook, she asks Subhi for help.",
+              "Jimmie cannot read the notebook so, she asks Subhi for help.",
+              "Jimmie cannot, read the notebook she asks Subhi for help."],
+        explain:"Comma + <b>so</b>: not being able to read it is the REASON she asks. Comma alone = splice." },
+      { id:"s3b3", q:"Which of these is still WRONG even though it has a comma?",
+        a:"The camp is quiet at night, the rats come out to play.",
+        opts:["The camp is quiet at night, the rats come out to play.",
+              "The camp is quiet at night, and the rats come out to play.",
+              "The camp is quiet at night. The rats come out to play.",
+              "At night, the camp is quiet."],
+        explain:"Two clauses joined by only a comma = comma splice. A comma needs a FANBOYS friend to join clauses." },
+    ]},
+];
+
+/* ---------------- EXTENSION: clause types ---------------- */
+const EXT_TEACH = `<b>Level up: clauses.</b>
+  <ul>
+  <li>An <b>independent clause</b> can stand alone as a sentence: <span class="ex">Subhi listens.</span></li>
+  <li>A <b>dependent (subordinate) clause</b> has a subject and verb but CANNOT stand alone — it starts with a subordinating conjunction like <b>because, although, when, if, while, since</b>: <span class="ex">because the guards are fewer</span></li>
+  <li><b>Complex sentence</b> = independent + dependent clause: <span class="ex">Jimmie visits at night <b>because</b> the guards are fewer.</span></li>
+  <li>When the dependent clause comes FIRST, put a comma after it: <span class="ex"><b>Although it was raining,</b> we went outside.</span></li>
+  <li>A dependent clause alone is a <b>fragment</b> — another error to hunt: <span class="ex">Because Subhi was born in the camp.</span> ✗</li>
+  </ul>`;
+const EXT_ITEMS = [
+  { id:"x1", q:"“Although it was raining, we went outside.” — what type of sentence is this?",
+    a:"Complex sentence", opts:["Complex sentence","Compound sentence","Simple sentence","Run-on sentence"],
+    explain:"<b>Although</b> is a subordinating conjunction: dependent clause + independent clause = complex." },
+  { id:"x2", q:"Which part of this sentence is the DEPENDENT clause? “Jimmie visits at night because the guards are fewer.”",
+    a:"because the guards are fewer", opts:["because the guards are fewer","Jimmie visits at night","at night","the guards are fewer"],
+    explain:"It has a subject and verb (<u>guards are</u>) but <b>because</b> stops it standing alone." },
+  { id:"x3", q:"“Because Subhi was born in the camp.” — what is wrong with this?",
+    a:"It is a fragment — a dependent clause with no independent clause to lean on",
+    opts:["It is a fragment — a dependent clause with no independent clause to lean on",
+          "It is a run-on — two clauses with no joiner",
+          "It is a comma splice",
+          "Nothing — it is a complete simple sentence"],
+    explain:"<b>Because…</b> sets up a reason and then never delivers the main clause. It can't stand alone." },
+  { id:"x4", q:"Pick the conjunction that makes sense: “______ he had never seen the sea, Subhi could describe every wave.”",
+    a:"Although", opts:["Although","Because","So","And"],
+    explain:"The two ideas CONTRAST (never seen it, yet can describe it) — that's <b>although</b>. <i>Because</i> would claim not-seeing caused the knowledge." },
+  { id:"x5", q:"“When the Shakespeare duck talks, Subhi listens.” — what type of sentence?",
+    a:"Complex sentence", opts:["Complex sentence","Compound sentence","Run-on sentence","Simple sentence"],
+    explain:"<b>When</b> starts a dependent clause; comma after it because it comes first; then the independent clause." },
+  { id:"x6", q:"“After lights-out, Subhi waits by the fence.” — what type of sentence?",
+    a:"Simple sentence", opts:["Simple sentence","Complex sentence","Compound sentence","Run-on sentence"],
+    explain:"Sneaky! “After lights-out” has NO verb — it's just a phrase, not a clause. One clause total = simple." },
+  { id:"x7", q:"“The duck talks Subhi listens.” — what type of sentence?",
+    a:"Run-on sentence", opts:["Run-on sentence","Complex sentence","Compound sentence","Simple sentence"],
+    explain:"Two independent clauses, no joiner. Fix: full stop, comma + FANBOYS, or subordinate one: “<b>When</b> the duck talks, Subhi listens.”" },
+  { id:"x8", q:"Where does the comma go? “_____ the dependent clause comes first…”",
+    a:"After the dependent clause, before the independent clause",
+    opts:["After the dependent clause, before the independent clause",
+          "Before the subordinating conjunction",
+          "You never use a comma in a complex sentence",
+          "After every clause, always"],
+    explain:"<span class='ex'>Although it was raining<b>,</b> we went outside.</span> Dependent first → comma. Independent first → usually no comma." },
+];
+
+/* ================= STATE ================= */
+const KEY = "bonesparrow.v1";
+let S = load();
+function blank(){ return { studied:false, first:{}, done:{}, reteach:{}, startedAt:null, finishedAt:null,
+                           extUnlocked:false, extDone:false, retryScores:{} }; }
+function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); return s && s.first ? s : blank(); }catch(e){ return blank(); } }
+function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
+function resetAll(){ if(confirm("Wipe all your progress and scores?")){ S = blank(); save(); go("home"); } }
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function esc(t){ const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+
+function go(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("scr-"+name).classList.add("active");
+  window.scrollTo(0,0);
+  if(name==="home") renderHome();
+  if(name==="study") renderStudy();
+  if(name==="report") renderReport();
+}
+
+/* ================= HOME ================= */
+function sectionScore(items){
+  let got=0, n=0, all=true;
+  items.forEach(it=>{ if(S.first[it.id]===undefined){ all=false; } else { n++; if(S.first[it.id]) got++; } });
+  return {got,n,complete:all};
+}
+function allGramItems(){ return GRAM_STAGES.flatMap(st=>st.itemsA); }
+
+function renderHome(){
+  const wrap = document.getElementById("home-steps"); wrap.innerHTML="";
+  const m = sectionScore(MATCH_ITEMS), g = sectionScore(GAP_ITEMS), gr = sectionScore(allGramItems());
+  const steps = [
+    { t:"Study the vocabulary", d:"17 unit words with their morphemes — read before you play", done:S.studied, locked:false, fn:()=>go("study"), tag:S.studied?"DONE":"" },
+    { t:"Word challenge", d:"Match meanings and morphemes — the wrong answers look VERY close", done:S.done.match, locked:!S.studied, fn:()=>startMatch(), tag:S.done.match?`${m.got}/${MATCH_ITEMS.length} FIRST TRY`:"" },
+    { t:"Gap fill", d:"Put the right word into the sentence — look-alikes included", done:S.done.gap, locked:!S.done.match, fn:()=>startGap(), tag:S.done.gap?`${g.got}/${GAP_ITEMS.length} FIRST TRY`:"" },
+    { t:"Sentence gym", d:"Simple, compound & run-on sentences — with reteaching if you need it", done:S.done.grammar, locked:!S.done.gap, fn:()=>startGrammar(), tag:S.done.grammar?`${gr.got}/${allGramItems().length} FIRST TRY`:"" },
+    { t:"Extension: clause types", d:"Complex sentences, dependent clauses & fragments — for sentence masters", done:S.extDone, locked:!S.done.grammar, fn:()=>startExt(), tag: S.done.grammar ? (S.extUnlocked?"UNLOCKED":"OPTIONAL") : "" },
+    { t:"My report", d:"Enter your name & student ID, save the PDF, send it to your teacher", done:false, locked:!S.done.grammar, fn:()=>go("report"), tag:"" },
+  ];
+  steps.forEach((st,i)=>{
+    const b = document.createElement("button");
+    b.className = "step"+(st.done?" done":"");
+    b.disabled = st.locked;
+    b.innerHTML = `<span class="num">${st.done?"✓":i+1}</span><span><span class="t">${st.t}</span><br><span class="d">${st.d}</span></span><span class="tag">${st.locked?"LOCKED":st.tag}</span>`;
+    b.onclick = st.fn;
+    wrap.appendChild(b);
+  });
+}
+
+/* ================= STUDY ================= */
+function renderStudy(){
+  const wrap = document.getElementById("vocab-list"); wrap.innerHTML="";
+  VOCAB.forEach(v=>{
+    const d = document.createElement("div"); d.className="vcard";
+    d.innerHTML = `<span class="w">${v.w}</span><span class="pos">${v.pos}</span>
+      <div class="meaning">${v.meaning}</div><div class="morph">${v.morph}</div>`;
+    wrap.appendChild(d);
+  });
+}
+function markStudied(){ S.studied=true; if(!S.startedAt) S.startedAt=Date.now(); save(); startMatch(); }
+
+/* ================= GENERIC QUIZ RUNNER =================
+   queue of items; wrong answers re-queued until answered right (mastery),
+   but only the FIRST attempt is scored & reported. */
+function runQuiz(cfg){
+  // cfg: {mount, progEl, progLabel, items, kind, onDone, firstTracked}
+  let queue = shuffle(cfg.items.map(it=>it)); // presentation order random
+  let seen = {}; // id -> attempted at least once (for first-attempt tracking)
+  const total = cfg.items.length;
+  let answeredFirst = 0;
+  cfg.items.forEach(it=>{ if(S.first[it.id]!==undefined) answeredFirst++; });
+
+  function progress(){
+    const el = document.getElementById(cfg.progEl);
+    if(el) el.textContent = `${cfg.progLabel} · ${Math.min(answeredFirst,total)}/${total}`;
+  }
+  function next(){
+    progress();
+    if(!queue.length){ cfg.onDone(); return; }
+    const it = queue.shift();
+    render(it);
+  }
+  function record(it, correct){
+    const firstTime = S.first[it.id]===undefined && !seen[it.id];
+    if(cfg.firstTracked && firstTime){ S.first[it.id]=correct; answeredFirst++; save(); }
+    seen[it.id]=true;
+    if(!correct) queue.push(it); // mastery loop
+  }
+  function render(it){
+    const mount = document.getElementById(cfg.mount);
+    mount.innerHTML = "";
+    const box = document.createElement("div");
+    let fb, nextBtn;
+    function finishItem(correct, correctLabel){
+      fb.className = "feedback "+(correct?"ok":"bad");
+      fb.innerHTML = (correct? "<b>Correct.</b> " : `<b>Not quite — the answer is “${correctLabel}”.</b> `) + (it.explain||"");
+      nextBtn.style.display="inline-block";
+      record(it, correct);
+    }
+    if(cfg.kind==="clickword"){
+      box.innerHTML = `<div class="prompt">Click the conjunction that joins the two clauses</div>`;
+      const w = document.createElement("div"); w.className="words";
+      it.q.split(/\s+/).forEach(word=>{
+        const clean = word.replace(/[.,!?;:'"“”]/g,"").toLowerCase();
+        const b = document.createElement("button"); b.className="wordbtn"; b.textContent=word;
+        b.onclick = ()=>{
+          if(nextBtn.style.display==="inline-block") return;
+          const correct = clean===it.a;
+          b.classList.add(correct?"right":"wrongpick");
+          if(!correct){ w.querySelectorAll(".wordbtn").forEach(x=>{ if(x.textContent.replace(/[.,!?;:'"“”]/g,"").toLowerCase()===it.a) x.classList.add("right"); }); }
+          finishItem(correct, it.a);
+        };
+        w.appendChild(b);
+      });
+      box.appendChild(w);
+    } else {
+      const isGap = cfg.kind==="gap";
+      const promptTxt = isGap ? "Choose the word that truly fits" :
+        (cfg.kind==="classify" ? "What type of sentence is this?" : "Choose the best answer");
+      box.innerHTML = `<div class="prompt">${promptTxt}</div>`;
+      const qd = document.createElement("div"); qd.className="qtext";
+      if(isGap){ qd.innerHTML = `${esc(it.before)} <span class="gap">&nbsp;</span> ${esc(it.after)}`; }
+      else { qd.innerHTML = it.q; }
+      box.appendChild(qd);
+      const opts = document.createElement("div");
+      opts.className = (isGap || (it.opts||SENT_OPTS).every(o=>o.length<28)) ? "opts chips" : "opts";
+      const optList = shuffle(it.opts || SENT_OPTS);
+      optList.forEach(o=>{
+        const b = document.createElement("button"); b.className="opt"; b.innerHTML=esc(o);
+        b.onclick = ()=>{
+          if(nextBtn.style.display==="inline-block") return;
+          const correct = o===it.a;
+          b.classList.add(correct?"right":"wrongpick");
+          if(!correct) opts.querySelectorAll(".opt").forEach(x=>{ if(x.textContent===it.a) x.classList.add("right"); });
+          opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+          if(isGap && correct) qd.querySelector(".gap").textContent = it.a;
+          finishItem(correct, it.a);
+        };
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+    }
+    fb = document.createElement("div"); fb.className="feedback"; box.appendChild(fb);
+    const row = document.createElement("div"); row.className="nextrow noprint";
+    nextBtn = document.createElement("button"); nextBtn.className="btn btn-primary"; nextBtn.textContent="Next →";
+    nextBtn.style.display="none"; nextBtn.onclick=next;
+    row.appendChild(nextBtn); box.appendChild(row);
+    mount.appendChild(box);
+  }
+  next();
+}
+
+/* ================= MATCH & GAP sections ================= */
+function startMatch(){
+  go("match");
+  runQuiz({ mount:"match-body", progEl:"match-prog", progLabel:"STEP 2 · WORD CHALLENGE",
+    items:MATCH_ITEMS, kind:"mcq", firstTracked:true,
+    onDone:()=>{ S.done.match=true; save(); sectionSummary("match-body", MATCH_ITEMS, "Word challenge", ()=>startGap()); }});
+}
+function startGap(){
+  go("gap");
+  runQuiz({ mount:"gap-body", progEl:"gap-prog", progLabel:"STEP 3 · GAP FILL",
+    items:GAP_ITEMS, kind:"gap", firstTracked:true,
+    onDone:()=>{ S.done.gap=true; save(); sectionSummary("gap-body", GAP_ITEMS, "Gap fill", ()=>startGrammar()); }});
+}
+function sectionSummary(mount, items, label, nextFn){
+  const sc = sectionScore(items);
+  const pct = Math.round(100*sc.got/items.length);
+  const cls = pct>=80?"good":(pct>=60?"mid":"low");
+  const m = document.getElementById(mount);
+  m.innerHTML = `<div class="sumbox"><div class="prompt">${label} — first attempts</div>
+    <div class="big ${cls}">${sc.got} / ${items.length}</div>
+    <p class="muted">${pct>=80?"Strong work — the look-alikes didn't fool you.":(pct>=60?"Solid. Check the words you slipped on in the study list before your teacher quizzes you.":"Go back over the study list — the morphemes are the key to telling the look-alikes apart.")}</p></div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="go('home')">home</button>
+      <button class="btn btn-primary" id="sum-next">Keep going →</button></div>`;
+  document.getElementById("sum-next").onclick = nextFn;
+}
+
+/* ================= GRAMMAR: staged with reteach ================= */
+function startGrammar(){ go("grammar"); gramStage(0, false); }
+function gramStage(idx, isRetry){
+  if(idx >= GRAM_STAGES.length){ finishGrammar(); return; }
+  const st = GRAM_STAGES[idx];
+  const mount = document.getElementById("gram-body");
+  const teachHtml = isRetry ? st.reteach : st.teach;
+  mount.innerHTML = `<h2>Stage ${idx+1}: ${st.title}${isRetry?" — second look":""}</h2>
+    <div class="teach">${teachHtml}</div>
+    <div class="nextrow"><button class="btn btn-primary" id="st-go">${isRetry?"Try the new set →":"Got it — quiz me →"}</button></div>`;
+  document.getElementById("st-go").onclick = ()=>{
+    const items = isRetry ? st.itemsB : st.itemsA;
+    let localRight = 0, localN = 0;
+    runQuiz({ mount:"gram-body", progEl:"gram-prog", progLabel:`STEP 4 · STAGE ${idx+1}`,
+      items, kind:st.kind, firstTracked:!isRetry,
+      onDone:()=>{
+        // score this pass on FIRST attempts of the pass
+        let got=0;
+        if(isRetry){
+          // retry pass: read from a temp tracker — recompute from itemsB firsts stored under retryScores
+          got = S.retryScores[st.id]||0;
+        } else {
+          items.forEach(it=>{ if(S.first[it.id]) got++; });
+        }
+        const passed = got >= Math.ceil(items.length*0.8);
+        if(!isRetry && !passed){
+          S.reteach[st.id]=true; save();
+          const m = document.getElementById("gram-body");
+          m.innerHTML = `<div class="sumbox"><div class="prompt">Stage ${idx+1} — first attempts</div>
+            <div class="big mid">${got} / ${items.length}</div>
+            <p class="muted">No stress — let's look at it a different way, then you get a fresh set of questions.</p></div>
+            <div class="nextrow" style="justify-content:center"><button class="btn btn-primary" id="rt">Reteach me →</button></div>`;
+          document.getElementById("rt").onclick = ()=>gramStage(idx, true);
+        } else {
+          gramStage(idx+1, false);
+        }
+      }});
+    // for retry passes, wrap first-attempt tracking manually
+    if(isRetry){
+      // count retry firsts by monkey-tracking: simplest is to snapshot before/after via S.first? retry passes aren't in S.first.
+      // We instead count corrects live: patch record by observing feedback isn't clean; store per-stage retry score at quiz end via queue drain:
+      // Simpler: retry pass uses firstTracked=false, so we count via a MutationObserver-free approach:
+      // we count "Correct." feedbacks that appear for fresh items only — good enough: track in closure below.
+    }
+  };
+}
+/* retry scoring: wrap runQuiz feedback by intercepting record — simplest reliable path:
+   we re-run retry sets with firstTracked=false and count first-sight corrects in a shadow map. */
+const _origRunQuiz = runQuiz;
+runQuiz = function(cfg){
+  if(cfg.firstTracked===false && cfg.progLabel && cfg.progLabel.startsWith("STEP 4")){
+    const stage = GRAM_STAGES.find(s=> s.itemsB.some(it=> cfg.items.includes(it)) && cfg.items.every(it=> s.itemsB.includes(it)) );
+    if(stage){
+      const shadowSeen = {}; let shadowGot = 0;
+      const origOnDone = cfg.onDone;
+      // wrap items with proxy scoring via a decorated onDone chain: intercept clicks is complex;
+      // instead track via explain-callback: we shadow-record inside a patched S.first setter — overkill.
+      // Pragmatic approach: retry uses its own mini first-map:
+      const mini = {};
+      const items = cfg.items.map(it=> Object.assign({}, it, { _mini:true }));
+      cfg.items = items;
+      const origRecordHook = null;
+      cfg._shadow = { mini };
+      cfg.onDone = function(){
+        let got=0; items.forEach(it=>{ if(cfg._shadow.mini[it.id]) got++; });
+        S.retryScores[stage.id]=got; save();
+        origOnDone();
+      };
+    }
+  }
+  return _origRunQuiz(cfg);
+};
+/* patch the shadow into the generic runner via a light re-implementation of record():
+   the original runner closes over its own record(); to keep one code path we piggyback on
+   S.first when firstTracked, and on cfg._shadow.mini when provided. */
+</script>
+<script>
+/* Second pass: replace runQuiz with a single clean implementation that supports
+   an optional shadow map (used for grammar retry sets). Defining it here overrides
+   the earlier versions — one code path, no monkey patching at runtime. */
+runQuiz = function(cfg){
+  let queue = shuffle(cfg.items.map(it=>it));
+  const total = cfg.items.length;
+  const seen = {};
+  let answered = 0;
+
+  function progress(){
+    const el = document.getElementById(cfg.progEl);
+    if(el) el.textContent = `${cfg.progLabel} · ${Math.min(answered,total)}/${total}`;
+  }
+  function record(it, correct){
+    if(!seen[it.id]){
+      seen[it.id]=true; answered++;
+      if(cfg.firstTracked && S.first[it.id]===undefined){ S.first[it.id]=correct; save(); }
+      if(cfg._shadow){ cfg._shadow.mini[it.id]=correct; }
+    }
+    if(!correct) queue.push(it);
+  }
+  function next(){
+    progress();
+    if(!queue.length){ cfg.onDone(); return; }
+    render(queue.shift());
+  }
+  function render(it){
+    const mount = document.getElementById(cfg.mount);
+    mount.innerHTML = "";
+    const box = document.createElement("div");
+    let fb, nextBtn;
+    function finishItem(correct, correctLabel){
+      fb.className = "feedback "+(correct?"ok":"bad");
+      fb.innerHTML = (correct? "<b>Correct.</b> " : `<b>Not quite — the answer is “${esc(correctLabel)}”.</b> `) + (it.explain||"");
+      nextBtn.style.display="inline-block";
+      record(it, correct);
+    }
+    if(cfg.kind==="clickword"){
+      box.innerHTML = `<div class="prompt">Click the conjunction that joins the two clauses</div>`;
+      const w = document.createElement("div"); w.className="words";
+      it.q.split(/\s+/).forEach(word=>{
+        const clean = word.replace(/[.,!?;:'"“”]/g,"").toLowerCase();
+        const b = document.createElement("button"); b.className="wordbtn"; b.textContent=word;
+        b.onclick = ()=>{
+          if(nextBtn.style.display==="inline-block") return;
+          const correct = clean===it.a;
+          b.classList.add(correct?"right":"wrongpick");
+          if(!correct){ w.querySelectorAll(".wordbtn").forEach(x=>{ if(x.textContent.replace(/[.,!?;:'"“”]/g,"").toLowerCase()===it.a) x.classList.add("right"); }); }
+          finishItem(correct, it.a);
+        };
+        w.appendChild(b);
+      });
+      box.appendChild(w);
+    } else {
+      const isGap = cfg.kind==="gap";
+      const promptTxt = isGap ? "Choose the word that truly fits" :
+        (cfg.kind==="classify" ? "What type of sentence is this?" : "Choose the best answer");
+      box.innerHTML = `<div class="prompt">${promptTxt}</div>`;
+      const qd = document.createElement("div"); qd.className="qtext";
+      if(isGap){ qd.innerHTML = `${esc(it.before)} <span class="gap">&nbsp;</span> ${esc(it.after)}`; }
+      else { qd.innerHTML = it.q; }
+      box.appendChild(qd);
+      const opts = document.createElement("div");
+      const optList = shuffle(it.opts || SENT_OPTS);
+      opts.className = optList.every(o=>o.length<30) ? "opts chips" : "opts";
+      optList.forEach(o=>{
+        const b = document.createElement("button"); b.className="opt"; b.textContent=o;
+        b.onclick = ()=>{
+          if(nextBtn.style.display==="inline-block") return;
+          const correct = o===it.a;
+          b.classList.add(correct?"right":"wrongpick");
+          if(!correct) opts.querySelectorAll(".opt").forEach(x=>{ if(x.textContent===it.a) x.classList.add("right"); });
+          opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+          if(isGap && correct) qd.querySelector(".gap").textContent = it.a;
+          finishItem(correct, it.a);
+        };
+        opts.appendChild(b);
+      });
+      box.appendChild(opts);
+    }
+    fb = document.createElement("div"); fb.className="feedback"; box.appendChild(fb);
+    const row = document.createElement("div"); row.className="nextrow noprint";
+    nextBtn = document.createElement("button"); nextBtn.className="btn btn-primary"; nextBtn.textContent="Next →";
+    nextBtn.style.display="none"; nextBtn.onclick=next;
+    row.appendChild(nextBtn); box.appendChild(row);
+    mount.appendChild(box);
+  }
+  next();
+};
+
+/* clean gramStage using the shadow map for retry passes */
+gramStage = function(idx, isRetry){
+  if(idx >= GRAM_STAGES.length){ finishGrammar(); return; }
+  const st = GRAM_STAGES[idx];
+  const mount = document.getElementById("gram-body");
+  mount.innerHTML = `<h2>Stage ${idx+1}: ${st.title}${isRetry?" — second look":""}</h2>
+    <div class="teach">${isRetry ? st.reteach : st.teach}</div>
+    <div class="nextrow"><button class="btn btn-primary" id="st-go">${isRetry?"Try the new set →":"Got it — quiz me →"}</button></div>`;
+  document.getElementById("st-go").onclick = ()=>{
+    const items = isRetry ? st.itemsB : st.itemsA;
+    const shadow = isRetry ? { mini:{} } : null;
+    runQuiz({ mount:"gram-body", progEl:"gram-prog", progLabel:`STEP 4 · STAGE ${idx+1}`,
+      items, kind:st.kind, firstTracked:!isRetry, _shadow:shadow,
+      onDone:()=>{
+        let got=0;
+        if(isRetry){ items.forEach(it=>{ if(shadow.mini[it.id]) got++; }); S.retryScores[st.id]=got; save(); }
+        else { items.forEach(it=>{ if(S.first[it.id]) got++; }); }
+        const passed = got >= Math.ceil(items.length*0.8);
+        if(!isRetry && !passed){
+          S.reteach[st.id]=true; save();
+          mount.innerHTML = `<div class="sumbox"><div class="prompt">Stage ${idx+1} — first attempts</div>
+            <div class="big mid">${got} / ${items.length}</div>
+            <p class="muted">No stress — let's look at it a different way, then you get a fresh set of questions.</p></div>
+            <div class="nextrow" style="justify-content:center"><button class="btn btn-primary" id="rt">Reteach me →</button></div>`;
+          document.getElementById("rt").onclick = ()=>gramStage(idx, true);
+        } else {
+          gramStage(idx+1, false);
+        }
+      }});
+  };
+};
+
+function finishGrammar(){
+  S.done.grammar = true;
+  const noReteach = GRAM_STAGES.every(st=>!S.reteach[st.id]);
+  const sc = sectionScore(allGramItems());
+  S.extUnlocked = noReteach && sc.got === allGramItems().length;
+  if(!S.finishedAt) S.finishedAt = Date.now();
+  save();
+  const m = document.getElementById("gram-body");
+  const pct = Math.round(100*sc.got/allGramItems().length);
+  const cls = pct>=80?"good":(pct>=60?"mid":"low");
+  m.innerHTML = `<div class="sumbox"><div class="prompt">Sentence gym — first attempts</div>
+    <div class="big ${cls}">${sc.got} / ${allGramItems().length}</div>
+    <p class="muted">${S.extUnlocked
+      ? "A perfect run — you've unlocked the <b>clause types extension</b>. That's where complex sentences live."
+      : "Core complete. The extension is optional — you can try it, or go straight to your report."}</p></div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="go('report')">my report</button>
+      <button class="btn btn-primary" onclick="startExt()">${S.extUnlocked?"Extension →":"Try the extension anyway →"}</button></div>`;
+}
+
+/* ================= EXTENSION ================= */
+function startExt(){
+  go("ext");
+  const m = document.getElementById("ext-body");
+  m.innerHTML = `<h2>Extension: clause types</h2><div class="teach">${EXT_TEACH}</div>
+    <div class="nextrow"><button class="btn btn-primary" id="ext-go">Quiz me →</button></div>`;
+  document.getElementById("ext-go").onclick = ()=>{
+    runQuiz({ mount:"ext-body", progEl:"ext-prog", progLabel:"EXTENSION", items:EXT_ITEMS, kind:"mcq", firstTracked:true,
+      onDone:()=>{ S.extDone=true; save(); sectionSummary("ext-body", EXT_ITEMS, "Extension", ()=>go("report")); }});
+  };
+}
+
+/* ================= REPORT ================= */
+function vcode(str){
+  let h = 5381; for(let i=0;i<str.length;i++){ h = ((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
+function wrongList(items, labelFn){
+  return items.filter(it=>S.first[it.id]===false).map(labelFn);
+}
+function renderReport(){
+  const m = document.getElementById("report-body");
+  if(!S.done.grammar){
+    m.innerHTML = `<div class="sumbox"><p class="muted">Finish the word challenge, gap fill and sentence gym first — then your report unlocks here.</p></div>`;
+    return;
+  }
+  const name = S.name||"", sid = S.sid||"";
+  const mS = sectionScore(MATCH_ITEMS), gS = sectionScore(GAP_ITEMS), grS = sectionScore(allGramItems());
+  const extS = S.extDone ? sectionScore(EXT_ITEMS) : null;
+  const stageRows = GRAM_STAGES.map((st,i)=>{
+    let got=0; st.itemsA.forEach(it=>{ if(S.first[it.id]) got++; });
+    const rt = S.reteach[st.id] ? ` · reteach used${S.retryScores[st.id]!==undefined?` (retry ${S.retryScores[st.id]}/${st.itemsB.length})`:""}` : "";
+    return `<tr><td>Stage ${i+1} — ${st.title}</td><td class="score">${got}/${st.itemsA.length}</td><td>${S.reteach[st.id]?"Reteach + fresh set"+rt.replace(" · reteach used",""):"Passed first time"}</td></tr>`;
+  }).join("");
+  const missedVocab = wrongList(MATCH_ITEMS.concat(GAP_ITEMS), it=> it.a );
+  const missedUnique = [...new Set(missedVocab)];
+  const totalFirst = mS.got + gS.got + grS.got + (extS?extS.got:0);
+  const totalN = MATCH_ITEMS.length + GAP_ITEMS.length + allGramItems().length + (extS?EXT_ITEMS.length:0);
+  const code = vcode(`${name}|${sid}|${mS.got}|${gS.got}|${grS.got}|${extS?extS.got:"x"}`);
+  const dt = new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
+
+  m.innerHTML = `
+    <div class="idrow noprint">
+      <span><label>Your name</label><input id="rep-name" value="${esc(name)}" placeholder="e.g. Subhi Dau"></span>
+      <span><label>Student ID</label><input id="rep-sid" value="${esc(sid)}" placeholder="e.g. KHS12345"></span>
+      <span style="align-self:flex-end"><button class="btn btn-primary" onclick="saveIdAndPrint()">Save as PDF</button></span>
+    </div>
+    <p class="muted noprint" style="margin-bottom:14px">In the print box, choose <b>Save as PDF</b> as the destination, then email the file to your teacher.</p>
+    <h2>The Bone Sparrow — Pre-reading Report</h2>
+    <p class="muted">${name?`<b>${esc(name)}</b>`:"<i>(name not entered)</i>"} · ID ${sid?`<b>${esc(sid)}</b>`:"<i>(not entered)</i>"} · ${dt}</p>
+    <table class="repgrid">
+      <tr><th>Section</th><th>First-attempt score</th><th>Notes</th></tr>
+      <tr><td>Word challenge (meanings &amp; morphemes)</td><td class="score">${mS.got}/${MATCH_ITEMS.length}</td><td>Close-distractor multiple choice</td></tr>
+      <tr><td>Gap fill (words in context)</td><td class="score">${gS.got}/${GAP_ITEMS.length}</td><td>Look-alike options included</td></tr>
+      ${stageRows}
+      <tr><td>Extension — clause types</td><td class="score">${extS?`${extS.got}/${EXT_ITEMS.length}`:"—"}</td><td>${extS?(S.extUnlocked?"Unlocked by perfect core run":"Attempted voluntarily"):"Not attempted"}</td></tr>
+      <tr><td><b>Total (first attempts)</b></td><td class="score"><b>${totalFirst}/${totalN}</b></td><td>${Math.round(100*totalFirst/totalN)}%</td></tr>
+    </table>
+    <h3>Words / answers missed on first try</h3>
+    <p class="muted">${missedUnique.length? esc(missedUnique.join(", ")) : "None — no first-attempt vocabulary errors."}</p>
+    <h3>What this tells your teacher</h3>
+    <p class="muted">Every wrong answer was retried until correct (mastery loop), but the scores above are first attempts only.
+    ${GRAM_STAGES.some(st=>S.reteach[st.id]) ? "Reteaching was triggered where a stage scored under 80% — a fresh parallel question set was used for the retry." : "No reteaching was needed."}
+    ${S.extUnlocked?" The clause-types extension was unlocked by a perfect core run.":""}</p>
+    <p class="muted">Verification code: <span class="vcode">${code}</span> · generated by the Bone Sparrow pre-reading trainer</p>`;
+}
+function saveIdAndPrint(){
+  S.name = document.getElementById("rep-name").value.trim();
+  S.sid = document.getElementById("rep-sid").value.trim();
+  save();
+  renderReport();
+  setTimeout(()=>window.print(), 150);
+}
+
+renderHome();
+</script>
+</body>
+</html>
