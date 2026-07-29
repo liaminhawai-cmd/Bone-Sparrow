@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" content="notranslate">
+<title>The Bone Sparrow — Reading &amp; Evidence Hub</title>
+<style>
+/* ============================================================
+   Palette matches Grammar Hub / Bone Sparrow Pre-reading Trainer
+   so the suite reads as one. Accent doubles as the wrong-answer
+   colour, so SELECTED state always uses --ink, never accent.
+   ============================================================ */
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
+  --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
+  --warnbg:#faeeda; --warntx:#854f0b;
+  /* tile roles (sentence-builder colour key: colour is metalanguage) */
+  --stem-bg:#d6eafc; --stem-tx:#0b447c;   /* blue   = sentence stem   */
+  --quote-bg:#fff3b0; --quote-tx:#7a5a00; /* yellow = embedded quote  */
+  --tail-bg:#fbeaf0;  --tail-tx:#993556;  /* pink   = ending / effect */
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:18px 10px 40px}
+.container{width:100%;max-width:880px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1,h2,h3,.serif{font-family:Georgia,'Times New Roman',serif}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:19px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 16px}
+.eyebrow{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent)}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.topbar .where{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.linkbtn{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0}
+.linkbtn:hover{text-decoration:underline}
+a{color:var(--accent)}
+.btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);transition:all .15s ease;font-family:inherit}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover:not(:disabled){background:#8c2828}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 12px}
+p.lead{color:var(--muted);font-size:13.5px;margin:0 0 10px}
+
+/* ---- home step list ---- */
+.step{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:9px;cursor:pointer;
+      font-family:inherit;font-size:15px;transition:border-color .15s}
+.step:hover:not(:disabled){border-color:var(--accent)}
+.step:disabled{opacity:.55;cursor:not-allowed}
+.step .num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--line);
+           display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+.step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.step .t{font-weight:700}
+.step .d{color:var(--muted);font-size:12.5px}
+.step .tag{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+           color:var(--muted);white-space:nowrap}
+.step.done .tag{color:var(--correct)}
+
+/* ---- quiz ---- */
+.stim{font-family:Georgia,serif;font-size:17px;background:#fff;border:1px solid var(--line);
+      border-left:4px solid var(--accent);border-radius:8px;padding:14px 16px;margin:0 0 12px}
+.stim .pg{display:block;margin-top:6px;font-family:'Segoe UI',sans-serif;font-size:11px;color:var(--muted)}
+.q{font-size:16px;font-weight:700;margin:0 0 10px}
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.opts.chips{flex-direction:row;flex-wrap:wrap}
+.opt{text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;
+     font-family:inherit;font-size:14.5px;cursor:pointer;transition:border-color .12s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--okbg);border-color:var(--correct)}
+.opt.wrongpick{background:var(--badbg);border-color:var(--wrong)}
+.feedback{display:none;border-radius:8px;padding:11px 13px;font-size:14px;margin:0 0 12px;line-height:1.5}
+.feedback.show{display:block;animation:rise .2s ease}
+.feedback.ok{display:block;background:var(--okbg);color:var(--correct);animation:rise .2s ease}
+.feedback.bad{display:block;background:var(--badbg);color:#7c2626;animation:rise .2s ease}
+.feedback.warn{display:block;background:var(--warnbg);color:var(--warntx);animation:rise .2s ease}
+.feedback ul{margin:6px 0 0 18px;padding:0}
+.feedback li{margin:0 0 4px}
+.requote{font-family:Georgia,serif;background:#fff;border:1px solid var(--line);border-radius:6px;
+         padding:8px 10px;margin-top:8px;color:var(--ink);font-size:14.5px}
+.progress-track{height:8px;background:var(--line-soft);border-radius:99px;margin:0 0 16px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .25s ease}
+@keyframes rise{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+
+/* ---- evidence passage ---- */
+.passage{font-family:Georgia,serif;font-size:16.5px;line-height:1.75;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:16px 18px;margin:0 0 12px}
+.passage .pg{display:block;margin-top:8px;font-family:'Segoe UI',sans-serif;font-size:11px;color:var(--muted)}
+.seg{cursor:pointer;border-radius:4px;padding:1px 2px;border-bottom:2px solid transparent;transition:background .12s}
+.seg:hover{background:var(--line-soft)}
+.seg.picked{background:#efe6c8;border-bottom-color:var(--ink)}
+.seg.hit{background:var(--okbg);border-bottom-color:var(--correct)}
+.seg.miss{background:var(--badbg);border-bottom-color:var(--wrong)}
+.idea-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.fchoice{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 14px;font-family:inherit;
+         font-size:13.5px;font-weight:600;cursor:pointer}
+.fchoice.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ---- rubric ladder ---- */
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 14px}
+.lcard{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;font-size:12px;
+       line-height:1.35;cursor:pointer;font-family:inherit;text-align:left;transition:border-color .12s}
+.lcard .lv{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);display:block;margin-bottom:3px}
+.lcard.now{border:2px solid var(--ink)}
+.lcard.got{background:var(--okbg);border-color:var(--correct)}
+.lcard.got .lv{color:var(--correct)}
+.lcard.below{opacity:.55}
+.ladder-hint{display:none;background:var(--bg);border:1px dashed var(--line);border-radius:8px;
+             padding:10px 12px;font-size:13px;margin:0 0 12px}
+.ladder-hint.show{display:block}
+@media (max-width:640px){.ladder{grid-template-columns:repeat(2,1fr)}}
+
+/* ---- sentence builder ---- */
+.slotrow{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+.slot{border:2px dashed var(--line);border-radius:10px;min-height:46px;padding:8px 10px;background:#fff;
+      display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.slot .slabel{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);flex:0 0 92px}
+.slot .placed{border-radius:8px;padding:7px 10px;font-size:13.5px;cursor:pointer;border:1px solid transparent}
+.slot .placed:after{content:" ✕";font-size:10px;color:var(--muted)}
+.bins{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:0 0 12px}
+@media (max-width:700px){.bins{grid-template-columns:1fr}}
+.bin{border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+.bin h4{margin:0;padding:7px 10px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line-soft)}
+.bin .binbody{padding:8px;display:flex;flex-direction:column;gap:6px;max-height:230px;overflow-y:auto}
+.tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13.5px;text-align:left;
+      cursor:pointer;font-family:inherit;transition:transform .1s, border-color .12s}
+.tile:hover{border-color:var(--ink)}
+.tile.used{opacity:.4}
+.bin.stems h4, .tile.k-stem{background:var(--stem-bg);color:var(--stem-tx)}
+.bin.quotes h4, .tile.k-quote{background:var(--quote-bg);color:var(--quote-tx)}
+.bin.tails h4, .tile.k-tail{background:var(--tail-bg);color:var(--tail-tx)}
+.slot .placed.k-stem{background:var(--stem-bg);color:var(--stem-tx)}
+.slot .placed.k-quote{background:var(--quote-bg);color:var(--quote-tx)}
+.slot .placed.k-tail{background:var(--tail-bg);color:var(--tail-tx)}
+.preview{font-family:Georgia,serif;font-size:16.5px;background:var(--bg);border:1px solid var(--line);
+         border-radius:8px;padding:12px 14px;margin:0 0 12px;min-height:48px}
+.preview .ph{color:var(--muted);font-size:13px;font-family:'Segoe UI',sans-serif}
+
+/* ---- upgrader ---- */
+.wag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+@media (max-width:640px){.wag{grid-template-columns:1fr}}
+.grow{font-family:Georgia,serif;font-size:16.5px;line-height:1.6;background:#fff;border:1px solid var(--line);
+      border-radius:10px;padding:14px 16px;margin:0 0 12px}
+.grow .new{background:var(--okbg)}
+
+/* ---- report ---- */
+table.rpt{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 12px}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:7px 10px;text-align:left}
+table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.rowinp{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.rowinp label{font-size:12px;font-weight:700;display:block;margin-bottom:3px}
+.rowinp input{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;background:#fff}
+.vcode{font-family:Georgia,serif;font-size:15px;letter-spacing:1px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff;padding:0}
+  .container{border:none;box-shadow:none;max-width:100%}
+  .noprint{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar noprint">
+    <span class="where" id="whereLbl">Year 7 English · The Bone Sparrow · Units 5–6</span>
+    <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← home</button>
+  </div>
+  <div id="body"></div>
+</div>
+
+<script>
+/* ============================================================================
+   THE BONE SPARROW — READING & EVIDENCE HUB
+   ----------------------------------------------------------------------------
+   This block is the data spine. The engine below knows nothing about the
+   novel; it only runs whatever is in these consts. To add content, copy an
+   entry and follow its shape — every item needs an `id` and an `explain`/`fb`
+   that names the trap and points the reader back to the line.
+
+   Scoring rules (same as the Pre-reading Trainer and Grammar Hub):
+   • wrong answers are retried until correct (mastery loop),
+   • but only the FIRST attempt is scored and reported.
+
+   Passages are short page-referenced extracts already used in the unit's
+   printed resources, reproduced for enrolled students under the school's
+   statutory licence. Keep extracts short; do not paste whole chapters.
+   ============================================================================ */
+
+/* ==================== QUICKREADS (cold-excerpt inference checks) ============
+   Each quickread: read the passage, then the passage HIDES and the questions
+   run "cold". A misread item is retaught immediately: the feedback re-quotes
+   the exact line (item.line) so the reteach happens at the point of error.
+   =========================================================================== */
+const QUICKREADS = [
+{ id:"qr1", step:"Quickread 1", title:"The Night Sea", where:"Chapter 1, pages 1–2",
+  intro:"Read the opening of the novel carefully — twice is better. When you start the questions, the passage disappears. That's the point: this checks what you understood, not what you can look up.",
+  passage:`Sometimes, at night, the dirt outside turns into a beautiful ocean. As red as the sun and as deep as the sky.<br><br>
+I lie on my bed, Queeny's feet pushing against my cheek, and listen to the waves lapping at the tent. Queeny says I'm stupid, saying that kind of stuff. But it's true. She just doesn't see it, is all. Our maá says there are some people in this world who can see all the hidden bits and pieces of the universe blown in on the north wind and scattered about in the shadows. Queeny, she never tries to look in the shadows. She doesn't even squint.<br><br>
+Maá sees though. She can hear the ocean outside too. 'You hear it, né?' I whisper, my fingers feeling for her smile in the dark.<br><br>
+In the morning, the ground still wet and foamy from where those waves washed up, I sit and trace the hundreds of animals that have swum all the way up to the tent, their faces pushing against the flaps, trying to get a look at us inside on our beds…`,
+  items:[
+  { id:"qr1a", q:"The dirt 'turns into a beautiful ocean'. The Night Sea is best understood as:",
+    opts:["A real ocean that floods the camp after dark",
+          "Subhi's imagination, which the story lets feel completely real",
+          "A dream Subhi has while he is asleep",
+          "A story that Queeny tells to help Subhi sleep"],
+    a:1, explain:"Fraillon deliberately blurs the line — we see the world exactly as Subhi sees it, so his imagined sea gets described as fact. Queeny calling it 'stupid' is our clue that not everyone can see it.",
+    line:"Sometimes, at night, the dirt outside turns into a beautiful ocean." },
+  { id:"qr1b", q:"'Queeny says I'm stupid, saying that kind of stuff.' What does this suggest?",
+    opts:["Queeny hates her brother",
+          "Subhi really is stupid",
+          "Queeny doesn't share — or won't let herself share — Subhi's way of seeing",
+          "Queeny cannot hear anything at night"],
+    a:2, explain:"'Hates' is too strong — the trap answer. Queeny dismisses the Night Sea, and the next lines tell us why: 'she never tries to look in the shadows. She doesn't even squint.' She refuses to look, which is different from hating him.",
+    line:"Queeny, she never tries to look in the shadows. She doesn't even squint." },
+  { id:"qr1c", q:"'She just doesn't see it, is all.' The little phrase 'is all' makes Subhi sound:",
+    opts:["Furious with his sister",
+          "Matter-of-fact and forgiving — he's not angry at Queeny",
+          "Confused about what he saw",
+          "Like he is boasting about his gift"],
+    a:1, explain:"'Is all' shrugs the criticism off. Subhi explains Queeny rather than attacking her — one of the first signs of how gentle this narrator is.",
+    line:"But it's true. She just doesn't see it, is all." },
+  { id:"qr1d", q:"'…my fingers feeling for her smile in the dark.' This detail suggests:",
+    opts:["Maá is invisible at night",
+          "Subhi cannot see anything at all",
+          "Maá is fast asleep and won't wake up",
+          "It's too dark to see, and Subhi checks by touch whether Maá shares the moment — their closeness"],
+    a:3, explain:"He isn't just touching her face — he's checking for the smile, hoping she hears the ocean too. It's a tiny action that shows warmth and closeness in one line.",
+    line:"'You hear it, né?' I whisper, my fingers feeling for her smile in the dark." },
+  { id:"qr1e", q:"In 'the waves lapping at the tent', the word 'lapping' means the waves are:",
+    opts:["Crashing violently","Touching gently, again and again","Freezing cold","Disappearing quickly"],
+    a:1, explain:"Lapping is the soft, repeated touch of small waves — think of a dog lapping water. It makes the Night Sea calm and comforting, not threatening.",
+    line:"…and listen to the waves lapping at the tent." },
+  { id:"qr1f", q:"Subhi whispers 'You hear it, né?' The word 'né' tells us:",
+    opts:["It is a spelling mistake",
+          "It is the name Subhi gives the ocean",
+          "Subhi's family speak another language, and its rhythms shape his English",
+          "Subhi is too tired to finish his words"],
+    a:2, explain:"'Né' is a tag from the family's own language sitting naturally inside an English sentence. Fraillon builds Subhi's voice this way — his English carries his Rohingya family inside it.",
+    line:"'You hear it, né?' I whisper…" }
+]},
+{ id:"qr2", step:"Quickread 2", title:"Caught by Beaver", where:"Chapter 5, page 33",
+  intro:"This is the moment Beaver catches Subhi with the package. Read it carefully — when you start the questions, the passage disappears.",
+  passage:`My throat is as dry as the dirt. Eli always tells me, 'Never let anyone see your scared,' and I try as hard as I can but trying isn't doing, and I've never been handcuffed before and I've never been taken into the offices, and thinking on all of that is fouling my stomach close to spewing.<br><br>
+'What are you doing back there?' Beaver's voice sounds as dark as the Jackets' dogs when they don't like a person. I can't talk. I can't say a single thing. His hand is hard and scratchy, grabbing at my shirt and pulling me towards him so that my teeth clang on my tongue and I can taste blood, and my brain is buzzing louder and louder.<br><br>
+'I asked you a question.'<br><br>
+I still can't talk. He shoves me backwards so hard that my feet leave the ground and my head cracks into the bricks behind me, and for a moment all I can see are little lights flashing in and out. When I crash into the dirt, Beaver has the package. And he's opening it.`,
+  items:[
+  { id:"qr2a", q:"Subhi says his throat is dry. This most likely shows that he is:",
+    opts:["Thirsty","Frightened","Bored","Angry"],
+    a:1, explain:"The dry throat arrives with the fear, not the weather — it comes in the build-up to the confrontation, right beside 'never let anyone see your scared'.",
+    line:"My throat is as dry as the dirt." },
+  { id:"qr2b", q:"Subhi describes his brain as 'buzzing louder and louder'. This suggests:",
+    opts:["Excitement","Tiredness","Building panic","Confusion"],
+    a:2, explain:"'Louder and louder' escalates as the physical threat escalates — it tracks rising panic, not a neutral state.",
+    line:"…and my brain is buzzing louder and louder." },
+  { id:"qr2c", q:"Beaver's dialogue is short and clipped ('What are you doing back there?' / 'I asked you a question.'). What does this best suggest about him in this moment?",
+    opts:["He is calm and polite","He doesn't know what to say","He is being friendly","He is trying to show that he is in control"],
+    a:3, explain:"Short, blunt questions from Beaver read as authority and menace — he doesn't need many words because he holds all the power here.",
+    line:"'I asked you a question.'" },
+  { id:"qr2d", q:"What does the author compare Beaver's voice to?",
+    opts:["The dry dirt of the camp","The darkness of the night","Guard dogs growling","Something hard and scratchy"],
+    a:2, explain:"'As dark as the Jackets' dogs when they don't like a person.' 'Hard and scratchy' is his hand — the sneaky look-alike option.",
+    line:"Beaver's voice sounds as dark as the Jackets' dogs when they don't like a person." },
+  { id:"qr2e", q:"Why might the author show Subhi's fear through physical sensations (dry throat, buzzing brain, blood in his mouth) rather than simply writing 'Subhi was scared'?",
+    opts:["It is shorter to write",
+          "It puts the reader inside Subhi's body, making the fear easier to feel",
+          "It is more difficult to understand",
+          "It avoids naming the emotion because it isn't important"],
+    a:1, explain:"Showing fear through the body instead of naming it is a deliberate craft choice — first-person sensation immerses the reader in Subhi's experience.",
+    line:"…thinking on all of that is fouling my stomach close to spewing." },
+  { id:"qr2f", q:"Based on how Beaver behaves here and what we already know of him, what is the most likely outcome the next time they cross paths?",
+    opts:["Beaver will keep targeting Subhi whenever the chance comes up",
+          "Beaver will avoid Subhi from now on",
+          "Subhi will report Beaver and be believed",
+          "Beaver and Subhi will become allies"],
+    a:0, explain:"Beaver's established pattern — the extra kick, tipping Maá's dinner into the dirt, handcuffing Eli — shows targeting is habitual, not a one-off. That's the best-supported prediction from the characterisation so far.",
+    line:"When I crash into the dirt, Beaver has the package. And he's opening it." },
+  { id:"qr2g", q:"In the phrase 'fouling my stomach', 'fouling' most likely means:",
+    opts:["Making him hungry","Making him excited","Making him feel sick","Filling him up"],
+    a:2, explain:"'Fouling' here is nausea brought on by dread — it sits alongside 'close to spewing' and the rest of the fear imagery.",
+    line:"…thinking on all of that is fouling my stomach close to spewing." }
+]}];
+
+/* ==================== FIGURATIVE → LITERAL ==================================
+   Two steps per line: (1) what does it literally mean, (2) which feature is
+   doing the work. Paraphrases are deliberately plain — EAL-friendly.
+   =========================================================================== */
+const FIG_TECHS = ["Simile — compares using 'like' or 'as'",
+                   "Metaphor — says one thing IS another",
+                   "Personification — gives a thing human behaviour",
+                   "Word-class swap — an adjective used as a noun",
+                   "Symbol — an object that carries a bigger idea",
+                   "Hyperbole — exaggeration for effect"];
+const FIG_ITEMS = [
+{ id:"fig1", quote:"My throat is as dry as the dirt.", page:"p. 33",
+  meaning:{ opts:["He is so frightened his mouth has gone dry","He needs a drink of water","The camp has run out of water","He has been eating dirt"],
+    a:0, explain:"The comparison lands in the middle of the Beaver confrontation — this is fear in the body, not thirst." },
+  tech:{ opts:[0,1,2,5], a:0, explain:"'As dry as the dirt' — and notice WHAT it's compared to: the camp's own dirt. Even his fear is described in camp language." } },
+{ id:"fig2", quote:"Beaver's voice sounds as dark as the Jackets' dogs when they don't like a person.", page:"p. 33",
+  meaning:{ opts:["Beaver speaks very quietly","His voice is low and threatening, like a dog's growl","Beaver owns several dogs","His voice is impossible to hear"],
+    a:1, explain:"A voice 'as dark as' a guard dog that doesn't like you is a growl — pure threat. The dogs also remind us this place is guarded like a prison." },
+  tech:{ opts:[0,1,2,3], a:0, explain:"It's a simile — 'as dark as'. 'Dark' describing a sound is also a sense-swap that makes the menace feel physical." } },
+{ id:"fig3", quote:"…as if the house is holding its breath too.", page:"p. 19",
+  meaning:{ opts:["The house has no air in it","The house is haunted","The house is completely silent and still, as if waiting for the sadness to end","The windows are all shut"],
+    a:2, explain:"Since Jimmie's mum died the house has gone quiet. The word 'too' tells us Jimmie is also holding her breath — both are waiting." },
+  tech:{ opts:[0,1,2,5], a:2, explain:"Houses don't breathe — giving the house a human action is personification, and it spreads Jimmie's grief into the building around her." } },
+{ id:"fig4", quote:"…her whole face shines like someone's lit a candle in her cheeks.", page:"p. 94",
+  meaning:{ opts:["Her face is on fire","She is embarrassed and blushing","Her face is reflecting torchlight","She suddenly looks glowing and happy"],
+    a:3, explain:"This is joy at seeing a friend again — the candle image is warmth and light, not embarrassment or literal fire." },
+  tech:{ opts:[0,1,2,3], a:0, explain:"'Shines like…' — a simile. The candle brings warmth, light and smallness together in one picture of quiet happiness." } },
+{ id:"fig5", quote:"When I stick my head under the water, the whole world stops.", page:"p. 16",
+  meaning:{ opts:["The pool water freezes",
+          "Underwater, everything feels still and silent — a moment of escape","Time travel is possible in the camp","Subhi can't swim"],
+    a:1, explain:"Underwater, the camp's noise disappears. It's the same job the Night Sea does — a private place detention can't reach." },
+  tech:{ opts:[0,1,2,5], a:3, explain:"The world doesn't literally stop — it's hyperbole (exaggeration), and the exaggeration is the point: this is how total the escape feels to Subhi." } },
+{ id:"fig6", quote:"'What am I listening to?' she says, the bored all over her face…", page:"p. 7",
+  meaning:{ opts:["She has paint on her face","Her face shows she is completely bored","She is wearing a bored-looking mask","She is listening carefully"],
+    a:1, explain:"'The bored' spread 'all over her face' — Queeny's boredom is total and visible." },
+  tech:{ opts:[0,1,3,5], a:2, explain:"'Bored' is an adjective used where a noun should be ('boredom'). Fraillon swaps word classes on purpose — it makes Subhi's voice young, and reminds us English is not his first language." } },
+{ id:"fig7", quote:"I was only nineteen fence diamonds high.", page:"p. 3",
+  meaning:{ opts:["Subhi was standing on the fence","Subhi measures his height against the wire fence — he has grown up inside it","The fence is covered in diamonds","Subhi is nineteen years old"],
+    a:1, explain:"He measures himself in fence wire because the fence is always there — it's his ruler. His whole childhood has happened inside it." },
+  tech:{ opts:[0,1,3,4], a:3, explain:"The fence works as a symbol: an everyday object carrying the novel's biggest idea, imprisonment. When the fence is how you measure growing up, detention has become your whole world." } },
+{ id:"fig8", quote:"Watching her go, something in my chest explodes.", page:"p. 81",
+  meaning:{ opts:["Subhi is having a heart attack","Subhi feels a sudden, overwhelming burst of emotion","Something in his pocket has burst","Subhi is angry at Jimmie for leaving"],
+    a:1, explain:"After the first visit and the first chapter of the story, this is joy and hope arriving all at once — too big for his chest to hold." },
+  tech:{ opts:[0,1,2,5], a:1, explain:"Nothing literally explodes — the feeling IS an explosion. That's metaphor: it states the impossible thing as fact to show the size of the feeling." } }
+];
+
+/* ==================== VOICE FINGERPRINT =====================================
+   Unattributed lines → who is speaking / narrating → what gave it away.
+   This is the lesson BEFORE the in-character voice memo: to speak AS a
+   character you first have to hear how Fraillon builds each voice.
+   =========================================================================== */
+const VOICE_WHO = ["Subhi (narrating)","Maá","Queeny","Eli","Beaver","The Shakespeare duck","A Jimmie chapter (the narrator)"];
+const VOICE_ITEMS = [
+{ id:"vo1", line:"I not hungry much, Subhi love.", page:"p. 3", a:1,
+  whoExplain:"Maá. The missing little word ('am') and the endearment 'Subhi love' are hers — tired, tender, and speaking an English she came to late.",
+  feat:{ opts:["Missing small grammar words plus a term of endearment",
+               "Short clipped commands","Formal, old-fashioned phrasing","Third-person narration"],
+    a:0, explain:"Fraillon drops the 'am' and adds 'Subhi love' — two moves that carry exhaustion and tenderness at once. Voice is built from grammar, not just word choice." } },
+{ id:"vo2", line:"My, my. She's quite the talker, isn't she?", page:"p. 73", a:5,
+  whoExplain:"The Shakespeare duck. Nobody in the camp talks like this — 'My, my' and 'quite the talker' are formal and wry, the voice Subhi invents for a duck named after Shakespeare.",
+  feat:{ opts:["Missing grammar words","Formal, old-fashioned, amused phrasing — an invented 'posh' voice",
+               "Angry shouting","Simple young-child words"],
+    a:1, explain:"The duck is Subhi's imagination doing a different voice. Its old-fashioned politeness ('My, my', the tag question 'isn't she?') is nothing like camp speech — which is exactly the joke, and the clue." } },
+{ id:"vo3", line:"What are you doing back there? … I asked you a question.", page:"p. 33", a:4,
+  whoExplain:"Beaver. Short, clipped demands with no softening — the grammar of someone who holds all the power and knows it.",
+  feat:{ opts:["Long flowing description","A term of endearment","Short, blunt demands that expect obedience","A question that invites discussion"],
+    a:2, explain:"Count the words. Beaver never wastes any — his sentences are orders. Compare that with how many words Subhi needs when he's afraid." } },
+{ id:"vo4", line:"Never let anyone see your scared.", page:"p. 33", a:3,
+  whoExplain:"Eli. It's advice — a protective older-brother imperative — and 'your scared' uses an adjective as a noun, the camp voice the boys share.",
+  feat:{ opts:["Third-person narration","An imperative (command) used as protective advice, with 'scared' used as a noun",
+               "Old-fashioned formal words","Missing capital letters"],
+    a:1, explain:"Two fingerprints at once: the shape (advice, telling Subhi how to survive) says Eli; the grammar ('your scared', not 'your fear') says camp-grown English." } },
+{ id:"vo5", line:"Knowing Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", page:"p. 74", a:0,
+  whoExplain:"Subhi narrating. First person 'me', and 'a sort of brave' — an adjective where a noun should be — is his signature move.",
+  feat:{ opts:["'A sort of brave' — an adjective used as a noun, in first person",
+               "Clipped commands","Formal politeness","Third-person 'she'"],
+    a:0, explain:"'A sort of brave' instead of 'a sort of bravery/courage' — the same word-class swap as 'the bored all over her face'. Once you can name this, you can DO it in your own presentation." } },
+{ id:"vo6", line:"She pulls herself under the yellow doona covered in monkeys that her mum gave her four years ago when she was six, and tells her brain to stop, to go back to sleep.", page:"p. 19", a:6,
+  whoExplain:"A Jimmie chapter. The 'she' gives it away — Jimmie's chapters are told from outside her, in the third person, while Subhi tells his own.",
+  feat:{ opts:["First person 'I'","Third-person narration — we watch Jimmie from outside","Missing grammar words","Rhyming words"],
+    a:1, explain:"Fraillon splits the novel: Subhi speaks ('I'), Jimmie is watched ('she'). Ask yourself why the author might keep the reader one step further away from Jimmie — that's an open question worth annotating." } },
+{ id:"vo7", line:"What's with the duck?", page:"p. 15", a:2,
+  whoExplain:"Queeny. Blunt, impatient, unimpressed — big-sister dismissiveness in four words.",
+  feat:{ opts:["Formal old-fashioned phrasing","A protective imperative","Casual, blunt teenage dismissiveness","An adjective used as a noun"],
+    a:2, explain:"'What's with…' is casual and scornful at once. Queeny's voice is armour — later in the novel you'll find out what the armour is protecting." } },
+{ id:"vo8", line:"You hear it, né?", page:"p. 2", a:0,
+  whoExplain:"Subhi — whispering to Maá about the Night Sea. The tag 'né' comes from the family's own language, folded into his English.",
+  feat:{ opts:["A borrowed word from the family's first language used as a question tag",
+               "Third-person narration","A clipped command","Old-fashioned formal English"],
+    a:0, explain:"One tiny syllable carries his whole heritage. When you write in character for your presentation, one well-chosen borrowed word can do more than a paragraph of description." } }
+];
+
+/* ==================== EVIDENCE BUILDER ======================================
+   The ladder is the Learning Continuum "Use of evidence" strand — the same
+   descriptors on the lesson 08 self-assessment and your report.
+   Round 1: fixed question, Chapter 5. Round 2: choose the idea, Chapter 1.
+   Segment roles: gold = the evidence; ok = supports but weaker; frame =
+   claim/introduce, not evidence; other = evidence for something else;
+   plain = connecting words / plot. Every segment carries coded feedback.
+   =========================================================================== */
+const EV_LADDER = [
+ { lv:"Level 1", text:"I can identify quotes that relate to an idea",
+   hint:"Ask: which words actually SHOW the idea? Watch for the switch-words — 'Eli says…' vs 'But I reckon…' tell you whose opinion you're inside." },
+ { lv:"Level 2", text:"I can explain the relevance of a quote",
+   hint:"Stems: 'This shows… because…' · 'Eli believes… so this quote gives his reason…' · Beware answers that are TRUE but don't answer THE question." },
+ { lv:"Level 3", text:"I can embed quotes into sentences",
+   hint:"Trim the quote to its key words. Read the whole sentence back — if it doesn't flow as one sentence, re-pick. Stems: 'Eli believes … because he ‘…’' · 'Subhi's imagination turns the camp into ‘…’'" },
+ { lv:"Level 4", text:"I can correctly embed quotes within an explanation",
+   hint:"Now the sentence must EXPLAIN, not just contain the quote: end with what it reveals, suggests or symbolises. Two short quotes woven in beats one long one." }
+];
+const EV_ROUNDS = [
+{ id:"r1", mode:"question", title:"Round 1 — whose reason is it?",
+  where:"Chapter 5, pages 31–32",
+  question:"According to Eli, what makes Beaver so mean?",
+  qNote:"Click the part (or parts) of the passage that answer the question, then press Check. Careful: two characters give two different explanations in this passage.",
+  pageRef:"p. 31",
+  segs:[
+  { t:"Eli says Beaver hates all of us", role:"frame",
+    fb:"That introduces WHOSE opinion it is — useful, but it doesn't yet give Eli's reason. Keep reading past it." },
+  { t:"because one time he almost got killed when a man in here turned crazy and grabbed a hammer.", role:"gold",
+    fb:"That's it — the attack is Eli's explanation for Beaver's meanness." },
+  { t:"Beaver ended up losing his eye because of it,", role:"gold",
+    fb:"Yes — the injury is part of Eli's reason: the attack cost Beaver his eye." },
+  { t:"and now just has his eyelid sewn down flat over where his eye used to be.", role:"ok",
+    fb:"It supports the answer — it's the lasting damage — but on its own it describes the injury rather than giving the reason." },
+  { t:"Eli reckons that's what makes him so mean.", role:"frame",
+    fb:"That's Eli's conclusion restated. The question asks WHAT made him mean — pick the cause, not the claim." },
+  { t:"But I reckon Beaver was always mean,", role:"other",
+    fb:"Careful — 'But I reckon' switches to SUBHI's opinion. The question asks for Eli's." },
+  { t:"and the almost-being-killed just made him meaner.", role:"other",
+    fb:"Still Subhi's counter-view. It mentions the attack, but as Subhi's take, not Eli's explanation." },
+  { t:"Beaver's the kind of person who gives you an extra kick for not getting out of his way fast enough,", role:"other",
+    fb:"Strong evidence that Beaver IS cruel — but it shows what he does, not Eli's explanation of why he became like this. Save it for a different question." },
+  { t:"or tips your maá's dinner into the dirt so she has to pick it up with her fingers and eat it fresh from the ground in front of him,", role:"other",
+    fb:"Same again — powerful evidence of cruelty, and you might use it in your essay. But it isn't Eli's reason." },
+  { t:"all covered in grit and all.", role:"plain",
+    fb:"That's descriptive detail finishing the sentence — it isn't evidence on its own." }],
+  l2:{ q:"You found 'almost got killed when a man in here turned crazy and grabbed a hammer'. WHY is this the right evidence for the question?",
+    opts:[
+    { t:"It gives Eli's reason: being nearly killed is what Eli believes turned Beaver against the refugees.", q:"good",
+      fb:"Exactly — it connects the quote back to the question. That connection IS the explanation." },
+    { t:"It shows that the detention centre is a violent place.", q:"retell",
+      fb:"True — but it doesn't answer THIS question. The question asks for Eli's explanation of Beaver, not what the camp is like. True-but-off-target is the most common evidence mistake." },
+    { t:"It proves that Beaver was always mean.", q:"wrong",
+      fb:"That's the opposite view — and it's Subhi's, not Eli's. Re-read who says what." },
+    { t:"It proves that all of the Jackets hate the refugees.", q:"stretch",
+      fb:"Overreach — one attack on one guard can't prove anything about ALL the Jackets. Claims have to stay inside what the evidence can carry." }] },
+  builder:{
+    intro:"Now embed it. Build ONE sentence: a stem, a trimmed quote, and an ending. Read the preview back — it has to flow as a single sentence.",
+    stems:[
+    { id:"st1", t:"Eli believes Beaver hates the refugees because he", q:"good", accepts:["f1"],
+      fb:"" },
+    { id:"st2", t:"According to Eli, Beaver's cruelty began when he", q:"good", accepts:["f1"],
+      fb:"" },
+    { id:"st3", t:"The quote shows that Beaver is mean because he", q:"point", accepts:["f1"],
+      fb:"Don't point at the quote ('The quote shows…') — say the idea itself and let the quote sit inside the sentence." }],
+    frags:[
+    { id:"f1", t:"almost got killed when a man in here turned crazy and grabbed a hammer", q:"good", fb:"" },
+    { id:"f2", t:"Eli says Beaver hates all of us because one time he almost got killed when a man in here turned crazy and grabbed a hammer. Beaver ended up losing his eye because of it", q:"long",
+      fb:"That's two whole sentences — too much to sit inside your own sentence. Trim the quote to its key words." },
+    { id:"f3", t:"hammer", q:"short",
+      fb:"One word can't carry the meaning — the reader needs enough of the quote to see the attack." },
+    { id:"f4", t:"losing his eye", q:"nofit",
+      fb:"Read it back: 'because he “losing his eye”' doesn't flow. The quote has to continue your sentence's grammar." }],
+    tails:[
+    { id:"t1", t:", and ended up “losing his eye because of it” (p. 31).", q:"bonus",
+      fb:"" },
+    { id:"t2", t:" (p. 31), which is why Eli thinks the attack turned him mean.", q:"good",
+      fb:"" },
+    { id:"t3", t:" (p. 31), and that is what the quote proves.", q:"point",
+      fb:"'That is what the quote proves' points at the quote instead of explaining it. Say what it tells us about Beaver or Eli." },
+    { id:"t4", t:" (p. 31), and then Subhi got caught with the package.", q:"retell",
+      fb:"That ending slides into retelling the plot. Stay with the question — why Eli thinks Beaver is mean." }] } },
+
+{ id:"r2", mode:"idea", title:"Round 2 — evidence for an idea",
+  where:"Chapter 1, pages 1–2",
+  question:"Choose one of the novel's key ideas, then gather the evidence for it from the opening passage.",
+  qNote:"First pick your idea. Then click the part (or parts) of the passage that are evidence for THAT idea. The same passage holds evidence for all three — the skill is matching the right line to the right idea.",
+  pageRef:"p. 1",
+  ideas:[ {id:"imag", label:"Imagination"}, {id:"fam", label:"Family love"}, {id:"diff", label:"Seeing differently (Subhi vs Queeny)"} ],
+  segs:[
+  { t:"Sometimes, at night, the dirt outside turns into a beautiful ocean.",
+    roles:{imag:"gold", fam:"other", diff:"ok"},
+    fbs:{imag:"The camp's dirt becomes an ocean — the novel's first and biggest act of imagination.",
+         fam:"A beautiful line — but it shows Subhi's imagination, not his family. Match the line to the idea.",
+         diff:"It sets up what Subhi can see — you'll want to pair it with a line about what Queeny can't."} },
+  { t:"As red as the sun and as deep as the sky.",
+    roles:{imag:"ok", fam:"other", diff:"other"},
+    fbs:{imag:"It extends the picture with similes — good supporting detail, though the transformation itself is the stronger evidence.",
+         fam:"This is the imagined sea's description — not family.",
+         diff:"This describes the sea, not the difference between the siblings."} },
+  { t:"I lie on my bed, Queeny's feet pushing against my cheek, and listen to the waves lapping at the tent.",
+    roles:{imag:"ok", fam:"ok", diff:"other"},
+    fbs:{imag:"He listens to imagined waves — supporting evidence, though gentler than the dirt-to-ocean line.",
+         fam:"It works — the crammed-together closeness (her feet against his cheek!) shows how physically close this family lives. There's a warmer line further down, though.",
+         diff:"Queeny is here, but asleep — this line doesn't yet show how differently the two of them see."} },
+  { t:"Queeny says I'm stupid, saying that kind of stuff.",
+    roles:{imag:"other", fam:"other", diff:"gold"},
+    fbs:{imag:"This is Queeny's judgement of the imagining — evidence for the siblings seeing differently, not for imagination itself.",
+         fam:"Sibling friction, not family warmth — and it's really about the ways they see.",
+         diff:"Exactly — Queeny dismisses what Subhi treasures. The gap between them opens in the very first paragraph."} },
+  { t:"She just doesn't see it, is all.",
+    roles:{imag:"other", fam:"other", diff:"gold"},
+    fbs:{imag:"It's about Queeny's not-seeing — pick it for the seeing-differently idea.",
+         fam:"Not family warmth — it's the difference between the siblings.",
+         diff:"Yes — and notice how forgiving 'is all' sounds. Subhi explains her without blaming her."} },
+  { t:"Our maá says there are some people in this world who can see all the hidden bits and pieces of the universe blown in on the north wind and scattered about in the shadows.",
+    roles:{imag:"gold", fam:"ok", diff:"ok"},
+    fbs:{imag:"Strong choice — Maá gives Subhi's way of seeing a family blessing: imagination as a gift some people have.",
+         fam:"It does show Maá nurturing Subhi — though it's even stronger as evidence about imagination itself.",
+         diff:"It supports the idea — 'some people' can see, and Queeny, we learn, doesn't try."} },
+  { t:"Queeny, she never tries to look in the shadows. She doesn't even squint.",
+    roles:{imag:"ok", fam:"other", diff:"gold"},
+    fbs:{imag:"It's about the LOOKING more than the imagining — best evidence for the siblings' difference.",
+         fam:"Not family warmth — this is the gap between the siblings.",
+         diff:"Perfect — 'doesn't even squint' says she won't even TRY. The difference isn't ability, it's willingness."} },
+  { t:"Maá sees though. She can hear the ocean outside too.",
+    roles:{imag:"ok", fam:"gold", diff:"ok"},
+    fbs:{imag:"It shows the imagination is shared — but what it proves most is the bond between Subhi and Maá.",
+         fam:"Yes — Maá shares the Night Sea with him. In this family, love looks like seeing the same invisible things.",
+         diff:"It works as contrast with Queeny — Maá sees, Queeny won't look."} },
+  { t:"'You hear it, né?' I whisper, my fingers feeling for her smile in the dark.",
+    roles:{imag:"ok", fam:"gold", diff:"other"},
+    fbs:{imag:"There's imagination in it, but the heart of this line is the tenderness between mother and son.",
+         fam:"The strongest family line in the passage — whispering in their shared language, feeling for her smile by touch.",
+         diff:"Queeny isn't in this line — it's Subhi and Maá."} },
+  { t:"In the morning, the ground still wet and foamy from where those waves washed up,",
+    roles:{imag:"ok", fam:"other", diff:"other"},
+    fbs:{imag:"Good noticing — the imagined sea leaves real traces, which shows how completely Subhi lives inside it. The animal line below is even stronger.",
+         fam:"Not family — this is the Night Sea's leftovers.",
+         diff:"Queeny isn't here — this is the imagined world continuing."} },
+  { t:"I sit and trace the hundreds of animals that have swum all the way up to the tent, their faces pushing against the flaps, trying to get a look at us inside on our beds…",
+    roles:{imag:"gold", fam:"other", diff:"other"},
+    fbs:{imag:"Yes — the imagination continues into daylight, detailed enough to trace. The Night Sea isn't a dream; it's how Subhi lives.",
+         fam:"The animals are imagined visitors — evidence of imagination, not family.",
+         diff:"Queeny isn't in this line — it's the imagined world at work."} }],
+  l2s:{
+   imag:{ q:"Why is 'the dirt outside turns into a beautiful ocean' strong evidence for IMAGINATION?",
+    opts:[
+    { t:"It shows Subhi's imagination transforming the camp itself — the dirt becomes an ocean, so beauty replaces detention.", q:"good",
+      fb:"That's the connection: the evidence doesn't just mention imagining, it shows imagination doing its job — remaking the world." },
+    { t:"It shows there is a lot of dirt in the camp.", q:"retell",
+      fb:"True, but that's the literal surface. The question is what the line shows about imagination." },
+    { t:"It proves the camp is near the sea.", q:"wrong",
+      fb:"There is no sea — that's the point. The ocean exists only in Subhi's seeing." },
+    { t:"It proves everyone in the camp shares Subhi's visions.", q:"stretch",
+      fb:"Overreach — Queeny explicitly doesn't. Claims have to stay inside what the evidence shows." }] },
+   fam:{ q:"Why is '…my fingers feeling for her smile in the dark' strong evidence for FAMILY LOVE?",
+    opts:[
+    { t:"The tiny action shows tenderness: he knows her face by touch and hopes she shares the moment.", q:"good",
+      fb:"Yes — small physical detail carrying a big feeling. That's Fraillon's signature: love shown, never announced." },
+    { t:"It shows that the tent is very dark at night.", q:"retell",
+      fb:"Literally true and completely beside the point — match the explanation to the IDEA, not the setting." },
+    { t:"It proves Maá is unwell.", q:"wrong",
+      fb:"Nothing here shows illness — that comes much later in the novel. Don't read backwards into early evidence." },
+    { t:"It proves Subhi loves Maá more than Queeny does.", q:"stretch",
+      fb:"The line can't carry a comparison — it shows his love, not a ranking." }] },
+   diff:{ q:"Why is 'She doesn't even squint' strong evidence that the siblings SEE DIFFERENTLY?",
+    opts:[
+    { t:"It shows the difference is about willingness — Queeny won't even try to look, while Subhi lives by looking.", q:"good",
+      fb:"Right — 'doesn't even squint' makes it a choice, not a lack of ability. That little detail is where the meaning lives." },
+    { t:"It shows Queeny has bad eyesight.", q:"wrong",
+      fb:"It's not about eyes — 'looking in the shadows' is Maá's phrase for seeing the hidden universe. Figurative, not optical." },
+    { t:"It shows that it is dark in the camp.", q:"retell",
+      fb:"Surface reading — the shadows here are figurative, carrying the idea of hidden things worth finding." },
+    { t:"It proves Queeny will never understand Subhi.", q:"stretch",
+      fb:"'Never' goes too far — the novel will complicate this. Evidence supports the moment, not a forever-claim." }] } },
+  builders:{
+   imag:{ intro:"Build one analytic sentence about imagination — stem, trimmed quote, ending. Read the preview back.",
+    stems:[
+    { id:"st1", t:"From the very first page, Subhi's imagination turns the camp's dirt into", q:"good", accepts:["f1"], fb:"" },
+    { id:"st2", t:"Fraillon opens the novel inside Subhi's imagination, where the dirt", q:"good", accepts:["f2"], fb:"" },
+    { id:"st3", t:"This quote is about imagination because the dirt", q:"point", accepts:["f2"],
+      fb:"Don't point at the quote ('This quote is about…') — make the idea the subject of your sentence." }],
+    frags:[
+    { id:"f1", t:"a beautiful ocean", q:"good", fb:"" },
+    { id:"f2", t:"turns into a beautiful ocean", q:"good", fb:"" },
+    { id:"f3", t:"Sometimes, at night, the dirt outside turns into a beautiful ocean. As red as the sun and as deep as the sky", q:"long",
+      fb:"Two whole sentences — too much to embed. Trim to the words that carry the transformation." },
+    { id:"f4", t:"the dirt", q:"short",
+      fb:"'The dirt' alone doesn't show any imagining — keep the transformation in the quote." }],
+    tails:[
+    { id:"t2", t:" (p. 1), showing the reader how he escapes the reality of detention.", q:"good", fb:"" },
+    { id:"t1", t:" (p. 1) — beauty 'as red as the sun', conjured from nothing but dirt.", q:"bonus", fb:"" },
+    { id:"t3", t:" (p. 1), which is a very good description.", q:"point",
+      fb:"'A very good description' praises the author instead of analysing — say what the description DOES." },
+    { id:"t4", t:" (p. 1), and Queeny's feet are pushing against his cheek.", q:"retell",
+      fb:"That drifts back into retelling the scene. Finish with what the imagination means, not what happens next." }] },
+   fam:{ intro:"Build one analytic sentence about family love — stem, trimmed quote, ending.",
+    stems:[
+    { id:"st1", t:"In the dark of the tent, Subhi whispers to Maá, his fingers", q:"good", accepts:["f1"], fb:"" },
+    { id:"st2", t:"Fraillon shows the family's closeness through touch: Subhi's fingers are", q:"good", accepts:["f1"], fb:"" },
+    { id:"st3", t:"This quote shows family love because his fingers are", q:"point", accepts:["f1"],
+      fb:"Don't point at the quote — let the moment itself be the subject of the sentence." }],
+    frags:[
+    { id:"f1", t:"feeling for her smile in the dark", q:"good", fb:"" },
+    { id:"f3", t:"'You hear it, né?' I whisper, my fingers feeling for her smile in the dark", q:"long",
+      fb:"You've quoted the whole line, speech and all — trim to the key image so it can live inside your sentence." },
+    { id:"f4", t:"smile", q:"short",
+      fb:"'Smile' alone loses the searching fingers and the dark — the tenderness is in the whole image." }],
+    tails:[
+    { id:"t2", t:" (p. 2), a small gesture that carries the warmth holding this family together.", q:"good", fb:"" },
+    { id:"t1", t:" (p. 2) — love shown by touch, in a place where little else is theirs.", q:"bonus", fb:"" },
+    { id:"t3", t:" (p. 2), which proves my point about family.", q:"point",
+      fb:"'Proves my point' points at your argument instead of making it — name what the gesture shows." },
+    { id:"t4", t:" (p. 2), and in the morning he traces the animals.", q:"retell",
+      fb:"Plot creep — the morning belongs to a different idea. Land the sentence on the family feeling." }] },
+   diff:{ intro:"Build one analytic sentence about the siblings seeing differently — stem, trimmed quote, ending.",
+    stems:[
+    { id:"st1", t:"While Subhi lives inside the Night Sea, Queeny", q:"good", accepts:["f1"], fb:"" },
+    { id:"st2", t:"Fraillon separates the siblings in the first paragraph: Queeny", q:"good", accepts:["f1"], fb:"" },
+    { id:"st3", t:"The quote about Queeny shows that she", q:"point", accepts:["f1"],
+      fb:"Don't announce 'the quote shows' — put Queeny and Subhi in the sentence and let the quote land inside it." }],
+    frags:[
+    { id:"f1", t:"never tries to look in the shadows", q:"good", fb:"" },
+    { id:"f2", t:"Queeny, she never tries to look in the shadows. She doesn't even squint", q:"long",
+      fb:"Whole sentences again — trim to the phrase that carries the refusal." },
+    { id:"f3", t:"squint", q:"short",
+      fb:"'Squint' alone is comic without its context — keep the refusing-to-look." }],
+    tails:[
+    { id:"t2", t:" (p. 1), suggesting the difference between them is willingness, not ability.", q:"good", fb:"" },
+    { id:"t1", t:" (p. 1) — she ‘doesn't even squint’, while her brother finds oceans in the dirt.", q:"bonus", fb:"" },
+    { id:"t3", t:" (p. 1), which is evidence of the theme.", q:"point",
+      fb:"'Evidence of the theme' names nothing — say WHAT the difference is." },
+    { id:"t4", t:" (p. 1), because she is older than Subhi.", q:"retell",
+      fb:"Her age isn't in this evidence — stay inside what the line shows." }] } } }
+];
+
+/* ==================== SENTENCE UPGRADER (WAGOLL ladder) =====================
+   Levels from the EAL analytical-writing WAGOLL: C2 Describe → C3 Explain →
+   C4 Analyse. The base sentence is already a solid C2. Each correct pick
+   grows the sentence one level. No answer reveals — coded feedback only.
+   =========================================================================== */
+const WAG_LEVELS = [
+ { lv:"C2 · Describe", text:"Names a language feature and says what happens in the text." },
+ { lv:"C3 · Explain",  text:"Adds an effect phrase — how the language works on the reader." },
+ { lv:"C4 · Analyse",  text:"Links the language choice and its effect to a bigger idea, with analytic verbs." }
+];
+const UPG_ITEMS = [
+{ id:"up1", focus:"Fear in the body",
+  base:"Fraillon uses a simile to show Subhi's fear when his throat is ‘as dry as the dirt’ (p. 33)",
+  c3:{ q:"Lift it to C3 — add the effect on the reader:",
+   opts:[
+   { t:", putting the reader inside Subhi's body as the panic rises.", ok:true,
+     fb:"That's the C3 move — the sentence now says what the simile DOES to the reader." },
+   { t:", because dirt is very dry in the camp.", ok:false,
+     fb:"That explains the dirt, not the reader. C3 asks: what does the language make the READER feel or see?" },
+   { t:", which is a simile using the word ‘as’.", ok:false,
+     fb:"That re-describes the feature — a C2 move twice over. Push forward to its effect." },
+   { t:", and then Beaver grabs the package.", ok:false,
+     fb:"Plot creep — retelling what happens next isn't explaining the language." }] },
+  c4:{ q:"Now to C4 — link it to a bigger idea:",
+   opts:[
+   { t:" Even his fear is described in the camp's own dust, suggesting detention has seeped into the way Subhi sees everything.", ok:true,
+     fb:"That's analysis: language choice → effect → what it reveals about detention. Read the whole thing back — that's an essay sentence." },
+   { t:" This shows the author is very good at similes.", ok:false,
+     fb:"Praising the author isn't analysing the text — say what the choice reveals." },
+   { t:" This makes the story more interesting for the reader.", ok:false,
+     fb:"'More interesting' could be said of anything — C4 needs a specific idea (imprisonment, fear, belonging…)." },
+   { t:" Subhi is scared many times in the novel.", ok:false,
+     fb:"True, but it's a plot observation. Land on what the LANGUAGE suggests." }] } },
+{ id:"up2", focus:"The Night Sea",
+  base:"Fraillon shows Subhi's imagination through the Night Sea, where the dirt ‘turns into a beautiful ocean’ (p. 1)",
+  c3:{ q:"Lift it to C3 — add the effect on the reader:",
+   opts:[
+   { t:", inviting the reader to see the camp the way Subhi does — full of hidden beauty.", ok:true,
+     fb:"Now the sentence explains what the description does to the reader's point of view." },
+   { t:", because there is no real ocean at the camp.", ok:false,
+     fb:"That's a fact about the setting, not an effect on the reader." },
+   { t:", which is an example of descriptive writing.", ok:false,
+     fb:"Naming the feature again keeps you at C2. What does the description DO?" },
+   { t:", and Queeny says he is stupid.", ok:false,
+     fb:"Retelling. Queeny's reaction belongs in a different sentence about a different idea." }] },
+  c4:{ q:"Now to C4 — link it to a bigger idea:",
+   opts:[
+   { t:" By making the imagined sea feel as real as the fences, Fraillon suggests imagination is Subhi's freedom — the one place detention cannot reach.", ok:true,
+     fb:"Feature → effect → theme, with 'suggests' doing analytic work. This is the level to aim for in your essay." },
+   { t:" This shows that oceans are important in the book.", ok:false,
+     fb:"'Important' names no idea. WHY the ocean — what does it stand against?" },
+   { t:" It makes the book more fun to read.", ok:false,
+     fb:"'Fun' is a review word, not an analysis word. Link the language to freedom, escape or hope." },
+   { t:" Later, Jimmie brings him hot chocolate.", ok:false,
+     fb:"That's another scene entirely — plot, not analysis." }] } },
+{ id:"up3", focus:"Subhi's voice",
+  base:"Fraillon builds Subhi's voice by using adjectives as nouns, like ‘the bored all over her face’ (p. 7)",
+  c3:{ q:"Lift it to C3 — add the effect on the reader:",
+   opts:[
+   { t:", making the description vivid and reminding the reader that Subhi is young and English is not his first language.", ok:true,
+     fb:"The effect phrase now explains why the 'wrong' grammar is the right choice." },
+   { t:", because ‘bored’ is an adjective.", ok:false,
+     fb:"That's the definition again — C2. Push to what the swap does for the reader." },
+   { t:", which is a grammar mistake the editor missed.", ok:false,
+     fb:"It appears on nearly every page — that pattern is the proof it's deliberate. Authors break rules on purpose; ask what the breaking achieves." },
+   { t:", and Queeny is often bored.", ok:false,
+     fb:"Off down the plot path — stay with the language." }] },
+  c4:{ q:"Now to C4 — link it to a bigger idea:",
+   opts:[
+   { t:" The bent grammar lets the reader hear a boy building English out of the camp around him, so the language itself carries the novel's ideas about belonging and identity.", ok:true,
+     fb:"Language → effect → theme. Notice the sentence never says 'this quote shows' — the analysis just flows. Steal that." },
+   { t:" This shows the author knows grammar rules.", ok:false,
+     fb:"Author-praise again. What does the CHOICE reveal about Subhi's world?" },
+   { t:" It makes Queeny seem boring.", ok:false,
+     fb:"The line is about how SUBHI speaks, not what Queeny is like." },
+   { t:" Subhi talks like this a lot.", ok:false,
+     fb:"True — that's your evidence of a pattern, but the sentence still has to say what the pattern MEANS." }] } }
+];
+
+/* ==================== MODULE DIRECTORY / REPORT LABELS ====================== */
+const MODULES = [
+ { id:"qr1",  n:1, t:"Quickread: the Night Sea",  d:"Chapter 1 · read it, lose it, prove you understood it", kind:"qr" },
+ { id:"qr2",  n:2, t:"Quickread: caught by Beaver", d:"Chapter 5 · inference under pressure — the silent-starter, self-marking", kind:"qr" },
+ { id:"fig",  n:3, t:"Figurative → literal", d:"Match the line to its plain meaning, then name the technique", kind:"fig" },
+ { id:"voice",n:4, t:"Voice fingerprint", d:"Whose line is it? Name the giveaway — do this before your voice memo", kind:"voice" },
+ { id:"ev",   n:5, t:"Evidence builder", d:"Find it in the passage, explain it, embed it — the rubric unlocks as you climb", kind:"ev" },
+ { id:"upg",  n:6, t:"Sentence upgrader", d:"Grow a C2 sentence into C4 analysis — WAGOLL ladder", kind:"upg", needs:"ev" },
+ { id:"rpt",  n:7, t:"My report", d:"Name & student ID, print/save it, hand it in", kind:"rpt" }
+];
+
+/* ============================================================================
+   ENGINE — knows nothing about the novel. State, router, runners, report.
+   ============================================================================ */
+const KEY="bonesparrow.readinghub.v1";
+function blank(){ return {first:{}, done:{}, evLv:0, name:"", sid:"", startedAt:Date.now(), finishedAt:0}; }
+let S=blank();
+function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ const p=JSON.parse(raw); if(p&&typeof p==="object") S=Object.assign(blank(),p);} }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function resetAll(){ if(confirm("Start again from scratch? This wipes all your saved answers.")){ S=blank(); save(); go("home"); } }
+load();
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function recFirst(key, correct){ if(S.first[key]===undefined){ S.first[key]=!!correct; save(); } }
+
+let screen="home";
+function go(s, arg){
+  screen=s;
+  $("homeBtn").style.display = s==="home" ? "none" : "inline";
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(s==="home") renderHome();
+  else if(s==="qr") renderQrIntro(arg);
+  else if(s==="fig") runFig();
+  else if(s==="voice") runVoice();
+  else if(s==="ev") renderEv(0);
+  else if(s==="upg") runUpg();
+  else if(s==="rpt") renderReport();
+}
+
+/* ---------- scoring helpers ---------- */
+function keysFor(mod){
+  return Object.keys(S.first).filter(k=>k.split(".")[0]===mod);
+}
+function scoreFor(mod){
+  const ks=keysFor(mod); const got=ks.filter(k=>S.first[k]).length;
+  return {got, total:ks.length};
+}
+function totalItemsOf(mod){
+  if(mod==="qr1") return QUICKREADS[0].items.length;
+  if(mod==="qr2") return QUICKREADS[1].items.length;
+  if(mod==="fig") return FIG_ITEMS.length*2;
+  if(mod==="voice") return VOICE_ITEMS.length*2;
+  if(mod==="ev") return 6; /* 2 rounds × 3 levels */
+  if(mod==="upg") return UPG_ITEMS.length*2;
+  return 0;
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const doneCount=MODULES.filter(m=>S.done[m.id]).length;
+  let h=`<h1>The Bone Sparrow — Reading &amp; Evidence Hub</h1>
+  <p class="sub">Zana Fraillon · reading, inference, voice &amp; evidence · follows on from the
+  <a href="bonesparrowtrainer (4) (3).html">Pre-reading Trainer</a>. Wrong answers get retried until you master them,
+  but <b>your first attempt at each question is what goes on your report</b>.</p>`;
+  h+=`<div class="panel" style="background:var(--bg)"><p class="lead" style="margin:0">
+  Work top to bottom unless your teacher says otherwise. The <b>Sentence upgrader</b> unlocks after the
+  <b>Evidence builder</b> — you need the embedding skill first. Need a grammar refresher along the way?
+  The <a href="GrammarHuboffline.html">Grammar Hub</a> is one click away.</p></div>`;
+  MODULES.forEach(m=>{
+    const done=!!S.done[m.id];
+    const locked = m.needs ? !S.done[m.needs] : false;
+    const sc=scoreFor(m.id);
+    let tag = done ? (sc.total? `${sc.got}/${sc.total} first try` : "done")
+            : locked ? "locked — finish the evidence builder"
+            : (m.id==="rpt" ? (doneCount>=3 ? "" : "finish 3 activities first") : (sc.total? "in progress" : ""));
+    const rptLocked = m.id==="rpt" && doneCount<3 && !S.done.rpt;
+    h+=`<button class="step ${done?"done":""}" ${locked||rptLocked?"disabled":""} onclick="go('${m.kind}','${m.id}')">
+      <span class="num">${done?"✓":m.n}</span>
+      <span><span class="t">${esc(m.t)}</span><br><span class="d">${esc(m.d)}</span></span>
+      <span class="tag">${esc(tag)}</span></button>`;
+  });
+  h+=`<div class="btnrow noprint"><button class="linkbtn" onclick="resetAll()">reset everything</button></div>`;
+  $("body").innerHTML=h;
+}
+/* the step buttons call go(kind, id); map kinds that share a runner */
+const _go=go;
+go=function(s,arg){
+  if(s==="qr"&&!arg) arg="qr1";
+  if(s==="qr1"||s==="qr2"){ arg=s; s="qr"; }
+  _go(s,arg);
+};
+
+/* ---------- GENERIC QUIZ RUNNER (mcq, multi-step items) ----------
+   cfg: {mod, title, where, items:[{id, stim?, steps:[{key,q,opts,a,explain,requote?}]}], onDone}
+   Mastery loop: any missed step re-queues the whole item; first attempts recorded once. */
+function runQuizzer(cfg){
+  let queue=cfg.items.slice(), idx=0, stepIdx=0, round=1;
+  const missed=[];
+  function draw(){
+    const item=queue[idx], step=item.steps[stepIdx];
+    const total=cfg.items.reduce((n,it)=>n+it.steps.length,0);
+    const answered=Object.keys(S.first).filter(k=>k.startsWith(cfg.mod+".")).length;
+    let h=`<div class="eyebrow">${esc(cfg.where)}</div><h2>${esc(cfg.title)}</h2>`;
+    h+=`<div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,answered/total*100)}%"></div></div>`;
+    if(round>1) h+=`<p class="lead">Mastery round ${round} — answer the ones you missed until they're all correct. (First attempts are already saved.)</p>`;
+    if(item.stim) h+=`<div class="stim">${item.stim}${item.page?`<span class="pg">(${esc(item.page)})</span>`:""}</div>`;
+    h+=`<p class="q">${esc(step.q)}</p><div class="opts ${step.chips?"chips":""}" id="opts"></div>
+    <div class="feedback" id="fb" aria-live="polite"></div>
+    <button class="btn btn-primary" id="nextBtn" style="display:none"></button>`;
+    $("body").innerHTML=h;
+    const order = step.noShuffle ? step.opts.map((_,i)=>i) : shuffle(step.opts.map((_,i)=>i));
+    order.forEach(oi=>{
+      const b=document.createElement("button");
+      b.className="opt"; b.innerHTML=esc(step.opts[oi]);
+      b.onclick=()=>grade(oi,b);
+      $("opts").appendChild(b);
+    });
+  }
+  function grade(oi,btn){
+    const item=queue[idx], step=item.steps[stepIdx];
+    const correct = oi===step.a;
+    document.querySelectorAll("#opts .opt").forEach((b,k)=>{ b.disabled=true; });
+    [...document.querySelectorAll("#opts .opt")].forEach(b=>{
+      if(b.textContent===step.opts[step.a]) b.classList.add("right");
+    });
+    if(!correct) btn.classList.add("wrongpick");
+    const key=cfg.mod+"."+item.id+"."+step.key;
+    const firstTime = S.first[key]===undefined;
+    recFirst(key, correct);
+    if(!correct && firstTime) missed.push({item,label:cfg.missLabel(item,step)});
+    const fb=$("fb");
+    fb.className="feedback "+(correct?"ok":"bad");
+    fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — the answer is “${esc(step.opts[step.a])}”.</b> `)+step.explain
+      +(!correct&&step.requote?`<div class="requote">“${esc(step.requote)}”</div>`:"");
+    if(!correct) item._requeue=true;
+    const nb=$("nextBtn");
+    nb.style.display="inline-block";
+    nb.textContent = stepIdx<item.steps.length-1 ? "Next part →" : "Next →";
+    nb.onclick=()=>{
+      if(stepIdx<item.steps.length-1){ stepIdx++; draw(); return; }
+      if(item._requeue){ delete item._requeue; queue.push(item); }
+      stepIdx=0; idx++;
+      if(idx>=queue.length){ finish(); } else {
+        if(idx>=cfg.items.length && queue[idx]) round= Math.max(round, 2);
+        draw();
+      }
+    };
+  }
+  function finish(){
+    S.done[cfg.mod]=true; save();
+    const sc=scoreFor(cfg.mod);
+    const pct=sc.total? sc.got/sc.total : 0;
+    const band = pct>=0.8 ? "Strong reading. Every miss got retaught and retried — check the report to see your first-try picture."
+      : pct>=0.6 ? "A good start — here's how to lift it: reread the lines quoted in the feedback you got, then tell someone WHY the right answer was right."
+      : "Worth a slower second pass. Reread the passage in your own copy of the novel, then come back — the reteach lines in the feedback are your map.";
+    $("body").innerHTML=`<h2>${esc(cfg.title)} — done</h2>
+    <div class="panel"><p style="margin:0"><b>${sc.got}/${sc.total} on first attempt.</b> ${band}</p></div>
+    ${cfg.doneNote?`<div class="panel" style="background:var(--bg)"><p class="lead" style="margin:0">${cfg.doneNote}</p></div>`:""}
+    <div class="btnrow"><button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
+  }
+  draw();
+}
+
+/* ---------- QUICKREADS ---------- */
+function renderQrIntro(id){
+  const qr=QUICKREADS.find(q=>q.id===id);
+  $("body").innerHTML=`<div class="eyebrow">${esc(qr.where)} · cold-excerpt inference check</div>
+  <h2>${esc(qr.title)}</h2>
+  <p class="lead">${esc(qr.intro)}</p>
+  <div class="passage">${qr.passage}<span class="pg">${esc(qr.where)} — The Bone Sparrow, Zana Fraillon</span></div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="startQr('${qr.id}')">I've finished reading — start the questions</button></div>`;
+}
+function startQr(id){
+  const qr=QUICKREADS.find(q=>q.id===id);
+  runQuizzer({
+    mod:qr.id, title:qr.title+" — questions (no looking back)", where:qr.where,
+    items:qr.items.map(it=>({ id:it.id, steps:[{key:"a", q:it.q, opts:it.opts, a:it.a, explain:it.explain, requote:it.line}] })),
+    missLabel:(item,step)=>item.id,
+    doneNote: id==="qr1" ? "Next quickread: Chapter 5, the moment Beaver catches Subhi." :
+      "If the figurative lines here interested you, the next activity digs into exactly how they work."
+  });
+}
+
+/* ---------- FIGURATIVE ---------- */
+function runFig(){
+  runQuizzer({
+    mod:"fig", title:"Figurative → literal", where:"Lesson 09 · figurative language",
+    items:FIG_ITEMS.map(it=>({ id:it.id, stim:"“"+esc(it.quote)+"”", page:it.page, steps:[
+      { key:"meaning", q:"What does this literally mean?", opts:it.meaning.opts, a:it.meaning.a, explain:it.meaning.explain },
+      { key:"tech", q:"Which feature is doing the work?", opts:it.tech.opts.map(i=>FIG_TECHS[i]), a:it.tech.a, explain:it.tech.explain }
+    ]})),
+    missLabel:(item,step)=>item.id,
+    doneNote:"You've just practised the two halves of writing about language: SAY what it means, then NAME how it's done. The Evidence builder puts those together."
+  });
+}
+
+/* ---------- VOICE ---------- */
+function runVoice(){
+  runQuizzer({
+    mod:"voice", title:"Voice fingerprint", where:"Lesson 07 / 11 · character voice — before your voice memo",
+    items:VOICE_ITEMS.map(it=>({ id:it.id, stim:"“"+esc(it.line)+"”", page:it.page, steps:[
+      { key:"who", q:"Whose line is this?", opts:VOICE_WHO, a:it.a, explain:it.whoExplain, chips:true, noShuffle:true },
+      { key:"feat", q:"What gave it away? Name the language feature:", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
+    ]})),
+    missLabel:(item,step)=>item.id,
+    doneNote:"For your oral presentation you'll be building one of these voices yourself. Steal the fingerprints: a borrowed word, a dropped 'am', an adjective where a noun should be."
+  });
+}
+
+/* ---------- EVIDENCE BUILDER ---------- */
+let EV = null; /* transient per-round state */
+function renderEv(roundIdx){
+  const round=EV_ROUNDS[roundIdx];
+  if(!round){ evFinish(); return; }
+  EV={ roundIdx, round, level:1, idea:null, picked:new Set(), checked:false, slots:{stem:null,frag:null,tail:null}, builderChecked:false };
+  if(round.mode==="idea") renderEvIdea();
+  else renderEvSelect();
+}
+function evLadderHtml(active){
+  const gotLv = S.evLv||0;
+  let h=`<div class="ladder">`;
+  EV_LADDER.forEach((L,i)=>{
+    const st = (i+1)<=gotLv ? "got" : (i+1)===active ? "now" : (i+1)>active ? "below":"";
+    h+=`<button class="lcard ${st}" onclick="evHint(${i},${active})"><span class="lv">${esc(L.lv)} ${(i+1)<=gotLv?"✓":""}</span>${esc(L.text)}</button>`;
+  });
+  h+=`</div><div class="ladder-hint" id="ladderHint"></div>`;
+  return h;
+}
+function evHint(i,active){
+  const box=$("ladderHint"); if(!box) return;
+  if((i+1)>active && (i+1)>(S.evLv||0)){ box.className="ladder-hint show"; box.innerHTML="<b>Locked.</b> Finish the level you're on and this one opens — with its sentence stems."; return; }
+  box.className="ladder-hint show";
+  box.innerHTML="<b>"+esc(EV_LADDER[i].lv)+" scaffold:</b> "+esc(EV_LADDER[i].hint);
+}
+function renderEvIdea(){
+  const r=EV.round;
+  let h=`<div class="eyebrow">${esc(r.where)} · evidence builder</div><h2>${esc(r.title)}</h2>`;
+  h+=evLadderHtml(1);
+  h+=`<p class="lead">${esc(r.question)}</p><div class="idea-chips">`;
+  r.ideas.forEach(idea=>{ h+=`<button class="fchoice" onclick="evPickIdea('${idea.id}')">${esc(idea.label)}</button>`; });
+  h+=`</div><p class="lead">Pick the idea you want to prove, then the passage opens for evidence-hunting.</p>`;
+  $("body").innerHTML=h;
+}
+function evPickIdea(id){ EV.idea=id; EV.picked=new Set(); EV.locked=false; renderEvSelect(); }
+function renderEvSelect(){
+  const r=EV.round;
+  const ideaLabel = EV.idea ? r.ideas.find(i=>i.id===EV.idea).label : null;
+  let h=`<div class="eyebrow">${esc(r.where)} · evidence builder · level 1</div><h2>${esc(r.title)}</h2>`;
+  h+=evLadderHtml(1);
+  h+=`<p class="q">${esc(r.mode==="idea" ? "Find the evidence for: "+ideaLabel : r.question)}</p>
+  <p class="lead">${esc(r.qNote)}</p><div class="passage" id="pass">`;
+  r.segs.forEach((seg,i)=>{ h+=`<span class="seg" id="seg${i}" onclick="evToggle(${i})">${esc(seg.t)}</span> `; });
+  h+=`<span class="pg">${esc(r.where)} — The Bone Sparrow, Zana Fraillon</span></div>
+  <div class="feedback" id="fb" aria-live="polite"></div>
+  <div class="btnrow"><button class="btn btn-primary" id="chk" onclick="evCheck()">Check my evidence</button>
+  ${r.mode==="idea"?`<button class="btn btn-ghost" onclick="renderEvIdea()">← different idea</button>`:""}</div>`;
+  $("body").innerHTML=h;
+}
+function evToggle(i){
+  if(EV.locked) return;
+  const el=$("seg"+i);
+  el.classList.remove("hit","miss");
+  if(EV.picked.has(i)){ EV.picked.delete(i); el.classList.remove("picked"); }
+  else { EV.picked.add(i); el.classList.add("picked"); }
+  $("fb").className="feedback";
+}
+function segRole(seg){ return EV.round.mode==="idea" ? (seg.roles[EV.idea]||"plain") : seg.role; }
+function segFb(seg){ return EV.round.mode==="idea" ? (seg.fbs[EV.idea]||"") : seg.fb; }
+function evCheck(){
+  const r=EV.round, fb=$("fb");
+  if(EV.picked.size===0){ fb.className="feedback bad"; fb.innerHTML="<b>Nothing selected.</b> Click the part of the passage that answers the question, then check."; return; }
+  const picked=[...EV.picked].map(i=>({i,seg:r.segs[i],role:segRole(r.segs[i])}));
+  const gold=picked.filter(p=>p.role==="gold"), okp=picked.filter(p=>p.role==="ok");
+  const bad=picked.filter(p=>["other","plain","frame"].includes(p.role));
+  picked.forEach(p=>{
+    const el=$("seg"+p.i); el.classList.remove("picked");
+    el.classList.add(p.role==="gold"||p.role==="ok" ? "hit" : "miss");
+  });
+  const findings=[];
+  gold.forEach(p=>findings.push({sev:"ok", text:"“"+p.seg.t.slice(0,52)+(p.seg.t.length>52?"…”":"”")+" — "+segFb(p.seg)}));
+  okp.forEach(p=>findings.push({sev:"warn", text:"“"+p.seg.t.slice(0,52)+(p.seg.t.length>52?"…”":"”")+" — "+segFb(p.seg)}));
+  bad.forEach(p=>findings.push({sev:"warn", text:"“"+p.seg.t.slice(0,52)+(p.seg.t.length>52?"…”":"”")+" — "+segFb(p.seg)}));
+  const pass = gold.length>=1 && bad.length===0;
+  if(!EV.checked){ recFirst("ev."+r.id+".l1", pass); EV.checked=true; }
+  let head, cls;
+  if(pass){ head="Strong evidence selected."; cls="ok"; }
+  else if(gold.length>=1){ head="A good start — here's how to lift it: your strongest pick is right, but deselect the ones that don't belong."; cls="warn"; }
+  else if(okp.length>=1){ head="Close — that supports the answer, but there's a stronger line. Deselect and look again."; cls="warn"; }
+  else { head="Something needs fixing — none of these picks answer the question yet."; cls="bad"; }
+  fb.className="feedback "+cls;
+  fb.innerHTML="<b>"+esc(head)+"</b><ul>"+findings.map(f=>"<li>"+esc(f.text)+"</li>").join("")+"</ul>";
+  if(pass){
+    EV.locked=true;
+    S.evLv=Math.max(S.evLv||0,1); save();
+    fb.innerHTML+=`<div style="margin-top:8px"><b>Level 1 achieved:</b> ${esc(EV_LADDER[0].text)}.</div>`;
+    document.querySelector(".btnrow").innerHTML=`<button class="btn btn-primary" onclick="renderEvL2()">Level 2: explain the relevance →</button>`;
+  } else {
+    picked.filter(p=>p.role!=="gold"&&p.role!=="ok").forEach(p=>{ EV.picked.delete(p.i); });
+  }
+}
+function renderEvL2(){
+  const r=EV.round;
+  const l2 = r.mode==="idea" ? r.l2s[EV.idea] : r.l2;
+  let h=`<div class="eyebrow">${esc(r.where)} · evidence builder · level 2</div><h2>${esc(r.title)}</h2>`;
+  h+=evLadderHtml(2);
+  h+=`<p class="q">${esc(l2.q)}</p><div class="opts" id="opts"></div>
+  <div class="feedback" id="fb" aria-live="polite"></div>
+  <div class="btnrow" id="brow"></div>`;
+  $("body").innerHTML=h;
+  let first=true;
+  shuffle(l2.opts.map((_,i)=>i)).forEach(oi=>{
+    const o=l2.opts[oi];
+    const b=document.createElement("button"); b.className="opt"; b.textContent=o.t;
+    b.onclick=()=>{
+      const good=o.q==="good";
+      if(first){ recFirst("ev."+r.id+".l2", good); first=false; }
+      const fb=$("fb");
+      if(good){
+        document.querySelectorAll("#opts .opt").forEach(x=>x.disabled=true);
+        b.classList.add("right");
+        fb.className="feedback ok"; fb.innerHTML="<b>Correct.</b> "+esc(o.fb);
+        S.evLv=Math.max(S.evLv,2); save();
+        fb.innerHTML+=`<div style="margin-top:8px"><b>Level 2 achieved:</b> ${esc(EV_LADDER[1].text)}.</div>`;
+        $("brow").innerHTML=`<button class="btn btn-primary" onclick="renderEvBuilder()">Level 3: embed the quote →</button>`;
+      } else {
+        b.disabled=true; b.classList.add("wrongpick");
+        fb.className="feedback bad"; fb.innerHTML="<b>Not this one.</b> "+esc(o.fb);
+      }
+    };
+    $("opts").appendChild(b);
+  });
+}
+function renderEvBuilder(){
+  const r=EV.round;
+  const B = r.mode==="idea" ? r.builders[EV.idea] : r.builder;
+  EV.slots={stem:null,frag:null,tail:null};
+  EV.builderChecked=false;
+  let h=`<div class="eyebrow">${esc(r.where)} · evidence builder · level 3</div><h2>${esc(r.title)}</h2>`;
+  h+=evLadderHtml(3);
+  h+=`<p class="lead">${esc(B.intro)} Tap a tile to place it; tap a placed tile to remove it. Colours are the parts: <b style="color:var(--stem-tx)">blue = stem</b>, <b style="color:var(--quote-tx)">yellow = quote</b>, <b style="color:var(--tail-tx)">pink = ending</b>.</p>
+  <div class="slotrow">
+    <div class="slot" id="slot-stem"><span class="slabel">Stem</span><span id="in-stem"></span></div>
+    <div class="slot" id="slot-frag"><span class="slabel">Quote</span><span id="in-frag"></span></div>
+    <div class="slot" id="slot-tail"><span class="slabel">Ending</span><span id="in-tail"></span></div>
+  </div>
+  <div class="preview" id="prev"></div>
+  <div class="bins">
+    <div class="bin stems"><h4>Sentence stems</h4><div class="binbody" id="bin-stem"></div></div>
+    <div class="bin quotes"><h4>Trimmed quotes</h4><div class="binbody" id="bin-frag"></div></div>
+    <div class="bin tails"><h4>Endings</h4><div class="binbody" id="bin-tail"></div></div>
+  </div>
+  <div class="feedback" id="fb" aria-live="polite"></div>
+  <div class="btnrow" id="brow"><button class="btn btn-primary" onclick="evBuildCheck()">Check my sentence</button>
+  <button class="btn btn-ghost" onclick="renderEvBuilder()">Reset</button></div>`;
+  $("body").innerHTML=h;
+  const fill=(kind,list)=>{
+    const bin=$("bin-"+kind);
+    shuffle(list).forEach(x=>{
+      const b=document.createElement("button"); b.className="tile k-"+(kind==="stem"?"stem":kind==="frag"?"quote":"tail");
+      b.textContent=x.t; b.onclick=()=>{ EV.slots[kind]=x; drawSlots(B); };
+      bin.appendChild(b);
+    });
+  };
+  fill("stem",B.stems); fill("frag",B.frags); fill("tail",B.tails);
+  drawSlots(B);
+}
+function drawSlots(B){
+  ["stem","frag","tail"].forEach(kind=>{
+    const holder=$("in-"+kind); holder.innerHTML="";
+    const x=EV.slots[kind];
+    if(x){ const b=document.createElement("button");
+      b.className="placed k-"+(kind==="stem"?"stem":kind==="frag"?"quote":"tail");
+      b.textContent=x.t; b.onclick=()=>{ EV.slots[kind]=null; drawSlots(B); };
+      holder.appendChild(b); }
+  });
+  const {stem,frag,tail}=EV.slots;
+  const prev=$("prev");
+  if(stem||frag||tail){
+    let s=(stem?stem.t:"…")+" "+(frag?"“"+frag.t+"”":"“…”")+(tail?tail.t:" …");
+    prev.textContent=s;
+  } else prev.innerHTML=`<span class="ph">Your sentence appears here as you build it.</span>`;
+  const fb=$("fb"); if(fb) fb.className="feedback";
+}
+function evBuildCheck(){
+  const r=EV.round;
+  const {stem,frag,tail}=EV.slots;
+  const fb=$("fb");
+  const findings=[];
+  if(!stem||!frag||!tail){
+    fb.className="feedback bad";
+    fb.innerHTML="<b>Something needs fixing.</b> The sentence needs all three parts — a stem, a trimmed quote, and an ending.";
+    return;
+  }
+  if(stem.q==="point") findings.push({sev:"warn", text:stem.fb});
+  if(frag.q==="long"||frag.q==="short") findings.push({sev:"warn", text:frag.fb});
+  if(frag.q==="nofit" || (stem.accepts && frag.q==="good" && !stem.accepts.includes(frag.id)))
+    findings.push({sev:"err", text: frag.q==="nofit" ? frag.fb : "Read the preview aloud — the quote doesn't continue the stem's grammar. Swap one of them so it flows as a single sentence."});
+  if(tail.q==="point"||tail.q==="retell") findings.push({sev:"warn", text:tail.fb});
+  const level = findings.some(f=>f.sev==="err") ? "err" : findings.length ? "warn" : "ok";
+  const pass = level==="ok";
+  if(!EV.builderChecked){ recFirst("ev."+r.id+".l3", pass); EV.builderChecked=true; }
+  if(pass){
+    fb.className="feedback ok";
+    let msg="<b>Strong analytical sentence.</b> Stem, embedded quote and an ending that explains — read it back once more, out loud if you can. This is the level to aim for in your essay.";
+    if(tail.q==="bonus") msg+=" <b>And you've woven in a second quote — that's above the standard: “I can correctly embed multiple quotes into an explanation.”</b>";
+    fb.innerHTML=msg+`<div style="margin-top:8px"><b>Level 3 achieved:</b> ${esc(EV_LADDER[2].text)}.</div>`;
+    S.evLv=Math.max(S.evLv, EV.roundIdx===0?3:4); save();
+    const nextIdx=EV.roundIdx+1;
+    $("brow").innerHTML = EV_ROUNDS[nextIdx]
+      ? `<button class="btn btn-primary" onclick="renderEv(${nextIdx})">Round 2: choose your own idea →</button>`
+      : `<button class="btn btn-primary" onclick="evFinish()">Finish the evidence builder →</button>`;
+  } else {
+    fb.className="feedback "+(level==="err"?"bad":"warn");
+    fb.innerHTML="<b>"+(level==="err"?"Something needs fixing.":"A good start — here's how to lift it:")+"</b><ul>"
+      +findings.map(f=>"<li>"+esc(f.text)+"</li>").join("")+"</ul>";
+  }
+}
+function evFinish(){
+  S.done.ev=true; save();
+  const sc=scoreFor("ev");
+  $("body").innerHTML=`<h2>Evidence builder — done</h2>
+  ${evLadderHtml(5)}
+  <div class="panel"><p style="margin:0"><b>${sc.got}/${sc.total} levels passed on the first check.</b>
+  You've climbed the same ladder that's on your assessment rubric: find it → explain it → embed it → make it explain something.
+  The wrong turns you met on the way — retelling, overreaching, pointing at the quote — are the exact traps to avoid in your essay.</p></div>
+  <div class="panel" style="background:var(--bg)"><p class="lead" style="margin:0">The <b>Sentence upgrader</b> has just unlocked on the hub — it takes the embedding skill and grows it into full analysis.</p></div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
+}
+
+/* ---------- SENTENCE UPGRADER ---------- */
+function runUpg(){
+  let idx=0;
+  function draw(stage, acc){
+    const it=UPG_ITEMS[idx];
+    if(!it){ finish(); return; }
+    let h=`<div class="eyebrow">Lessons 16–17 · analytic writing · WAGOLL ladder</div>
+    <h2>Sentence upgrader — ${esc(it.focus)} (${idx+1}/${UPG_ITEMS.length})</h2><div class="wag">`;
+    WAG_LEVELS.forEach((L,i)=>{
+      h+=`<div class="lcard ${i===0? "got" : i<=stage? "got" : i===stage+1? "now":"below"}" style="cursor:default">
+        <span class="lv">${esc(L.lv)} ${i===0||i<=stage?"✓":""}</span>${esc(L.text)}</div>`;
+    });
+    h+=`</div><div class="grow" id="grow">${esc(it.base)}${acc.map(a=>`<span class="new"> ${esc(a)}</span>`).join("")}</div>`;
+    const stepDef = stage===0 ? it.c3 : it.c4;
+    if(stage<2){
+      h+=`<p class="q">${esc(stepDef.q)}</p><div class="opts" id="opts"></div>
+      <div class="feedback" id="fb" aria-live="polite"></div><div class="btnrow" id="brow"></div>`;
+      $("body").innerHTML=h;
+      let first = S.first["upg."+it.id+"."+(stage===0?"c3":"c4")]===undefined;
+      shuffle(stepDef.opts.map((_,i)=>i)).forEach(oi=>{
+        const o=stepDef.opts[oi];
+        const b=document.createElement("button"); b.className="opt"; b.textContent=o.t;
+        b.onclick=()=>{
+          if(first){ recFirst("upg."+it.id+"."+(stage===0?"c3":"c4"), o.ok); first=false; }
+          const fb=$("fb");
+          if(o.ok){
+            document.querySelectorAll("#opts .opt").forEach(x=>x.disabled=true);
+            b.classList.add("right");
+            fb.className="feedback ok"; fb.innerHTML="<b>Correct.</b> "+esc(o.fb);
+            $("brow").innerHTML=`<button class="btn btn-primary" id="nx">${stage===0?"Climb to C4 →":"Read it back →"}</button>`;
+            $("nx").onclick=()=>draw(stage+1, acc.concat([o.t]));
+          } else {
+            b.disabled=true; b.classList.add("wrongpick");
+            fb.className="feedback bad"; fb.innerHTML="<b>Not that one.</b> "+esc(o.fb);
+          }
+        };
+        $("opts").appendChild(b);
+      });
+    } else {
+      h+=`<div class="feedback ok"><b>Read it back.</b> You started at describing and finished at analysing — feature, effect, idea, all in one flowing sentence. That's a C4 sentence: the level to aim for in the text response essay.</div>
+      <div class="btnrow"><button class="btn btn-primary" id="nx">${idx<UPG_ITEMS.length-1?"Next sentence →":"Finish →"}</button></div>`;
+      $("body").innerHTML=h;
+      $("nx").onclick=()=>{ idx++; draw(0,[]); };
+    }
+  }
+  function finish(){
+    S.done.upg=true; save();
+    const sc=scoreFor("upg");
+    $("body").innerHTML=`<h2>Sentence upgrader — done</h2>
+    <div class="panel"><p style="margin:0"><b>${sc.got}/${sc.total} upgrades chosen first try.</b>
+    The pattern you just practised — <i>feature → effect on the reader → bigger idea</i> — is the whole engine of a text response paragraph.
+    Next stop: Lesson 16–17 on OneNote, where you write these yourself.</p></div>
+    <div class="btnrow"><button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
+  }
+  draw(0,[]);
+}
+
+/* ---------- REPORT ---------- */
+function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
+const MISS_LABELS={qr1:"Quickread: the Night Sea",qr2:"Quickread: caught by Beaver",fig:"Figurative → literal",voice:"Voice fingerprint",ev:"Evidence builder",upg:"Sentence upgrader"};
+const RECOMMEND={
+ qr1:"Reread with a pencil (Lesson 09 annotation strategies) and use the chapter audio recordings while following along.",
+ qr2:"Reread with a pencil (Lesson 09 annotation strategies) and use the chapter audio recordings while following along.",
+ fig:"Revisit Lesson 09 (figurative language) and the simile/metaphor rows of 12w — Key ideas in the novel.",
+ voice:"Revisit Lesson 07 — Character Voice before recording your voice memo; practise the word-class swap on two of your own sentences.",
+ ev:"Revisit Lessons 04 and 06 (finding and embedding evidence). If sentence flow was the problem, open the Grammar Hub → Sentence Structure.",
+ upg:"Revisit Lessons 16–17 (writing about how the text is written) and the workshopped model paragraph."};
+function renderReport(){
+  const mods=["qr1","qr2","fig","voice","ev","upg"];
+  let rows="", worst=null, worstErr=-1, anyDone=false;
+  mods.forEach(m=>{
+    const sc=scoreFor(m); if(!sc.total) return;
+    anyDone=true;
+    const err= 1 - sc.got/sc.total;
+    if(err>worstErr && sc.total>=3){ worstErr=err; worst=m; }
+    rows+=`<tr><td>${esc(MISS_LABELS[m])}</td><td>${sc.got} / ${sc.total}</td><td>${S.done[m]?"finished":"in progress"}</td></tr>`;
+  });
+  const missed=Object.keys(S.first).filter(k=>!S.first[k]);
+  const scAll=mods.reduce((a,m)=>{const s=scoreFor(m);return{got:a.got+s.got,total:a.total+s.total}},{got:0,total:0});
+  const code=vcode(JSON.stringify(S.first)+(S.name||"")+(S.sid||""));
+  const teach = !anyDone ? "" :
+    `This student worked through the Reading &amp; Evidence Hub. Every wrong answer was retried until correct (mastery loop), but the scores above are <b>first attempts only</b> — so they show genuine independent reading, not final-state guessing. `
+    + (worst!==null && worstErr>0.34 ? `The clearest next step: <b>${esc(MISS_LABELS[worst])}</b> — ${esc(RECOMMEND[worst])}` :
+       worst!==null && worstErr>0 ? `Errors were spread thin; the softest area was <b>${esc(MISS_LABELS[worst])}</b>. ${esc(RECOMMEND[worst])}` :
+       `A clean first-attempt run across everything attempted — extension: the 'stretch' rows of 12w, or drafting the voice memo unassisted.`);
+  $("body").innerHTML=`<div class="eyebrow">My report</div><h2>Reading &amp; Evidence Hub — report</h2>
+  <div class="rowinp noprint">
+    <span><label for="nm">Name</label><input id="nm" value="${esc(S.name||"")}" onchange="S.name=this.value;save();renderReport()"></span>
+    <span><label for="sid">Student ID</label><input id="sid" value="${esc(S.sid||"")}" onchange="S.sid=this.value;save();renderReport()"></span>
+  </div>
+  <p class="lead">${esc(S.name||"(no name entered)")}${S.sid?" · "+esc(S.sid):""} · first-attempt scores · overall <b>${scAll.got}/${scAll.total}</b></p>
+  <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rows||`<tr><td colspan="3">Nothing attempted yet — go do an activity first.</td></tr>`}</table>
+  ${missed.length?`<div class="panel"><b>Missed on first try (${missed.length}):</b> <span style="color:var(--muted);font-size:13px">${missed.map(esc).join(", ")}</span></div>`:""}
+  <div class="panel"><b>What this tells your teacher:</b> ${teach||"Attempt at least one activity to generate the summary."}</div>
+  <p class="lead">Verification code: <span class="vcode">${code}</span></p>
+  <div class="btnrow noprint">
+    <button class="btn btn-primary" onclick="S.done.rpt=true;save();window.print()">Print / save as PDF</button>
+    <button class="btn btn-ghost" onclick="go('home')">← back to the hub</button>
+  </div>`;
+}
+
+go("home");
+</script>
+</body>
+</html>
