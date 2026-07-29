@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himalaya Trek Planner &mdash; Geography Simulation</title>
+<style>
+  :root{
+    --ink:#23272e; --muted:#6b7280; --line:#d8dce1; --paper:#ffffff; --bg:#f4f6f8;
+    --accent:#1f6f6b; --accent2:#b4541f; --warm:#c98a1a;
+    --ok-bg:#e7f3e0; --ok-tx:#3a6b14;
+    --warn-bg:#fdeccd; --warn-tx:#8a560c;
+    --bad-bg:#fbe5e3; --bad-tx:#a3322a;
+    --info-bg:#e3eef0; --info-tx:#175e5a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;}
+  .wrap{max-width:1340px;margin:0 auto;padding:14px 18px 70px;}
+  header.app h1{font-family:Georgia,serif;font-size:24px;margin:0 0 2px;}
+  header.app p{margin:0;color:var(--muted);font-size:13px;}
+  .accent{height:3px;width:64px;background:var(--accent);border-radius:2px;margin-top:8px;}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px;}
+  h2.sec{font-family:Georgia,serif;font-size:18px;margin:0 0 4px;}
+  h2.sec .step{display:inline-block;background:var(--accent);color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:2px 9px;margin-right:8px;vertical-align:middle;}
+  p.lead{color:var(--muted);font-size:13.5px;margin:0 0 12px;}
+  .callout{background:var(--info-bg);color:var(--info-tx);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px;}
+
+  button.act{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 15px;font-size:13px;color:var(--ink);font-family:inherit;font-weight:600;}
+  button.act:hover{background:var(--bg);}
+  button.act.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  button.act.primary:hover{filter:brightness(1.07);}
+  button.act.big{font-size:15px;padding:11px 22px;}
+  button.act:disabled{opacity:.45;cursor:default;}
+
+  /* layout: map left, controls right */
+  .explorer{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;}
+  @media (max-width:920px){.explorer{grid-template-columns:1fr;}}
+
+  /* view switch */
+  .viewbar{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+  .viewbtn{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 13px;font-size:12.5px;font-weight:600;color:var(--ink);font-family:inherit;}
+  .viewbtn.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .viewdesc{font-size:12px;color:var(--muted);margin:0 0 6px;}
+
+  svg.map{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;display:block;background:#fbfaf6;}
+  .cell{cursor:pointer;}
+  .cell:hover{stroke:var(--accent);stroke-width:1.5;}
+  .gridlabel{font-size:9px;fill:#9aa1a9;font-family:monospace;}
+  .spotht{font-size:8px;fill:#5a5246;font-family:monospace;pointer-events:none;}
+  .contour{fill:none;stroke:#b09a76;stroke-width:0.8;opacity:0.7;pointer-events:none;}
+  .contour.index{stroke:#8a7350;stroke-width:1.4;opacity:0.85;}
+  .feat{pointer-events:none;}
+  .featlabel{font-size:9px;fill:#2a2e26;font-family:"Segoe UI";pointer-events:none;}
+  .baseMarker{pointer-events:none;}
+  .legend-mini{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--muted);margin-top:8px;}
+  .legend-mini span{display:inline-flex;align-items:center;gap:5px;}
+  .legend-mini i{width:12px;height:8px;border-radius:2px;display:inline-block;}
+
+  /* controls card */
+  .control h3{margin:0 0 6px;font-size:14px;}
+  .control{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;}
+  .control .pickrow{display:flex;flex-wrap:wrap;gap:6px;}
+  .pick{cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;font-size:12.5px;font-family:inherit;font-weight:600;color:var(--ink);}
+  .pick.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .hintbtn{font-size:11.5px;color:var(--accent);background:none;border:none;cursor:pointer;padding:4px 0 0;font-family:inherit;text-decoration:underline;}
+  .hinttext{font-size:12px;color:var(--warn-tx);background:var(--warn-bg);border-radius:7px;padding:8px 10px;margin-top:7px;display:none;}
+  .hinttext.show{display:block;}
+  .readout{font-size:12.5px;margin-top:8px;}
+  .readout .row{display:flex;justify-content:space-between;padding:3px 0;border-top:1px solid var(--line);}
+  .readout .row .v{font-weight:600;}
+  .flag{font-size:12px;border-radius:6px;padding:6px 9px;margin-top:6px;}
+  .flag.bad{background:var(--bad-bg);color:var(--bad-tx);}
+  .flag.warn{background:var(--warn-bg);color:var(--warn-tx);}
+  .flag.ok{background:var(--ok-bg);color:var(--ok-tx);}
+
+  /* meters */
+  .meters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 4px;}
+  .meter{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;}
+  .meter .lab{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .meter .num{font-size:22px;font-weight:700;font-family:Georgia,serif;}
+  .meter .bar{height:7px;border-radius:4px;background:var(--bg);margin-top:5px;overflow:hidden;}
+  .meter .bar > div{height:100%;border-radius:4px;transition:width .5s;}
+
+  /* event log */
+  .log{margin-top:12px;}
+  .logitem{border-left:3px solid var(--line);padding:8px 0 8px 12px;margin-bottom:8px;font-size:13px;}
+  .logitem.good{border-color:var(--ok-tx);}
+  .logitem.bad{border-color:var(--bad-tx);}
+  .logitem.warn{border-color:var(--warn-tx);}
+  .logitem .t{font-weight:700;font-size:12px;display:block;margin-bottom:2px;}
+  .logitem .delta{font-size:11.5px;color:var(--muted);margin-top:3px;}
+
+  .verdict{border-radius:10px;padding:14px 16px;font-size:14px;margin-top:12px;}
+  .verdict.good{background:var(--ok-bg);color:var(--ok-tx);}
+  .verdict.mixed{background:var(--warn-bg);color:var(--warn-tx);}
+  .verdict.bad{background:var(--bad-bg);color:var(--bad-tx);}
+  .verdict h3{margin:0 0 4px;font-size:16px;}
+
+  /* SAQ */
+  .saq{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;background:#fff;}
+  .saq .q{font-size:14px;font-weight:600;margin:0 0 4px;}
+  .saq .hintq{font-size:12.5px;color:var(--muted);margin:0 0 8px;}
+  .saq textarea{width:100%;min-height:80px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-family:inherit;font-size:13.5px;resize:vertical;}
+  .saq textarea:focus{outline:2px solid var(--accent);border-color:var(--accent);}
+  .saqbtns{display:flex;gap:8px;margin-top:8px;align-items:center;}
+  .saqfb{margin-top:10px;border-radius:8px;padding:10px 12px;font-size:13px;display:none;}
+  .saqfb.show{display:block;}
+  .saqfb.ok{background:var(--ok-bg);color:var(--ok-tx);}
+  .saqfb.warn{background:var(--warn-bg);color:var(--warn-tx);}
+  .saqfb ul{margin:6px 0 0 16px;padding:0;}
+  .wordcount{font-size:11.5px;color:var(--muted);}
+  .hidden{display:none;}
+
+  /* ===== v3 additions ===== */
+  /* tab strip for the three map views */
+  .viewtabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;border-bottom:2px solid var(--line);}
+  .viewtab{cursor:pointer;border:1px solid var(--line);border-bottom:none;background:#fff;border-radius:8px 8px 0 0;padding:8px 15px;font-size:13px;font-weight:600;color:var(--muted);font-family:inherit;margin-bottom:-2px;}
+  .viewtab.on{color:var(--ink);border-color:var(--accent);border-bottom:2px solid var(--paper);background:var(--paper);}
+  .viewpanel{display:none;}
+  .viewpanel.on{display:block;}
+
+  /* authentic topographic map frame */
+  .map-frame{background:#f3eedf;border:1.5px solid #6b6650;border-radius:6px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+  .map-title{font-family:Georgia,serif;font-size:13.5px;text-align:center;margin-bottom:6px;color:#3c2f1e;}
+  svg.topomap{width:100%;height:auto;background:#f3eedf;display:block;}
+  .contour{fill:none;stroke:#9b6b32;stroke-width:0.6;opacity:0.85;}
+  .contour.index{stroke:#6b3f12;stroke-width:1.3;opacity:0.95;}
+  .contour-label{font-size:8px;fill:#5a3010;font-family:Georgia,serif;font-style:italic;}
+  .spot-height{font-size:8.5px;fill:#5a3010;font-family:Georgia,serif;}
+  .spot-x{font-size:9px;fill:#5a3010;}
+  .river{fill:none;stroke:#5b8fb0;stroke-width:3.5;stroke-linecap:round;}
+  .feature-circle{fill:#fff;stroke:#3c2f1e;stroke-width:1.6;}
+  .feature-label{font-size:10px;fill:#1f1810;font-family:"Segoe UI",sans-serif;font-weight:600;}
+  .feature-sub{font-size:8.5px;fill:#6b6450;font-style:italic;}
+  .cell-hit{fill:transparent;cursor:crosshair;}
+  .cell-hit:hover{fill:#1f6f6b;fill-opacity:0.10;stroke:#1f6f6b;stroke-width:1.5;}
+  .cell-hit.selected{fill:#b4541f;fill-opacity:0.18;stroke:#b4541f;stroke-width:2.4;}
+  .scalebar text{font-size:9px;fill:#3c2f1e;font-family:Georgia,serif;}
+  .north text{font-size:11px;fill:#3c2f1e;font-family:Georgia,serif;font-weight:700;}
+  .north line{stroke:#3c2f1e;stroke-width:1.4;}
+  .north polygon{fill:#3c2f1e;}
+  .map-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:#3c2f1e;margin-top:10px;padding:6px 8px;background:#f9f5e8;border:1px solid #c9bf9e;border-radius:4px;}
+  .map-legend span{display:inline-flex;align-items:center;gap:5px;}
+
+  /* climate panel */
+  .climgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;}
+  @media (max-width:920px){.climgrid{grid-template-columns:1fr;}}
+  .chartbox{background:#fbfaf6;border:1px solid var(--line);border-radius:8px;padding:10px 12px;}
+  .chartbox + .chartbox{margin-top:12px;}
+  .chartbox .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;flex-wrap:wrap;gap:6px;}
+  .chartbox h4{margin:0;font-size:13px;font-weight:700;}
+  .chartbox .src{font-size:11px;color:var(--muted);font-style:italic;}
+  svg.chart{width:100%;height:auto;display:block;}
+  .window-summary{background:var(--info-bg);color:var(--info-tx);border-radius:8px;padding:12px 14px;font-size:13px;}
+  .window-summary .big{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .handle-grip{cursor:ew-resize;}
+
+  /* cultural briefing columns */
+  .briefing{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media (max-width:920px){.briefing{grid-template-columns:1fr;}}
+  .briefing .col{background:#fbfaf6;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55;}
+  .briefing h4{margin:0 0 6px;font-size:13.5px;color:var(--accent);font-family:Georgia,serif;}
+  .briefing p{margin:0 0 8px;}
+  .briefing .aside{background:#f3eedf;border-left:3px solid #c9bf9e;padding:6px 10px;font-size:12px;font-style:italic;color:#5a4f33;margin:6px 0;}
+  .briefing strong{color:var(--ink);}
+  .briefing .warning{color:var(--bad-tx);font-weight:600;}
+  .briefing .links{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+  .briefing .links a{font-size:12px;color:var(--accent);text-decoration:none;}
+  .briefing .links a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="app">
+  <h1>Himalaya Trek Planner</h1>
+  <p>Plan a trekking company in a Himalayan valley. Read the maps, weigh the trade-offs, commit to a plan &mdash; then run your first season and live with the consequences.</p>
+  <div class="accent"></div>
+</header>
+
+<div class="callout">
+  <strong>Your problem:</strong> Tourists pay to see <em>high, dramatic places</em> &mdash; the sacred peak, the glacial lake, the high pass. But a base camp needs to be <em>lower</em> (safe to sleep, time to acclimatise), on flat ground, near water and access, away from hazards and sacred land &mdash; and not too far from the attraction, or clients can't make the trek. Find the balance. The maps hold the evidence; you have to infer the consequences.
+</div>
+
+<!-- ============ STEP 1: READ THE MAPS ============ -->
+<section class="panel">
+  <h2 class="sec"><span class="step">1</span>Read the maps</h2>
+  <p class="lead">Three sources of evidence about the same valley. Read all three before you commit to a plan.</p>
+
+  <div class="viewtabs">
+    <button class="viewtab on" data-view="topo" onclick="setView('topo')">Topographic map</button>
+    <button class="viewtab" data-view="climate" onclick="setView('climate')">Climate &amp; season</button>
+    <button class="viewtab" data-view="cultural" onclick="setView('cultural')">Cultural &amp; tourist briefing</button>
+  </div>
+
+  <!-- ===== TOPO VIEW ===== -->
+  <div class="viewpanel on" id="view-topo">
+    <div class="explorer">
+      <div>
+        <div class="map-frame">
+          <div class="map-title">Upper Khumbu valley &mdash; Topographic map &middot; scale ~1:60,000 &middot; contour interval 100m</div>
+          <svg class="topomap" id="topomap" viewBox="0 0 760 540" role="img" aria-label="Topographic map"></svg>
+          <div class="map-legend">
+            <span><i style="display:inline-block;width:18px;height:0;border-top:1.3px solid #6b3f12"></i> contour (index, every 500m)</span>
+            <span><i style="display:inline-block;width:18px;height:0;border-top:0.6px solid #9b6b32"></i> contour (100m)</span>
+            <span><i style="display:inline-block;width:14px;height:3px;background:#5b8fb0;border-radius:2px"></i> river / glacier melt</span>
+            <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid #3c2f1e;background:#fff"></i> settlement / landmark</span>
+            <span><i style="display:inline-block;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #3c2f1e"></i> mountain summit</span>
+            <span><i style="display:inline-block;width:14px;height:6px;background:#3c2f1e"></i> rock band (climbing only)</span>
+            <span><i style="display:inline-block;font-size:9px;font-weight:700">4200</i> spot height (m)</span>
+            <span><i style="display:inline-block;width:12px;height:12px;background:#b4541f;opacity:0.4;border:1.5px solid #b4541f"></i> your base</span>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin:8px 4px 0;">Hover a square to see the cell highlight. Click to set your base camp there.</p>
+      </div>
+
+      <div>
+        <div class="control">
+          <h3>Base camp</h3>
+          <div style="font-size:12.5px;color:var(--muted);">Click a square on the topographic map to set your base. Infer from the maps whether it's a smart choice.</div>
+          <div class="readout" id="baseReadout"><div class="row"><span>No base chosen yet</span><span class="v">&mdash;</span></div></div>
+          <div id="baseFlags"></div>
+          <button class="hintbtn" onclick="toggleHint('hintBase')">Need a hint?</button>
+          <div class="hinttext" id="hintBase">A good base sits low enough to sleep safely and let clients adjust to the altitude, on flatter ground (look where contour lines are spaced <em>widely</em>), near the river for water and near a village for access. Read all three maps before committing.</div>
+        </div>
+
+        <div class="control">
+          <h3>What will you sell?</h3>
+          <div style="font-size:12.5px;color:var(--muted);">Pick the high attraction clients pay to reach. Higher = more dramatic = more they'll pay, but harder to reach safely.</div>
+          <div class="pickrow" id="attractionPicks" style="margin-top:8px;"></div>
+          <button class="hintbtn" onclick="toggleHint('hintAttr')">Need a hint?</button>
+          <div class="hinttext" id="hintAttr">Above 3,000m, clients shouldn't gain more than about 500m of sleeping height per day. How much height is there between your base and what you're selling? How far across the map? And look at what the route would cross &mdash; are there contour lines so tightly packed they form a near-vertical wall? Trekking parties can't cross those.</div>
+        </div>
+
+        <div class="control" id="routeControl" style="display:none;">
+          <h3>Your route, base &rarr; attraction</h3>
+          <div class="readout" id="routeReadout"></div>
+          <div id="routeFlags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CLIMATE VIEW ===== -->
+  <div class="viewpanel" id="view-climate">
+    <p class="lead">Drag the two brown handles below the climograph to set the months your company will operate. The summary and daily-pattern panel update with the weather you'd actually face. Climate data is anchored to Namche Bazaar (Khumbu valley, ~3,440m).</p>
+    <div class="climgrid">
+      <div>
+        <div class="chartbox">
+          <div class="head"><h4>Yearly climograph</h4><span class="src">Source: 1991&ndash;2021 averages, climate-data.org &amp; weather2travel.com</span></div>
+          <svg class="chart" id="yearlyChart" viewBox="0 0 600 280" role="img" aria-label="Yearly climograph"></svg>
+        </div>
+        <div class="chartbox">
+          <div class="head"><h4>Daily pattern in your trekking window</h4><span class="src">Hourly averages across selected months</span></div>
+          <svg class="chart" id="dailyChart" viewBox="0 0 600 220" role="img" aria-label="Daily pattern"></svg>
+        </div>
+      </div>
+      <div>
+        <div class="window-summary" id="windowSummary"></div>
+        <div style="font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.55;">
+          <strong>How to read it:</strong>
+          <ul style="margin:6px 0 0 16px;padding:0;">
+            <li>Bars = monthly rainfall (mm). The big blue spike Jun&ndash;Aug is the <em>monsoon</em>.</li>
+            <li>Line = average daytime temperature (&deg;C) at ~3,440m.</li>
+            <li>Yellow shading = your selected window. Drag the brown handles to widen or move it.</li>
+            <li>Daily panel: what a typical day looks like, averaged across your chosen months.</li>
+          </ul>
+        </div>
+        <div style="font-size:12px;margin-top:10px;">
+          <a href="https://en.climate-data.org/asia/nepal/eastern-development-region/namche-bazaar-199444/" target="_blank" rel="noopener" style="color:var(--accent);">View real Namche Bazaar climate data &nearr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CULTURAL VIEW ===== -->
+  <div class="viewpanel" id="view-cultural">
+    <p class="lead">A briefing from a local guide association. Read carefully &mdash; not everything here is critical for your planning, but a few details really matter. Your job is to find them.</p>
+    <div class="briefing">
+      <div class="col">
+        <h4>Religion &amp; sacred places</h4>
+        <p>The valley&rsquo;s people are mostly <strong>Tibetan Buddhists</strong> (the lower farms blend Buddhist and Hindu practice). Prayer flags and stone <em>chortens</em> mark the trails; trekkers walk to the <strong>left</strong> of chortens and prayer walls, clockwise around them.</p>
+        <p>Two places are sacred and <span class="warning">off-limits to commercial development</span>:</p>
+        <p>&bull; <strong>Tashi Gompa</strong> at grid reference F4. This Buddhist monastery (a <em>gompa</em>) was founded by a revered lama in the 19th century. The land around it is consecrated. Building a base, camp or lodge here is refused by the council and offends the community deeply. Visiting the monastery itself &mdash; quietly, modestly dressed, hat off &mdash; is welcomed.</p>
+        <p>&bull; <strong>Khumla Ri</strong> at grid reference M9. This peak is locally known as the dwelling of a protector deity. The summit may <span class="warning">never be climbed</span>; the viewpoint at its base is the only acceptable goal. You can sell the view; you cannot sell the climb.</p>
+        <div class="aside">The local <em>lama</em> blesses the trekking season at a small ceremony each autumn. Companies that attend in person and donate to the monastery upkeep are viewed more warmly than those that don&rsquo;t.</div>
+        <p><strong>Solu La</strong> (the high pass at N10), by contrast, is not sacred &mdash; it is a working trade route and crossings are unrestricted, weather permitting.</p>
+      </div>
+
+      <div class="col">
+        <h4>Communities &amp; the local economy</h4>
+        <p>About 3,000 people live in the valley year-round. <strong>Sherpa</strong> families dominate the upper valley around Sherpa lodge village (G6) and have worked in trekking and mountaineering for over a century &mdash; most adult men in this village have summit experience.</p>
+        <p>Lower down, the <strong>Farming village (D2)</strong> is a mixed Sherpa&ndash;Rai community of subsistence farmers who terrace-cultivate barley, potato and buckwheat. They sell surplus to passing trekkers but trekking is not their main income.</p>
+        <p>Where tourist money lands matters. A company that <strong>bases near a village</strong> hires local guides and porters, fills local teahouses, and the income spreads. A camp set up in the wilderness, far from any settlement, brings little to the people who live here &mdash; the council notices.</p>
+        <div class="aside">Yak husbandry remains important above 3,500m. Yak-driver families graze their animals on the alpine meadows from June to September; trekking parties should give yaks the uphill side of the trail when they pass.</div>
+        <p>Yearly tourist revenue across the valley is estimated at <strong>USD 4 million</strong>, of which only about 30% is thought to reach local pockets. Companies that hire local, use local food and accommodation, and avoid undercutting community rates are welcomed; those that fly in their own staff and supplies less so.</p>
+        <p>A traditional craft worth knowing about is the weaving of wool <em>radi</em> mats, which makes for an authentic gift for clients.</p>
+      </div>
+
+      <div class="col">
+        <h4>Calendar &amp; behaviour</h4>
+        <p>Two festivals fall within typical trekking windows:</p>
+        <p>&bull; <strong>Dashain &amp; Tihar (Oct&ndash;Nov)</strong>: Nepal&rsquo;s biggest Hindu festivals, observed in the lower villages. Many shops and bus services pause for several days. Trekkers can experience the lights, music and family feasts &mdash; a real cultural drawcard.</p>
+        <p>&bull; <strong>Mani Rimdu (Oct or Nov)</strong>: a three-day Buddhist festival held at Tashi Gompa with masked dances. Trekkers may attend respectfully. <span class="warning">Do not photograph during the rites without permission.</span></p>
+        <p>Tibetan New Year (<em>Losar</em>) falls in February or March and is celebrated more quietly at home.</p>
+        <div class="aside">A famous British mountaineer attempted Khumla Ri in 1953 and was turned back not by the mountain but by the community; her account is in the <em>Alpine Journal</em>.</div>
+        <p>Trekkers are expected to dress modestly (shoulders and knees covered in villages), remove shoes before entering homes and monasteries, and not point feet at altars. Photography is welcome outdoors but ask before photographing people, especially monks.</p>
+        <p>Local guides earn roughly USD 25 per day; porters carry up to 30kg and earn around USD 15 per day. Tipping at trek end is customary, around 10% of the trek price.</p>
+        <div class="links">
+          <a href="https://www.tengboche.org/" target="_blank" rel="noopener">Tengboche monastery (real example) &nearr;</a>
+          <a href="https://www.welcomenepal.com/plan-your-trip/festivals.html" target="_blank" rel="noopener">Nepal festivals calendar &nearr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEP 2: RUN THE SEASON ============ -->
+<section class="panel">
+  <h2 class="sec"><span class="step">2</span>Run your first season</h2>
+  <p class="lead">When your plan is set (base, attraction and the trekking window), run the season. Events unfold &mdash; some are down to luck, but your choices change the odds and how badly each one hits you.</p>
+  <button class="act primary big" id="runBtn" onclick="runSeason()" disabled>Set a base &amp; attraction first</button>
+
+  <div id="simResult" class="hidden">
+    <div class="meters" id="meters"></div>
+    <div class="log" id="eventLog"></div>
+    <div id="verdict"></div>
+    <button class="act" style="margin-top:12px;" onclick="replan()">Replan &amp; run again</button>
+  </div>
+</section>
+
+<!-- ============ STEP 3: REFLECT ============ -->
+<section class="panel" id="reflectPanel" style="display:none;">
+  <h2 class="sec"><span class="step">3</span>Reflect like a geographer</h2>
+  <p class="lead">Explain what happened using the geography. Write your answer, press Check, and you'll get feedback on what to strengthen. Then you can replan and try to do better.</p>
+  <div id="saqArea"></div>
+</section>
+
+</div>
+
+<script>
+const T = {"cols": 14, "rows": 10, "elev": [[2068, 1886, 1793, 2051, 2310, 2392, 2431, 2469, 2508, 2546, 2585, 2623, 2662, 2700], [2456, 2274, 2093, 2197, 2456, 3009, 2697, 2736, 2774, 2813, 2851, 2890, 2928, 2967], [2733, 2662, 2480, 2343, 2601, 3140, 2964, 3003, 3041, 3079, 3118, 3156, 3195, 3233], [3000, 3038, 2868, 2686, 2803, 3185, 3287, 3269, 3308, 3346, 3385, 3423, 3462, 3500], [3267, 3305, 3256, 3074, 2915, 3223, 3425, 3536, 3534, 3573, 3701, 3960, 4178, 4037], [3533, 3572, 3610, 3495, 3205, 2976, 3327, 3678, 3791, 3839, 3968, 4226, 4445, 4303], [3867, 4054, 3944, 3915, 3700, 3419, 3409, 3636, 4543, 4674, 4875, 4493, 4712, 4570], [4283, 4681, 4360, 4182, 4155, 3973, 3720, 3841, 4357, 4537, 4698, 4726, 4978, 4837], [4400, 4588, 4477, 4449, 4487, 4394, 4212, 4108, 4274, 4380, 4460, 4858, 5325, 5103], [4600, 4638, 4677, 4715, 4754, 4792, 4633, 4451, 4490, 4707, 4907, 5380, 5672, 5370]], "climate": [[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], [2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1], [2, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "features": [{"id": "gateway", "name": "Gateway airstrip town", "c": 1, "r": 0, "type": "town", "val": 0, "sacred": false, "haz": [], "access": "road", "landform": "valley floor", "note": "Road & airstrip. Arrival point. Warm, very wet in monsoon.", "elev": 1886}, {"id": "village", "name": "Farming village", "c": 3, "r": 1, "type": "village", "val": 0, "sacred": "sensitive", "haz": [], "access": "road", "landform": "terraced slope", "note": "Terraced farms on the south-facing valley side, mixed Sherpa/Rai community.", "elev": 2197}, {"id": "cliff", "name": "Cliff face", "c": 5, "r": 1, "type": "cliff", "val": 0, "sacred": false, "haz": ["rockfall", "landslide"], "access": "high-trail", "landform": "cliff face", "note": "A vertical sandstone cliff where the valley wall is undercut. Rockfall danger; no buildings here.", "elev": 3009}, {"id": "riverflat", "name": "Riverside flat", "c": 4, "r": 3, "type": "flat", "val": 0, "sacred": false, "haz": ["flood"], "access": "trail", "landform": "floodplain", "note": "Flat alluvial ground in the main valley - but in the river's flood path during monsoon.", "elev": 2803}, {"id": "monastery", "name": "Tashi Gompa", "c": 5, "r": 3, "type": "sacred", "val": 1, "sacred": "forbidden", "haz": [], "access": "trail", "landform": "ridge knoll", "note": "Buddhist monastery (gompa) on a prominent rocky knoll west of the river.", "elev": 3185}, {"id": "sherpa", "name": "Sherpa lodge village", "c": 6, "r": 5, "type": "village", "val": 1, "sacred": "sensitive", "haz": [], "access": "trail", "landform": "valley terrace", "note": "Established teahouses on a broad valley terrace above the river; community works in trekking.", "elev": 3327}, {"id": "nima", "name": "Nima Peak", "c": 1, "r": 7, "type": "mountain", "val": 0, "sacred": false, "haz": ["altitude", "avalanche"], "access": "none", "landform": "mountain summit", "note": "An isolated peak in the far west. Mountaineering objective, not a trek destination.", "elev": 4681}, {"id": "meadow", "name": "Alpine meadow", "c": 8, "r": 7, "type": "flat", "val": 1, "sacred": "sensitive", "haz": ["altitude"], "access": "high-trail", "landform": "yak pasture", "note": "Flat alpine meadow used as yak pasture. Above the worst monsoon. Shared with herders.", "elev": 4357}, {"id": "rockwall", "name": "Black Rock Wall", "c": 9, "r": 6, "type": "climbing", "val": 0, "sacred": false, "haz": ["rockfall", "climbing-only"], "access": "none", "landform": "rock band", "note": "A near-vertical rock band. Pure rock climbing, not a hiking route. Trek parties must go around it.", "elev": 4674}, {"id": "lake", "name": "Glacial lake", "c": 10, "r": 8, "type": "attraction", "val": 2, "sacred": false, "haz": ["GLOF", "altitude"], "access": "high-trail", "landform": "cirque basin", "note": "Turquoise moraine-dammed lake at the head of the side valley. GLOF flood risk downstream.", "elev": 4460}, {"id": "peak", "name": "Khumla Ri", "c": 12, "r": 8, "type": "attraction", "val": 3, "sacred": "forbidden", "haz": ["altitude", "avalanche"], "access": "high-trail", "landform": "peak / summit", "note": "A peak on the north-east ridge. Highly visible from across the valley.", "elev": 5325}, {"id": "pass", "name": "Solu La", "c": 13, "r": 9, "type": "attraction", "val": 3, "sacred": false, "haz": ["altitude", "avalanche", "cold"], "access": "high-trail", "landform": "col / pass", "note": "5,300m crossing in the NE corner - the trek challenge objective. Snow/avalanche; closed in winter.", "elev": 5370}]};
+const COLS=T.cols, ROWS=T.rows, ELEV=T.elev, CLIMATE=T.climate, FEATURES=T.features;
+const ATTRACTIONS = FEATURES.filter(f=>['lake','peak','pass','meadow'].includes(f.id));
+const CLIM = {"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], "tempMax": [3, 4, 9, 13, 15, 16, 15, 15, 14, 12, 8, 4], "tempMin": [-7, -6, -2, 2, 6, 9, 10, 10, 8, 3, -2, -5], "rain": [18, 22, 40, 55, 80, 180, 310, 280, 150, 45, 12, 10], "sun": [7, 7, 9, 9, 8, 6, 4, 4, 5, 8, 8, 7], "daylight": [10.5, 11.0, 11.7, 12.5, 13.3, 13.9, 13.7, 13.0, 12.2, 11.4, 10.7, 10.4]};
+
+const state = { view:'topo', base:null, attraction:null, windowOpen:9, windowClose:10 };
+
+const svgNS='http://www.w3.org/2000/svg';
+function E(tag,attrs,parent){const e=document.createElementNS(svgNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+
+/* =========================================================
+   AUTHENTIC TOPOGRAPHIC MAP RENDERER
+   - hill-shading underlay (8x sampled)
+   - flowing smooth contours (marching squares + segment joining + quadratic smoothing)
+   - real-looking river
+   - spot heights with halos
+   - features with halo labels
+   - scale bar, north arrow, frame
+   - hover/select cell-grid overlay for base picking
+   ========================================================= */
+const TOPO_W=760, TOPO_H=540, PAD_L=30, PAD_R=18, PAD_T=24, PAD_B=46;
+const plotW=TOPO_W-PAD_L-PAD_R, plotH=TOPO_H-PAD_T-PAD_B;
+const cellW=plotW/COLS, cellH=plotH/ROWS;
+function wx(c){return PAD_L + c*cellW;}
+function wy(r){return PAD_T + (ROWS-r)*cellH;}
+
+function elevAt(gx, gy){
+  const x = Math.max(0, Math.min(COLS-1.001, gx));
+  const y = Math.max(0, Math.min(ROWS-1.001, gy));
+  const x0=Math.floor(x), y0=Math.floor(y);
+  const fx=x-x0, fy=y-y0;
+  const e00=ELEV[y0][x0], e10=ELEV[y0][x0+1]||ELEV[y0][x0];
+  const e01=ELEV[y0+1]?ELEV[y0+1][x0]:e00, e11=ELEV[y0+1]?(ELEV[y0+1][x0+1]||e01):e10;
+  return e00*(1-fx)*(1-fy)+e10*fx*(1-fy)+e01*(1-fx)*fy+e11*fx*fy;
+}
+function mix(a,b,t){
+  function p(s){return [parseInt(s.slice(1,3),16),parseInt(s.slice(3,5),16),parseInt(s.slice(5,7),16)];}
+  const A=p(a),B=p(b);
+  return '#'+[A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t, A[2]+(B[2]-A[2])*t].map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+}
+function drawShading(svgEl){
+  const g = E('g',{},svgEl);
+  const NX=COLS*8, NY=ROWS*8;
+  const dx=plotW/NX, dy=plotH/NY;
+  for(let j=0;j<NY;j++) for(let i=0;i<NX;i++){
+    const gx = (i+0.5)/NX * (COLS-1);
+    const gy = (ROWS-1) - (j+0.5)/NY * (ROWS-1);
+    const e = elevAt(gx, gy);
+    const eR = elevAt(gx+0.2, gy), eU = elevAt(gx, gy+0.2);
+    const slope = Math.hypot(eR-e, eU-e);
+    const lit = (eR-e) + (e-eU);
+    let h = e<2000?0:e<2800?1:e<3400?2:e<4000?3:e<4600?4:e<5100?5:6;
+    const baseCols = ['#cfe0bd','#c3d7a8','#cdc591','#c2b07b','#bba086','#c0b5a3','#dcd7cd'];
+    let c = baseCols[h];
+    const shadeAmt = Math.max(0, -lit*0.0012) + Math.min(0.25, slope*0.0006);
+    if(shadeAmt>0) c = mix(c, '#7a5f3e', shadeAmt);
+    else c = mix(c, '#fff8e8', Math.min(0.18, Math.max(0, lit*0.001)));
+    E('rect',{x:PAD_L+i*dx, y:PAD_T+j*dy, width:dx+0.2, height:dy+0.2, fill:c}, g);
+  }
+}
+function traceContours(level){
+  const NX=COLS*8, NY=ROWS*8;
+  const sx = plotW/(NX-1), sy = plotH/(NY-1);
+  const segs = [];
+  for(let j=0;j<NY-1;j++){
+    for(let i=0;i<NX-1;i++){
+      const gx0=i/(NX-1)*(COLS-1), gx1=(i+1)/(NX-1)*(COLS-1);
+      const gy0=(ROWS-1) - j/(NY-1)*(ROWS-1);
+      const gy1=(ROWS-1) - (j+1)/(NY-1)*(ROWS-1);
+      const a=elevAt(gx0,gy0), b=elevAt(gx1,gy0), c=elevAt(gx1,gy1), d=elevAt(gx0,gy1);
+      const x0s=PAD_L+i*sx, x1s=PAD_L+(i+1)*sx, y0s=PAD_T+j*sy, y1s=PAD_T+(j+1)*sy;
+      function ip(v1,v2,x1,y1,x2,y2){const t=(level-v1)/(v2-v1);return [x1+(x2-x1)*t,y1+(y2-y1)*t];}
+      const pts=[];
+      if((a-level)*(b-level)<0) pts.push(ip(a,b,x0s,y0s,x1s,y0s));
+      if((b-level)*(c-level)<0) pts.push(ip(b,c,x1s,y0s,x1s,y1s));
+      if((d-level)*(c-level)<0) pts.push(ip(d,c,x0s,y1s,x1s,y1s));
+      if((a-level)*(d-level)<0) pts.push(ip(a,d,x0s,y0s,x0s,y1s));
+      if(pts.length===2) segs.push([pts[0][0],pts[0][1],pts[1][0],pts[1][1]]);
+    }
+  }
+  const eps=0.5, lines=[], used=new Array(segs.length).fill(false);
+  function near(a,b){return Math.abs(a[0]-b[0])<eps && Math.abs(a[1]-b[1])<eps;}
+  for(let i=0;i<segs.length;i++){
+    if(used[i]) continue;
+    used[i]=true;
+    const s=segs[i];
+    let line=[[s[0],s[1]],[s[2],s[3]]];
+    let extended=true;
+    while(extended){
+      extended=false;
+      const tail=line[line.length-1];
+      for(let k=0;k<segs.length;k++){
+        if(used[k]) continue;
+        const t=segs[k];
+        if(near(tail,[t[0],t[1]])){line.push([t[2],t[3]]);used[k]=true;extended=true;break;}
+        if(near(tail,[t[2],t[3]])){line.push([t[0],t[1]]);used[k]=true;extended=true;break;}
+      }
+      const head=line[0];
+      for(let k=0;k<segs.length;k++){
+        if(used[k]) continue;
+        const t=segs[k];
+        if(near(head,[t[0],t[1]])){line.unshift([t[2],t[3]]);used[k]=true;extended=true;break;}
+        if(near(head,[t[2],t[3]])){line.unshift([t[0],t[1]]);used[k]=true;extended=true;break;}
+      }
+    }
+    if(line.length>=3) lines.push(line);
+  }
+  return lines;
+}
+function smoothPath(pts){
+  if(pts.length<3) return 'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L');
+  let d='M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
+  for(let i=1;i<pts.length-1;i++){
+    const mx=(pts[i][0]+pts[i+1][0])/2, my=(pts[i][1]+pts[i+1][1])/2;
+    d += ' Q'+pts[i][0].toFixed(1)+' '+pts[i][1].toFixed(1)+' '+mx.toFixed(1)+' '+my.toFixed(1);
+  }
+  d += ' T'+pts[pts.length-1][0].toFixed(1)+' '+pts[pts.length-1][1].toFixed(1);
+  return d;
+}
+function drawContours(svgEl){
+  const g = E('g',{},svgEl);
+  for(let lev=2000; lev<=5500; lev+=100){
+    const isIndex = lev%500===0;
+    traceContours(lev).forEach(line=>{
+      if(line.length<4) return;
+      E('path',{d:smoothPath(line), class:'contour'+(isIndex?' index':'')}, g);
+      if(isIndex && line.length>=10){
+        const mid = line[Math.floor(line.length/2)];
+        const halo = E('text',{x:mid[0],y:mid[1]+3,class:'contour-label','text-anchor':'middle',stroke:'#f3eedf','stroke-width':'3',fill:'#f3eedf'}, g);
+        halo.textContent = lev;
+        const lbl = E('text',{x:mid[0],y:mid[1]+3,class:'contour-label','text-anchor':'middle'}, g);
+        lbl.textContent = lev;
+      }
+    });
+  }
+}
+function drawRiver(svgEl){
+  const g = E('g',{},svgEl);
+  const path = 'M '+wx(1.5)+' '+wy(0.5)+
+               ' C '+wx(2.5)+' '+wy(1.6)+', '+wx(2.5)+' '+wy(2.0)+', '+wx(3)+' '+wy(2.5)+
+               ' C '+wx(3.5)+' '+wy(3.0)+', '+wx(4)+' '+wy(3.6)+', '+wx(4.5)+' '+wy(4.2)+
+               ' C '+wx(5.2)+' '+wy(4.8)+', '+wx(6)+' '+wy(5.2)+', '+wx(7)+' '+wy(5.8)+
+               ' C '+wx(8)+' '+wy(6.3)+', '+wx(9)+' '+wy(6.8)+', '+wx(10)+' '+wy(7.2)+
+               ' L '+wx(11)+' '+wy(7.6);
+  E('path',{d:path,class:'river'}, g);
+}
+function drawSpotHeights(svgEl){
+  const g = E('g',{},svgEl);
+  for(let r=1;r<ROWS;r+=2) for(let c=1;c<COLS;c+=3){
+    if(!FEATURES.find(f=>f.c===c&&f.r===r)){
+      const x=wx(c+0.5), y=wy(r+0.5);
+      const e=ELEV[r][c];
+      const xHalo = E('text',{x:x,y:y-1,class:'spot-x','text-anchor':'middle',stroke:'#f3eedf','stroke-width':'2',fill:'#f3eedf'}, g);
+      xHalo.textContent='\u00d7';
+      const xmark = E('text',{x:x,y:y-1,class:'spot-x','text-anchor':'middle'}, g);
+      xmark.textContent='\u00d7';
+      const labHalo = E('text',{x:x+5,y:y+3.5,class:'spot-height',stroke:'#f3eedf','stroke-width':'2',fill:'#f3eedf'}, g);
+      labHalo.textContent=e;
+      const lab = E('text',{x:x+5,y:y+3.5,class:'spot-height'}, g);
+      lab.textContent=e;
+    }
+  }
+}
+function drawFeatures(svgEl){
+  const g = E('g',{},svgEl);
+  FEATURES.forEach(f=>{
+    const x=wx(f.c+0.5), y=wy(f.r+0.5);
+    if(f.type==='mountain'){
+      // Mountain summit - small black triangle (standard cartographic symbol)
+      E('polygon',{points:(x-4)+','+(y+3)+' '+x+','+(y-4)+' '+(x+4)+','+(y+3), fill:'#3c2f1e', stroke:'#3c2f1e','stroke-width':'1'}, g);
+    } else if(f.type==='climbing'){
+      // Rock band - hatched line marker
+      E('rect',{x:x-7,y:y-3,width:14,height:6, fill:'#3c2f1e', opacity:'0.85'}, g);
+      E('line',{x1:x-7,y1:y+3,x2:x+7,y2:y-3, stroke:'#fff','stroke-width':'0.8'}, g);
+      E('line',{x1:x-3,y1:y+3,x2:x+7,y2:y-1, stroke:'#fff','stroke-width':'0.8'}, g);
+    } else {
+      // Default: settlement/landmark circle
+      E('circle',{cx:x,cy:y,r:'4.5',class:'feature-circle'}, g);
+      E('circle',{cx:x,cy:y,r:'1.6',fill:'#3c2f1e'}, g);
+    }
+    [['feature-label', f.name, 8, -1],
+     ['feature-sub',   f.elev.toLocaleString()+' m', 8, 9]].forEach(([cls,text,dx,dy])=>{
+      const halo = E('text',{x:x+dx, y:y+dy, class:cls, stroke:'#f3eedf','stroke-width':'3','paint-order':'stroke'}, g);
+      halo.textContent = text;
+      const t = E('text',{x:x+dx, y:y+dy, class:cls}, g);
+      t.textContent = text;
+    });
+  });
+}
+function drawCellGrid(svgEl){
+  const g = E('g',{},svgEl);
+  for(let c=0;c<COLS;c++) E('text',{x:wx(c+0.5),y:TOPO_H-PAD_B+14,'font-size':'9',fill:'#5a4f33','text-anchor':'middle','font-family':'Georgia,serif'}, g).textContent=String.fromCharCode(65+c);
+  for(let r=0;r<ROWS;r++) E('text',{x:PAD_L-7,y:wy(r+0.5)+3,'font-size':'9',fill:'#5a4f33','text-anchor':'end','font-family':'Georgia,serif'}, g).textContent=(r+1);
+  const gHits = E('g',{},svgEl);
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const isBase = state.base && state.base.c===c && state.base.r===r;
+    const rect = E('rect',{x:wx(c),y:wy(r+1),width:cellW,height:cellH,class:'cell-hit'+(isBase?' selected':'')}, gHits);
+    rect.addEventListener('click',()=>setBase(c,r));
+  }
+  E('rect',{x:PAD_L,y:PAD_T,width:plotW,height:plotH,fill:'none',stroke:'#3c2f1e','stroke-width':'1.2'}, svgEl);
+}
+function drawScale(svgEl){
+  const g = E('g',{class:'scalebar'}, svgEl);
+  const x0 = TOPO_W-PAD_R-110, y0 = TOPO_H-26;
+  for(let i=0;i<5;i++) E('rect',{x:x0+i*20, y:y0, width:20, height:5, fill:i%2?'#fff':'#3c2f1e', stroke:'#3c2f1e','stroke-width':'0.6'}, g);
+  E('text',{x:x0, y:y0+15, 'text-anchor':'start'}, g).textContent='0';
+  E('text',{x:x0+100, y:y0+15, 'text-anchor':'end'}, g).textContent='5 km';
+}
+function drawNorth(svgEl){
+  const g = E('g',{class:'north', transform:'translate('+(TOPO_W-PAD_R-22)+', '+(PAD_T+14)+')'}, svgEl);
+  E('line',{x1:0,y1:14,x2:0,y2:-14}, g);
+  E('polygon',{points:'-4,-9 0,-16 4,-9'}, g);
+  E('text',{x:0,y:-20,'text-anchor':'middle'}, g).textContent='N';
+}
+function drawRouteOverlay(svgEl){
+  if(state.base && state.attraction){
+    const a = FEATURES.find(f=>f.id===state.attraction);
+    const x1=wx(state.base.c+0.5), y1=wy(state.base.r+0.5);
+    const x2=wx(a.c+0.5), y2=wy(a.r+0.5);
+    E('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#b4541f','stroke-width':'2.2','stroke-dasharray':'6 4',opacity:'0.85'}, svgEl);
+  }
+}
+function renderTopo(){
+  const svg=document.getElementById('topomap');
+  if(!svg) return;
+  svg.innerHTML='';
+  drawShading(svg);
+  drawContours(svg);
+  drawRiver(svg);
+  drawSpotHeights(svg);
+  drawFeatures(svg);
+  drawCellGrid(svg);
+  drawRouteOverlay(svg);
+  drawScale(svg);
+  drawNorth(svg);
+}
+
+/* =========================================================
+   CLIMATE PANEL
+   - yearly climograph (rain bars + temp line + monsoon shading)
+   - draggable open/close window with two handles
+   - daily-pattern panel (computed from selected months)
+   - summary box with verdict
+   ========================================================= */
+const Y_W=600, Y_H=280, Y_padL=42, Y_padR=42, Y_padB=44, Y_padT=18;
+const Y_plotW=Y_W-Y_padL-Y_padR, Y_plotH=Y_H-Y_padT-Y_padB;
+function renderYearly(){
+  const svg=document.getElementById('yearlyChart');
+  if(!svg) return;
+  svg.innerHTML='';
+  const x0 = Y_padL + state.windowOpen/12 * Y_plotW;
+  const x1 = Y_padL + (state.windowClose+1)/12 * Y_plotW;
+  E('rect',{x:x0,y:Y_padT-2,width:x1-x0,height:Y_plotH+4,fill:'#f4d35e',opacity:'0.20'},svg);
+  const mx0=Y_padL+5/12*Y_plotW, mx1=Y_padL+9/12*Y_plotW;
+  E('rect',{x:mx0,y:Y_padT,width:mx1-mx0,height:Y_plotH,fill:'#2b7bb9',opacity:'0.06'},svg);
+  const monsoonLbl = E('text',{x:(mx0+mx1)/2,y:Y_padT+10,'text-anchor':'middle','font-size':'9.5',fill:'#2b7bb9','font-weight':'700'},svg);
+  monsoonLbl.textContent='monsoon';
+  const maxRain=350, bw=Y_plotW/12*0.62;
+  CLIM.rain.forEach((r,i)=>{
+    const x=Y_padL+Y_plotW/12*(i+0.5)-bw/2;
+    const h=r/maxRain*Y_plotH;
+    E('rect',{x:x,y:Y_H-Y_padB-h,width:bw,height:h,fill:'#2b7bb9',opacity:'0.65',rx:'2'},svg);
+  });
+  const tMax=20, tMin=-10;
+  function tx(i){return Y_padL+Y_plotW/12*(i+0.5);}
+  function ty(t){return Y_H-Y_padB-(t-tMin)/(tMax-tMin)*Y_plotH;}
+  let dp='M';
+  CLIM.tempMax.forEach((t,i)=>{dp+=(i===0?'':'L')+tx(i)+' '+ty(t)+' ';});
+  E('path',{d:dp,fill:'none',stroke:'#b4541f','stroke-width':'2.5'},svg);
+  CLIM.tempMax.forEach((t,i)=>E('circle',{cx:tx(i),cy:ty(t),r:'2.5',fill:'#b4541f'},svg));
+  E('line',{x1:Y_padL,y1:Y_H-Y_padB,x2:Y_W-Y_padR,y2:Y_H-Y_padB,stroke:'#cbd0d6'},svg);
+  CLIM.months.forEach((m,i)=>{
+    const t = E('text',{x:tx(i),y:Y_H-Y_padB+16,'font-size':'10',fill:'#6b7280','text-anchor':'middle'},svg);
+    t.textContent=m;
+  });
+  [0,100,200,300].forEach(v=>{
+    const y=Y_H-Y_padB-v/maxRain*Y_plotH;
+    const t = E('text',{x:Y_padL-6,y:y+3,'font-size':'9',fill:'#2b7bb9','text-anchor':'end'},svg);
+    t.textContent=v;
+  });
+  const mmLbl = E('text',{x:Y_padL-30,y:Y_padT+8,'font-size':'9.5',fill:'#2b7bb9','font-weight':'700'},svg);
+  mmLbl.textContent='mm';
+  [-10,0,10,20].forEach(v=>{
+    const t = E('text',{x:Y_W-Y_padR+6,y:ty(v)+3,'font-size':'9',fill:'#b4541f','text-anchor':'start'},svg);
+    t.textContent=v+'\u00b0';
+  });
+  const cLbl = E('text',{x:Y_W-Y_padR+22,y:Y_padT+8,'font-size':'9.5',fill:'#b4541f','font-weight':'700'},svg);
+  cLbl.textContent='\u00b0C';
+  drawClimHandle(state.windowOpen, 'open');
+  drawClimHandle(state.windowClose+1, 'close');
+  const opMo=CLIM.months[state.windowOpen], clMo=CLIM.months[state.windowClose];
+  const winLbl = E('text',{x:(x0+x1)/2,y:Y_padT+24,'text-anchor':'middle','font-size':'11',fill:'#8a560c','font-weight':'700'},svg);
+  winLbl.textContent = (state.windowOpen===state.windowClose ? opMo : opMo+' \u2013 '+clMo);
+}
+function drawClimHandle(monthBoundary, role){
+  const svg=document.getElementById('yearlyChart');
+  const x = Y_padL + monthBoundary/12 * Y_plotW;
+  const g = E('g',{class:'handle-grip'}, svg);
+  g.dataset.role = role;
+  E('line',{x1:x,y1:Y_padT-4,x2:x,y2:Y_H-Y_padB+4,stroke:'#8a560c','stroke-width':'2'}, g);
+  E('rect',{x:x-6,y:Y_H-Y_padB-2,width:12,height:16,fill:'#8a560c',rx:'3'}, g);
+  const t = E('text',{x:x,y:Y_H-Y_padB+9,'text-anchor':'middle','font-size':'8',fill:'#fff'}, g);
+  t.textContent='\u2261';
+  g.addEventListener('mousedown', startClimDrag);
+  g.addEventListener('touchstart', startClimDrag, {passive:false});
+}
+function startClimDrag(e){
+  e.preventDefault();
+  const role = e.currentTarget.dataset.role;
+  const svg=document.getElementById('yearlyChart');
+  function move(ev){
+    const pt = ev.touches?ev.touches[0]:ev;
+    const r = svg.getBoundingClientRect();
+    const vx = (pt.clientX - r.left) / r.width * Y_W;
+    let mb = (vx - Y_padL) / Y_plotW * 12;
+    if(role==='open'){
+      let mi = Math.max(0, Math.min(11, Math.round(mb)));
+      if(mi > state.windowClose) mi = state.windowClose;
+      state.windowOpen = mi;
+    } else {
+      let mb2 = Math.max(1, Math.min(12, Math.round(mb)));
+      let newClose = mb2 - 1;
+      if(newClose < state.windowOpen) newClose = state.windowOpen;
+      state.windowClose = newClose;
+    }
+    renderYearly(); renderDaily(); renderWindowSummary();
+  }
+  function up(){
+    window.removeEventListener('mousemove',move); window.removeEventListener('mouseup',up);
+    window.removeEventListener('touchmove',move); window.removeEventListener('touchend',up);
+  }
+  window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
+  window.addEventListener('touchmove',move,{passive:false}); window.addEventListener('touchend',up);
+}
+function tempAtHour(monthIdx, h){
+  const tmax = CLIM.tempMax[monthIdx], tmin = CLIM.tempMin[monthIdx];
+  const phase = (h - 3) / 24 * Math.PI * 2;
+  const v = (1 - Math.cos(phase)) / 2;
+  return tmin + (tmax - tmin) * v;
+}
+function rainProbHour(monthIdx, h){
+  const monthRain = CLIM.rain[monthIdx];
+  const scale = Math.min(1, monthRain/300);
+  const peakHour = 16;
+  const spread = monthRain>150 ? 5 : 3.5;
+  const x = (h - peakHour) / spread;
+  return Math.min(1, scale * Math.exp(-x*x) * 1.6);
+}
+function renderDaily(){
+  const svg=document.getElementById('dailyChart');
+  if(!svg) return;
+  svg.innerHTML='';
+  const W=600,H=220,pL=42,pR=42,pB=38,pT=14;
+  const pW=W-pL-pR, pH=H-pT-pB;
+  const months=[];
+  for(let i=state.windowOpen;i<=state.windowClose;i++) months.push(i);
+  const hours=[...Array(24).keys()];
+  const avgTemp = hours.map(h=>months.reduce((s,m)=>s+tempAtHour(m,h),0)/months.length);
+  const avgRain = hours.map(h=>months.reduce((s,m)=>s+rainProbHour(m,h),0)/months.length);
+  function tx(h){return pL+h/23*pW;}
+  const tMax=20, tMin=-10;
+  function ty(t){return H-pB-(t-tMin)/(tMax-tMin)*pH;}
+  let rp='M'+tx(0)+' '+(H-pB)+' ';
+  hours.forEach(h=>{rp+='L'+tx(h)+' '+(H-pB-avgRain[h]*pH*0.7)+' ';});
+  rp+='L'+tx(23)+' '+(H-pB)+' Z';
+  E('path',{d:rp,fill:'#2b7bb9',opacity:'0.32'},svg);
+  let tp='M';
+  hours.forEach((h,i)=>{tp+=(i===0?'':'L')+tx(h)+' '+ty(avgTemp[h])+' ';});
+  E('path',{d:tp,fill:'none',stroke:'#b4541f','stroke-width':'2.3'},svg);
+  if(0>=tMin && 0<=tMax){
+    const y=ty(0);
+    E('line',{x1:pL,y1:y,x2:W-pR,y2:y,stroke:'#888','stroke-dasharray':'3 3','stroke-width':'1'},svg);
+    const fzLbl = E('text',{x:W-pR-2,y:y-2,'font-size':'9',fill:'#888','text-anchor':'end'},svg);
+    fzLbl.textContent='freezing';
+  }
+  E('line',{x1:pL,y1:H-pB,x2:W-pR,y2:H-pB,stroke:'#cbd0d6'},svg);
+  for(let h=0;h<24;h+=3){
+    const hStr = h===0?'12am':h<12?h+'am':h===12?'12pm':(h-12)+'pm';
+    const t = E('text',{x:tx(h),y:H-pB+14,'font-size':'10',fill:'#6b7280','text-anchor':'middle'},svg);
+    t.textContent=hStr;
+  }
+  [-10,0,10,20].forEach(v=>{const t=E('text',{x:W-pR+5,y:ty(v)+3,'font-size':'9',fill:'#b4541f'},svg);t.textContent=v+'\u00b0';});
+  const rainLab = E('text',{x:pL-30,y:pT+10,'font-size':'9.5',fill:'#2b7bb9','font-weight':'700'},svg);
+  rainLab.textContent='rain';
+  const tempLab = E('text',{x:pL-30,y:pT+22,'font-size':'9.5',fill:'#b4541f','font-weight':'700'},svg);
+  tempLab.textContent='temp';
+  const monthsStr = months.length===1 ? CLIM.months[months[0]]+' average day' : CLIM.months[months[0]]+'\u2013'+CLIM.months[months[months.length-1]]+' average day';
+  const titleEl = E('text',{x:W/2,y:pT-2,'font-size':'10',fill:'#6b7280','text-anchor':'middle','font-style':'italic'},svg);
+  titleEl.textContent=monthsStr;
+}
+function renderWindowSummary(){
+  const box = document.getElementById('windowSummary');
+  if(!box) return;
+  const months=[];
+  for(let i=state.windowOpen;i<=state.windowClose;i++) months.push(i);
+  const n=months.length;
+  const avgMax = (months.reduce((s,m)=>s+CLIM.tempMax[m],0)/n).toFixed(1);
+  const avgMin = (months.reduce((s,m)=>s+CLIM.tempMin[m],0)/n).toFixed(1);
+  const totalRain = months.reduce((s,m)=>s+CLIM.rain[m],0);
+  const avgSun = (months.reduce((s,m)=>s+CLIM.sun[m],0)/n).toFixed(1);
+  const avgLight = (months.reduce((s,m)=>s+CLIM.daylight[m],0)/n).toFixed(1);
+  const monsoonOverlap = months.filter(m=>m>=5 && m<=8).length;
+  const winterOverlap = months.filter(m=>m<=1 || m>=11).length;
+  let verdict='';
+  if(monsoonOverlap>=2) verdict='<strong>Heavy monsoon overlap.</strong> Your window includes the worst of the rains. Lower trails will be muddy and prone to landslides; high views are often clouded out.';
+  else if(winterOverlap>=2) verdict='<strong>Deep into winter.</strong> Daytime temperatures are cold and nights are well below freezing. High passes are likely closed by snow.';
+  else if(n<=2 && months.some(m=>m===2||m===3||m===8||m===9||m===10)) verdict='<strong>A classic peak window.</strong> Clear skies, mild days, the best views of the year. But trails are crowded and prices are highest.';
+  else if(n>=6) verdict='<strong>A very long season.</strong> You\u2019re running through both monsoon and winter shoulders \u2014 you\u2019ll face a mix of conditions and need to plan for all of them.';
+  else verdict='<strong>A shoulder-season window.</strong> Reasonable trekking weather with fewer crowds, but conditions are less reliable than peak.';
+  const opMo=CLIM.months[state.windowOpen], clMo=CLIM.months[state.windowClose];
+  box.innerHTML =
+    '<div class="big">'+(state.windowOpen===state.windowClose ? opMo : opMo+' \u2013 '+clMo)+' &middot; '+n+' month'+(n===1?'':'s')+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;font-size:12.5px;margin:6px 0;">'+
+      '<div><strong>Avg day temp:</strong> '+avgMax+'\u00b0C</div>'+
+      '<div><strong>Avg night temp:</strong> '+avgMin+'\u00b0C</div>'+
+      '<div><strong>Total rainfall:</strong> '+totalRain+' mm</div>'+
+      '<div><strong>Daylight:</strong> '+avgLight+' h/day</div>'+
+      '<div><strong>Sunshine:</strong> '+avgSun+' h/day</div>'+
+    '</div>'+
+    '<div style="font-size:12.5px;margin-top:8px;line-height:1.5;">'+verdict+'</div>';
+}
+
+/* =========================================================
+   VIEW SWITCHER
+   ========================================================= */
+function setView(v){
+  state.view=v;
+  document.querySelectorAll('.viewtab').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
+  document.querySelectorAll('.viewpanel').forEach(p=>p.classList.toggle('on', p.id==='view-'+v));
+}
+
+/* ---------- base selection ---------- */
+function setBase(c,r){
+  state.base={c,r};
+  renderTopo();
+  updateBaseReadout();
+  updateRoute();
+  updateRunBtn();
+}
+function slopeAt(c,r){
+  // estimate slope from neighbour elevation differences
+  let mx=0;
+  for(const [dc,dr] of [[1,0],[-1,0],[0,1],[0,-1]]){
+    const nc=c+dc,nr=r+dr;
+    if(nc>=0&&nc<COLS&&nr>=0&&nr<ROWS) mx=Math.max(mx,Math.abs(ELEV[r][c]-ELEV[nr][nc]));
+  }
+  return mx; // metres over ~1km
+}
+function featureAt(c,r){ return FEATURES.find(f=>f.c===c&&f.r===r); }
+
+function updateBaseReadout(){
+  const {c,r}=state.base;
+  const e=ELEV[r][c], sl=slopeAt(c,r), m=CLIMATE[r][c];
+  const f=featureAt(c,r);
+  const ro=document.getElementById('baseReadout');
+  ro.innerHTML=
+    '<div class="row"><span>Grid reference</span><span class="v">'+String.fromCharCode(65+c)+(r+1)+'</span></div>'+
+    '<div class="row"><span>Elevation</span><span class="v">'+e.toLocaleString()+' m</span></div>'+
+    '<div class="row"><span>Steepness (height change/km)</span><span class="v">'+sl+' m</span></div>'+
+    '<div class="row"><span>Monsoon exposure</span><span class="v">'+(m===2?'high':m===1?'medium':'low')+'</span></div>'+
+    (f?'<div class="row"><span>On a known site</span><span class="v">'+f.name+'</span></div>':'');
+  // No interpretive flags on click - students should infer from the maps and discover
+  // consequences after running the season. The ONLY exception is the sacred-ground refusal:
+  // that's a hard rule (permits refused before any season begins), not a consequence to discover.
+  let flags='';
+  if(f && f.sacred==='forbidden') flags+='<div class="flag bad">This is sacred ground. The council would refuse permits to build a base here, so this isn\u2019t a viable choice. Pick a different square.</div>';
+  document.getElementById('baseFlags').innerHTML=flags;
+}
+
+/* ---------- attraction + season pickers ---------- */
+function drawAttractionPicks(){
+  const box=document.getElementById('attractionPicks');
+  box.innerHTML='';
+  ATTRACTIONS.forEach(a=>{
+    const b=document.createElement('button');
+    b.className='pick';
+    const dollars='$'.repeat(a.val);
+    b.innerHTML=a.name+' <span style="opacity:.7">'+a.elev.toLocaleString()+'m '+dollars+'</span>';
+    b.onclick=()=>{state.attraction=a.id;document.querySelectorAll('#attractionPicks .pick').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderTopo();updateRoute();updateRunBtn();};
+    box.appendChild(b);
+  });
+}
+/* ---------- route metrics ---------- */
+function lineCells(c0,r0,c1,r1){
+  const cells=[];const steps=Math.max(Math.abs(c1-c0),Math.abs(r1-r0))*2;
+  for(let i=0;i<=steps;i++){const t=i/steps;cells.push([Math.round(c0+(c1-c0)*t),Math.round(r0+(r1-r0)*t)]);}
+  return cells;
+}
+function updateRoute(){
+  const ctrl=document.getElementById('routeControl');
+  if(!state.base||!state.attraction){ctrl.style.display='none';return;}
+  ctrl.style.display='';
+  const a=FEATURES.find(f=>f.id===state.attraction);
+  const dc=a.c-state.base.c, dr=a.r-state.base.r;
+  const dist=Math.round(Math.sqrt(dc*dc+dr*dr)*10)/10;  // cells ~km
+  const gain=a.elev-ELEV[state.base.r][state.base.c];
+  const cells=lineCells(state.base.c,state.base.r,a.c,a.r);
+  let crossSacred=false, crossHaz=[];
+  cells.forEach(([cc,rr])=>{const f=featureAt(cc,rr);if(f){if(f.sacred==='forbidden')crossSacred=true;f.haz.forEach(h=>{if(!crossHaz.includes(h))crossHaz.push(h);});}});
+  document.getElementById('routeReadout').innerHTML=
+    '<div class="row"><span>Horizontal distance</span><span class="v">~'+dist+' km</span></div>'+
+    '<div class="row"><span>Elevation gain, base&rarr;attraction</span><span class="v">'+gain.toLocaleString()+' m</span></div>'+
+    '<div class="row"><span>Attraction value to tourists</span><span class="v">'+'$'.repeat(a.val)+'</span></div>';
+  // No interpretive flags - the readout shows the data, students reason from it.
+  document.getElementById('routeFlags').innerHTML='';
+}
+
+function updateRunBtn(){
+  const btn=document.getElementById('runBtn');
+  const ready=state.base&&state.attraction;
+  btn.disabled=!ready;
+  btn.textContent=ready?'Run the season \u2192':'Set a base & attraction first';
+}
+
+function toggleHint(id){document.getElementById(id).classList.toggle('show');}
+
+/* ================= SIMULATION ENGINE ================= */
+function clamp(v){return Math.max(0,Math.min(100,Math.round(v)));}
+
+// Classify the open/close window into a dominant season for the simulation engine.
+// Counts overlaps with each season and picks the largest.
+function dominantSeasonFromWindow(){
+  const months=[];
+  // Inclusive range; if open===close, that's a single month
+  for(let i=state.windowOpen;i<=state.windowClose;i++) months.push(i);
+  if(months.length===0) months.push(state.windowOpen);  // defensive: never empty
+  const monsoonOverlap = months.filter(m=>m>=5 && m<=8).length;   // Jun-Sep
+  const winterOverlap  = months.filter(m=>m<=1 || m>=11).length;  // Dec-Feb
+  const springOverlap  = months.filter(m=>m>=2 && m<=4).length;   // Mar-May
+  const autumnOverlap  = months.filter(m=>m===9 || m===10).length;// Oct-Nov
+  const counts={spring:springOverlap, monsoon:monsoonOverlap, autumn:autumnOverlap, winter:winterOverlap};
+  let best='autumn', bestN=-1;
+  for(const k in counts){if(counts[k]>bestN){bestN=counts[k];best=k;}}
+  return best;
+}
+
+function runSeason(){
+  // derive plan facts
+  const b=state.base, a=FEATURES.find(f=>f.id===state.attraction), s=dominantSeasonFromWindow();
+  const baseE=ELEV[b.r][b.c], baseSlope=slopeAt(b.c,b.r), baseClim=CLIMATE[b.r][b.c];
+  const baseFeat=featureAt(b.c,b.r);
+  const gain=a.elev-baseE;
+  const dc=a.c-b.c, dr=a.r-b.r; const dist=Math.sqrt(dc*dc+dr*dr);
+  const cells=lineCells(b.c,b.r,a.c,a.r);
+  let crossSacred=false, routeHaz=[], crossClimbing=false;
+  cells.forEach(([cc,rr])=>{
+    const f=featureAt(cc,rr);
+    if(f){
+      if(f.sacred==='forbidden') crossSacred=true;
+      if(f.haz.includes('climbing-only')) crossClimbing=true;
+      f.haz.forEach(h=>{if(!routeHaz.includes(h)) routeHaz.push(h);});
+    }
+  });
+  const baseSacred = baseFeat && baseFeat.sacred==='forbidden';
+  const baseFlood  = baseFeat && baseFeat.haz.includes('flood');
+  const nearVillage = FEATURES.some(f=>(f.id==='sherpa'||f.id==='village')&&Math.abs(f.c-b.c)<=1&&Math.abs(f.r-b.r)<=1);
+
+  let M={money:50,sat:50,comm:50,safe:50};
+  const log=[];
+  function ev(type,title,text,deltas){
+    for(const k in deltas) M[k]=clamp(M[k]+deltas[k]);
+    log.push({type,title,text,deltas});
+  }
+  const rand=Math.random;
+  const seasonProb={ // storm/snow base probabilities
+    spring:{storm:0.35,snow:0.15}, monsoon:{storm:0.85,snow:0}, autumn:{storm:0.2,snow:0.05}, winter:{storm:0.15,snow:0.75}
+  }[s];
+
+  // E1 ACCESS / SETUP
+  if(baseSacred){
+    ev('bad','Permit refused','The council learns your base sits on sacred ground. They refuse permits and the community is angry before you even begin.',{comm:-35,money:-10});
+  } else if(baseFeat && (baseFeat.haz.includes('rockfall') || (baseFeat.haz.includes('landslide') && !baseFeat.haz.includes('flood')))){
+    // Base on the cliff face or other unstable steep ground
+    ev('bad','Unstable ground','Setting up at this site means working on unstable, steep ground. Rocks fall on tents during construction. Insurance refuses to cover the operation here.',{money:-15,safe:-18,sat:-8});
+  } else if(baseFeat && (baseFeat.access==='road')){
+    ev('good','Easy access','Your base has road access. Clients and supplies arrive smoothly and cheaply.',{money:+6,sat:+4});
+  } else {
+    const farFromTown = b.r>=4;
+    if(farFromTown){ ev('warn','Hard to resupply','Your base is high in the valley with only trail access. Porters and supplies cost more.',{money:-8,sat:-2}); }
+    else { ev('good','Reasonable access','Trails to your base are short enough to resupply without much trouble.',{money:+2}); }
+  }
+
+  // E2 WEATHER
+  const stormHit = rand() < seasonProb.storm;
+  const snowHit  = rand() < seasonProb.snow;
+  if(stormHit){
+    if(baseFlood && (s==='monsoon')){
+      ev('bad','Monsoon flood','A storm swells the river and your low riverside base floods. Tents and gear are lost; clients are evacuated.',{money:-22,safe:-20,sat:-18});
+    } else if(baseClim===2 && s==='monsoon'){
+      ev('bad','Washed-out trails','Heavy monsoon rain turns the lower trails to mud and triggers small landslides. Days are lost and a couple of clients leave early.',{money:-12,safe:-8,sat:-10});
+    } else if(baseClim===1 && s==='monsoon'){
+      // Mid-altitude bases (like Sherpa village) still get monsoon impact: cloud, mud,
+      // washed-out lower trails feeding clients in. Less severe than the lower bases,
+      // but real.
+      ev('warn','Monsoon disruption','Even at mid-altitude, monsoon rain clouds the views, makes lower approach trails muddy and dangerous, and a few clients cancel before arriving.',{money:-9,sat:-9,safe:-3});
+    } else if(baseClim===0){
+      ev('good','Storm dodged','A storm sweeps the valley, but your base sits in the drier, higher rain-shadow zone. You carry on with only a short delay.',{sat:+3});
+    } else {
+      ev('warn','Storm delay','A storm rolls through. Your base is reasonably sheltered, so you lose a day but no more.',{sat:-3,money:-3});
+    }
+  } else {
+    if(s==='autumn'||s==='spring') ev('good','Clear skies','The weather holds. Clear mountain views and steady trekking days. Clients are delighted.',{sat:+10,money:+4});
+    else ev('good','Lucky weather','You get away without a major storm this season.',{sat:+4});
+  }
+  if(snowHit){
+    if(a.haz.includes('cold')||a.haz.includes('avalanche')||a.elev>4800){
+      if(s==='winter'){ ev('bad','Pass closed by snow','Heavy snow closes the high route you were selling. You can\u2019t deliver the trek and must refund clients.',{money:-18,sat:-15}); }
+      else { ev('warn','Snow on the high route','Late snow makes the high crossing risky. Guides turn the group around short of the goal.',{sat:-8,safe:-4}); }
+    }
+  }
+
+  // E3 ALTITUDE / ACCLIMATISATION
+  if(baseE>4000 && gain>800){
+    ev('bad','Altitude sickness','Your base is already very high and the climb to the attraction adds a lot more, too fast. Several clients develop altitude sickness and must descend.',{safe:-18,sat:-14,money:-8});
+  } else if(gain>1800){
+    ev('bad','Too much, too fast','The height gain from base to attraction breaks the acclimatisation rule. Clients fall ill and some turn back.',{safe:-14,sat:-12,money:-6});
+  } else if(gain>1200){
+    ev('warn','Tough ascent','The climb is demanding. A few clients struggle with the altitude but most cope with extra rest days.',{sat:-4,safe:-3});
+  } else if(baseE>=2800 && baseE<=3600){
+    ev('good','Well acclimatised','Your base sits at a smart altitude, so clients adjust before going high. Few altitude problems.',{safe:+10,sat:+6});
+  }
+
+  // E4 REACHABILITY / ATTRACTION
+  if(crossClimbing){
+    // Route runs straight through the Black Rock Wall - trek parties cannot cross
+    // pure rock-climbing terrain. Guides try to find an alternative around it but
+    // burn days, lose clients and refund what they can.
+    ev('bad','Route blocked by rock band','Your planned route runs straight through the Black Rock Wall \u2014 a near-vertical rock band that is rock-climbing terrain, not a hiking route. Guides have to find a long detour around it; days are lost and many clients turn back. Refunds follow.',{money:-20,sat:-18,safe:-10});
+  } else if(dist>7){
+    ev('bad','Too far to reach','The attraction is so far from base that most clients run out of time and energy before reaching it. Refunds and poor reviews follow.',{money:-15,sat:-16});
+  } else {
+    // they reach it - reward scales steeply with attraction value (high-value = big payoff IF delivered)
+    const rev=a.val*7 + a.val*a.val*2;  // val1->9, val2->22, val3->39
+    if(dist>5){
+      ev('warn','A long but rewarding haul','The attraction is a long way off and the days are exhausting, but the group makes it to '+a.name+'. The payoff is real, though some clients are worn out.',{money:rev,sat:a.val*6-8});
+    } else {
+      ev('good','Clients reach the highlight','Your group reaches '+a.name+'. '+(a.val>=3?'It is the trip of a lifetime and word spreads fast \u2014 premium clients pay top rates.':a.val>=2?'It\u2019s a spectacular payoff and reviews glow.':'A satisfying goal, modestly priced.'),{money:rev,sat:a.val*6});
+    }
+  }
+  // hazard scare near attraction (probabilistic)
+  if(a.haz.includes('GLOF') && rand()<0.3){
+    ev('warn','Glacial lake scare','Meltwater surges at the glacial lake. No one is hurt this time, but it frightens the group \u2014 a reminder of GLOF risk.',{safe:-6,sat:-4});
+  }
+  if(a.haz.includes('avalanche') && (s==='spring'||snowHit) && rand()<0.35){
+    ev('bad','Avalanche danger','Warming snow brings avalanche danger near the peak. Guides pull the group back for safety.',{safe:-12,sat:-8});
+  }
+
+  // E5 CULTURAL / COMMUNITY
+  if(crossSacred){
+    ev('bad','Sacred ground crossed','Your route takes clients across sacred land. Village elders complain and your standing in the community drops sharply.',{comm:-22,sat:-3});
+  }
+  if(!baseSacred){
+    if(nearVillage){ ev('good','Local partnership','Basing near a village means you hire local guides and fill local teahouses. The community benefits and supports you.',{comm:+16,money:+5}); }
+    else { ev('warn','Few local ties','Your base is away from any village, so little of the tourist money reaches local people. The community is indifferent.',{comm:-4}); }
+  }
+  if(a.sacred==='forbidden'){
+    // Selling Khumla Ri as a viewpoint, never a summit climb
+    ev('good','Respectful highlight','You sell '+a.name+' as a viewpoint, never a summit climb, and brief clients on its spiritual meaning. The community appreciates the respect shown.',{comm:+6,sat:+4});
+  }
+
+  // E6 RECKONING handled by verdict
+  renderSim(M,log,{a,s,baseE,gain,dist:Math.round(dist*10)/10});
+}
+
+function renderSim(M,log,facts){
+  document.getElementById('simResult').classList.remove('hidden');
+  // meters
+  const defs=[['money','Money','#2e8b3d'],['sat','Client satisfaction','#2b7bb9'],['comm','Community relations','#8e44ad'],['safe','Safety record','#c0392b']];
+  document.getElementById('meters').innerHTML=defs.map(([k,lab,col])=>{
+    const v=M[k];
+    return '<div class="meter"><div class="lab">'+lab+'</div><div class="num">'+v+'</div><div class="bar"><div style="width:'+v+'%;background:'+col+'"></div></div></div>';
+  }).join('');
+  // log
+  document.getElementById('eventLog').innerHTML=log.map(it=>{
+    const deltas=Object.entries(it.deltas).map(([k,v])=>{
+      const lab={money:'Money',sat:'Satisfaction',comm:'Community',safe:'Safety'}[k];
+      return (v>0?'+':'')+v+' '+lab;
+    }).join(' \u00b7 ');
+    return '<div class="logitem '+it.type+'"><span class="t">'+it.title+'</span>'+it.text+'<div class="delta">'+deltas+'</div></div>';
+  }).join('');
+  // verdict
+  const avg=(M.money+M.sat+M.comm+M.safe)/4;
+  let cls,head,msg;
+  if(avg>=62 && M.safe>=45 && M.comm>=40){cls='good';head='A strong first season';msg='Your plan balanced the competing demands well. Clients were happy and safe, the community benefited, and you made money. This is what good geographic planning looks like \u2014 you weighed elevation, climate, hazards and culture against each other.';}
+  else if(avg>=42){cls='mixed';head='A mixed season';msg='You survived, but the numbers show real strain. Look at which meter fell furthest and trace it back to a choice: was the base too high, the attraction too far, the season too risky, or the route too close to sacred ground?';}
+  else {cls='bad';head='A hard lesson';msg='The season went badly. That is useful data, not failure. Read the event log: each setback traces back to a planning decision. Find the choice that hurt you most, change it, and run again.';}
+  document.getElementById('verdict').innerHTML='<div class="verdict '+cls+'"><h3>'+head+'</h3>'+msg+'</div>';
+  // reveal reflection
+  document.getElementById('reflectPanel').style.display='';
+  window.scrollTo({top:document.getElementById('simResult').offsetTop-20,behavior:'smooth'});
+}
+
+function replan(){
+  document.getElementById('simResult').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= SAQs ================= */
+const SAQS=[
+  {id:'q1',q:'1. Explain how the geographical processes and characteristics of this landscape influenced the outcome of your season.',hint:'Refer to specific processes (e.g. monsoon rainfall, glacial melt, weathering on steep slopes, altitude) and the characteristics of the place you chose (elevation, slope, proximity to a river or sacred site). Use cause-and-effect language.',
+   needs:[
+     {test:t=>/\b(process|monsoon|rainfall|glacial|altitud|weather|erosion|elevation|slope|landform|landscape|terrain)\b/i.test(t),miss:'Name at least one geographical process or characteristic of the landscape (e.g. monsoon rainfall, altitude, slope, glacial melt) that affected your season.'},
+     {test:t=>/\b(base|attraction|route|location|chose|chose to|chosen|placed|selected|window|season)\b/i.test(t),miss:'Refer to a specific planning choice you made (where you placed the base, what you chose to sell, your trekking window).'},
+     {test:t=>/\b(because|so|led to|caused|meant|resulted|due to|since|as a result|which is why|this is why)\b/i.test(t),miss:'Use cause-and-effect language to explain HOW the process or characteristic produced the outcome.'},
+   ]},
+  {id:'q2',q:'2. Identify a geomorphological hazard your trekkers faced or could have faced in this landscape, and explain a human response to reduce its impact.',hint:'Geomorphological hazards in this landscape include landslides, glacial-lake outburst floods (GLOFs), avalanches, river flooding and rockfall. Name one, explain the process that causes it, and describe a response a trekking company could use to reduce its impact.',
+   needs:[
+     {test:t=>/\b(landslide|rockfall|glof|glacial.{0,15}flood|avalanche|flood|altitude.?sickness|ams|cold|crevasse|outburst)\b/i.test(t),miss:'Name a specific geomorphological hazard (landslide, GLOF, avalanche, river flood, rockfall, altitude sickness).'},
+     {test:t=>/\b(rain|monsoon|snow|melt|steep|gravity|moraine|saturat|freeze|thaw|unstable|loose|slope)\b/i.test(t),miss:'Briefly explain the process that causes the hazard (e.g. heavy monsoon rain saturates soil; a moraine dam fails as the glacial lake fills; warming snow becomes unstable).'},
+     {test:t=>/\b(avoid|reduce|manage|response|mitigat|prevent|rest|acclimatis|acclimatiz|reroute|brief|guide|early|monitor|descend|equipment|train|plan|preparation|warning|evacuat)\b/i.test(t),miss:'Describe the HUMAN RESPONSE \u2014 a concrete action a trekking company could take to reduce the hazard\u2019s impact (e.g. avoiding the zone, building in rest days, crossing early in the day, briefing clients, monitoring symptoms).'},
+   ]},
+  {id:'q3',q:'3. Explain the interconnections between people and this environment, referring to environmental, economic and social/cultural factors.',hint:'How does the environment (landforms, climate, hazards) shape what people do here? How do people\u2019s actions (your trekking business, the community\u2019s use of sacred sites) shape this place? Use the language of environmental, economic and social/cultural factors.',
+   needs:[
+     {test:t=>/\b(environment|landform|landscape|climate|monsoon|altitud|terrain|river|glacial|hazard|physical)\b/i.test(t),miss:'Refer to an ENVIRONMENTAL factor (a landform, climate feature, or hazard in this landscape).'},
+     {test:t=>/\b(econom|tourism|income|money|job|cost|revenue|trade|business|local economy|livelihood|wage)\b/i.test(t),miss:'Refer to an ECONOMIC factor (tourism revenue, local income, jobs, the cost of your operation).'},
+     {test:t=>/\b(cultur|spiritu|sacred|religio|community|monastery|festival|sherpa|tradition|respect|aesthet|value|belief)\b/i.test(t),miss:'Refer to a SOCIAL or CULTURAL factor (spiritual or cultural value of places, the local community, festivals, religious practice, respect for sacred sites).'},
+     {test:t=>/\b(shape|influenc|affect|interconnect|connect|depend|relations|link|between|because|so|led|due to)\b/i.test(t),miss:'Make the INTERCONNECTION explicit \u2014 show how these factors influence each other.'},
+   ]},
+  {id:'q4',q:'4. Propose a strategy to manage this landscape sustainably as a trekking destination, and justify it.',hint:'A sustainable strategy balances environmental protection (e.g. avoiding hazardous or sacred areas), economic benefit (income for the local community), and social/cultural value (respect for spiritual and aesthetic significance). Propose one concrete strategy and explain how it addresses these factors.',
+   needs:[
+     {test:t=>/\b(propose|recommend|suggest|strateg|plan|approach|change|move|instead|use|build|partner|limit|restrict|require|ensure)\b/i.test(t),miss:'Propose a concrete strategy (something a trekking company or the local council could DO).'},
+     {test:t=>/\b(sustainab|protect|preserve|long.?term|future|reduce|impact|conserv|respect|share|benefit|fair)\b/i.test(t),miss:'Use the language of SUSTAINABILITY \u2014 protecting the landscape long-term, fair benefit-sharing, reducing impact.'},
+     {test:t=>/\b(environment|landform|hazard|sacred|cultur|spiritu|econom|tourism|local|community|income|monsoon|altitud)\b/i.test(t),miss:'Refer to at least two of the factors (environmental, economic, social/cultural) your strategy addresses.'},
+   ]},
+];
+function drawSAQs(){
+  const area=document.getElementById('saqArea');
+  area.innerHTML=SAQS.map(s=>
+    '<div class="saq"><p class="q">'+s.q+'</p><p class="hintq">'+s.hint+'</p>'+
+    '<textarea id="ta_'+s.id+'" placeholder="Write your answer here..." oninput="wc(\''+s.id+'\')"></textarea>'+
+    '<div class="saqbtns"><button class="act primary" onclick="checkSAQ(\''+s.id+'\')">Check my answer</button><span class="wordcount" id="wc_'+s.id+'">0 words</span></div>'+
+    '<div class="saqfb" id="fb_'+s.id+'"></div></div>'
+  ).join('');
+}
+function wc(id){const t=document.getElementById('ta_'+id).value.trim();const n=t?t.split(/\s+/).length:0;document.getElementById('wc_'+id).textContent=n+' word'+(n===1?'':'s');}
+function checkSAQ(id){
+  const s=SAQS.find(x=>x.id===id);const t=document.getElementById('ta_'+id).value.trim();const fb=document.getElementById('fb_'+id);
+  const n=t?t.split(/\s+/).length:0;
+  if(n<12){fb.className='saqfb warn show';fb.innerHTML='Have a proper go first \u2014 write a couple of full sentences, then press Check.';return;}
+  const misses=s.needs.filter(req=>!req.test(t)).map(req=>req.miss);
+  if(misses.length===0){fb.className='saqfb ok show';fb.innerHTML='<strong>Strong answer.</strong> You\u2019ve connected your decision to the geography and the consequence, the way a geographer would.';}
+  else{fb.className='saqfb warn show';fb.innerHTML='<strong>Good start \u2014 now strengthen it:</strong><ul>'+misses.map(m=>'<li>'+m+'</li>').join('')+'</ul>';}
+}
+
+/* ---------- init ---------- */
+renderTopo();
+renderYearly();
+renderDaily();
+renderWindowSummary();
+drawAttractionPicks();
+drawSAQs();
+</script>
+</body>
+</html>
