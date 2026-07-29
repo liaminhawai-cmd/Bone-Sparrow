@@ -36,6 +36,9 @@ h2{font-size:19px;margin:0 0 8px}
 .topbar .where{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 .linkbtn{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0}
 .linkbtn:hover{text-decoration:underline}
+a.linkbtn{text-decoration:none}
+a.menulink{border:1px solid var(--line);border-radius:20px;padding:5px 12px;background:#fff}
+a.menulink:hover{border-color:var(--accent);text-decoration:none}
 a{color:var(--accent)}
 .btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
      cursor:pointer;background:var(--paper);color:var(--ink);transition:all .15s ease;font-family:inherit}
@@ -216,7 +219,10 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 <div class="container">
   <div class="topbar noprint">
     <span class="where" id="whereLbl">Year 7 English · The Bone Sparrow · Units 5–6</span>
-    <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← home</button>
+    <span style="display:flex;gap:16px;align-items:center;margin-left:auto">
+      <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← all activities</button>
+      <a class="linkbtn menulink" href="index.html">⌂ Main menu</a>
+    </span>
   </div>
   <div id="body"></div>
 </div>
@@ -676,6 +682,148 @@ const EV_ROUNDS = [
       fb:"Her age isn't in this evidence — stay inside what the line shows." }] } } }
 ];
 
+/* ==================== REDUNDANCY BANK ======================================
+   Getting something wrong does NOT hand back the same question. The mastery
+   loop draws a PARALLEL item from this bank — same skill, same chapter, new
+   material — so the only way through is to do the skill again, not to
+   remember which option was highlighted. Items here are never scored; they
+   are the price of a miss and the proof of recovery.
+   Skills: infer · figmeaning · figtech · voicewho · voicefeat
+   =========================================================================== */
+const REDUNDANCY = {
+ infer:[
+  { id:"rx_inf1", ch:1, stim:"Sometimes, at night, the dirt outside turns into a beautiful ocean. As red as the sun and as deep as the sky.", page:"p. 1",
+    q:"'As red as the sun and as deep as the sky.' What does this sentence do that a plain description would not?",
+    opts:["It measures the imagined sea against the two biggest things Subhi can see",
+          "It tells us the exact colour of the dirt",
+          "It proves the ocean is real",
+          "It explains why Subhi cannot sleep"],
+    a:0, explain:"He has no ocean to compare it to, so he reaches for the sun and the sky — the only enormous things inside the fences. Even his imagination is furnished from what the camp allows him.",
+    line:"As red as the sun and as deep as the sky." },
+  { id:"rx_inf2", ch:1, stim:"Our maá says there are some people in this world who can see all the hidden bits and pieces of the universe blown in on the north wind and scattered about in the shadows.", page:"p. 1",
+    q:"Maá says 'some people' can see the hidden bits of the universe. What is she really telling Subhi?",
+    opts:["That he should stop imagining things","That his way of seeing is a gift, not a fault",
+          "That the wind is dangerous","That Queeny is right about him"],
+    a:1, explain:"It arrives immediately after Queeny calls him stupid. Maá's line is a quiet defence of her son — she gives his imagination a place in the family's understanding of the world.",
+    line:"…there are some people in this world who can see all the hidden bits and pieces of the universe…" },
+  { id:"rx_inf3", ch:1, stim:"In the morning, the ground still wet and foamy from where those waves washed up, I sit and trace the hundreds of animals that have swum all the way up to the tent…", page:"p. 2",
+    q:"The Night Sea leaves the ground 'wet and foamy' in the morning. What does this tell us about how Subhi experiences it?",
+    opts:["It is only a dream he forgets on waking","It rained overnight and he is confused",
+          "It continues into daylight and leaves evidence — it is how he lives, not a passing dream","The other tents flood too"],
+    a:2, explain:"Fraillon never breaks the spell by telling us it isn't real. The traces in the morning dirt keep the imagined world going, so the reader lives inside Subhi's seeing rather than watching it from outside.",
+    line:"In the morning, the ground still wet and foamy from where those waves washed up…" },
+  { id:"rx_inf4", ch:5, stim:"Eli always tells me, 'Never let anyone see your scared,' and I try as hard as I can but trying isn't doing…", page:"p. 33",
+    q:"'Trying isn't doing.' What is Subhi admitting in these three words?",
+    opts:["That he has given up on Eli's advice","That he is trying his hardest and it still isn't enough to hide the fear",
+          "That he does not understand what Eli meant","That Eli was wrong to give advice"],
+    a:1, explain:"The rule is good; the boy is nine and terrified. The gap between the advice and what a child's body actually does is where the whole scene lives.",
+    line:"…and I try as hard as I can but trying isn't doing…" },
+  { id:"rx_inf5", ch:5, stim:"His hand is hard and scratchy, grabbing at my shirt and pulling me towards him so that my teeth clang on my tongue and I can taste blood…", page:"p. 33",
+    q:"Subhi reports the taste of blood but never says 'it hurt'. Why does that make the moment stronger?",
+    opts:["Because the reader works out the pain from the evidence of his senses",
+          "Because it did not actually hurt","Because he is being brave for Eli","Because the narrator is unreliable"],
+    a:0, explain:"The body reports; the reader concludes. That is the difference between being told a boy is hurt and standing inside him while it happens.",
+    line:"…my teeth clang on my tongue and I can taste blood…" },
+  { id:"rx_inf6", ch:5, stim:"When I crash into the dirt, Beaver has the package. And he's opening it.", page:"p. 33",
+    q:"The chapter breaks off here, on 'And he's opening it.' What is that short final sentence doing?",
+    opts:["Ending the story of the package","Holding the reader in the worst moment, before we learn what is inside",
+          "Telling us Beaver is curious","Showing that Subhi has escaped"],
+    a:1, explain:"A short sentence after a long one slams the door. Fraillon leaves us in the not-knowing — the same place she has left Subhi.",
+    line:"When I crash into the dirt, Beaver has the package. And he's opening it." }
+ ],
+ figmeaning:[
+  { id:"rx_fm1", ch:1, stim:"“…listen to the waves lapping at the tent.”", page:"p. 1",
+    q:"What does this most likely mean?",
+    opts:["Real seawater is leaking into the tent","In his imagined ocean, small waves touch the canvas again and again",
+          "The tent is being blown down by wind","Someone is knocking on the tent"],
+    a:1, explain:"Lapping is the gentle repeated touch of small waves — it makes the Night Sea comforting rather than threatening.",
+    line:"…listen to the waves lapping at the tent." },
+  { id:"rx_fm2", ch:5, stim:"“Beaver's meanness just picks its moments. Or maybe it just picks its people.”", page:"p. 32",
+    q:"What does Subhi mean here?",
+    opts:["Beaver is cruel only sometimes, and mostly to particular people",
+          "Beaver cannot control himself at all","Beaver is kind to children","Beaver chooses his friends carefully"],
+    a:0, explain:"Beaver saved Harvey but torments the refugees — so his cruelty is aimed, not accidental. Subhi has worked out something about power that adults miss.",
+    line:"I guess Beaver's meanness just picks its moments. Or maybe it just picks its people." },
+  { id:"rx_fm3", ch:5, stim:"“…all I can see are little lights flashing in and out.”", page:"p. 33",
+    q:"What does this describe?",
+    opts:["The camp's floodlights coming on","What Subhi sees after his head hits the bricks",
+          "Stars appearing at night","Torches carried by the Jackets"],
+    a:1, explain:"A head injury described exactly as a child would experience it — from the inside, with no medical words available.",
+    line:"…my head cracks into the bricks behind me, and for a moment all I can see are little lights flashing in and out." },
+  { id:"rx_fm4", ch:3, stim:"“…tells her brain to stop, to go back to sleep.”", page:"p. 19",
+    q:"What is happening to Jimmie here?",
+    opts:["She is talking to someone else in the room","Her thoughts won't switch off, and she is trying to order them away",
+          "She has forgotten how to sleep","She is dreaming about her mother"],
+    a:1, explain:"Grief keeps her awake, and she treats her own brain as something separate that won't obey her. Try to imagine a lonelier image.",
+    line:"…and tells her brain to stop, to go back to sleep." }
+ ],
+ figtech:[
+  { id:"rx_ft1", ch:1, stim:"“Sometimes, at night, the dirt outside turns into a beautiful ocean.”", page:"p. 1",
+    q:"Which feature is doing the work in this line?",
+    opts:["Metaphor — the dirt is said to BECOME an ocean, not to be like one",
+          "Simile — it compares using 'like' or 'as'",
+          "Personification — the dirt is given human behaviour",
+          "Hyperbole — deliberate exaggeration for effect"],
+    a:0, explain:"No 'like' or 'as' — it states the transformation as fact. That is what makes Subhi's imagination feel real rather than decorative.",
+    line:"Sometimes, at night, the dirt outside turns into a beautiful ocean." },
+  { id:"rx_ft2", ch:5, stim:"“My throat is as dry as the dirt.”", page:"p. 33",
+    q:"Beyond being a simile, why is the comparison to DIRT the important choice?",
+    opts:["Dirt is the cheapest thing to describe","It shows the camp has supplied even the words for his fear",
+          "It proves he is thirsty","It rhymes with the next line"],
+    a:1, explain:"He could have compared it to anything. He reaches for the ground of the camp — the only world he has ever had to think with.",
+    line:"My throat is as dry as the dirt." },
+  { id:"rx_ft3", ch:3, stim:"“…as if the house is holding its breath too.”", page:"p. 19",
+    q:"Which feature is doing the work here?",
+    opts:["Simile — it compares using 'as if'","Personification — the house is given a human action",
+          "Both: the house is personified inside an 'as if' comparison","Neither — it is literal description"],
+    a:2, explain:"Good noticing if you saw both. The comparison frame is 'as if', but the power comes from giving the house a held breath — and the word 'too' hands that breath back to Jimmie.",
+    line:"…as if the house is holding its breath too." },
+  { id:"rx_ft4", ch:5, stim:"“…my brain is buzzing louder and louder.”", page:"p. 33",
+    q:"Which feature is doing the work?",
+    opts:["Onomatopoeia — 'buzzing' imitates the sound it names","Simile — it compares using 'like'",
+          "Symbol — the brain stands for a bigger idea","Rhyme — the words echo each other"],
+    a:0, explain:"'Buzz' performs its own sound, and 'louder and louder' makes the panic climb. Sound-words put you inside his skull.",
+    line:"…and my brain is buzzing louder and louder." }
+ ],
+ voicewho:[
+  { id:"rx_vw1", ch:1, stim:"“Queeny says I'm stupid, saying that kind of stuff. But it's true. She just doesn't see it, is all.”", page:"p. 1",
+    q:"Whose voice is this?",
+    opts:null, a:0,
+    explain:"Subhi narrating. First person, and 'is all' — a soft, forgiving shrug that no one else in the novel uses.",
+    line:"She just doesn't see it, is all." },
+  { id:"rx_vw2", ch:5, stim:"“Never let anyone see your scared.”", page:"p. 33",
+    q:"Whose voice is this?",
+    opts:null, a:3,
+    explain:"Eli. It is a survival rule handed down to a younger boy — and 'your scared' uses an adjective as a noun, the camp-grown English the two of them share.",
+    line:"Eli always tells me, 'Never let anyone see your scared.'" },
+  { id:"rx_vw3", ch:3, stim:"“She pulls the yellow doona up and the house stays quiet around her.”", page:"ch. 3",
+    q:"Whose voice is this?",
+    opts:null, a:6,
+    explain:"A Jimmie chapter — third person 'she'. Subhi says 'I'; Jimmie is watched from just outside.",
+    line:"She pulls herself under the yellow doona…" }
+ ],
+ voicefeat:[
+  { id:"rx_vf1", ch:1, stim:"“I can tell by the still and heavy in the tent that no one else is awake.”", page:"p. 46",
+    q:"Which language feature builds the voice here?",
+    opts:["Two adjectives ('still', 'heavy') used as nouns","A borrowed word from another language",
+          "Short clipped commands","Formal, old-fashioned phrasing"],
+    a:0, explain:"'The still and heavy' instead of 'the stillness and heaviness'. Fraillon strips the endings so Subhi's English stays young and self-built.",
+    line:"I can tell by the still and heavy in the tent." },
+  { id:"rx_vf2", ch:5, stim:"“Beaver's the kind of person who gives you an extra kick for not getting out of his way fast enough.”", page:"p. 32",
+    q:"Which feature builds the voice here?",
+    opts:["A long, run-on sentence built out of everyday words, as a child would explain it",
+          "Formal analytical vocabulary","A borrowed word from Rohingya","Rhyme and rhythm"],
+    a:0, explain:"The sentence keeps going because his thought does. Fraillon writes the shape of a child explaining something he has thought about for a long time.",
+    line:"Beaver's the kind of person who gives you an extra kick…" },
+  { id:"rx_vf3", ch:5, stim:"“I can't talk. I can't say a single thing.”", page:"p. 33",
+    q:"Which feature builds the voice here?",
+    opts:["Repetition of a short simple sentence","An adjective used as a noun",
+          "A simile","A borrowed word"],
+    a:0, explain:"Saying it twice, both times short, is the sound of a mind stuck. The repetition does what the sentence describes.",
+    line:"I can't talk. I can't say a single thing." }
+ ]
+};
+
 /* ==================== ANALYSIS WORKSHOP =====================================
    Part A — build the WAGOLL wall: five real-sounding responses to one
    question, placed against the CAT rubric's Vic-curriculum levels (5-9).
@@ -789,6 +937,15 @@ const MODULES = [
    ENGINE — knows nothing about the novel. State, router, runners, report.
    ============================================================================ */
 const KEY="bonesparrow.readinghub.v2";
+/* Shared profile written by the front door (index.html) so a student signs in
+   once for the whole suite. Identity, chapter and EAL live there; the scores
+   stay in this hub's own key. Adopted on boot, written back on change. */
+const PKEY="bonesparrow.profile.v1";
+function readProfile(){ try{ const p=JSON.parse(localStorage.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){ try{
+  const p=readProfile()||{};
+  localStorage.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid,chapter:S.chapter,eal:S.eal})));
+}catch(e){} }
 function blank(){ return {first:{}, done:{}, evLv:0, fname:"", lname:"", sid:"", chapter:5, eal:false, kept:[], startedAt:Date.now(), finishedAt:0}; }
 let S=blank();
 function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ const p=JSON.parse(raw); if(p&&typeof p==="object") S=Object.assign(blank(),p);} }catch(e){} }
@@ -803,6 +960,13 @@ function recFirst(key, correct){ if(S.first[key]===undefined){ S.first[key]=!!co
 
 let screen="home";
 function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S.lname||"").trim() && sid.length>=4 && sid.length<=8; }
+(function adoptProfile(){
+  const p=readProfile(); if(!p) return;
+  S.fname=p.fname||S.fname; S.lname=p.lname||S.lname; S.sid=p.sid||S.sid;
+  if(typeof p.chapter==="number") S.chapter=p.chapter;
+  if(typeof p.eal==="boolean") S.eal=p.eal;
+  save();
+})();
 function go(s, arg){
   if(!idOk() && s!=="id") s="id";
   screen=s;
@@ -850,7 +1014,7 @@ function idSubmit(){
   $("el").textContent = l? "" : "Last name needed.";
   $("es").textContent = (sid.length>=4&&sid.length<=8)? "" : "That doesn’t look right — check your student ID and try again.";
   if(!f||!l||sid.length<4||sid.length>8) return;
-  S.fname=f; S.lname=l; S.sid=sid; if(!S.startedAt) S.startedAt=Date.now(); save();
+  S.fname=f; S.lname=l; S.sid=sid; if(!S.startedAt) S.startedAt=Date.now(); save(); writeProfile();
   go("home");
 }
 
@@ -867,10 +1031,10 @@ function renderHome(){
   Wrong answers get retried until you master them, but <b>your first attempt at each question is what goes on your report</b>.</p>`;
   h+=`<div class="homectl noprint">
     <span><label for="chSel">Where are you up to?&nbsp;</label>
-    <select id="chSel" onchange="S.chapter=+this.value;save();renderHome()">`;
+    <select id="chSel" onchange="S.chapter=+this.value;save();writeProfile();renderHome()">`;
   for(let c=1;c<=20;c++) h+=`<option value="${c}" ${S.chapter===c?"selected":""}>I've read to the end of chapter ${c}</option>`;
   h+=`<option value="99" ${S.chapter>20?"selected":""}>I've finished the novel</option></select></span>
-    <button class="switch ${S.eal?"on":""}" onclick="S.eal=!S.eal;save();renderHome()" aria-pressed="${S.eal}">
+    <button class="switch ${S.eal?"on":""}" onclick="S.eal=!S.eal;save();writeProfile();renderHome()" aria-pressed="${S.eal}">
       <span class="track"></span>EAL support ${S.eal?"on":"off"}</button>
     <span class="gatednote">Questions about pages you haven't reached stay hidden — no spoilers.</span>
   </div>`;
@@ -911,6 +1075,25 @@ go=function(s,arg){
 function runQuizzer(cfg){
   let queue=cfg.items.slice(), idx=0, stepIdx=0, round=1;
   const missed=[];
+  /* Redundancy: a miss never hands back the same question. We draw a parallel
+     item — same skill, same chapter, different material — and keep drawing a
+     new one each time it is missed again. Parallel items are never scored;
+     the report still shows first attempts on the real set. */
+  const usedRx=new Set();
+  function drawParallel(skill){
+    const pool=(REDUNDANCY[skill]||[]).filter(x=>(x.ch||1)<=(S.chapter||1) && !usedRx.has(x.id));
+    if(!pool.length) return null;
+    /* stay on the passage they are working on where we can */
+    const near = cfg.preferCh ? pool.filter(x=>x.ch===cfg.preferCh) : [];
+    const from = near.length ? near : pool;
+    const x=from[Math.floor(Math.random()*from.length)];
+    usedRx.add(x.id);
+    const opts = x.opts || (skill==="voicewho" ? VOICE_WHO : null);
+    if(!opts) return null;
+    return { id:x.id, stim:x.stim, page:x.page, redundant:true,
+      steps:[{ key:"a", q:x.q, opts:opts, a:x.a, explain:x.explain, requote:x.line,
+               chips:skill==="voicewho", noShuffle:skill==="voicewho", skill:skill }] };
+  }
   function draw(){
     const item=queue[idx], step=item.steps[stepIdx];
     const total=cfg.items.reduce((n,it)=>n+it.steps.length,0);
@@ -918,7 +1101,8 @@ function runQuizzer(cfg){
     let h=`<div class="eyebrow">${esc(cfg.where)}</div><h2>${esc(cfg.title)}</h2>`;
     if(cfg.subnote) h+=`<p class="lead">${esc(cfg.subnote)}</p>`;
     h+=`<div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,answered/total*100)}%"></div></div>`;
-    if(round>1) h+=`<p class="lead">Mastery round ${round} — answer the ones you missed until they're all correct. (First attempts are already saved.)</p>`;
+    if(item.redundant) h+=`<p class="lead"><b>Same skill, new question.</b> You'll get a fresh one every time you miss it — the way through is to do it again, not to remember the answer. This one isn't scored; your first attempt is already saved.</p>`;
+    else if(round>1) h+=`<p class="lead">Mastery round ${round} — the questions you missed, replaced with new ones on the same skill. (Your first attempts are already saved.)</p>`;
     if(item.stim) h+=`<div class="stim">${item.stim}${item.page?`<span class="pg">(${esc(item.page)})</span>`:""}</div>`;
     h+=`<p class="q">${esc(step.q)}</p><div class="opts ${step.chips?"chips":""}" id="opts"></div>
     <div class="feedback" id="fb" aria-live="polite"></div>
@@ -941,20 +1125,26 @@ function runQuizzer(cfg){
     });
     if(!correct) btn.classList.add("wrongpick");
     const key=cfg.mod+"."+item.id+"."+step.key;
-    const firstTime = S.first[key]===undefined;
-    recFirst(key, correct);
+    const firstTime = !item.redundant && S.first[key]===undefined;
+    if(!item.redundant) recFirst(key, correct);
     if(!correct && firstTime) missed.push({item,label:cfg.missLabel(item,step)});
     const fb=$("fb");
     fb.className="feedback "+(correct?"ok":"bad");
     fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — the answer is “${esc(step.opts[step.a])}”.</b> `)+step.explain
       +(!correct&&step.requote?`<div class="requote">“${esc(step.requote)}”</div>`:"");
-    if(!correct) item._requeue=true;
+    if(!correct){ (item._missed=item._missed||[]).push(step); }
     const nb=$("nextBtn");
     nb.style.display="inline-block";
     nb.textContent = stepIdx<item.steps.length-1 ? "Next part →" : "Next →";
     nb.onclick=()=>{
       if(stepIdx<item.steps.length-1){ stepIdx++; draw(); return; }
-      if(item._requeue){ delete item._requeue; queue.push(item); }
+      if(item._missed && item._missed.length){
+        const again=item._missed.slice(); delete item._missed;
+        again.forEach(st=>{
+          const alt = drawParallel(st.skill);
+          queue.push(alt || { id:item.id, stim:item.stim, page:item.page, redundant:true, steps:[st] });
+        });
+      }
       stepIdx=0; idx++;
       if(idx>=queue.length){ finish(); } else {
         if(idx>=cfg.items.length && queue[idx]) round= Math.max(round, 2);
@@ -990,9 +1180,9 @@ function renderQrIntro(id){
 function startQr(id){
   const qr=QUICKREADS.find(q=>q.id===id);
   runQuizzer({
-    mod:qr.id, title:qr.title+" — questions (no looking back)", where:qr.where,
+    mod:qr.id, title:qr.title+" — questions (no looking back)", where:qr.where, preferCh:qr.ch,
     lowNote: "If word meanings tripped you, do exactly this: open "+hubRef("BoneSparrowVocabHub.html","Vocab Hub → CH "+(id==="qr1"?"1-2":"5"),"run 'Meet the words' and 'Build the words' for this chapter set, then come back and retry."),
-    items:qr.items.map(it=>({ id:it.id, steps:[{key:"a", q:it.q, opts:it.opts, a:it.a, explain:it.explain, requote:it.line}] })),
+    items:qr.items.map(it=>({ id:it.id, steps:[{key:"a", skill:"infer", q:it.q, opts:it.opts, a:it.a, explain:it.explain, requote:it.line}] })),
     missLabel:(item,step)=>item.id,
     doneNote: id==="qr1" ? "Next quickread: Chapter 5, the moment Beaver catches Subhi." :
       "If the figurative lines here interested you, the next activity digs into exactly how they work."
@@ -1006,8 +1196,8 @@ function runFig(){
     mod:"fig", title:"Figurative → literal", where:"Lesson 09 · figurative language",
     subnote: hidden? `${hidden} more line${hidden>1?"s are":" is"} waiting further into the novel — update your chapter on the home screen as you read.`:"",
     items:pool.map(it=>({ id:it.id, stim:"“"+esc(it.quote)+"”", page:it.page, steps:[
-      { key:"meaning", q:"What does this literally mean?", opts:it.meaning.opts, a:it.meaning.a, explain:it.meaning.explain },
-      { key:"tech", q:"Which feature is doing the work?", opts:it.tech.opts.map(i=>FIG_TECHS[i]), a:it.tech.a, explain:it.tech.explain }
+      { key:"meaning", skill:"figmeaning", q:"What does this literally mean?", opts:it.meaning.opts, a:it.meaning.a, explain:it.meaning.explain },
+      { key:"tech", skill:"figtech", q:"Which feature is doing the work?", opts:it.tech.opts.map(i=>FIG_TECHS[i]), a:it.tech.a, explain:it.tech.explain }
     ]})),
     missLabel:(item,step)=>item.id,
     doneNote:"You've just practised the two halves of writing about language: SAY what it means, then NAME how it's done. The Evidence builder puts those together."
@@ -1021,8 +1211,8 @@ function runVoice(){
     mod:"voice", title:"Voice fingerprint", where:"Lesson 07 / 11 · character voice — before your voice memo",
     subnote: hidden? `${hidden} more line${hidden>1?"s are":" is"} waiting further into the novel — update your chapter on the home screen as you read.`:"",
     items:pool.map(it=>({ id:it.id, stim:"“"+esc(it.line)+"”", page:it.page, steps:[
-      { key:"who", q:"Whose line is this?", opts:VOICE_WHO, a:it.a, explain:it.whoExplain, chips:true, noShuffle:true },
-      { key:"feat", q:"What gave it away? Name the language feature:", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
+      { key:"who", skill:"voicewho", q:"Whose line is this?", opts:VOICE_WHO, a:it.a, explain:it.whoExplain, chips:true, noShuffle:true },
+      { key:"feat", skill:"voicefeat", q:"What gave it away? Name the language feature:", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
     ]})),
     missLabel:(item,step)=>item.id,
     doneNote:"For your oral presentation you'll be building one of these voices yourself. Steal the fingerprints: a borrowed word, a dropped 'am', an adjective where a noun should be."

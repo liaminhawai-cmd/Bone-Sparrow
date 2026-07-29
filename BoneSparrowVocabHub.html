@@ -186,6 +186,9 @@
   .repgrid td.nf{color:var(--muted);font-style:italic}
   .idrow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
   .idrow label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+  .topnav .menulink{display:inline-block;text-decoration:none;padding:7px 13px;border:1px solid var(--line);
+    border-radius:20px;font-size:13px;font-weight:600;color:var(--earth-d);background:var(--earthbg);font-family:inherit}
+  .topnav .menulink:hover{border-color:var(--earth-d)}
   .idrow input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;background:#fff}
   .iderr{color:var(--wrong);font-size:12.5px;min-height:16px;margin-top:3px}
   .vcode{font-family:'Courier New',monospace;font-size:13px;letter-spacing:2px}
@@ -279,6 +282,7 @@
 <div class="container">
 
 <div class="topnav noprint">
+  <a class="menulink" href="index.html">&#8962; Main menu</a>
   <button data-scr="home" onclick="go('home')">&#9776; Chapters</button>
   <button data-scr="morphtable" onclick="go('morphtable')">Morpheme table</button>
   <button data-scr="glossary" onclick="go('glossary')">Word list</button>
@@ -473,6 +477,181 @@ const SVG_GROUND = `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg
    sampled per run. Review draws on the same banks.
    ============================================================ */
 const LESSONS = [
+
+/* ================= BEFORE YOU READ · THE WORDS OF THE UNIT =================
+   The pre-reading vocabulary, folded in here so there is ONE vocab home.
+   Always open — no chapter of the novel is spoiled by any of it. The
+   distractors are deliberate look-alikes: the morphemes are how you tell
+   them apart. (The sentence-types half of the old pre-reading trainer now
+   lives in the Grammar Hub.) ========================================== */
+{ id:"0", pre:1, topic:"Before you read · the words of the unit", title:"The words of the unit",
+  focus:"The words we need before the story starts — the language of leaving, of borders, and of being held. Learn the parts and you can unlock the whole family.",
+  words:[
+  { w:"Refugee", pos:"noun", domain:"world",
+    meaning:"A person forced to leave their country to escape war, persecution or disaster.",
+    type:"morph",
+    tiles:[["re-","back, away"],["fug","to flee"],["-ee","the person it happens TO"]],
+    decoys:[["-er","the person who DOES it"],["pre-","before"],["-ation","the process of"]],
+    note:"Latin <i>re-</i> (back) + <i>fugere</i> (to flee) — the same <i>fug</i> as in <b>fugitive</b> and <b>refuge</b>. The ending matters most: <i>-ee</i> marks the person something is done TO (employ<b>ee</b>, train<b>ee</b>), while <i>-er</i> marks the doer (employ<b>er</b>). Nobody chooses to be a refugee — the suffix says so.",
+    apply:[
+      { id:"ap_ref_scn", type:"scenario",
+        q:"Subhi's family fled Burma because staying was not survivable. The suffix <i>-ee</i> in <b>refugee</b> tells us that fleeing was:",
+        a:"something forced on them, not chosen", opts:["something forced on them, not chosen","a choice they made freely","a job they applied for","a punishment they earned"],
+        explain:"<i>-ee</i> = the person an action happens TO. Compare employ<b>er</b> (does the hiring) with employ<b>ee</b> (is hired)." },
+      { id:"ap_ref_cloze", type:"cloze",
+        before:"A person who has been forced from their country by war or persecution is a", after:", from the Latin for 'one who flees back to shelter'.",
+        a:"refugee", opts:["refugee","refugium","referee","refusal"],
+        explain:"Watch <b>referee</b> — same <i>-ee</i> ending, completely different root (Latin <i>referre</i>, to refer)." } ] },
+
+  { w:"Asylum seeker", pos:"noun phrase", domain:"world",
+    meaning:"Someone who has asked another country for protection, but whose claim has not yet been decided.",
+    type:"origin",
+    originQ:"<b>Asylum</b> comes from the Greek <i>asylon</i>. What did <i>asylon</i> literally mean?",
+    originOpts:["A place that cannot be seized — where no one may be dragged away","A hospital for the sick","A ship carrying strangers","A gift given to a guest"],
+    originA:"A place that cannot be seized — where no one may be dragged away",
+    note:"Greek <i>a-</i> (without) + <i>sylon</i> (right of seizure): a place where you <b>cannot be taken</b>. In ancient temples, a person who reached asylum could not legally be dragged out. That is the promise the word still carries — worth holding on to as you read what the Centre actually is.",
+    apply:[
+      { id:"ap_asy_scn", type:"scenario",
+        q:"'Asylum' originally meant a place where a person could not be seized. Why is that an uncomfortable word for a detention centre?",
+        a:"People came seeking a place they could not be taken from, and were taken into detention instead", opts:["People came seeking a place they could not be taken from, and were taken into detention instead","Because asylums were old hospitals","Because the word is Greek, not English","Because seizures are a medical condition"],
+        explain:"Etymology can hold a government to account: the word promises exactly what the camp withholds." },
+      { id:"ap_asy_desc", type:"desc",
+        q:"What is the difference between a refugee and an asylum seeker?",
+        a:"An asylum seeker has asked for protection but is still waiting for a decision", opts:["An asylum seeker has asked for protection but is still waiting for a decision","They mean exactly the same thing","An asylum seeker has already been accepted","A refugee has never left their country"],
+        explain:"The waiting IS the difference — and in the novel that wait has swallowed Subhi's whole childhood." } ] },
+
+  { w:"Persecution", pos:"noun", domain:"world",
+    meaning:"Being hunted, punished or ill-treated because of who you are — your race, religion, or beliefs.",
+    type:"morph",
+    tiles:[["per-","thoroughly, relentlessly"],["secut","to follow, to chase"],["-ion","the process of"]],
+    decoys:[["pro-","forward, in front"],["-ment","the result of"],["sect","to cut"]],
+    note:"Latin <i>per-</i> (thoroughly) + <i>sequi/secut-</i> (to follow): to be <b>chased relentlessly</b>. Now look at its dangerous twin: <b>prosecution</b> is <i>pro-</i> (forward, in front) + the same chasing root — following a case forward in a court of law. One prefix apart, and the difference is everything: persecution is what the Rohingya fled; prosecution is what a fair court does.",
+    apply:[
+      { id:"ap_per_scn", type:"scenario",
+        q:"A government hunts a minority group because of their religion. Which word names that?",
+        a:"Persecution", opts:["Persecution","Prosecution","Procession","Prescription"],
+        explain:"<i>per-</i> = relentlessly chased. <b>Prosecution</b> (<i>pro-</i>, forward) is a legal case in a court — a completely different act, one prefix away." },
+      { id:"ap_per_desc", type:"desc",
+        q:"<b>Persecution</b> and <b>prosecution</b> share the root <i>secut</i> (to follow). What separates them?",
+        a:"The prefix: per- (chased relentlessly) versus pro- (a case taken forward in court)", opts:["The prefix: per- (chased relentlessly) versus pro- (a case taken forward in court)","Nothing, they are the same word","One is a noun and one is a verb","Persecution is legal and prosecution is not"],
+        explain:"This is why morphemes matter: two letters carry the difference between injustice and justice." } ] },
+
+  { w:"Incarceration", pos:"noun", domain:"camp",
+    meaning:"Being locked up; imprisonment.",
+    type:"morph",
+    tiles:[["in-","into"],["carcer","prison"],["-ation","the state or process of"]],
+    decoys:[["ex-","out of"],["cine","ash, burning"],["carn","flesh"]],
+    note:"Latin <i>in-</i> (into) + <i>carcer</i> (prison, enclosure). Now meet the look-alikes that trip everyone up: <b>incineration</b> (<i>cine</i> = ash — burning), and <b>incarnation</b> (<i>carn</i> = flesh — as in <b>carnivore</b>). Three near-identical words, three totally different roots. Read the middle of a word, not just its shape.",
+    apply:[
+      { id:"ap_inc_scn", type:"scenario",
+        q:"Which word means being locked up in a prison?",
+        a:"Incarceration", opts:["Incarceration","Incineration","Incarnation","Incantation"],
+        explain:"<i>carcer</i> = prison. Incineration burns (<i>cine</i>, ash), incarnation is flesh (<i>carn</i>), incantation is chanting (<i>cant</i>, to sing). The root is the only reliable clue." },
+      { id:"ap_inc_cloze", type:"cloze",
+        before:"Children who have committed no crime still experience", after:"— they are held behind fences they cannot pass.",
+        a:"incarceration", opts:["incarceration","incineration","incarnation","integration"],
+        explain:"Into-prison-ness. The novel's central fact, in one word." } ] },
+
+  { w:"Bureaucracy", pos:"noun", domain:"world",
+    meaning:"A system of government run through offices, forms and rules — often slow and frustrating to deal with.",
+    type:"morph",
+    tiles:[["bureau","desk, office"],["-cracy","rule, power"]],
+    decoys:[["demo","the people"],["-ology","the study of"],["auto","self"]],
+    note:"French <i>bureau</i> (a desk) + Greek <i>kratos</i> (power): literally <b>rule by desk</b>. Compare <b>demo</b>cracy (rule by the people), <b>auto</b>cracy (rule by one self-appointed person). Naming it 'rule by desk' is already a criticism — and in this novel the desks decide how long a childhood lasts.",
+    apply:[
+      { id:"ap_bur_scn", type:"scenario",
+        q:"<b>Democracy</b> is rule by the people. Using the same ending, <b>bureaucracy</b> is rule by:",
+        a:"desks and offices — the paperwork system", opts:["desks and offices — the paperwork system","one powerful leader","the wealthy","the army"],
+        explain:"<i>-cracy</i> always means rule or power. Change the front and you change who holds it." },
+      { id:"ap_bur_desc", type:"desc",
+        q:"A family waits years for a decision while forms move between offices and nobody can say who decides. The word for that system is:",
+        a:"bureaucracy", opts:["bureaucracy","democracy","autocracy","diplomacy"],
+        explain:"Rule by desk. Its slowness is not an accident in this novel — it is the thing that eats the years." } ] },
+
+  { w:"Trauma", pos:"noun", domain:"feeling",
+    meaning:"A deeply distressing experience — and the lasting harm it leaves behind.",
+    type:"origin",
+    originQ:"<b>Trauma</b> is Greek. What did it originally mean?",
+    originOpts:["A wound","A long journey","A bad memory","A loud noise"],
+    originA:"A wound",
+    note:"Greek <i>trauma</i> = a wound. For centuries it meant only physical injury; doctors extended it to the mind roughly a century ago. That extension is the whole idea: some injuries do not show on the skin. When you meet Maá later in the novel, remember that the word for what has happened to her is a word for a wound.",
+    apply:[
+      { id:"ap_tra_scn", type:"scenario",
+        q:"'Trauma' first meant a physical wound before it was used for the mind. Why is that history useful for reading this novel?",
+        a:"It insists that harm to the mind is a real injury, not weakness", opts:["It insists that harm to the mind is a real injury, not weakness","It proves the characters are physically hurt","It shows the word is used incorrectly today","It means only doctors can use the word"],
+        explain:"A metaphor that became a medical fact — and the reason this book takes its quiet characters seriously." },
+      { id:"ap_tra_cloze", type:"cloze",
+        before:"Years of fear and waiting leave", after:"— a wound that no one can see and no one can bandage.",
+        a:"trauma", opts:["trauma","drama","stigma","dogma"],
+        explain:"Greek for wound. The rhyming distractors are Greek too, but mean action, mark and doctrine." } ] },
+
+  { w:"Dispossessed", pos:"adjective", domain:"world",
+    meaning:"Having had your home, land, rights or belonging taken away.",
+    type:"morph",
+    tiles:[["dis-","away, removal"],["possess","to own, to hold"],["-ed","having been"]],
+    decoys:[["re-","again"],["-ing","in the process of"],["press","to push"]],
+    note:"<i>dis-</i> (removal) + <i>possess</i>. And <b>possess</b> itself is Latin <i>potis</i> (able) + <i>sedere</i> (to sit): to possess is to be <b>able to sit</b> somewhere — settled. So the dispossessed are those who have been made unable to sit anywhere. Say that slowly and you have the entire refugee experience in one word's history.",
+    apply:[
+      { id:"ap_dis_scn", type:"scenario",
+        q:"'Possess' comes from Latin words meaning 'able to sit'. What does that make the <b>dispossessed</b>?",
+        a:"People who have been left with nowhere they are allowed to settle", opts:["People who have been left with nowhere they are allowed to settle","People who refuse to sit down","People who own too much","People who have lost a court case"],
+        explain:"Etymology as definition: to be dispossessed is to have your place to sit taken from under you." },
+      { id:"ap_dis_desc", type:"desc",
+        q:"Which prefix would you swap into <b>dispossessed</b> to describe getting a home back again?",
+        a:"re- (repossessed)", opts:["re- (repossessed)","pre-","un-","mis-"],
+        explain:"<i>re-</i> = again, back. Morphemes let you build a word for an idea you have never been taught." } ] },
+
+  { w:"Immigration", pos:"noun", domain:"world",
+    meaning:"The act of coming into a country to live there permanently.",
+    type:"morph",
+    tiles:[["im-","into"],["migr","to move, to wander"],["-ation","the process of"]],
+    decoys:[["e-","out of"],["-ee","the person it happens to"],["magn","great"]],
+    note:"Latin <i>in-</i> (into, becoming <i>im-</i> before m) + <i>migrare</i> (to move). Its mirror twin is <b>emigration</b>: <i>e-</i> (out of) — the same journey, named from the other end. You <b>emigrate</b> from the place you leave and <b>immigrate</b> into the place you arrive. One person, two words, depending on who is telling the story — which is exactly what this novel is about.",
+    apply:[
+      { id:"ap_imm_scn", type:"scenario",
+        q:"A family leaves Burma and arrives in Australia. From Burma's side it is emigration. From Australia's side the same journey is:",
+        a:"immigration", opts:["immigration","exploration","irrigation","imagination"],
+        explain:"<i>im-</i> = into, <i>e-</i> = out of. Same people, same journey — the prefix depends on where you're standing." },
+      { id:"ap_imm_desc", type:"desc",
+        q:"Why does it matter that one journey has two names depending on who describes it?",
+        a:"It shows that whose story gets told changes how it sounds", opts:["It shows that whose story gets told changes how it sounds","It proves one of the words is wrong","It means the family moved twice","It shows English has too many words"],
+        explain:"Point of view is built into the vocabulary — and this novel gives you two narrators for exactly that reason." } ] }
+  ],
+  base:{ intro:"The same word-parts inside words you already own. Get these and the big ones come free.",
+    items:[
+      { id:"b0_escape", kind:"build", w:"refuge",
+        tiles:[["re-","back, away"],["fuge","to flee"]],
+        decoys:[["-ee","the person it happens to"],["pre-","before"]],
+        meaning:"a safe place you flee back to",
+        explain:"Add <i>-ee</i> (the person it happens to) and you have <b>refugee</b>." },
+      { id:"b0_prison", kind:"mcq",
+        q:"A <b>carnivore</b> eats flesh (<i>carn</i> = flesh). So <b>incarnation</b> has nothing to do with prison. Which root DOES mean prison?",
+        a:"carcer", opts:["carcer","carn","cine","cant"],
+        explain:"<i>carcer</i> = prison — incarceration. Read the middle of the word." },
+      { id:"b0_employee", kind:"mcq",
+        q:"An employ<b>er</b> hires; an employ<b>ee</b> is hired. Using the same rule, a train<b>ee</b> is someone who:",
+        a:"is being trained", opts:["is being trained","trains others","owns a train","finished training"],
+        explain:"<i>-ee</i> marks the person an action happens TO — the same suffix as in refugee." },
+      { id:"b0_democracy", kind:"build", w:"democracy",
+        tiles:[["demo","the people"],["-cracy","rule, power"]],
+        decoys:[["bureau","desk, office"],["-ology","the study of"]],
+        meaning:"rule by the people",
+        explain:"Swap the front for <i>bureau</i> and you get rule by desk — bureaucracy." } ] },
+  stretch:{ intro:"Heavier words from the same parts — useful in your essay and in Humanities.",
+    items:[
+      { id:"s0_displacement", kind:"build", w:"displacement",
+        tiles:[["dis-","away, removal"],["place","place"],["-ment","the state or result of"]],
+        decoys:[["re-","again"],["-ation","the process of"]],
+        meaning:"the state of having been forced away from your place — the formal word for what happens to refugees",
+        explain:"'Forced displacement' is the term the UN uses. You can now read it without being told." },
+      { id:"s0_statelessness", kind:"mcq",
+        q:"The Rohingya are denied citizenship by Myanmar — they legally belong to no country. The word for that condition is:",
+        a:"statelessness", opts:["statelessness","homelessness","restlessness","carelessness"],
+        explain:"<i>state</i> (country) + <i>-less</i> (without) + <i>-ness</i> (the state of being). Three morphemes, one enormous idea." },
+      { id:"s0_indefinite", kind:"mcq",
+        q:"Detention with no set end date is called <b>indefinite</b> detention. Using <i>in-</i> (not) + <i>define</i> (to set limits), that means detention with:",
+        a:"no limit set — nobody has said when it ends", opts:["no limit set — nobody has said when it ends","a very long but known limit","a limit set by a judge","no reason given"],
+        explain:"Latin <i>finis</i> = boundary (as in finish, final, confine). Not-bounded. Hold that word for Subhi's whole childhood." } ] } },
 
 /* ================= CH 1–2 · THE NIGHT SEA ================= */
 { id:"1-2", pre:1, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapters 1–2 · The Night Sea",
@@ -1517,6 +1696,14 @@ const LANGS = [
 ];
 const RTL = { ar:1, fa:1 };
 const TR = {
+"Refugee":{zh:"难民",yue:"難民",vi:"người tị nạn",ar:"لاجئ",fa:"پناهنده"},
+"Asylum seeker":{zh:"寻求庇护者",yue:"尋求庇護者",vi:"người xin tị nạn",ar:"طالب لجوء",fa:"پناهجو"},
+"Persecution":{zh:"迫害",yue:"迫害",vi:"sự ngược đãi",ar:"اضطهاد",fa:"آزار و تعقیب"},
+"Incarceration":{zh:"监禁",yue:"監禁",vi:"sự giam cầm",ar:"سجن",fa:"حبس"},
+"Bureaucracy":{zh:"官僚体系",yue:"官僚體系",vi:"bộ máy quan liêu",ar:"بيروقراطية",fa:"دیوان‌سالاری"},
+"Trauma":{zh:"创伤",yue:"創傷",vi:"sang chấn",ar:"صدمة نفسية",fa:"آسیب روانی"},
+"Dispossessed":{zh:"被剥夺家园的",yue:"被剝奪家園嘅",vi:"bị tước đoạt",ar:"محروم من الممتلكات",fa:"سلب‌مالکیت‌شده"},
+"Immigration":{zh:"移入；移民",yue:"移入；移民",vi:"sự nhập cư",ar:"الهجرة إلى",fa:"مهاجرت به"},
 "Detention":{zh:"拘留",yue:"拘留",vi:"sự giam giữ",ar:"الاحتجاز",fa:"بازداشت"},
 "Imagination":{zh:"想象力",yue:"想像力",vi:"trí tưởng tượng",ar:"الخيال",fa:"تخیل"},
 "Universe":{zh:"宇宙",yue:"宇宙",vi:"vũ trụ",ar:"الكون",fa:"جهان هستی"},
@@ -1606,6 +1793,15 @@ const store = (function(){
   catch(e){ const m={}; return { getItem:k=>(k in m?m[k]:null), setItem:(k,v)=>{m[k]=String(v);}, removeItem:k=>{delete m[k];} }; }
 })();
 const KEY = "bonesparrow.vocabhub.v1";
+/* Shared profile written by the front door (index.html) so a student signs in
+   once for the whole suite. Identity, chapter and language live there; scores
+   stay in this hub's own key. We adopt it on boot and write back on change. */
+const PKEY = "bonesparrow.profile.v1";
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){ try{
+  const p=readProfile()||{};
+  store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid,chapter:S.chapter,lang:S.lang,eal:S.lang?true:p.eal})));
+}catch(e){} }
 let S = load();
 function blankLesson(){ return { studied:false, buildDone:{}, buildFirst:{}, buildComplete:false,
   applySample:[], applyFirst:{}, applyDone:false,
@@ -1624,6 +1820,14 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 let cur = null; // current lesson id
 function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S.lname||"").trim() && sid.length>=4 && sid.length<=8; }
+(function adoptProfile(){
+  const p=readProfile(); if(!p) return;
+  S.fname=p.fname||S.fname; S.lname=p.lname||S.lname; S.sid=p.sid||S.sid;
+  S.name=(S.fname+" "+S.lname).trim()||S.name;
+  if(typeof p.chapter==="number") S.chapter=p.chapter;
+  if(p.eal===false) S.lang=""; else if(p.lang) S.lang=p.lang;
+  save();
+})();
 function go(id){
   if(!idOk() && id!=="id") id="id";
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -1694,7 +1898,7 @@ function renderHome(){
   crow.innerHTML=`<label for="chsel">Where are you up to?</label> <select id="chsel">${copts}</select>
     <span style="font-size:12px;color:var(--muted);font-style:italic">Each chapter set unlocks one chapter early, so you can meet the words before you read them.</span>`;
   wrap.appendChild(crow);
-  crow.querySelector("#chsel").onchange=(e)=>{ S.chapter=+e.target.value; save(); renderHome(); };
+  crow.querySelector("#chsel").onchange=(e)=>{ S.chapter=+e.target.value; save(); writeProfile(); renderHome(); };
   /* language toggle */
   const lrow=document.createElement("div");
   lrow.className="langrow noprint";
@@ -1702,7 +1906,7 @@ function renderHome(){
   LANGS.forEach(([c,n])=>{ lopts+=`<option value="${c}"${S.lang===c?" selected":""}>${esc(n)}</option>`; });
   lrow.innerHTML=`<label for="langsel">Key words in my language:</label> <select id="langsel">${lopts}</select>`;
   wrap.appendChild(lrow);
-  lrow.querySelector("#langsel").onchange=(e)=>{ S.lang=e.target.value; save(); };
+  lrow.querySelector("#langsel").onchange=(e)=>{ S.lang=e.target.value; save(); writeProfile(); };
 
   let topic="";
   let firstOpen=null;
@@ -2192,10 +2396,30 @@ function startApply(l){
   const record = !st.applyDone; /* re-runs don't change the report */
   let queue=shuffle(descs.map(d=>({d, it:Object.assign({}, applyItem(d))})));
   let mastered=0;
+  /* Redundancy bank. Getting it wrong does NOT hand back the same question —
+     you get a fresh one on the same word, from a different angle, until you
+     can do the skill rather than remember the answer. `seen` tracks which
+     versions this student has already met for each word. */
+  const seen={};
+  function markSeen(d){ const w=applyWordName(d); (seen[w]=seen[w]||new Set()).add(d.k==="a"?("a:"+d.id):("g:"+d.g)); }
+  function parallelFor(d){
+    const wName=applyWordName(d), w=WORD_BY_NAME[wName];
+    const used=seen[wName]||new Set();
+    if(w){
+      const freshAuthored=(w.apply||[]).filter(it=>!used.has("a:"+it.id));
+      if(freshAuthored.length) return {k:"a", id:pick(freshAuthored).id};
+      const freshGen=genTypesFor(w).filter(g=>!used.has("g:"+g));
+      if(freshGen.length) return {k:"g", g:pick(freshGen), w:wName};
+      const gts=genTypesFor(w);
+      if(gts.length>1){ const other=gts.filter(g=>!(d.k==="g"&&g===d.g)); if(other.length) return {k:"g", g:pick(other), w:wName}; }
+    }
+    return d; /* bank exhausted — repeat as a last resort */
+  }
   function next(){
     document.getElementById("apply-prog").textContent=`STEP 3 · USE THE WORDS · mastered ${mastered}/${descs.length}`;
     if(!queue.length){ finishApply(l, record); return; }
     const cur=queue.shift();
+    markSeen(cur.shown || cur.d);   /* remember exactly what they were shown */
     const key=applyKey(cur.d);
     renderTaskItem(document.getElementById("apply-body"), cur.it, {
       onAnswer:(correct)=>{
@@ -2204,7 +2428,12 @@ function startApply(l){
           if(!correct) WS(applyWordName(cur.d)).wrong++;
           save();
         }
-        if(correct) mastered++; else queue.push(cur);
+        if(correct){ mastered++; }
+        else {
+          markSeen(cur.d);
+          const alt=parallelFor(cur.d);
+          queue.push({d:cur.d, it:Object.assign({}, applyItem(alt)), retryOf:cur.d, shown:alt});
+        }
       },
       onNext:next,
     });
@@ -2487,7 +2716,7 @@ function renderReport(){
   let rows="", aggFirst=0, aggAtt=0, sig="";
   LESSONS.forEach(l=>{
     const st=S.lessons[l.id];
-    if(!st){ rows+=`<tr><td>${esc(l.id)} ${esc(l.title)}</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td></tr>`; return; }
+    if(!st){ rows+=`<tr><td>${esc(l.id==="0"?"Before you read":"Ch "+l.id)} — ${esc(l.title)}</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td></tr>`; return; }
     const b=buildCounts(l), a=applyCounts(l);
     const bTxt = b.done? (st.buildComplete?`${b.clean}/${b.total}`:`${b.clean}/${b.done} (${b.done}/${b.total} built)`) : "—";
     const aTxt = a.ans? (st.applyDone?`${a.got}/${a.total}`:`${a.got}/${a.ans} (unfinished)`) : "—";
@@ -2497,7 +2726,7 @@ function renderReport(){
     const scTxt = sc&&sc.ans? `${sc.got}/${st.stretchDone?sc.total:sc.ans}` : "—";
     aggFirst += b.clean + a.got; aggAtt += b.done + a.ans;
     sig += `|${l.id}:${b.clean}.${a.got}`;
-    rows+=`<tr><td>${esc(l.id)} ${esc(l.title)}</td>
+    rows+=`<tr><td>${esc(l.id==="0"?"Before you read":"Ch "+l.id)} — ${esc(l.title)}</td>
       <td class="score">${bTxt}</td><td class="score">${aTxt}</td>
       <td class="score">${bcTxt}</td><td class="score">${scTxt}</td></tr>`;
   });
@@ -2561,7 +2790,7 @@ function idSubmit(){
   document.getElementById("el").textContent = l? "" : "Last name needed.";
   document.getElementById("es").textContent = (sid.length>=4&&sid.length<=8)? "" : "That doesn’t look right — check your student ID and try again.";
   if(!f||!l||sid.length<4||sid.length>8) return;
-  S.fname=f; S.lname=l; S.sid=sid; S.name=f+" "+l; touchStart(); save();
+  S.fname=f; S.lname=l; S.sid=sid; S.name=f+" "+l; touchStart(); save(); writeProfile();
   go("home");
 }
 
