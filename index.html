@@ -99,7 +99,13 @@ a.card .now{display:inline-block;font-size:10.5px;font-weight:800;text-transform
 .repcard a.btn{display:inline-block;text-decoration:none;text-align:center}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.container.report{max-width:min(1080px,96vw)}
 .rpth{margin:22px 0 8px;font-size:1.05rem}
+.cattest{border:1px solid var(--line);border-left:4px solid var(--accent,#a03d29);border-radius:8px;
+  padding:10px 14px;margin:10px 0 4px;background:#fff}
+.catlab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#8a7c56}
+.catlv{font-size:1.15rem;font-weight:800;margin:2px 0 2px}
+.catvic{font-family:Georgia,serif;font-style:italic;margin-bottom:4px}
 table.rpt{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 8px;background:#fff}
 table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 10px;text-align:left}
 table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
@@ -284,6 +290,18 @@ const READING_MODULES = [
   ["fig","Figurative → literal"],["voice","Voice fingerprint"],
   ["ev","Evidence builder"],["wk","Analysis workshop"]
 ];
+/* The CAT rubric, in the curriculum's own words — the report quotes the
+   level a student actually reached rather than inventing a grade. */
+const VIC_LEVELS = {
+  5:"I can identify parts of the story that relate to key ideas",
+  6:"I can describe characters and events that relate to key ideas",
+  7:"I can describe the ideas and issues that are illustrated through characters and events",
+  8:"I can explain the way different perspectives on ideas are represented through characters and events",
+  9:"I can analyse the way different people and perspectives are represented in the story"
+};
+const EAL_BANDS = { 5:"C2", 6:"C2/C3", 7:"C3", 8:"C4", 9:"C4+" };
+function pct(got,total){ return total? Math.round(100*got/total)+"%" : "—"; }
+function scoreCell(got,total){ return total? `<b>${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">—</span>`; }
 function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
 function renderReports(){
   const R = readJSON("bonesparrow.readinghub.v2")||{};
@@ -298,7 +316,7 @@ function renderReports(){
     rAny=true;
     const got=ks.filter(k=>first[k]).length;
     rGot+=got; rTot+=ks.length;
-    rrows+=`<tr><td>${esc(label)}</td><td><b>${got} / ${ks.length}</b></td><td>${R.done&&R.done[id]?"finished":"in progress"}</td></tr>`;
+    rrows+=`<tr><td>${esc(label)}</td><td>${scoreCell(got,ks.length)}</td><td>${R.done&&R.done[id]?"finished":"in progress"}</td></tr>`;
   });
 
   /* ---- vocab hub: first-attempt per chapter set ---- */
@@ -310,7 +328,7 @@ function renderReports(){
     vAny=true;
     const b=cnt(L.buildFirst), a=cnt(L.applyFirst);
     vGot+=b.got+a.got; vTot+=b.tot+a.tot;
-    vrows+=`<tr><td>${esc(st.title)}</td><td>${b.tot?`<b>${b.got} / ${b.tot}</b>`:"—"}</td><td>${a.tot?`<b>${a.got} / ${a.tot}</b>`:"—"}</td>
+    vrows+=`<tr><td>${esc(st.title)}</td><td>${scoreCell(b.got,b.tot)}</td><td>${scoreCell(a.got,a.tot)}</td>
       <td>${L.applyDone?"finished":(L.studied?"in progress":"met the words")}</td></tr>`;
   });
 
@@ -321,8 +339,25 @@ function renderReports(){
   const revs=V.reviews||[];
   const revFirst=revs.reduce((s,r)=>s+(r.got||0),0), revAtt=revs.reduce((s,r)=>s+(r.total||0),0);
 
+  /* Against the rubric: the highest level of the analysis climb the student
+     actually wrote at. This is the one number a CAT marker cares about, so
+     it gets said in the curriculum's words rather than as a score. */
+  let climbBlock="";
+  const climbed = R.wkLevel || [9,8,7,6,5].find(n=>first["wk.build.L"+n]===true) || 0;
+  const attempted=[5,6,7,8,9].filter(n=>first["wk.build.L"+n]!==undefined);
+  if(attempted.length){
+    climbBlock = climbed
+      ? `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
+          <div class="catlv">Level ${climbed}${P.eal&&EAL_BANDS[climbed]?` <span class="dim">· EAL ${EAL_BANDS[climbed]}</span>`:""}</div>
+          <div class="catvic">“${esc(VIC_LEVELS[climbed])}”</div>
+          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:" — top of the ladder."}</div></div>`
+      : `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
+          <div class="catlv dim">Not yet reached</div>
+          <div class="catvic">Working towards “${esc(VIC_LEVELS[5])}”</div></div>`;
+  }
   const code=vcode(JSON.stringify(first)+"|"+rGot+"/"+rTot+"|"+vGot+"/"+vTot+"|"+revFirst+"/"+revAtt+"|"+mastered.length+"|"+(P.fname||"")+(P.lname||"")+(P.sid||""));
 
+  document.querySelector(".container").classList.add("report");
   $("app").innerHTML=`
   <div class="noprint btnrow" style="justify-content:space-between;margin:0 0 10px">
     <button class="btn btn-ghost" id="backRep">← back to my tasks</button>
@@ -332,18 +367,19 @@ function renderReports(){
   <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
   <p class="sub">One report for everything. Every score is a <b>first attempt</b> — wrong answers came back until they were mastered, but the honest first go is what's shown here.</p>
 
-  <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt`:""}</h2>
+  <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt (${pct(rGot,rTot)})`:""}</h2>
   <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rrows}</table>
   ${rAny?"":`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowReadingHub.html">go do an activity</a>.</p>`}
+  ${climbBlock}
 
-  <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items`:""}</h2>
+  <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items (${pct(vGot,vTot)})`:""}</h2>
   <table class="rpt"><tr><th>Chapter set</th><th>Build (1st try)</th><th>Use (1st try)</th><th>Status</th></tr>${vrows}</table>
-  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them.`:"none yet — reviews are what make the words stick."}</p>
-  <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
+  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them (${pct(revFirst,revAtt)}).`:"none yet — reviews are what make the words stick."}</p>
+  <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered (${pct(mastered.length,wk.length)})</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
   :`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowVocabHub.html">go meet some words</a>.</p>`}
 
   <p class="sub">Verification code: <b class="vc">${code}</b> · changes if any name, ID or score changes — so a report can't be quietly edited after printing.</p>`;
-  $("backRep").onclick=()=>{ step=3; render(); };
+  $("backRep").onclick=()=>{ document.querySelector(".container").classList.remove("report"); step=3; render(); };
 }
 function renderTopMini(){
   const bar=$("topMini"); if(!bar) return;
