@@ -25,7 +25,8 @@
 html,body{margin:0;padding:0}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
      display:flex;justify-content:center;padding:18px 10px 40px}
-body.wide .container{max-width:min(1320px,97vw)}
+body.wide .container{max-width:min(1600px,98vw)}
+@media (min-width:1500px){ body.wide .container{padding-left:34px;padding-right:34px} }
 .container{width:100%;max-width:880px;background:var(--paper);border:1px solid var(--line);
            border-radius:12px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 h1,h2,h3,.serif{font-family:Georgia,'Times New Roman',serif}
@@ -166,7 +167,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
    blue = language feature · orange = analytical verb ·
    yellow = embedded evidence · green = effect on the reader        */
 :root{
-  --feat-bg:#d6eafc; --feat-tx:#0b447c;
+  --feat-bg:#e7ddf6; --feat-tx:#4b2f7a;
   --verb-bg:#fae3cf; --verb-tx:#8a4b12;
   --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
   --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
@@ -180,14 +181,14 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .ckey{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:11.5px;color:var(--muted)}
 .ckey span{display:flex;align-items:center;gap:6px}
-.ckey .sw{width:13px;height:13px;border-radius:3px;display:inline-block}
-.ckey .sw.idea,.sw.idea{background:var(--idea-bg);border:1px solid var(--idea-tx)}
-.ckey .sw.feat{background:var(--feat-bg);border:1px solid var(--feat-tx)}
-.ckey .sw.verb{background:var(--verb-bg);border:1px solid var(--verb-tx)}
-.ckey .sw.ev{background:var(--ev-bg);border:1px solid var(--ev-tx)}
-.ckey .sw.eff{background:var(--eff-bg);border:1px solid var(--eff-tx)}
+.ckey .sw{width:13px;height:13px;border-radius:50%;display:inline-block}
+.ckey .sw.idea,.sw.idea{background:#9ccbf2;border:1px solid var(--idea-tx)}
+.ckey .sw.feat,.sw.feat{background:#c3aee8;border:1px solid var(--feat-tx)}
+.ckey .sw.verb,.sw.verb{background:#f3b785;border:1px solid var(--verb-tx)}
+.ckey .sw.ev,.sw.ev{background:#f2d34a;border:1px solid var(--ev-tx)}
+.ckey .sw.eff,.sw.eff{background:#a4d4ae;border:1px solid var(--eff-tx)}
 /* ---- workshop: the WAGOLL table (EAL sheet shape) ---- */
-.wag2{display:grid;grid-template-columns:74px repeat(3,1fr) 34px;gap:0;margin:0 0 6px;
+.wag2{display:grid;grid-template-columns:74px 52px repeat(3,1fr) 52px 34px;gap:0;margin:0 0 6px;
   border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line-soft)}
 .wag2 .wcell{background:#fff;padding:9px 11px;font-size:12.5px;line-height:1.5;
   border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
@@ -195,7 +196,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
   text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;justify-content:center;text-align:center}
 .wag2 .head{background:var(--bg)}
 .wag2 .head .lvname{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
-.wag2 .head .lveal{font-size:10.5px;color:var(--feat-tx);font-style:italic;margin-top:2px}
+.wag2 .head .lveal{font-size:10.5px;color:var(--muted);font-style:italic;margin-top:2px}
 .wag2 .focus{font-family:Georgia,serif;font-size:13.5px}
 .wag2 .vic{color:var(--muted);font-size:11.5px}
 .wag2 .exp{font-size:11.5px;color:var(--muted);background:var(--paper)}
@@ -206,17 +207,30 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .wag2 .ex.now{background:var(--bg);outline:2px solid var(--ink);outline-offset:-2px}
 .wag2 .ex .wresp{font-family:Georgia,serif;font-size:12.5px;line-height:1.55}
 .wag2 .ex .giventag{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  background:var(--eff-bg);color:var(--eff-tx);border-radius:8px;padding:1px 7px;margin:0 0 5px}
+  background:var(--bg);color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:1px 7px;margin:0 0 5px}
 .wag2 .ex .wempty{font-size:11px;color:var(--muted);font-style:italic}
 .wag2 .head.active,.wag2 .focus.active,.wag2 .vic.active,.wag2 .exp.active{background:#f6f1e4}
 .wag2 .head.done .lvname{color:var(--correct)}
+/* the half-visible levels either side: clipped, faded, and clickable */
+.wag2 .peek{cursor:pointer;overflow:hidden;position:relative;padding:9px 6px;font-size:11px;
+  color:var(--muted);background:var(--bg);white-space:nowrap}
+.wag2 .peek.empty{cursor:default;background:var(--bg);padding:0;border-right:0}
+.wag2.nol{grid-template-columns:74px 0 repeat(3,1fr) 52px 34px}
+.wag2.nor{grid-template-columns:74px 52px repeat(3,1fr) 0 34px}
+.wag2.nol.nor{grid-template-columns:74px 0 repeat(3,1fr) 0 34px}
+.wag2 .peek .lvname{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+.wag2 .peek.l{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 78%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 78%);text-align:right;direction:rtl}
+.wag2 .peek.r{-webkit-mask-image:linear-gradient(270deg,transparent 0,#000 78%);
+  mask-image:linear-gradient(270deg,transparent 0,#000 78%)}
+.wag2 .peek:not(.empty):hover{background:#f2ecdc;color:var(--ink)}
 .wag2 .pager{border:1px solid var(--line);background:#fff;border-radius:6px;width:24px;height:28px;
   font-size:15px;cursor:pointer;color:var(--ink);font-family:inherit;padding:0}
 .wag2 .pager:disabled{opacity:.3;cursor:not-allowed}
 .wagnote{font-size:11px;color:var(--muted);margin:0 0 14px;text-align:right}
-.ckey .sw,.wag2 .sw,.climbrow .sw{width:11px;height:11px;border-radius:3px;display:inline-block;vertical-align:-1px}
+.ckey .sw,.wag2 .sw,.climbrow .sw{width:11px;height:11px;border-radius:50%;display:inline-block;vertical-align:-1px;flex:none}
 @media (max-width:640px){
-  .wag2{grid-template-columns:56px repeat(3,1fr) 28px}
+  .wag2{grid-template-columns:56px 26px repeat(3,1fr) 26px 28px}
   .wag2 .wcell{padding:7px 6px;font-size:11.5px}
 }
 .wag2 .explock{font-style:italic;opacity:.55;font-size:11px}
@@ -241,7 +255,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .wallcol.filled{border-style:solid;border-color:var(--correct);background:var(--okbg)}
 .wallcol .wl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
 .wallcol .wdesc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
-.wallcol .weal{font-size:11px;color:var(--feat-tx);margin-top:3px;font-style:italic}
+.wallcol .weal{font-size:11px;color:var(--muted);margin-top:3px;font-style:italic}
 .wallcol .wresp{font-family:Georgia,serif;font-size:13px;line-height:1.55;margin-top:8px;background:#fff;
   border:1px solid var(--line);border-radius:8px;padding:9px 10px}
 .wallcol .wempty{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--muted);font-style:italic}
@@ -283,7 +297,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ctile.retired{outline:2px solid var(--wrong);opacity:.7;text-decoration:line-through}
 .ctile.grabbing{transform:scale(1.05);box-shadow:0 3px 10px rgba(0,0,0,.18);cursor:grabbing}
 .ctile{cursor:grab;touch-action:none}
-.bin.opens h4,.tile.k-open,.ctile.k-open{background:#e8e2f2;color:#4a3f63}
+.bin.opens h4,.tile.k-open,.ctile.k-open{background:#e6e1d6;color:#5c503b}
 /* ---- workshop: flexible builder ---- */
 .canvas{border:2px dashed var(--line);border-radius:10px;min-height:56px;padding:10px;background:#fff;
         display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}
@@ -365,10 +379,25 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .gm{font-size:12.5px;line-height:1.45}
 .gtr{font-size:14px;font-weight:700;margin-top:4px;color:#0b447c}
 .gfoot{font-size:11px;color:#8a7c56;line-height:1.45;padding:8px 12px;border-top:1px dashed #d8cfae;background:#fbf7e6}
-/* mastered words inside passages */
-.gw{border:0;padding:0 1px;font:inherit;cursor:pointer;color:inherit;border-radius:3px;
-  background:linear-gradient(transparent 62%, var(--ev-bg,#fff3b0) 62%);border-bottom:2px dotted var(--accent,#a03d29)}
-.gw:hover{background:var(--ev-bg,#fff3b0)}
+/* book words inside passages — the halo says which state they're in */
+.gw{border:0;padding:1px 3px;margin:0 -1px;font:inherit;cursor:pointer;color:inherit;border-radius:5px;
+  background:transparent;transition:background .14s,box-shadow .14s,color .14s}
+.gw.gw-ok{box-shadow:0 0 0 2px rgba(46,125,50,.16), 0 0 8px 2px rgba(46,125,50,.22);background:rgba(46,125,50,.09)}
+.gw.gw-part{box-shadow:0 0 0 2px rgba(46,125,50,.10), 0 0 7px 2px rgba(46,125,50,.13);background:rgba(46,125,50,.05)}
+.gw.gw-todo{box-shadow:0 0 0 2px rgba(214,140,20,.20), 0 0 8px 2px rgba(214,140,20,.26);background:rgba(214,140,20,.11)}
+.gw:hover,.gw:focus-visible{background:#fff;color:var(--ink);
+  box-shadow:0 0 0 2px #fff, 0 2px 10px rgba(40,30,10,.28);outline:none}
+@media (prefers-reduced-motion: reduce){ .gw{transition:none} }
+/* the notepad's own badge */
+#gnoteBtn{position:relative}
+.gbadge{position:absolute;top:-3px;right:-3px;min-width:19px;height:19px;border-radius:10px;
+  font-size:11px;font-weight:800;line-height:19px;color:#fff;display:none}
+.gbadge.ok{display:block;background:#2e7d32}
+.gbadge.todo{display:block;background:#c8801a}
+.gfoot .hint{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px}
+.gfoot .hint.ok{background:rgba(46,125,50,.35);box-shadow:0 0 0 2px rgba(46,125,50,.18)}
+.gfoot .hint.todo{background:rgba(214,140,20,.45);box-shadow:0 0 0 2px rgba(214,140,20,.22)}
+.gword.on{background:#fbf7e6;border-radius:6px}
 /* the decompose pop */
 .morphpop{position:fixed;z-index:70;width:min(330px,calc(100vw - 24px));background:#fffdf2;border:1px solid #d8cfae;
   border-radius:12px;box-shadow:0 12px 34px rgba(40,30,10,.3);padding:12px 14px}
@@ -1185,6 +1214,7 @@ const WK_BUILD = {
   { t:"the animal imagery", q:"craft", lv:[7,9] },
   { t:"the narrow point of view", q:"craft", lv:[9,9] },
   { t:"the silence where Beaver's side should be", q:"craft", lv:[9,9] },
+  { t:"the choice to stay inside Subhi's head", q:"craft", lv:[9,9] },
   /* vague — always wrong, always available as a trap */
   { t:"this", q:"vague", lv:[5,9] },
   { t:"it", q:"vague", lv:[5,9] },
@@ -1579,7 +1609,7 @@ function runFig(){
   runQuizzer({
     mod:"fig", title:"Figurative → literal", where:"Lesson 09 · figurative language",
     subnote: hidden? `${hidden} more line${hidden>1?"s are":" is"} waiting further into the novel — update your chapter on the home screen as you read.`:"",
-    items:pool.map(it=>({ id:it.id, stim:"“"+esc(it.quote)+"”", page:it.page, steps:[
+    items:pool.map(it=>({ id:it.id, stim:"“"+glossify(esc(it.quote))+"”", page:it.page, steps:[
       { key:"meaning", skill:"figmeaning", q:"What does this literally mean?", opts:it.meaning.opts, a:it.meaning.a, explain:it.meaning.explain },
       { key:"tech", skill:"figtech", q:"Which feature is doing the work?", opts:it.tech.opts.map(i=>FIG_TECHS[i]), a:it.tech.a, explain:it.tech.explain }
     ]})),
@@ -1594,7 +1624,7 @@ function runVoice(){
   runQuizzer({
     mod:"voice", title:"Voice fingerprint", where:"Lesson 07 / 11 · character voice — before your voice memo",
     subnote: hidden? `${hidden} more line${hidden>1?"s are":" is"} waiting further into the novel — update your chapter on the home screen as you read.`:"",
-    items:pool.map(it=>({ id:it.id, stim:"“"+esc(it.line)+"”", page:it.page, steps:[
+    items:pool.map(it=>({ id:it.id, stim:"“"+glossify(esc(it.line))+"”", page:it.page, steps:[
       { key:"who", skill:"voicewho", q:"Whose line is this?", opts:VOICE_WHO, a:it.a, explain:it.whoExplain, chips:true, noShuffle:true },
       { key:"feat", skill:"voicefeat", q:"What gave it away? Name the language feature:", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
     ]})),
@@ -1852,11 +1882,11 @@ function wkAnimateFresh(){
 }
 function wkColourKey(){
   return `<div class="ckey">
+    <span><i class="sw feat"></i>subject — who or what (a person, a body, a language feature)</span>
+    <span><i class="sw verb"></i>analytical verb</span>
     <span><i class="sw idea"></i>idea</span>
     <span><i class="sw ev"></i>evidence</span>
     <span><i class="sw eff"></i>purpose — effect on the reader</span>
-    <span><i class="sw verb"></i>analytical verb</span>
-    <span><i class="sw feat"></i>language feature</span>
   </div>`;
 }
 const WAGOLL_COLS = 3;
@@ -1871,36 +1901,46 @@ function wagollTable(o){
   const start=Math.max(0,Math.min(o.start,maxStart));
   const vis=[];
   for(let i=start;i<Math.min(start+WAGOLL_COLS,total);i++) vis.push(i);
-  let h=`<div class="wag2">`;
+  /* the levels immediately off each edge — rendered half-visible so it's
+     obvious the rubric continues, and clickable to scroll there */
+  const pL = start>0 ? start-1 : -1;
+  const pR = (start+WAGOLL_COLS)<total ? start+WAGOLL_COLS : -1;
+  const peek=(idx, side, inner)=>
+    idx<0 ? `<div class="wcell peek empty"></div>`
+          : `<div class="wcell peek ${side}" onclick="${o.pageFn}(${side==="l"?start-1:start+1})"
+               role="button" tabindex="0" title="Level ${levels[idx].n} — click to scroll">${inner}</div>`;
+
+  let h=`<div class="wag2${pL<0?" nol":""}${pR<0?" nor":""}">`;
   /* header row */
   h+=`<div class="wcell rowlab"><button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button></div>`;
+  h+=peek(pL,"l", pL<0?"":`<div class="lvname">${esc(levels[pL].lv||("Level "+levels[pL].n))}</div>`);
   vis.forEach(i=>{ const L=levels[i];
     h+=`<div class="wcell head ${o.activeIdx===i?"active":""} ${o.doneIdx&&o.doneIdx(i)?"done":""}">
       <div class="lvname">${esc(L.lv||("Level "+L.n))} ${o.doneIdx&&o.doneIdx(i)?"✓":""}</div>
       ${S.eal&&L.eal?`<div class="lveal">${esc(L.eal)}</div>`:""}</div>`; });
+  h+=peek(pR,"r", pR<0?"":`<div class="lvname">${esc(levels[pR].lv||("Level "+levels[pR].n))}</div>`);
   h+=`<div class="wcell rowlab endpage"><button class="pager" ${start>=maxStart?"disabled":""} onclick="${o.pageFn}(${start+1})" aria-label="later levels">›</button></div>`;
-  /* skill focus */
-  h+=`<div class="wcell rowlab">Skill focus</div>`;
-  vis.forEach(i=>{ h+=`<div class="wcell focus ${o.activeIdx===i?"active":""}">${esc(levels[i].focus||"")}</div>`; });
-  h+=`<div class="wcell rowlab"></div>`;
-  /* rubric wording */
-  h+=`<div class="wcell rowlab">The rubric</div>`;
-  vis.forEach(i=>{ h+=`<div class="wcell vic ${o.activeIdx===i?"active":""}">${levels[i].vicH||esc(levels[i].vic||"")}</div>`; });
-  h+=`<div class="wcell rowlab"></div>`;
-  /* example — the row the student fills */
-  h+=`<div class="wcell rowlab">Example</div>`;
-  vis.forEach(i=>{ h+=o.exampleCell(i); });
-  h+=`<div class="wcell rowlab"></div>`;
-  /* explanation */
-  h+=`<div class="wcell rowlab">What makes it</div>`;
-  vis.forEach(i=>{
-    const got=o.doneIdx&&o.doneIdx(i);
-    const fresh=(o.justIdx===i)?" reveal":"";
-    h+=`<div class="wcell exp ${o.activeIdx===i?"active":""}${fresh}">`+
-       (got?(levels[i].exp||""):`<span class="explock">fills in once you get this one</span>`)+`</div>`;
-  });
-  h+=`<div class="wcell rowlab"></div>`;
-  h+=`</div><div class="wagnote">Showing levels ${levels[vis[0]].n}–${levels[vis[vis.length-1]].n} of ${levels[0].n}–${levels[total-1].n} — use ‹ › to move along the rubric.</div>`;
+
+  const row=(label, cellFn, peekFn)=>{
+    h+=`<div class="wcell rowlab">${label}</div>`;
+    h+=peek(pL,"l", pL<0?"":peekFn(pL));
+    vis.forEach(i=>{ h+=cellFn(i); });
+    h+=peek(pR,"r", pR<0?"":peekFn(pR));
+    h+=`<div class="wcell rowlab"></div>`;
+  };
+  row("Skill focus",
+      i=>`<div class="wcell focus ${o.activeIdx===i?"active":""}">${esc(levels[i].focus||"")}</div>`,
+      i=>esc(levels[i].focus||""));
+  row("The rubric",
+      i=>`<div class="wcell vic ${o.activeIdx===i?"active":""}">${levels[i].vicH||esc(levels[i].vic||"")}</div>`,
+      i=>esc(levels[i].vic||""));
+  row("Example", i=>o.exampleCell(i), i=>"");
+  row("What makes it",
+      i=>{ const got=o.doneIdx&&o.doneIdx(i); const fresh=(o.justIdx===i)?" reveal":"";
+        return `<div class="wcell exp ${o.activeIdx===i?"active":""}${fresh}">`+
+          (got?(levels[i].exp||""):`<span class="explock">fills in once you get this one</span>`)+`</div>`; },
+      i=>"");
+  h+=`</div><div class="wagnote">Levels ${levels[vis[0]].n}–${levels[vis[vis.length-1]].n} of ${levels[0].n}–${levels[total-1].n} — the faded columns are the rest of the rubric. Click one, or use ‹ ›, to scroll along it.</div>`;
   return h;
 }
 function wallPage(n){ WK.wallStart=n; renderWall(); }
@@ -1962,8 +2002,8 @@ function wkLevel(){ return WK_LEVELS.find(L=>L.n===WK.level); }
 function wkPage(n){ WK.climbStart=n; renderWkBuild(); }
 function wkLevelIdx(){ return WK_LEVELS.findIndex(L=>L.n===WK.level); }
 function wkAvail(list){ return list.map((x,i)=>({x,i})).filter(o=>{
-  const lv=o.x.lv||[5,8]; return WK.level>=lv[0] && WK.level<=lv[1]; }); }
-function wkRetired(x){ const lv=x.lv||[5,8]; return WK.level>lv[1]; }
+  const lv=o.x.lv||[5,9]; return WK.level>=lv[0] && WK.level<=lv[1]; }); }
+function wkRetired(x){ const lv=x.lv||[5,9]; return WK.level>lv[1]; }
 function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
 /* Resolve a starter recipe (kind + tile text) into canvas refs. */
 function wkStarter(fid){
@@ -2010,7 +2050,10 @@ function wkTileData(c){
   if(c.k==="idea") return WK_BUILD.ideas[c.i];
   if(c.k==="eff")  return WK_BUILD.effects[c.i];
   if(c.k==="con")  return WK_BUILD.cons[c.i];
-  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”", seg:sg}; }
+  /* Quotes belong to every level from 6 up — evidence never retires, only
+     the way you weave it in changes. Without an explicit range they fell
+     back to the default and read as "retired" at Level 9. */
+  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”", seg:sg, lv:[5,9]}; }
   return {t:""};
 }
 function wkHlClass(k){
@@ -2139,7 +2182,7 @@ function wkFillBins(){
   fill("wb-open", WK_BUILD.opens, "open", "k-open");
   fill("wb-subj", WK_BUILD.subjects, "subj", "k-subj");
   fill("wb-verb", WK_BUILD.verbs, "verb", "k-verb");
-  fill("wb-idea", WK_BUILD.ideas, "idea", "k-eff");
+  fill("wb-idea", WK_BUILD.ideas, "idea", "k-idea");
   fill("wb-eff",  WK_BUILD.effects, "eff", "k-eff");
   fill("wb-con",  WK_BUILD.cons, "con", "k-con");
   const qbin=$("wb-q");
@@ -2346,6 +2389,8 @@ function wkCheck(){
   if(level==="ok"){
     WK.versions[WK.level]={t:wkText(), h:wkTextHtml()};
     WK.justIdx=wkLevelIdx();
+    /* the highest rung they've written at — what the report quotes */
+    S.wkLevel=Math.max(S.wkLevel||0, WK.level);
     save();
     const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
@@ -2398,7 +2443,8 @@ function wkFinishClimb(){
    trip back to exactly where you were. Mastered words also light up inside
    the reading passages; tapping one decomposes it into its morphemes. */
 let lastArg=null;
-let GP={open:false,set:"all",az:false,exp:null};
+let GP={open:false,set:"all",az:false,exp:null,view:"page"};
+let GPAGE=[];  /* glossary words found on the screen right now */
 const GRTL={ar:1,fa:1};
 function vocabSt(){ try{ return JSON.parse(localStorage.getItem("bonesparrow.vocabhub.v1"))||{}; }catch(e){ return {}; } }
 function glossLang(){ const pr=readProfile(); return (pr&&pr.lang)||""; }
@@ -2407,50 +2453,103 @@ function glossState(w){ const V=vocabSt(); const ws=(V.wstat||{})[w]; return (ws
 function escJs(t){ return String(t).replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
 
 function glossMount(){
-  if($("gnoteBtn")) return;
-  const b=document.createElement("button");
-  b.id="gnoteBtn"; b.title="My word notepad"; b.setAttribute("aria-label","My word notepad");
-  b.textContent="\ud83d\udcd3";
-  b.onclick=()=>{ GP.open=!GP.open; renderGloss(); };
-  document.body.appendChild(b);
-  const pn=document.createElement("div"); pn.id="gpanel"; document.body.appendChild(pn);
+  if(!$("gnoteBtn")){
+    const b=document.createElement("button");
+    b.id="gnoteBtn"; b.title="My word notepad"; b.setAttribute("aria-label","My word notepad");
+    b.innerHTML=`\ud83d\udcd3<span class="gbadge" id="gbadge"></span>`;
+    b.onclick=()=>{ GP.open=!GP.open; if(GP.open) GP.view=GPAGE.length?"page":"all"; renderGloss(); };
+    document.body.appendChild(b);
+    const pn=document.createElement("div"); pn.id="gpanel"; document.body.appendChild(pn);
+    /* Screens redraw inside a module too (every quiz question), so watch the
+       body rather than re-scanning from each render site. */
+    const bd=$("body");
+    if(bd && window.MutationObserver){
+      let t=null;
+      new MutationObserver(()=>{ clearTimeout(t); t=setTimeout(()=>{
+        const before=GPAGE.join("|"); glossScan();
+        if(GP.open && GP.view==="page" && GPAGE.join("|")!==before) renderGloss();
+      }, 60); }).observe(bd, {childList:true, subtree:true});
+    }
+  }
+  glossScan();
   renderGloss();
+}
+/* What book words are actually on screen right now? Drives the badge and the
+   notepad's default view. */
+function glossScan(){
+  GPAGE=[];
+  document.querySelectorAll("#body .gw").forEach(el=>{
+    const w=el.dataset.w; if(w && !GPAGE.includes(w)) GPAGE.push(w);
+  });
+  const bd=$("gbadge");
+  if(bd){
+    const locked=GPAGE.filter(w=>{ const h=glossFindBase(w); return h && !glossStudied(h.g.set); }).length;
+    bd.textContent = GPAGE.length ? String(GPAGE.length) : "";
+    bd.className = "gbadge" + (GPAGE.length? (locked? " todo":" ok") : "");
+  }
 }
 function renderGloss(){
   const pn=$("gpanel"); if(!pn) return;
   if(!GP.open){ pn.style.display="none"; return; }
   pn.style.display="flex"; pn.className="gpanel";
   const lang=glossLang();
-  let sets=GLOSSARY.slice();
-  if(GP.set!=="all") sets=sets.filter(g=>g.set===GP.set);
-  let body="";
-  if(GP.az){
-    const all=[];
-    sets.forEach(g=>g.words.forEach(w=>all.push({g,w})));
-    all.sort((a,b)=>a.w.w.localeCompare(b.w.w));
-    body=all.map(o=>glossRow(o.g,o.w,lang)).join("");
+  let body="", tools="";
+
+  if(GP.view==="page"){
+    /* the words that are actually on the page in front of them */
+    const hits=GPAGE.map(w=>glossFindBase(w)).filter(Boolean);
+    body = hits.length
+      ? `<div class="gsec">On this page (${hits.length})</div>`+
+        hits.map(o=>glossRow(o.g,o.w,lang)).join("")
+      : `<div class="glock">No book words from your list on this page. Try the whole list below.</div>`;
+    tools = `<button class="gaz on">On this page</button>
+             <button class="gaz" onclick="GP.view='all';GP.exp=null;renderGloss()">All my words →</button>`;
   } else {
-    sets.forEach(g=>{
-      const open=glossStudied(g.set);
-      body+=`<div class="gsec">${esc(g.t)}${open?"":" \ud83d\udd12"}</div>`;
-      if(!open) body+=`<div class="glock">Not met yet — <button class="glink" onclick="glossGo('${escJs(g.set)}')">meet these words in the Vocab Hub →</button></div>`;
-      body+=g.words.map(w=>glossRow(g,w,lang)).join("");
-    });
+    let sets=GLOSSARY.slice();
+    if(GP.set!=="all") sets=sets.filter(g=>g.set===GP.set);
+    if(GP.az){
+      const all=[];
+      sets.forEach(g=>g.words.forEach(w=>all.push({g,w})));
+      all.sort((a,b)=>a.w.w.localeCompare(b.w.w));
+      body=all.map(o=>glossRow(o.g,o.w,lang)).join("");
+    } else {
+      sets.forEach(g=>{
+        const open=glossStudied(g.set);
+        body+=`<div class="gsec">${esc(g.t)}${open?"":" \ud83d\udd12"}</div>`;
+        if(!open) body+=`<div class="glock">Not met yet — <button class="glink" onclick="glossGo('${escJs(g.set)}')">meet these words in the Vocab Hub →</button></div>`;
+        body+=g.words.map(w=>glossRow(g,w,lang)).join("");
+      });
+    }
+    const opts=[`<option value="all"${GP.set==="all"?" selected":""}>All chapters</option>`]
+      .concat(GLOSSARY.map(g=>`<option value="${esc(g.set)}"${GP.set===g.set?" selected":""}>${esc(g.t)}</option>`)).join("");
+    tools = `${GPAGE.length?`<button class="gaz" onclick="GP.view='page';GP.exp=null;renderGloss()">← On this page</button>`:""}
+      <select onchange="GP.set=this.value;GP.exp=null;renderGloss()" aria-label="filter by chapter">${opts}</select>
+      <button class="gaz${GP.az?" on":""}" onclick="GP.az=!GP.az;renderGloss()">A–Z</button>`;
   }
-  const opts=[`<option value="all"${GP.set==="all"?" selected":""}>All chapters</option>`]
-    .concat(GLOSSARY.map(g=>`<option value="${esc(g.set)}"${GP.set===g.set?" selected":""}>${esc(g.t)}</option>`)).join("");
+
   pn.innerHTML=`
    <div class="ghead"><span>\ud83d\udcd3 My word notepad</span>
      <button class="gx" onclick="GP.open=false;renderGloss()" aria-label="close">×</button></div>
-   <div class="gtools">
-     <select onchange="GP.set=this.value;GP.exp=null;renderGloss()" aria-label="filter by chapter">${opts}</select>
-     <button class="gaz${GP.az?" on":""}" onclick="GP.az=!GP.az;renderGloss()">A–Z</button>
-   </div>
+   <div class="gtools">${tools}</div>
    <div class="gbody">${body||`<div class="glock">Nothing here yet.</div>`}</div>
-   <div class="gfoot">Words you've mastered glow in the passages — tap one to watch it come apart. Locked sets unlock when you meet them in the Vocab Hub.</div>`;
+   <div class="gfoot"><i class="hint ok"></i> words you've unlocked · <i class="hint todo"></i> still waiting in the Vocab Hub — both glow in the passage, and tapping one brings you here.</div>`;
+  const on=pn.querySelector(".gword.on");
+  if(on) on.scrollIntoView({block:"nearest"});
+}
+/* open the notepad focused on one word — what a click in the passage does */
+function glossOpenAt(word){
+  GP.open=true; GP.view="page"; GP.exp=word;
+  if(!GPAGE.includes(word)) GP.view="all";
+  renderGloss();
 }
 function glossRow(g,w,lang){
-  if(!glossStudied(g.set)) return `<div class="gword locked"><span class="st"></span><span class="gt">${esc(w.w)}</span><span class="glk">\ud83d\udd12</span></div>`;
+  if(!glossStudied(g.set)){
+    const on=GP.exp===w.w;
+    return `<div class="gword locked${on?" on":""}" onclick="GP.exp=(GP.exp==='${escJs(w.w)}')?null:'${escJs(w.w)}';renderGloss()">
+      <span class="st"></span><span class="gt">${esc(w.w)}</span><span class="glk">\ud83d\udd12</span></div>`+
+      (on?`<div class="gdetail"><div class="gm">You haven't met this one yet — its word-parts are still locked.</div>
+        <button class="glink" onclick="glossGo('${escJs(g.set)}')">meet it in the Vocab Hub →</button></div>`:"");
+  }
   const st=glossState(w.w), on=GP.exp===w.w;
   let d="";
   if(on){
@@ -2468,13 +2567,20 @@ function glossGo(setId){
   location.href="BoneSparrowVocabHub.html#set-"+encodeURIComponent(setId);
 }
 
-/* ---- mastered words light up inside passages ---- */
-function glossMastered(){
-  const V=vocabSt(); const out=[];
-  if(!V.wstat) return out;
-  GLOSSARY.forEach(g=>{ if(!glossStudied(g.set)) return;
-    g.words.forEach(w=>{ const ws=V.wstat[w.w]; if(ws&&ws.mastered) out.push(w); }); });
+/* ---- book words light up inside passages ----
+   Every word from the unit's vocabulary is marked, not just the mastered
+   ones: green says "you own this", amber says "this one's still waiting for
+   you in the Vocab Hub". Either way it's a door into the notepad. */
+function glossAllWords(){
+  const out=[];
+  GLOSSARY.forEach(g=>g.words.forEach(w=>out.push(w)));
   return out;
+}
+function glossWordClass(word){
+  const hit=glossFindBase(word); if(!hit) return "";
+  if(!glossStudied(hit.g.set)) return "gw-todo";
+  const V=vocabSt(), ws=(V.wstat||{})[word];
+  return (ws&&ws.mastered) ? "gw-ok" : "gw-part";
 }
 function glossFindBase(m){
   const k=String(m).toLowerCase();
@@ -2485,7 +2591,7 @@ function glossFindBase(m){
   return null;
 }
 function glossify(html){
-  const words=glossMastered().map(w=>w.w);
+  const words=glossAllWords().map(w=>w.w);
   if(!words.length) return html;
   words.sort((a,b)=>b.length-a.length);
   const re=new RegExp("\\b("+words.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?:s|es|d|ed)?").join("|")+")\\b","gi");
@@ -2496,14 +2602,22 @@ function glossify(html){
       const hit=glossFindBase(m); if(!hit) return m;
       if(seen[hit.w.w]) return m;
       seen[hit.w.w]=1;
-      return `<button class="gw" data-w="${esc(hit.w.w)}" onclick="morphPop(event)">${m}</button>`;
+      const cls=glossWordClass(hit.w.w);
+      const tip=cls==="gw-todo" ? "A word from your list — not met yet. Click to see it."
+              : cls==="gw-ok" ? "You've mastered this one. Click to take it apart."
+              : "A word from your list. Click to see it.";
+      return `<button class="gw ${cls}" data-w="${esc(hit.w.w)}" title="${esc(tip)}" onclick="morphPop(event)">${m}</button>`;
     });
   }).join("");
 }
 function morphPop(ev){
   ev.stopPropagation();
-  const hit=glossFindBase(ev.currentTarget.dataset.w); if(!hit) return;
+  const word=ev.currentTarget.dataset.w;
+  const hit=glossFindBase(word); if(!hit) return;
   morphPopClose();
+  /* not met yet: no morphemes to show, so open the notepad at the word
+     instead — that's where the way into the Vocab Hub lives */
+  if(!glossStudied(hit.g.set)){ glossOpenAt(word); return; }
   const lang=glossLang();
   const parts=hit.w.parts?hit.w.parts.map((t,i)=>`<span class="mchip pop" style="animation-delay:${140+i*170}ms"><b>${esc(t[0])}</b><small>${esc(t[1])}</small></span>`).join(`<span class="mplus">+</span>`):"";
   const tr=(lang&&hit.w.tr&&hit.w.tr[lang])?`<div class="gtr"${GRTL[lang]?' dir="rtl"':""} lang="${esc(lang)}">${esc(hit.w.tr[lang])}</div>`:"";
@@ -2512,7 +2626,8 @@ function morphPop(ev){
     <div class="mpw">${esc(hit.w.w)}</div>
     ${parts?`<div class="gparts">${parts}</div>`:""}
     <div class="gm">${esc(hit.w.m)}</div>${tr}
-    <div class="mpnote">from your word notepad — mastered ✓</div>`;
+    <div class="mpnote">${glossWordClass(hit.w.w)==="gw-ok"?"from your word notepad — mastered ✓":"from your word notepad — keep drilling it"}</div>
+    <button class="glink" onclick="morphPopClose();glossOpenAt('${escJs(hit.w.w)}')">open my notepad here →</button>`;
   document.body.appendChild(d);
   const r=d.getBoundingClientRect();
   let x=Math.min(Math.max(8,ev.clientX-r.width/2), window.innerWidth-r.width-8);
