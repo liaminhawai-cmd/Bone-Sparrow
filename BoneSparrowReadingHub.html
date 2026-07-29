@@ -590,39 +590,39 @@ const FIG_ITEMS = [
 const VOICE_WHO = ["Subhi (narrating)","Maá","Queeny","Eli","Beaver","The Shakespeare duck","A Jimmie chapter (the narrator)"];
 const VOICE_ITEMS = [
 { id:"vo1", ch:1, line:"I not hungry much, Subhi love.", page:"p. 3", a:1,
-  whoExplain:"Maá. The missing little word ('am') and the endearment 'Subhi love' are hers — tired, tender, and speaking an English she came to late.",
+  whoExplain:"Maá. She's turning food down so there's more for her children, and softening it so Subhi won't argue — that's a mother's line, not a child's or a guard's.",
   feat:{ opts:["Missing small grammar words plus a term of endearment",
                "Short clipped commands","Formal, old-fashioned phrasing","Third-person narration"],
     a:0, explain:"Fraillon drops the 'am' and adds 'Subhi love' — two moves that carry exhaustion and tenderness at once. Voice is built from grammar, not just word choice." } },
 { id:"vo2", ch:10, line:"My, my. She's quite the talker, isn't she?", page:"p. 73", a:5,
-  whoExplain:"The Shakespeare duck. Nobody in the camp talks like this — 'My, my' and 'quite the talker' are formal and wry, the voice Subhi invents for a duck named after Shakespeare.",
+  whoExplain:"The Shakespeare duck. It's an amused comment ABOUT someone else in the room, made by a character with no stake in the conversation — nobody detained here has that luxury.",
   feat:{ opts:["Missing grammar words","Formal, old-fashioned, amused phrasing — an invented 'posh' voice",
                "Angry shouting","Simple young-child words"],
     a:1, explain:"The duck is Subhi's imagination doing a different voice. Its old-fashioned politeness ('My, my', the tag question 'isn't she?') is nothing like camp speech — which is exactly the joke, and the clue." } },
 { id:"vo3", ch:5, line:"What are you doing back there? … I asked you a question.", page:"p. 33", a:4,
-  whoExplain:"Beaver. Short, clipped demands with no softening — the grammar of someone who holds all the power and knows it.",
+  whoExplain:"Beaver. Only one person in this scene can demand an answer and expect to get one. Ask who has the power in a moment and the voice usually follows.",
   feat:{ opts:["Long flowing description","A term of endearment","Short, blunt demands that expect obedience","A question that invites discussion"],
     a:2, explain:"Count the words. Beaver never wastes any — his sentences are orders. Compare that with how many words Subhi needs when he's afraid." } },
 { id:"vo4", ch:5, line:"Never let anyone see your scared.", page:"p. 33", a:3,
-  whoExplain:"Eli. It's advice — a protective older-brother imperative — and 'your scared' uses an adjective as a noun, the camp voice the boys share.",
+  whoExplain:"Eli. Someone is teaching Subhi how to survive being watched — that's the older-brother role Eli plays all through these chapters.",
   feat:{ opts:["Third-person narration","An imperative (command) used as protective advice, with 'scared' used as a noun",
                "Old-fashioned formal words","Missing capital letters"],
     a:1, explain:"Two fingerprints at once: the shape (advice, telling Subhi how to survive) says Eli; the grammar ('your scared', not 'your fear') says camp-grown English." } },
 { id:"vo5", ch:10, line:"Knowing Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", page:"p. 74", a:0,
-  whoExplain:"Subhi narrating. First person 'me', and 'a sort of brave' — an adjective where a noun should be — is his signature move.",
+  whoExplain:"Subhi narrating. He's inside his own head, measuring how he feels now against how he felt when Eli was taken — only the narrator gets to do that.",
   feat:{ opts:["'A sort of brave' — an adjective used as a noun, in first person",
                "Clipped commands","Formal politeness","Third-person 'she'"],
     a:0, explain:"'A sort of brave' instead of 'a sort of bravery/courage' — the same word-class swap as 'the bored all over her face'. Once you can name this, you can DO it in your own presentation." } },
 { id:"vo6", ch:3, line:"She pulls herself under the yellow doona covered in monkeys that her mum gave her four years ago when she was six, and tells her brain to stop, to go back to sleep.", page:"p. 19", a:6,
-  whoExplain:"A Jimmie chapter. The 'she' gives it away — Jimmie's chapters are told from outside her, in the third person, while Subhi tells his own.",
-  feat:{ opts:["First person 'I'","Third-person narration — we watch Jimmie from outside","Missing grammar words","Rhyming words"],
+  whoExplain:"A Jimmie chapter. A doona her mum gave her, her own bed, a memory of turning six at home — none of that exists behind the fences, so this can't be Subhi's world.",
+  feat:{ opts:["First person 'I'","Third-person narration — the character is watched, not speaking","Missing grammar words","Rhyming words"],
     a:1, explain:"Fraillon splits the novel: Subhi speaks ('I'), Jimmie is watched ('she'). Ask yourself why the author might keep the reader one step further away from Jimmie — that's an open question worth annotating." } },
 { id:"vo7", ch:2, line:"What's with the duck?", page:"p. 15", a:2,
-  whoExplain:"Queeny. Blunt, impatient, unimpressed — big-sister dismissiveness in four words.",
+  whoExplain:"Queeny. Somebody is being unimpressed at Subhi about something he loves — that's the big-sister job in this novel.",
   feat:{ opts:["Formal old-fashioned phrasing","A protective imperative","Casual, blunt teenage dismissiveness","An adjective used as a noun"],
     a:2, explain:"'What's with…' is casual and scornful at once. Queeny's voice is armour — later in the novel you'll find out what the armour is protecting." } },
 { id:"vo8", ch:1, line:"You hear it, né?", page:"p. 2", a:0,
-  whoExplain:"Subhi — whispering to Maá about the Night Sea. The tag 'né' comes from the family's own language, folded into his English.",
+  whoExplain:"Subhi, checking with Maá that she can hear the Night Sea too. He's asking his mother to share something he half-believes — a child's question, and only he asks them.",
   feat:{ opts:["A borrowed word from the family's first language used as a question tag",
                "Third-person narration","A clipped command","Old-fashioned formal English"],
     a:0, explain:"One tiny syllable carries his whole heritage. When you write in character for your presentation, one well-chosen borrowed word can do more than a paragraph of description." } }
@@ -1121,8 +1121,8 @@ const WK_LEVELS = [
    goal:"Grow the idea from a feeling into an issue, trade the flat verb for an analytical one, and say what the writing makes the reader understand.",
    need:["subj","verb","idea","q","eff"],
    exp:`The <i class="sw idea"></i> idea becomes an <em class="hl-idea">issue</em>, the verb becomes <em class="hl-verb">analytical</em>, and the <i class="sw eff"></i> purpose says what we <em class="hl-eff">understand</em>.`,
-   unlocks:"Issue-level ideas, analytical verbs, and reader-effect endings unlock.",
-   retires:"Flat verbs (shows, is about) and plain feeling-endings retire — you've outgrown them.",
+   unlocks:"Issue-level ideas unlock, and so do clause endings (“that…”, “how…”) with the joiners that carry them — “which shows”, “which makes the reader see”.",
+   retires:"Reporting verbs (shows, is about, describes) and plain feeling-endings retire — you've outgrown them. Analytical verbs like reveals, conveys and emphasises stay: they're good writing at every level.",
    why:"All three parts are still there, and each one has grown up." },
  { n:8, name:"Analyse the choice", focus:"Analyse the choice",
    vic:"I can explain the way different perspectives on ideas are represented through characters and events",
@@ -1223,24 +1223,36 @@ const WK_BUILD = {
  ],
 
  /* ---- verbs: flat ones retire at L7 ---- */
+ /* takes = what can legally follow this verb.
+      np = a noun phrase ("reveals the issue of power")
+      cl = a that-clause ("reveals that the fear is physical")
+      wh = a wh-clause ("positions the reader to feel how little control…") */
  verbs:[
-  { t:"shows", q:"weak", lv:[5,6] },
-  { t:"is about", q:"weak", lv:[5,6] },
-  { t:"tells us about", q:"weak", lv:[5,6] },
-  { t:"describes", q:"weak", lv:[5,6] },
-  { t:"reveals", q:"good", lv:[5,9] },
-  { t:"suggests", q:"good", lv:[5,9] },
-  { t:"exposes", q:"good", lv:[6,9] },
-  { t:"conveys", q:"good", lv:[6,8] },
-  { t:"captures", q:"good", lv:[6,9] },
-  { t:"highlights", q:"good", lv:[6,8] },
-  { t:"betrays", q:"good", lv:[7,8] },
-  { t:"emphasises", q:"good", lv:[7,8] },
-  { t:"positions the reader to feel", q:"pos", lv:[8,9] },
-  { t:"forces the reader to share", q:"pos", lv:[8,9] },
-  { t:"invites the reader to question", q:"pos", lv:[9,9] },
-  { t:"quietly denies the reader", q:"pos", lv:[9,9] },
-  { t:"leaves the reader with no way to see", q:"pos", lv:[9,9] }
+  /* reporting verbs — they only ever say the story happened. These are the
+     ones that retire at Level 7. */
+  { t:"shows", q:"weak", takes:"np|cl", lv:[5,6] },
+  { t:"is about", q:"weak", takes:"np", lv:[5,6] },
+  { t:"tells us about", q:"weak", takes:"np", lv:[5,6] },
+  { t:"describes", q:"weak", takes:"np", lv:[5,6] },
+  { t:"talks about", q:"weak", takes:"np", lv:[5,6] },
+  /* analytical verbs — these are good writing at EVERY level, so none of
+     them retire. What changes up the ladder is what you put after them. */
+  { t:"reveals", q:"good", takes:"np|cl", lv:[5,9] },
+  { t:"suggests", q:"good", takes:"np|cl", lv:[5,9] },
+  { t:"conveys", q:"good", takes:"np|cl", lv:[6,9] },
+  { t:"exposes", q:"good", takes:"np|cl", lv:[6,9] },
+  { t:"captures", q:"good", takes:"np", lv:[6,9] },
+  { t:"highlights", q:"good", takes:"np|cl", lv:[6,9] },
+  { t:"emphasises", q:"good", takes:"np|cl", lv:[7,9] },
+  { t:"betrays", q:"good", takes:"np", lv:[7,9] },
+  { t:"undercuts", q:"good", takes:"np", lv:[8,9] },
+  /* positioning verbs — what the writing does to US. Unlock at 8, and at 9
+     the rubric asks for one. */
+  { t:"positions the reader to feel", q:"pos", takes:"np|wh", lv:[8,9] },
+  { t:"forces the reader to share", q:"pos", takes:"np", lv:[8,9] },
+  { t:"invites the reader to question", q:"pos", takes:"np|wh", gives:"question", lv:[9,9] },
+  { t:"quietly denies the reader", q:"pos", takes:"np", gives:"deny", lv:[9,9] },
+  { t:"leaves the reader with no way to see", q:"pos", takes:"np|wh", gives:"deny", lv:[9,9] }
  ],
 
   ideas:[
@@ -1274,31 +1286,40 @@ const WK_BUILD = {
  /* ---- effect-on-reader clauses: unlock at L7 ---- */
  effects:[
   /* plain feelings — L5–6 */
-  { t:"makes you feel sorry for him", themes:["fear","protect"], lv:[5,6] },
-  { t:"makes the camp feel frightening", themes:["fear"], lv:[5,6] },
-  { t:"makes the guards seem powerful", themes:["power"], lv:[5,6] },
-  { t:"makes you want the boys to be safe", themes:["protect"], lv:[5,6] },
-  { t:"makes you feel the danger with him", themes:["fear"], lv:[5,6] },
-  { t:"makes it feel unfair", themes:["power","protect"], lv:[5,6] },
+  /* shape "vp" — these START with a verb, so they need "which" in front */
+  { t:"makes you feel sorry for him", shape:"vp", themes:["fear","protect"], lv:[5,6] },
+  { t:"makes the camp feel frightening", shape:"vp", themes:["fear"], lv:[5,6] },
+  { t:"makes the guards seem powerful", shape:"vp", themes:["power"], lv:[5,6] },
+  { t:"makes you want the boys to be safe", shape:"vp", themes:["protect"], lv:[5,6] },
+  { t:"makes you feel the danger with him", shape:"vp", themes:["fear"], lv:[5,6] },
+  { t:"makes it feel unfair", shape:"vp", themes:["power","protect"], lv:[5,6] },
   /* what the reader understands — L7–8 */
-  { t:"how completely fear takes over a child's body", themes:["fear"], lv:[7,8] },
-  { t:"that the terror is physical before it is anything else", themes:["fear"], lv:[7,8] },
-  { t:"the panic rising faster than Subhi can control it", themes:["fear"], lv:[7,8] },
-  { t:"that Beaver holds all the power, and both of them know it", themes:["power"], lv:[7,8] },
-  { t:"how the guards' control reaches into every word and silence", themes:["power"], lv:[7,8] },
-  { t:"how little control a child has here", themes:["power"], lv:[7,8] },
-  { t:"that the boys have learned survival rules no child should need", themes:["protect"], lv:[7,8] },
-  { t:"that Eli's advice is armour, and it isn't enough", themes:["protect"], lv:[7,8] },
-  { t:"that nowhere inside the fences is actually safe", themes:["protect","fear"], lv:[7,8] },
-  { t:"the book is exciting", q:"weak", lv:[5,9],
+  /* shape "wh" / "cl" — clauses, so they hang off an analytical verb or a
+     joiner that carries a verb ("which shows that…") */
+  { t:"how completely fear takes over a child's body", shape:"wh", themes:["fear"], lv:[7,9] },
+  { t:"that the terror is physical before it is anything else", shape:"cl", themes:["fear"], lv:[7,9] },
+  { t:"how the guards' control reaches into every word and silence", shape:"wh", themes:["power"], lv:[7,9] },
+  { t:"how little control a child has here", shape:"wh", themes:["power"], lv:[7,9] },
+  { t:"that Beaver holds all the power, and both of them know it", shape:"cl", themes:["power"], lv:[7,9] },
+  { t:"that the boys have learned survival rules no child should need", shape:"cl", themes:["protect"], lv:[7,9] },
+  { t:"that Eli's advice is armour, and it isn't enough", shape:"cl", themes:["protect"], lv:[7,9] },
+  { t:"that nowhere inside the fences is actually safe", shape:"cl", themes:["protect","fear"], lv:[7,9] },
+  /* shape "np" — noun phrases, so they can sit straight after a verb */
+  { t:"the panic rising faster than Subhi can control it", shape:"np", themes:["fear"], lv:[7,9] },
+  { t:"that the book is exciting", shape:"cl", q:"weak", lv:[5,9],
     fb:"'Exciting' is a review word — say what the writing makes the reader feel or understand." },
-  { t:"Beaver is a bad person", q:"weak", lv:[5,9],
+  { t:"that Beaver is a bad person", shape:"cl", q:"weak", lv:[5,9],
     fb:"That names a villain, not a purpose. What does the moment make the reader feel or understand?" },
   /* what the writing withholds — L9 */
-  { t:"Beaver's side of it, so he stays a force rather than a person", q:"interp", themes:["power"], lv:[9,9] },
-  { t:"any way to stand outside a child's fear and judge it calmly", q:"interp", themes:["fear"], lv:[9,9] },
-  { t:"how completely a system can erase people at both ends of it", q:"interp", themes:["power"], lv:[9,9] },
-  { t:"whether courage is even the right thing to ask of a child here", q:"interp", themes:["protect"], lv:[9,9] }
+  /* needs = the meaning the thing in front of it has to supply. "any way to
+     stand outside a child's fear" is what the writing DENIES us; "whether
+     courage is…" is what it makes us QUESTION. Hang either off the wrong
+     verb and the sentence says the opposite of what the student means. */
+  { t:"Beaver's side of it, so he stays a force rather than a person", shape:"np", needs:"deny", q:"interp", themes:["power"], lv:[9,9] },
+  { t:"any way to stand outside a child's fear and judge it calmly", shape:"np", needs:"deny", q:"interp", themes:["fear"], lv:[9,9] },
+  { t:"how completely a system can erase people at both ends of it", shape:"wh", q:"interp", themes:["power"], lv:[9,9] },
+  { t:"whether courage is even the right thing to ask of a child here", shape:"wh", needs:"question", q:"interp", themes:["protect"], lv:[9,9] },
+  { t:"that we are never given the guard's reasons, only his effect", shape:"cl", q:"interp", themes:["power"], lv:[9,9] }
  ],
  /* ---- the Level 5 sentence, done for the student — one per focus.
         Picking a focus lays it on the canvas; the student's own climb
@@ -1313,17 +1334,26 @@ const WK_BUILD = {
  },
 
  /* ---- joiners ---- */
+ /* role = the job the joiner does, which decides what may follow it.
+      quote = introduces a quotation · rel = "which", needs a verb after it
+      bridge = carries its own verb, so a clause can follow
+      sub = subordinator · coord = "and" · punct = punctuation */
  cons:[
-  { t:"when he says", lv:[5,9] },
-  { t:"in the line", lv:[5,9] },
-  { t:"which", lv:[5,9] },
-  { t:"through", lv:[7,9] },
-  { t:"because", lv:[5,9] },
-  { t:"and", lv:[5,9] },
-  { t:"so that", lv:[6,9] },
-  { t:"us", lv:[9,9] },
-  { t:",", lv:[5,9] },
-  { t:".", lv:[5,9] }
+  { t:"when he says", role:"quote", lv:[5,9] },
+  { t:"in the line", role:"quote", lv:[5,9] },
+  { t:"where Fraillon writes", role:"quote", lv:[7,9] },
+  { t:"which", role:"rel", lv:[5,9] },
+  { t:"which shows", role:"bridge", lv:[7,9] },
+  { t:"which makes the reader see", role:"bridge", lv:[7,9] },
+  { t:"which asks us to consider", role:"bridge", gives:"question", lv:[8,9] },
+  { t:"which never gives us", role:"bridge", gives:"deny", lv:[9,9] },
+  { t:"which refuses us", role:"bridge", gives:"deny", lv:[9,9] },
+  { t:"through", role:"prep", lv:[7,9] },
+  { t:"because", role:"sub", lv:[5,9] },
+  { t:"so that", role:"sub", lv:[6,9] },
+  { t:"and", role:"coord", lv:[5,9] },
+  { t:",", role:"punct", lv:[5,9] },
+  { t:".", role:"punct", lv:[5,9] }
  ]
 };
 
@@ -1626,7 +1656,7 @@ function runVoice(){
     subnote: hidden? `${hidden} more line${hidden>1?"s are":" is"} waiting further into the novel — update your chapter on the home screen as you read.`:"",
     items:pool.map(it=>({ id:it.id, stim:"“"+glossify(esc(it.line))+"”", page:it.page, steps:[
       { key:"who", skill:"voicewho", q:"Whose line is this?", opts:VOICE_WHO, a:it.a, explain:it.whoExplain, chips:true, noShuffle:true },
-      { key:"feat", skill:"voicefeat", q:"What gave it away? Name the language feature:", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
+      { key:"feat", skill:"voicefeat", q:"Now name the giveaway. Which language feature marks it as theirs?", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
     ]})),
     missLabel:(item,step)=>item.id,
     doneNote:"For your oral presentation you'll be building one of these voices yourself. Steal the fingerprints: a borrowed word, a dropped 'am', an adjective where a noun should be."
@@ -1865,6 +1895,11 @@ let WK=null;
 function runWk(){
   WK={armed:null, placed:{}, firstTried:{}, focus:null, canvas:[], harvested:[],
       level:6, versions:{}, tried:{}, wallStart:0, climbStart:0};
+  /* Shuffle the response bank. Listed in rubric order it can be placed top
+     to bottom without reading a word of it. */
+  WK.bank=WK_WALL.resps.map(r=>r.id);
+  for(let i=WK.bank.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));
+    [WK.bank[i],WK.bank[j]]=[WK.bank[j],WK.bank[i]]; }
   renderWall();
 }
 function wallDone(){ return WK_WALL.resps.every(r=>WK.placed[r.id]!==undefined); }
@@ -1960,7 +1995,9 @@ function renderWall(){
         (r?`<div class="wresp">${r.h||esc(r.t)}</div>`:`<span class="wempty">tap a response below, then tap here</span>`)+`</div>`;
     }
   });
-  const remaining=WK_WALL.resps.filter(r=>WK.placed[r.id]===undefined);
+  const order=WK.bank||WK_WALL.resps.map(r=>r.id);
+  const remaining=order.map(id=>WK_WALL.resps.find(r=>r.id===id))
+    .filter(r=>r && WK.placed[r.id]===undefined);
   if(remaining.length){
     h+=`<p class="q">Responses to place (${remaining.length} left) — tap one, then tap the Example box of the level it belongs to:</p><div class="respbank">`;
     remaining.forEach(r=>{ h+=`<button class="resp ${WK.armed===r.id?"armed":""}" onclick="wallArm('${r.id}')">${r.h||esc(r.t)}</button>`; });
@@ -2281,10 +2318,27 @@ function wkBindDrag(el, idx){
     window.addEventListener("pointercancel", up);
   });
 }
-/* ---- grammar: order matters, not just presence ---- */
-function wkGrammar(kinds){
+/* ---- grammar: order, and whether each piece FITS what's next to it ----
+   Every tile knows the shape of phrase it is; every slot knows what shapes
+   it licenses. That's enough to catch what students really build — "which
+   that the boys have learned…", a clause dumped straight after a quotation,
+   a verb that can't take the ending hung off it — without pretending to
+   parse English. Each message names the fix, not just the fault. */
+function wkShape(t){
+  if(!t) return null;
+  if(t.c.k==="eff")  return t.d.shape||"vp";
+  if(t.c.k==="idea") return "np";
+  if(t.c.k==="subj") return "np";
+  if(t.c.k==="q")    return "quote";
+  return null;
+}
+function wkRole(t){ return (t && t.c.k==="con") ? (t.d.role||"coord") : null; }
+function wkTakes(t){ return ((t && t.d.takes) || "np").split("|"); }
+function wkSnip(x,n){ x=String(x); return x.length>n ? x.slice(0,n)+"…" : x; }
+function wkGrammar(kinds, tiles){
   const f=[];
   if(!kinds.length) return f;
+  tiles = tiles || [];
   const first=kinds[0], last=kinds[kinds.length-1];
   const iOpen=kinds.indexOf("open"), iS=kinds.indexOf("subj"), iV=kinds.indexOf("verb");
   const iE=kinds.indexOf("eff"), iI=kinds.indexOf("idea"), iQ=kinds.indexOf("q");
@@ -2315,16 +2369,93 @@ function wkGrammar(kinds){
     if(!["con","verb","open"].includes(before))
       f.push({sev:"warn", text:"Your quotation is dropped straight in. Put a joiner in front of it — 'when he says', 'in the line' — so it reads as one sentence."});
   }
-  return f;
+
+  /* ---- fit: does each piece have something it can legally hang off? ---- */
+  for(let i=0;i<tiles.length;i++){
+    const t=tiles[i], prev=tiles[i-1]||null, next=tiles[i+1]||null;
+    const role=wkRole(t), shape=wkShape(t);
+
+    /* "which" is a relative pronoun: a verb has to come straight after it */
+    if(role==="rel" && next){
+      const ns=wkShape(next);
+      if(next.c.k==="eff" && ns!=="vp")
+        f.push({sev:"err", text:"“which” followed by “"+wkSnip(next.d.t,26)+"” collides — “which” needs a verb straight after it. Either pick an ending that starts with a verb (“makes the reader…”), or swap the joiner for “which shows”, which brings its own verb along."});
+      else if(next.c.k!=="eff" && next.c.k!=="verb")
+        f.push({sev:"err", text:"“which” is pointing at nothing. It should lead into your purpose — what the writing does to the reader."});
+    }
+
+    /* a bridge joiner already carries its verb, so it wants a clause next */
+    if(role==="bridge" && next && next.c.k==="eff" && wkShape(next)==="vp")
+      f.push({sev:"err", text:"“"+t.d.t+"” already has its verb, so the ending after it shouldn't start with one — that gives you two verbs in a row. Use a “that…” or “how…” ending here, or go back to plain “which”."});
+
+    /* clause endings need a verb or a bridge to hang off */
+    if(t.c.k==="eff" && (shape==="cl"||shape==="wh")){
+      const licensed = prev && (
+        (prev.c.k==="verb" && wkTakes(prev).includes(shape==="cl"?"cl":"wh")) ||
+        (prev.c.k==="con" && ["bridge","sub"].includes(wkRole(prev))) );
+      if(!licensed){
+        const why = prev && prev.c.k==="q"
+          ? "It's sitting straight after your quotation, with nothing to join them."
+          : prev && prev.c.k==="verb"
+            ? "“"+prev.d.t+"” can't take a clause after it — it wants a noun phrase."
+            : "There's nothing in front of it for it to hang off.";
+        f.push({sev:"err", text:"“"+wkSnip(t.d.t,30)+"” is a clause. "+why+" Put it straight after an analytical verb (“reveals that…”), or lead into it with “which shows”, “which asks us to consider” or “because”."});
+      }
+    }
+
+    /* meaning, not just shape: an ending that is what the writing DENIES us
+       has to hang off something that denies; a "whether…" ending off
+       something that questions */
+    if(t.c.k==="eff" && t.d.needs){
+      const gives = prev && (prev.d.gives || null);
+      if(gives!==t.d.needs){
+        const want = t.d.needs==="deny"
+          ? "This ending is what the writing REFUSES the reader, so it has to follow something that withholds — “quietly denies the reader”, “leaves the reader with no way to see”, or the joiner “which never gives us”."
+          : "This ending is a question the writing raises, so it has to follow something that questions — “invites the reader to question”, or the joiner “which asks us to consider”.";
+        f.push({sev:"err", text:"“"+wkSnip(t.d.t,30)+"” doesn't mean what you want it to here. "+want});
+      }
+    }
+
+    /* verb-shaped endings need "which" (or "and") in front */
+    if(t.c.k==="eff" && shape==="vp"){
+      const licensed = prev && prev.c.k==="con" && ["rel","coord"].includes(wkRole(prev));
+      if(!licensed)
+        f.push({sev:"err", text:"“"+wkSnip(t.d.t,28)+"” starts with a verb, so it needs “which” in front of it — otherwise two verbs run into each other."});
+    }
+
+    /* a verb that only takes a noun phrase, handed a clause */
+    if(t.c.k==="verb" && next && next.c.k==="eff"){
+      const ns=wkShape(next);
+      if((ns==="cl"&&!wkTakes(t).includes("cl")) || (ns==="wh"&&!wkTakes(t).includes("wh")))
+        f.push({sev:"err", text:"“"+t.d.t+" "+wkSnip(next.d.t,24)+"” doesn't fit. “"+t.d.t+"” takes a thing (a noun phrase), not a clause — swap the verb for one that can carry a clause (reveals, suggests, conveys, shows), or pick a different ending."});
+    }
+  }
+
+  /* the idea belongs before the purpose, whatever else is between them */
+  const idxI=tiles.findIndex(t=>t.c.k==="idea"), idxE=tiles.findIndex(t=>t.c.k==="eff");
+  if(idxI>=0 && idxE>=0 && idxI>idxE)
+    f.push({sev:"err", text:"Your purpose lands before your idea. Read the order out loud: subject → verb → idea → evidence → purpose."});
+
+  /* de-duplicate: one message per problem, however many tiles trip it */
+  const seen={};
+  return f.filter(x=>seen[x.text]?false:(seen[x.text]=true));
 }
 
 function wkCheck(){
   const fb=$("fb"), L=wkLevel();
   if(!WK.focus){ fb.className="feedback bad"; fb.innerHTML="<b>Choose your focus first</b> — the check needs to know which idea your sentence is aiming at."; return; }
   if(!WK.canvas.length){ fb.className="feedback bad"; fb.innerHTML="<b>The canvas is empty.</b> Tap tiles to build a sentence first."; return; }
-  const tiles=WK.canvas.map(c=>({c, d:wkTileData(c)}));
-  const kinds=WK.canvas.map(c=>c.k);
+  wkCheckTail(wkFindings(WK.canvas, WK.level, WK.focus));
+}
+
+/* Everything the check knows, with nothing on the screen involved: give it a
+   canvas, a level and a focus and it hands back what's wrong. */
+function wkFindings(canvas, level, focus){
+  const L=WK_LEVELS.find(x=>x.n===level);
+  const tiles=canvas.map(c=>({c, d:wkTileData(c)}));
+  const kinds=canvas.map(c=>c.k);
   const findings=[];
+  const wasLevel=WK.level; WK.level=level;   /* wkRetired reads the live level */
 
   /* retired tiles must be traded out */
   tiles.forEach(t=>{ if(wkRetired(t.d))
@@ -2345,14 +2476,14 @@ function wkCheck(){
   });
 
   /* grammar / word order */
-  wkGrammar(kinds).forEach(f=>findings.push(f));
+  wkGrammar(kinds, tiles).forEach(f=>findings.push(f));
 
   /* Level 6 and up: the quote has to live INSIDE the sentence, not beside it.
      This is the actual gate between 5 and 6 — the Level 5 freebie leaves the
      quote sitting after a full stop, and the student's first job is to weave
      it in with a joiner. */
-  if(WK.level>=6){
-    WK.canvas.forEach((c,i)=>{
+  if(level>=6){
+    canvas.forEach((c,i)=>{
       if(c.k!=="q") return;
       const before=i>0?tiles[i-1]:null;
       if(!before || (before.c.k==="con" && (before.d.t==="."||before.d.t==="and")))
@@ -2364,26 +2495,35 @@ function wkCheck(){
   const subj=tiles.filter(t=>t.c.k==="subj"), verbs=tiles.filter(t=>t.c.k==="verb");
   if(subj.some(t=>t.d.q==="vague"))
     findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Name the actual thing — a body, a voice, a technique, or the author."});
-  if(WK.level>=8 && !subj.some(t=>t.d.q==="craft"))
+  if(level>=8 && !subj.some(t=>t.d.q==="craft"))
     findings.push({sev:"warn", text:"At this level the subject of your sentence should be a writing choice — the simile, the clipped dialogue, the narration, or Fraillon herself."});
-  if(WK.level>=9 && !verbs.some(t=>t.d.q==="pos"))
+  if(level>=9 && !verbs.some(t=>t.d.q==="pos"))
     findings.push({sev:"warn", text:"At the top of the ladder the verb should say what the writing does to US — positions the reader to, invites the reader to question, quietly denies the reader."});
-  if(WK.level>=9 && !tiles.some(t=>(t.c.k==="eff") && t.d.q==="interp"))
+  if(level>=9 && !tiles.some(t=>(t.c.k==="eff") && t.d.q==="interp"))
     findings.push({sev:"warn", text:"Level 9 asks what the writing withholds or makes us accept. Pick one of the interpretive endings — the ones about what the reader is given or denied."});
-  if(WK.level>=7 && verbs.some(t=>t.d.q==="weak"))
+  if(level>=7 && verbs.some(t=>t.d.q==="weak"))
     findings.push({sev:"warn", text:"That verb is flat. Trade up to an analytical verb — reveals, suggests, exposes, betrays, emphasises."});
   tiles.filter(t=>t.c.k==="q").forEach(t=>{
     const th=t.d.seg.themes||{};
     if(!Object.keys(th).length) findings.push({sev:"warn", text:"Your quote is "+t.d.seg.note+". Swap it for a line that shows the idea."});
-    else if(!th[WK.focus]) findings.push({sev:"warn", text:"That quote is "+t.d.seg.note+" — but your focus is "+wkFocusLabel()+". Match the quote to the focus, or switch focus."});
+    else if(!th[focus]) findings.push({sev:"warn", text:"That quote is "+t.d.seg.note+" — but your focus is "+wkFocusLabel()+". Match the quote to the focus, or switch focus."});
   });
   tiles.filter(t=>t.c.k==="idea"||t.c.k==="eff").forEach(t=>{
     if(t.d.q==="weak") findings.push({sev:"warn", text:t.d.fb});
-    else if(t.d.themes && !t.d.themes.includes(WK.focus))
+    else if(t.d.themes && !t.d.themes.includes(focus))
       findings.push({sev:"warn", text:"Your ending is about a different idea than your focus ("+wkFocusLabel()+"). Match them — or switch your focus chip."});
   });
 
-  const level = findings.some(f=>f.sev==="err") ? "err" : findings.length ? "warn" : "ok";
+  WK.level=wasLevel;
+  return findings;
+}
+
+function wkVerdict(findings){
+  return findings.some(f=>f.sev==="err") ? "err" : findings.length ? "warn" : "ok";
+}
+function wkCheckTail(findings){
+  const fb=$("fb"), L=wkLevel();
+  const level=wkVerdict(findings);
   if(!WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
 
   if(level==="ok"){
