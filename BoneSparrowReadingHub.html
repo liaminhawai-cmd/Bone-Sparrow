@@ -25,6 +25,7 @@
 html,body{margin:0;padding:0}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
      display:flex;justify-content:center;padding:18px 10px 40px}
+body.wide .container{max-width:min(1320px,97vw)}
 .container{width:100%;max-width:880px;background:var(--paper);border:1px solid var(--line);
            border-radius:12px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 h1,h2,h3,.serif{font-family:Georgia,'Times New Roman',serif}
@@ -169,8 +170,10 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
   --verb-bg:#fae3cf; --verb-tx:#8a4b12;
   --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
   --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
 }
-.hl-feat,.hl-verb,.hl-ev,.hl-eff{font-style:normal;border-radius:4px;padding:1px 3px}
+.hl-feat,.hl-verb,.hl-ev,.hl-eff,.hl-idea{font-style:normal;border-radius:4px;padding:1px 3px}
+.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
 .hl-feat{background:var(--feat-bg);color:var(--feat-tx)}
 .hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
 .hl-ev{background:var(--ev-bg);color:var(--ev-tx)}
@@ -178,11 +181,57 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ckey{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:11.5px;color:var(--muted)}
 .ckey span{display:flex;align-items:center;gap:6px}
 .ckey .sw{width:13px;height:13px;border-radius:3px;display:inline-block}
+.ckey .sw.idea,.sw.idea{background:var(--idea-bg);border:1px solid var(--idea-tx)}
 .ckey .sw.feat{background:var(--feat-bg);border:1px solid var(--feat-tx)}
 .ckey .sw.verb{background:var(--verb-bg);border:1px solid var(--verb-tx)}
 .ckey .sw.ev{background:var(--ev-bg);border:1px solid var(--ev-tx)}
 .ckey .sw.eff{background:var(--eff-bg);border:1px solid var(--eff-tx)}
-/* ---- workshop: WAGOLL wall, horizontal ---- */
+/* ---- workshop: the WAGOLL table (EAL sheet shape) ---- */
+.wag2{display:grid;grid-template-columns:74px repeat(3,1fr) 34px;gap:0;margin:0 0 6px;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line-soft)}
+.wag2 .wcell{background:#fff;padding:9px 11px;font-size:12.5px;line-height:1.5;
+  border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.wag2 .rowlab{background:var(--bg);color:var(--muted);font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;justify-content:center;text-align:center}
+.wag2 .head{background:var(--bg)}
+.wag2 .head .lvname{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.wag2 .head .lveal{font-size:10.5px;color:var(--feat-tx);font-style:italic;margin-top:2px}
+.wag2 .focus{font-family:Georgia,serif;font-size:13.5px}
+.wag2 .vic{color:var(--muted);font-size:11.5px}
+.wag2 .exp{font-size:11.5px;color:var(--muted);background:var(--paper)}
+.wag2 .ex{min-height:64px}
+.wag2 .ex.droppable{cursor:pointer;background:repeating-linear-gradient(45deg,#fff,#fff 8px,var(--bg) 8px,var(--bg) 16px)}
+.wag2 .ex.droppable:hover{outline:2px solid var(--ink);outline-offset:-2px}
+.wag2 .ex.filled{background:var(--okbg)}
+.wag2 .ex.now{background:var(--bg);outline:2px solid var(--ink);outline-offset:-2px}
+.wag2 .ex .wresp{font-family:Georgia,serif;font-size:12.5px;line-height:1.55}
+.wag2 .ex .giventag{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--eff-bg);color:var(--eff-tx);border-radius:8px;padding:1px 7px;margin:0 0 5px}
+.wag2 .ex .wempty{font-size:11px;color:var(--muted);font-style:italic}
+.wag2 .head.active,.wag2 .focus.active,.wag2 .vic.active,.wag2 .exp.active{background:#f6f1e4}
+.wag2 .head.done .lvname{color:var(--correct)}
+.wag2 .pager{border:1px solid var(--line);background:#fff;border-radius:6px;width:24px;height:28px;
+  font-size:15px;cursor:pointer;color:var(--ink);font-family:inherit;padding:0}
+.wag2 .pager:disabled{opacity:.3;cursor:not-allowed}
+.wagnote{font-size:11px;color:var(--muted);margin:0 0 14px;text-align:right}
+.ckey .sw,.wag2 .sw,.climbrow .sw{width:11px;height:11px;border-radius:3px;display:inline-block;vertical-align:-1px}
+@media (max-width:640px){
+  .wag2{grid-template-columns:56px repeat(3,1fr) 28px}
+  .wag2 .wcell{padding:7px 6px;font-size:11.5px}
+}
+.wag2 .explock{font-style:italic;opacity:.55;font-size:11px}
+.hl-feat,.hl-verb,.hl-ev,.hl-eff{transition:background .3s ease}
+@keyframes lightUp{
+  0%{background:transparent;box-shadow:none}
+  40%{box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+  100%{box-shadow:none}
+}
+.lightup{animation:lightUp .55s ease both}
+@keyframes expIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.wag2 .exp.reveal{animation:expIn .45s ease both}
+@keyframes cellPop{0%{transform:scale(.985)}60%{transform:scale(1.008)}100%{transform:scale(1)}}
+.wag2 .ex.justplaced{animation:cellPop .4s ease both}
+/* ---- workshop: WAGOLL wall, horizontal (legacy) ---- */
 .wallscroll{overflow-x:auto;margin:0 0 14px;padding-bottom:6px}
 .wallcols{display:flex;gap:10px;min-width:min-content}
 .wallcol{flex:0 0 240px;border:2px dashed var(--line);border-radius:10px;padding:10px 12px;background:#fff;
@@ -243,11 +292,12 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ctile:after{content:" \2715";font-size:9px;color:var(--muted)}
 .ctile.flag-err{outline:2px solid var(--wrong)}
 .ctile.flag-warn{outline:2px solid #cf8336}
-.bins5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 12px}
+.bins5{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:0 0 12px}
 @media (max-width:820px){.bins5{grid-template-columns:repeat(2,1fr)}}
 .bin.subjects h4, .tile.k-subj, .ctile.k-subj{background:var(--feat-bg);color:var(--feat-tx)}
 .bin.verbs h4, .tile.k-verb, .ctile.k-verb{background:var(--verb-bg);color:var(--verb-tx)}
 .bin.effects h4, .tile.k-eff, .ctile.k-eff{background:var(--eff-bg);color:var(--eff-tx)}
+.bin.ideas h4, .tile.k-idea, .ctile.k-idea{background:var(--idea-bg);color:var(--idea-tx)}
 .bin.connects h4, .tile.k-con, .ctile.k-con{background:#eeebe3;color:#574d3a}
 .bin.quotes h4, .tile.k-q, .ctile.k-q{background:var(--ev-bg);color:var(--ev-tx)}
 .seg.harv{background:var(--quote-bg);border-bottom-color:var(--quote-tx)}
@@ -272,6 +322,62 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
   .container{border:none;box-shadow:none;max-width:100%}
   .noprint{display:none!important}
 }
+/* ---- word notepad ---- */
+#gnoteBtn{position:fixed;right:18px;bottom:18px;z-index:60;width:52px;height:52px;border-radius:50%;
+  border:1px solid #d8cfae;background:#fffdf2;box-shadow:0 4px 14px rgba(40,30,10,.22);font-size:24px;cursor:pointer;
+  transition:transform .15s}
+#gnoteBtn:hover{transform:scale(1.08) rotate(-4deg)}
+.gpanel{position:fixed;right:18px;bottom:80px;z-index:60;width:min(370px,calc(100vw - 36px));
+  max-height:min(580px,74vh);display:flex;flex-direction:column;border-radius:12px;overflow:hidden;
+  background:#fffdf2;border:1px solid #d8cfae;box-shadow:0 12px 34px rgba(40,30,10,.28)}
+.gpanel .ghead{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:#fff;
+  background:var(--accent,#a03d29);font-weight:800;letter-spacing:.3px;font-size:14px;
+  background-image:radial-gradient(circle at 8px 50%, rgba(255,255,255,.35) 2.5px, transparent 3px);
+  background-size:22px 100%}
+.gpanel .gx,.morphpop .gx{border:0;background:none;color:inherit;font-size:19px;cursor:pointer;line-height:1}
+.gtools{display:flex;gap:8px;padding:8px 12px;border-bottom:1px dashed #d8cfae;background:#fbf7e6}
+.gtools select{flex:1;min-width:0;border:1px solid #d8cfae;border-radius:7px;padding:4px 6px;font-size:12.5px;background:#fff}
+.gtools .gaz{border:1px solid #d8cfae;background:#fff;border-radius:7px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.gtools .gaz.on{background:var(--accent,#a03d29);color:#fff;border-color:var(--accent,#a03d29)}
+.gbody{overflow-y:auto;padding:4px 12px 8px;flex:1;
+  background-image:repeating-linear-gradient(transparent 0 27px, rgba(190,165,105,.28) 27px 28px)}
+.gsec{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#8a7c56;padding:12px 0 3px}
+.gword{display:flex;align-items:center;gap:8px;padding:5px 2px;cursor:pointer;line-height:22px}
+.gword:hover .gt{text-decoration:underline}
+.gword .st{width:9px;height:9px;border-radius:50%;flex:none;background:#d8cfae}
+.gword.mastered .st{background:#2e7d32}
+.gword.met .st{background:#e0a13c}
+.gword .gt{font-weight:700;font-size:14px}
+.gword .gpos{font-size:11px;color:#8a7c56;font-style:italic}
+.gword .gtick{margin-left:auto;color:#2e7d32;font-weight:800}
+.gword .glk{margin-left:auto;font-size:12px}
+.gword.locked{cursor:default;color:#9a8f77}
+.gword.locked .gt{font-weight:600}
+.glock{font-size:12px;color:#8a7c56;padding:2px 2px 6px}
+.glink{border:0;background:none;color:var(--accent,#a03d29);font-weight:700;font-size:12.5px;cursor:pointer;padding:0;text-decoration:underline}
+.gdetail{padding:2px 4px 10px 17px}
+.gparts{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:4px 0 6px}
+.mchip{display:inline-flex;flex-direction:column;align-items:center;background:var(--idea-bg,#d6eafc);color:var(--idea-tx,#0b447c);
+  border-radius:8px;padding:3px 9px;line-height:1.25}
+.mchip b{font-size:13.5px}
+.mchip small{font-size:10px;opacity:.85}
+.mplus{font-weight:800;color:#8a7c56}
+.gm{font-size:12.5px;line-height:1.45}
+.gtr{font-size:14px;font-weight:700;margin-top:4px;color:#0b447c}
+.gfoot{font-size:11px;color:#8a7c56;line-height:1.45;padding:8px 12px;border-top:1px dashed #d8cfae;background:#fbf7e6}
+/* mastered words inside passages */
+.gw{border:0;padding:0 1px;font:inherit;cursor:pointer;color:inherit;border-radius:3px;
+  background:linear-gradient(transparent 62%, var(--ev-bg,#fff3b0) 62%);border-bottom:2px dotted var(--accent,#a03d29)}
+.gw:hover{background:var(--ev-bg,#fff3b0)}
+/* the decompose pop */
+.morphpop{position:fixed;z-index:70;width:min(330px,calc(100vw - 24px));background:#fffdf2;border:1px solid #d8cfae;
+  border-radius:12px;box-shadow:0 12px 34px rgba(40,30,10,.3);padding:12px 14px}
+.morphpop .gx{position:absolute;top:6px;right:8px;color:#8a7c56}
+.morphpop .mpw{font-family:Georgia,serif;font-size:19px;font-weight:700;margin-bottom:6px}
+.morphpop .mchip.pop{opacity:0;transform:translateY(12px) scale(.55);animation:mchipIn .5s cubic-bezier(.2,.85,.3,1.25) forwards}
+@keyframes mchipIn{to{opacity:1;transform:none}}
+.morphpop .mpnote{font-size:10.5px;color:#8a7c56;margin-top:8px}
+@media (prefers-reduced-motion: reduce){ .morphpop .mchip.pop{animation:none;opacity:1;transform:none} }
 </style>
 </head>
 <body>
@@ -898,38 +1004,53 @@ const WK_WALL = {
  q:"How does Fraillon show what Beaver is like?",
  note:"Five students answered the same question. Build the WAGOLL wall: tap a response, then tap the level it demonstrates. Get it right and it locks into the wall — your finished wall stays with you for Part B.",
  levels:[
-  { lv:"Level 5", vic:"I can identify parts of the story that relate to key ideas",
-    eal:"C2 — Describe: say what happens" },
-  { lv:"Level 6", vic:"I can describe characters and events that relate to key ideas",
-    eal:"C2/C3 — Describe in detail, begin to explain" },
-  { lv:"Level 7", vic:"I can describe the ideas and issues that are illustrated through characters and events",
-    eal:"C3 — Explain: link events to ideas, with evidence" },
-  { lv:"Level 8", vic:"I can explain the way different perspectives on ideas are represented through characters and events",
-    eal:"C4 — Analyse: weigh up perspectives" },
-  { lv:"Level 9", vic:"I can analyse the way different people and perspectives are represented in the story",
-    eal:"C4+ — Interpret: question the representation itself" }
+  { lv:"Level 5", n:5, eal:"C2 — Describe",
+    focus:"Say what happens",
+    vic:"I can identify parts of the story that relate to key ideas",
+    vicH:`I can identify parts of the story that relate to <em class="hl-idea">key ideas</em>`,
+    exp:`<i class="sw idea"></i> a plain idea, <i class="sw ev"></i> a quote sitting beside the sentence, <i class="sw eff"></i> a general feeling. All three are here — each done as simply as it can be, with a flat verb (<em class="hl-verb">shows</em>).` },
+  { lv:"Level 6", n:6, eal:"C2/C3 — Describe in detail",
+    focus:"Describe it, with evidence",
+    vic:"I can describe characters and events that relate to key ideas",
+    vicH:`I can <em class="hl-ev">describe characters and events</em> that relate to <em class="hl-idea">key ideas</em>`,
+    exp:`Same three parts, done better: the <i class="sw ev"></i> evidence is now woven inside the sentence (often two quotes), and the <i class="sw eff"></i> purpose is specific rather than general.` },
+  { lv:"Level 7", n:7, eal:"C3 — Explain",
+    focus:"Explain the effect",
+    vic:"I can describe the ideas and issues that are illustrated through characters and events",
+    vicH:`I can describe the <em class="hl-idea">ideas and issues that are illustrated</em> through characters and events`,
+    exp:`The <i class="sw idea"></i> idea grows from a feeling into an <em class="hl-idea">issue</em>, the verb becomes <em class="hl-verb">analytical</em>, and the <i class="sw eff"></i> purpose says what the writing makes us <em class="hl-eff">understand</em>, not just feel.` },
+  { lv:"Level 8", n:8, eal:"C4 — Analyse",
+    focus:"Analyse the choice",
+    vic:"I can explain the way different perspectives on ideas are represented through characters and events",
+    vicH:`I can explain the way <em class="hl-idea">different perspectives</em> on ideas are represented through characters and events`,
+    exp:`The sentence opens on the author's <em class="hl-verb">choice</em>, and the <i class="sw idea"></i> idea holds two perspectives against each other. <i class="sw ev"></i> Evidence and <i class="sw eff"></i> purpose are still both there — carrying more weight.` },
+  { lv:"Level 9", n:9, eal:"C4+ — Interpret",
+    focus:"Question the representation",
+    vic:"I can analyse the way different people and perspectives are represented in the story",
+    vicH:`I can <em class="hl-verb">analyse</em> the way different people and perspectives are <em class="hl-idea">represented</em> in the story`,
+    exp:`The <i class="sw idea"></i> idea becomes the representation itself, and the <i class="sw eff"></i> purpose questions what the writing <em class="hl-eff">withholds</em> — not only what it gives us.` }
  ],
  resps:[
-  { id:"w6", lvl:1,
-    t:"Beaver is one of the Jackets, and Fraillon shows his cruelty through events: he tips Maá's dinner into the dirt, he handcuffs Eli, and he shoves Subhi into the bricks. Subhi even has nightmares about him.",
-    h:"Beaver is one of the Jackets, and Fraillon <em class=\"hl-verb\">shows</em> his cruelty through events: he tips Maá's dinner into the dirt, he handcuffs Eli, and he shoves Subhi into the bricks. Subhi even has nightmares about him.",
-    why:"This one describes several characters and EVENTS that show the cruelty — it stays with what happens rather than the ideas behind it." },
-  { id:"w9", lvl:4,
-    t:"Beaver is only ever represented through Subhi's senses — a voice 'as dark as the Jackets' dogs', a hand 'hard and scratchy' — so the reader is never given Beaver's side. That narrowing is the point: to a child in detention, a guard is not a person but a force, and Fraillon makes us feel how the system erases people in both directions.",
-    h:"<em class=\"hl-feat\">Beaver is only ever represented through Subhi's senses</em> — <em class=\"hl-ev\">'as dark as the Jackets' dogs'</em>, <em class=\"hl-ev\">'hard and scratchy'</em> — so <em class=\"hl-eff\">the reader is never given Beaver's side</em>. That narrowing is the point: <em class=\"hl-eff\">to a child in detention, a guard is not a person but a force</em>, and Fraillon <em class=\"hl-verb\">makes us feel</em> <em class=\"hl-eff\">how the system erases people in both directions</em>.",
-    why:"This one analyses HOW Beaver is represented — the narrowed point of view itself — and what that authorial choice means." },
   { id:"w5", lvl:0,
-    t:"Beaver is really mean and scary. He catches Subhi with the package and Subhi gets hurt. It shows the idea of fear in the camp.",
-    h:"Beaver is really mean and scary. He catches Subhi with the package and Subhi gets hurt. It <em class=\"hl-verb\">shows</em> the idea of fear in the camp.",
-    why:"This one names an idea and retells the frightening event — it identifies parts of the story, but doesn't yet describe how the author builds Beaver." },
-  { id:"w8", lvl:3,
-    t:"Fraillon builds two perspectives on Beaver's cruelty. Eli reckons losing his eye 'is what makes him so mean', but Subhi decides Beaver 'was always mean'. By letting the boys disagree, the novel asks the reader to weigh up whether cruelty is made by a place like this, or just let loose by it.",
-    h:"Fraillon <em class=\"hl-verb\">builds</em> <em class=\"hl-feat\">two perspectives</em> on Beaver's cruelty. Eli reckons losing his eye <em class=\"hl-ev\">'is what makes him so mean'</em>, but Subhi decides Beaver <em class=\"hl-ev\">'was always mean'</em>. By letting the boys disagree, the novel <em class=\"hl-verb\">asks</em> <em class=\"hl-eff\">the reader to weigh up whether cruelty is made by a place like this, or just let loose by it</em>.",
-    why:"This one puts two characters' PERSPECTIVES side by side and explains what the disagreement does for the reader." },
+    t:"This part shows fear in the camp. Subhi says 'My throat is as dry as the dirt' and it makes you feel sorry for him.",
+    h:`This part <em class="hl-verb">shows</em> <em class="hl-idea">fear in the camp</em>. Subhi says <em class="hl-ev">'My throat is as dry as the dirt'</em> and it <em class="hl-eff">makes you feel sorry for him</em>.`,
+    why:"All three parts are here — an idea, a quote and a reason it matters — but each is done as simply as it can be: a flat verb, a quote sitting beside the sentence, and a general feeling." },
+  { id:"w6", lvl:1,
+    t:"Fraillon describes Subhi's fear in the camp through his body: his throat is 'as dry as the dirt' and his 'brain is buzzing louder and louder', which makes the reader picture how frightened he is.",
+    h:`Fraillon <em class="hl-verb">describes</em> <em class="hl-idea">Subhi's fear in the camp</em> through his body: his throat is <em class="hl-ev">'as dry as the dirt'</em> and his <em class="hl-ev">'brain is buzzing louder and louder'</em>, which <em class="hl-eff">makes the reader picture how frightened he is</em>.`,
+    why:"Same three parts, done better: two quotations are now woven inside the sentence, and the description is detailed rather than general." },
   { id:"w7", lvl:2,
-    t:"Through Beaver, the novel shows the issue of power in detention. The guards control every part of the refugees' lives, and Fraillon shows what that power feels like from below: Subhi's fear lives in his body, with his throat 'as dry as the dirt'.",
-    h:"Through Beaver, the novel <em class=\"hl-verb\">shows</em> <em class=\"hl-eff\">the issue of power in detention</em>. The guards control every part of the refugees' lives, and Fraillon <em class=\"hl-verb\">shows</em> <em class=\"hl-eff\">what that power feels like from below</em>: Subhi's fear lives in his body, with his throat <em class=\"hl-ev\">'as dry as the dirt'</em>.",
-    why:"This one steps up from events to an ISSUE — power in detention — and uses embedded evidence to show it." }
+    t:"The issue of power in detention is revealed through Subhi's body, because his throat goes 'as dry as the dirt' before Beaver has even touched him, which shows that the fear is physical before it is anything else.",
+    h:`<em class="hl-idea">The issue of power in detention</em> is <em class="hl-verb">revealed</em> through Subhi's body, because his throat goes <em class="hl-ev">'as dry as the dirt'</em> before Beaver has even touched him, which shows that <em class="hl-eff">the fear is physical before it is anything else</em>.`,
+    why:"The idea has grown from a feeling into an ISSUE, the verb has become analytical, and the purpose now says what the writing makes us understand — not just how it makes us feel." },
+  { id:"w8", lvl:3,
+    t:"By writing the scene through Subhi's senses, Fraillon builds two perspectives on power in detention: Eli's rule that you must 'never let anyone see your scared' is set against a body that betrays him anyway, which positions the reader to feel how little control a child has here.",
+    h:`By writing the scene through Subhi's senses, Fraillon <em class="hl-verb">builds</em> <em class="hl-idea">two perspectives on power in detention</em>: Eli's rule that you must <em class="hl-ev">'never let anyone see your scared'</em> is set against a body that betrays him anyway, which <em class="hl-verb">positions the reader</em> to feel <em class="hl-eff">how little control a child has here</em>.`,
+    why:"The sentence now opens on the author's CHOICE, and the idea holds two perspectives against each other rather than one." },
+  { id:"w9", lvl:4,
+    t:"Because we only ever stand where Subhi stands, the narrow point of view quietly denies the reader Beaver's side of it — he arrives only as a voice 'as dark as the Jackets' dogs' and a hand that is 'hard and scratchy' — so the representation itself asks whether a system that erases people can ever be judged fairly from inside it.",
+    h:`Because we only ever stand where Subhi stands, <em class="hl-idea">the narrow point of view</em> <em class="hl-verb">quietly denies the reader</em> Beaver's side of it — he arrives only as a voice <em class="hl-ev">'as dark as the Jackets' dogs'</em> and a hand that is <em class="hl-ev">'hard and scratchy'</em> — so <em class="hl-eff">the representation itself asks whether a system that erases people can ever be judged fairly from inside it</em>.`,
+    why:"The idea is now the representation itself, and the purpose questions what the writing withholds — not only what it gives us." }
  ]};
 
 /* ==================== ANALYSIS WORKSHOP · PART B DATA =======================
@@ -946,37 +1067,54 @@ const WK_WALL = {
    Each tile carries lv:[min,max] — the levels it is available at.
    =========================================================================== */
 const WK_LEVELS = [
- { n:5, name:"Identify",
+ { n:5, name:"Identify", focus:"Say what happens",
    vic:"I can identify parts of the story that relate to key ideas",
-   eal:"C2 — Describe: say what happens",
-   goal:"Write a simple sentence: name something in the text, and the key idea it relates to.",
-   need:["subj","verb","idea"],
-   model:"Beaver shows the power of the guards.",
-   unlocks:"Start simple. One thing from the story, one idea.",
-   why:"You've named a part of the story and tied it to a key idea." },
- { n:6, name:"Describe with evidence",
+   vicH:`I can identify parts of the story that relate to <em class="hl-idea">key ideas</em>`,
+   eal:"C2 — Describe",
+   goal:"A complete simple sentence with all three parts: an idea, a quote, and what it makes the reader feel. This one is done for you.",
+   need:["subj","verb","idea","q","eff"],
+   exp:`<i class="sw idea"></i> a plain idea, <i class="sw ev"></i> a quote, <i class="sw eff"></i> a general feeling — all three, each as simply as it can be done.`,
+   unlocks:"Done for you — pick a focus and this sentence lands on your canvas, ready to lift.",
+   why:"You've written a complete analytical sentence — idea, evidence and purpose all present." },
+ { n:6, name:"Describe with detail", focus:"Describe it, with evidence",
    vic:"I can describe characters and events that relate to key ideas",
-   eal:"C2/C3 — Describe in detail, begin to explain",
-   goal:"Keep your sentence, and work a quotation into it. Harvest a line from the passage first.",
-   need:["subj","verb","idea","q"],
-   unlocks:"Quotes are now available (harvest them from the passage), plus joiners to weave them in.",
-   why:"Your claim is now carrying evidence from the text." },
- { n:7, name:"Explain the effect",
+   vicH:`I can <em class="hl-ev">describe characters and events</em> that relate to <em class="hl-idea">key ideas</em>`,
+   eal:"C2/C3 — Describe in detail",
+   goal:"Your first level. Keep all three parts, but make the evidence work harder — weave the quote in with a joiner ('when he says', 'in the line') instead of leaving it beside the sentence after a full stop.",
+   need:["subj","verb","idea","q","eff"],
+   exp:`The same three parts, with the <i class="sw ev"></i> evidence woven inside the sentence and a more specific <i class="sw eff"></i> purpose.`,
+   unlocks:"Your climb starts here. Rejig the Level 5 freebie: get the quote inside the sentence, not beside it.",
+   why:"Your evidence is embedded now, and your purpose is specific rather than general." },
+ { n:7, name:"Explain the effect", focus:"Explain the effect",
    vic:"I can describe the ideas and issues that are illustrated through characters and events",
-   eal:"C3 — Explain: link events to ideas, with evidence",
-   goal:"Trade the flat verb for an analytical one, and swap your plain idea for what it does to the reader.",
-   need:["subj","verb","q","eff"],
-   unlocks:"Analytical verbs and effect-on-the-reader clauses unlock.",
-   retires:"Flat verbs (shows, is about, tells us) and plain idea-labels are retired — you've outgrown them.",
-   why:"You're explaining what the writing DOES, not just what is in it." },
- { n:8, name:"Analyse the choice",
+   vicH:`I can describe the <em class="hl-idea">ideas and issues that are illustrated</em> through characters and events`,
+   eal:"C3 — Explain",
+   goal:"Grow the idea from a feeling into an issue, trade the flat verb for an analytical one, and say what the writing makes the reader understand.",
+   need:["subj","verb","idea","q","eff"],
+   exp:`The <i class="sw idea"></i> idea becomes an <em class="hl-idea">issue</em>, the verb becomes <em class="hl-verb">analytical</em>, and the <i class="sw eff"></i> purpose says what we <em class="hl-eff">understand</em>.`,
+   unlocks:"Issue-level ideas, analytical verbs, and reader-effect endings unlock.",
+   retires:"Flat verbs (shows, is about) and plain feeling-endings retire — you've outgrown them.",
+   why:"All three parts are still there, and each one has grown up." },
+ { n:8, name:"Analyse the choice", focus:"Analyse the choice",
    vic:"I can explain the way different perspectives on ideas are represented through characters and events",
-   eal:"C4 — Analyse: weigh up perspectives",
-   goal:"Make the author's technique the subject, and open with a lead-in phrase. This is CAT-standard writing.",
-   need:["open","subj","verb","q","eff"],
-   unlocks:"Lead-in phrases and technique-subjects unlock (the simile, the clipped dialogue, the first-person narration).",
-   retires:"Plot-only subjects (Beaver, Subhi, the guards) are retired — at this level the SUBJECT of your sentence is a writing choice.",
-   why:"You're analysing the author's craft and its effect on the reader — the standard the CAT is marked against." }
+   vicH:`I can explain the way <em class="hl-idea">different perspectives</em> on ideas are represented through characters and events`,
+   eal:"C4 — Analyse",
+   goal:"Open on the author's choice, and make the idea hold two perspectives against each other. This is CAT-standard writing.",
+   need:["open","subj","verb","idea","q","eff"],
+   exp:`The sentence opens on a <em class="hl-verb">choice</em>, and the <i class="sw idea"></i> idea holds two perspectives at once — with <i class="sw ev"></i> evidence and <i class="sw eff"></i> purpose still carrying their weight.`,
+   unlocks:"Lead-in phrases, technique-subjects and two-perspective ideas unlock.",
+   retires:"Plot-only subjects retire — up here the subject of your sentence is a writing choice.",
+   why:"You're analysing the author's craft, with all three parts pulling together." },
+ { n:9, name:"Question the representation", focus:"Question the representation",
+   vic:"I can analyse the way different people and perspectives are represented in the story",
+   vicH:`I can <em class="hl-verb">analyse</em> the way different people and perspectives are <em class="hl-idea">represented</em> in the story`,
+   eal:"C4+ — Interpret",
+   goal:"Make the representation itself your idea, and let the purpose question what the writing withholds.",
+   need:["open","subj","verb","idea","q","eff"],
+   exp:`The <i class="sw idea"></i> idea is now the <em class="hl-idea">representation itself</em>, and the <i class="sw eff"></i> purpose questions what the writing <em class="hl-eff">withholds</em>.`,
+   unlocks:"Representation-level ideas, positioning verbs and interpretive endings unlock.",
+   retires:"Issue-level ideas and reader-effect endings retire in favour of the interpretive ones.",
+   why:"You're questioning the representation itself. Top of the ladder." }
 ];
 
 const WK_BUILD = {
@@ -1013,11 +1151,13 @@ const WK_BUILD = {
 
  /* ---- lead-in phrases: unlock at L8 ---- */
  opens:[
-  { t:"In Chapter 5,", lv:[8,8] },
-  { t:"When Beaver catches him with the package,", lv:[8,8] },
-  { t:"Throughout the confrontation,", lv:[8,8] },
-  { t:"By writing the scene through Subhi's senses,", lv:[8,8] },
-  { t:"As the threat builds,", lv:[8,8] }
+  { t:"In Chapter 5,", lv:[8,9] },
+  { t:"When Beaver catches him with the package,", lv:[8,9] },
+  { t:"Throughout the confrontation,", lv:[8,9] },
+  { t:"By writing the scene through Subhi's senses,", lv:[8,9] },
+  { t:"As the threat builds,", lv:[8,9] },
+  { t:"Because we only ever stand where Subhi stands,", lv:[9,9] },
+  { t:"By never letting us outside Subhi's head,", lv:[9,9] }
  ],
 
  /* ---- subjects: plot-level ones retire at L7/L8, craft ones unlock ---- */
@@ -1026,23 +1166,30 @@ const WK_BUILD = {
   { t:"Beaver", q:"plot", lv:[5,7] },
   { t:"Subhi", q:"plot", lv:[5,7] },
   { t:"the guards", q:"plot", lv:[5,7] },
-  { t:"Eli's advice", q:"plot", lv:[5,7] },
+  { t:"the camp", q:"plot", lv:[5,7] },
+  { t:"the Jackets", q:"plot", lv:[5,7] },
+  { t:"Eli's advice", q:"plot", lv:[5,8] },
   /* body / voice — work at every level */
   { t:"Subhi's body", q:"good", lv:[5,8] },
   { t:"Beaver's voice", q:"good", lv:[5,8] },
   { t:"Subhi's silence", q:"good", lv:[5,8] },
+  { t:"Subhi's stomach", q:"good", lv:[5,8] },
+  /* (these retire at Level 9 — up there the subject must be a writing choice) */
   /* craft subjects — unlock at 7, essential at 8 */
-  { t:"Fraillon", q:"craft", lv:[7,8] },
-  { t:"the simile", q:"craft", lv:[7,8] },
-  { t:"the clipped dialogue", q:"craft", lv:[7,8] },
-  { t:"the first-person narration", q:"craft", lv:[7,8] },
-  { t:"the short, blunt sentences", q:"craft", lv:[7,8] },
-  { t:"the sensory description", q:"craft", lv:[7,8] },
+  { t:"Fraillon", q:"craft", lv:[7,9] },
+  { t:"the simile", q:"craft", lv:[7,9] },
+  { t:"the clipped dialogue", q:"craft", lv:[7,9] },
+  { t:"the first-person narration", q:"craft", lv:[7,9] },
+  { t:"the short, blunt sentences", q:"craft", lv:[7,9] },
+  { t:"the sensory description", q:"craft", lv:[7,9] },
+  { t:"the animal imagery", q:"craft", lv:[7,9] },
+  { t:"the narrow point of view", q:"craft", lv:[9,9] },
+  { t:"the silence where Beaver's side should be", q:"craft", lv:[9,9] },
   /* vague — always wrong, always available as a trap */
-  { t:"this", q:"vague", lv:[5,8] },
-  { t:"it", q:"vague", lv:[5,8] },
-  { t:"the quote", q:"vague", lv:[5,8] },
-  { t:"the book", q:"vague", lv:[5,8] }
+  { t:"this", q:"vague", lv:[5,9] },
+  { t:"it", q:"vague", lv:[5,9] },
+  { t:"the quote", q:"vague", lv:[5,9] },
+  { t:"the book", q:"vague", lv:[5,9] }
  ],
 
  /* ---- verbs: flat ones retire at L7 ---- */
@@ -1051,56 +1198,112 @@ const WK_BUILD = {
   { t:"is about", q:"weak", lv:[5,6] },
   { t:"tells us about", q:"weak", lv:[5,6] },
   { t:"describes", q:"weak", lv:[5,6] },
-  { t:"reveals", q:"good", lv:[5,8] },
-  { t:"suggests", q:"good", lv:[5,8] },
-  { t:"exposes", q:"good", lv:[6,8] },
+  { t:"reveals", q:"good", lv:[5,9] },
+  { t:"suggests", q:"good", lv:[5,9] },
+  { t:"exposes", q:"good", lv:[6,9] },
   { t:"conveys", q:"good", lv:[6,8] },
+  { t:"captures", q:"good", lv:[6,9] },
+  { t:"highlights", q:"good", lv:[6,8] },
   { t:"betrays", q:"good", lv:[7,8] },
   { t:"emphasises", q:"good", lv:[7,8] },
-  { t:"positions the reader to feel", q:"good", lv:[8,8] },
-  { t:"forces the reader to share", q:"good", lv:[8,8] }
+  { t:"positions the reader to feel", q:"pos", lv:[8,9] },
+  { t:"forces the reader to share", q:"pos", lv:[8,9] },
+  { t:"invites the reader to question", q:"pos", lv:[9,9] },
+  { t:"quietly denies the reader", q:"pos", lv:[9,9] },
+  { t:"leaves the reader with no way to see", q:"pos", lv:[9,9] }
  ],
 
- /* ---- plain key ideas: the L5–6 currency, retired at L7 ---- */
- ideas:[
+  ideas:[
+  /* plain feelings — L5–6 */
   { t:"fear in the camp", themes:["fear"], lv:[5,6] },
   { t:"how frightening the camp is", themes:["fear"], lv:[5,6] },
   { t:"the power of the guards", themes:["power"], lv:[5,6] },
   { t:"who is in control", themes:["power"], lv:[5,6] },
   { t:"how the boys survive", themes:["protect"], lv:[5,6] },
   { t:"looking after each other", themes:["protect"], lv:[5,6] },
+  { t:"being scared all the time", themes:["fear"], lv:[5,6] },
+  { t:"the guards being in charge of everything", themes:["power"], lv:[5,6] },
+  { t:"sticking together to stay safe", themes:["protect"], lv:[5,6] },
   { t:"that the book is exciting", q:"weak", lv:[5,6],
-    fb:"'Exciting' is a review word, not an idea. Name what the moment is ABOUT — fear, power, or survival." }
+    fb:"'Exciting' is a review word, not an idea. Name what the moment is ABOUT — fear, power, or survival." },
+  /* issues — L7–8 */
+  { t:"the issue of fear in detention", themes:["fear"], lv:[7,8] },
+  { t:"the issue of power in detention", themes:["power"], lv:[7,8] },
+  { t:"the issue of survival inside the fences", themes:["protect"], lv:[7,8] },
+  { t:"the issue of what constant fear does to a child", themes:["fear"], lv:[7,8] },
+  /* two perspectives — L8 */
+  { t:"two perspectives on power in detention", themes:["power"], lv:[8,8] },
+  { t:"two perspectives on what courage costs", themes:["protect"], lv:[8,8] },
+  { t:"two perspectives on fear — the rule and the body", themes:["fear"], lv:[8,8] },
+  /* the representation itself — L9 */
+  { t:"the narrow point of view", themes:["power","fear"], lv:[9,9] },
+  { t:"the way a guard is represented", themes:["power"], lv:[9,9] },
+  { t:"the way a child's fear is represented", themes:["fear"], lv:[9,9] },
+  { t:"the way survival is shown as a child's job", themes:["protect"], lv:[9,9] }
  ],
-
  /* ---- effect-on-reader clauses: unlock at L7 ---- */
  effects:[
+  /* plain feelings — L5–6 */
+  { t:"makes you feel sorry for him", themes:["fear","protect"], lv:[5,6] },
+  { t:"makes the camp feel frightening", themes:["fear"], lv:[5,6] },
+  { t:"makes the guards seem powerful", themes:["power"], lv:[5,6] },
+  { t:"makes you want the boys to be safe", themes:["protect"], lv:[5,6] },
+  { t:"makes you feel the danger with him", themes:["fear"], lv:[5,6] },
+  { t:"makes it feel unfair", themes:["power","protect"], lv:[5,6] },
+  /* what the reader understands — L7–8 */
   { t:"how completely fear takes over a child's body", themes:["fear"], lv:[7,8] },
   { t:"that the terror is physical before it is anything else", themes:["fear"], lv:[7,8] },
   { t:"the panic rising faster than Subhi can control it", themes:["fear"], lv:[7,8] },
   { t:"that Beaver holds all the power, and both of them know it", themes:["power"], lv:[7,8] },
   { t:"how the guards' control reaches into every word and silence", themes:["power"], lv:[7,8] },
-  { t:"that a child has no way to answer back", themes:["power"], lv:[7,8] },
+  { t:"how little control a child has here", themes:["power"], lv:[7,8] },
   { t:"that the boys have learned survival rules no child should need", themes:["protect"], lv:[7,8] },
   { t:"that Eli's advice is armour, and it isn't enough", themes:["protect"], lv:[7,8] },
-  { t:"how quickly a rule for staying safe falls apart", themes:["protect"], lv:[7,8] },
-  { t:"that the book is exciting", q:"weak", lv:[7,8],
-    fb:"'Exciting' is a review word — say what the writing makes the reader understand or feel." },
-  { t:"that Beaver is a bad person", q:"weak", lv:[7,8],
-    fb:"That names a villain, not an effect. What does the moment show the reader about fear, power or survival?" }
+  { t:"that nowhere inside the fences is actually safe", themes:["protect","fear"], lv:[7,8] },
+  { t:"the book is exciting", q:"weak", lv:[5,9],
+    fb:"'Exciting' is a review word — say what the writing makes the reader feel or understand." },
+  { t:"Beaver is a bad person", q:"weak", lv:[5,9],
+    fb:"That names a villain, not a purpose. What does the moment make the reader feel or understand?" },
+  /* what the writing withholds — L9 */
+  { t:"Beaver's side of it, so he stays a force rather than a person", q:"interp", themes:["power"], lv:[9,9] },
+  { t:"any way to stand outside a child's fear and judge it calmly", q:"interp", themes:["fear"], lv:[9,9] },
+  { t:"how completely a system can erase people at both ends of it", q:"interp", themes:["power"], lv:[9,9] },
+  { t:"whether courage is even the right thing to ask of a child here", q:"interp", themes:["protect"], lv:[9,9] }
  ],
+ /* ---- the Level 5 sentence, done for the student — one per focus.
+        Picking a focus lays it on the canvas; the student's own climb
+        starts at Level 6 by rejigging it. ---- */
+ starters:{
+  fear:[ ["subj","Subhi's body"], ["verb","shows"], ["idea","fear in the camp"], ["con","."],
+         ["q","My throat is as dry as the dirt"], ["con","which"], ["eff","makes you feel sorry for him"] ],
+  power:[ ["subj","Beaver's voice"], ["verb","shows"], ["idea","the power of the guards"], ["con","."],
+          ["q","I asked you a question"], ["con","which"], ["eff","makes the guards seem powerful"] ],
+  protect:[ ["subj","Eli's advice"], ["verb","shows"], ["idea","looking after each other"], ["con","."],
+            ["q","Never let anyone see your scared"], ["con","which"], ["eff","makes you want the boys to be safe"] ]
+ },
 
  /* ---- joiners ---- */
  cons:[
-  { t:"when he says", lv:[6,8] },
-  { t:"in the line", lv:[6,8] },
-  { t:"through", lv:[7,8] },
-  { t:"because", lv:[5,8] },
-  { t:"and", lv:[5,8] },
-  { t:",", lv:[5,8] },
-  { t:".", lv:[5,8] }
+  { t:"when he says", lv:[5,9] },
+  { t:"in the line", lv:[5,9] },
+  { t:"which", lv:[5,9] },
+  { t:"through", lv:[7,9] },
+  { t:"because", lv:[5,9] },
+  { t:"and", lv:[5,9] },
+  { t:"so that", lv:[6,9] },
+  { t:"us", lv:[9,9] },
+  { t:",", lv:[5,9] },
+  { t:".", lv:[5,9] }
  ]
 };
+
+/* ==================== SHARED GLOSSARY (generated) ==========================
+   Generated from the Vocab Hub's LESSONS + TR by scratchpad/gen_glossary.js —
+   regenerate there if the vocab data changes. Word, meaning, morpheme parts
+   and translations, grouped by chapter set. Lock state comes live from the
+   vocab hub's own localStorage, so the two hubs stay in step.
+   =========================================================================== */
+const GLOSSARY = [{"set":"0","t":"The words of the unit","pre":1,"words":[{"w":"Refugee","pos":"noun","m":"A person forced to leave their country to escape war, persecution or disaster.","parts":[["re-","back, away"],["fug","to flee"],["-ee","the person it happens TO"]],"tr":{"zh":"难民","yue":"難民","vi":"người tị nạn","ar":"لاجئ","fa":"پناهنده"}},{"w":"Asylum seeker","pos":"noun phrase","m":"Someone who has asked another country for protection, but whose claim has not yet been decided.","tr":{"zh":"寻求庇护者","yue":"尋求庇護者","vi":"người xin tị nạn","ar":"طالب لجوء","fa":"پناهجو"}},{"w":"Persecution","pos":"noun","m":"Being hunted, punished or ill-treated because of who you are — your race, religion, or beliefs.","parts":[["per-","thoroughly, relentlessly"],["secut","to follow, to chase"],["-ion","the process of"]],"tr":{"zh":"迫害","yue":"迫害","vi":"sự ngược đãi","ar":"اضطهاد","fa":"آزار و تعقیب"}},{"w":"Incarceration","pos":"noun","m":"Being locked up; imprisonment.","parts":[["in-","into"],["carcer","prison"],["-ation","the state or process of"]],"tr":{"zh":"监禁","yue":"監禁","vi":"sự giam cầm","ar":"سجن","fa":"حبس"}},{"w":"Bureaucracy","pos":"noun","m":"A system of government run through offices, forms and rules — often slow and frustrating to deal with.","parts":[["bureau","desk, office"],["-cracy","rule, power"]],"tr":{"zh":"官僚体系","yue":"官僚體系","vi":"bộ máy quan liêu","ar":"بيروقراطية","fa":"دیوان‌سالاری"}},{"w":"Trauma","pos":"noun","m":"A deeply distressing experience — and the lasting harm it leaves behind.","tr":{"zh":"创伤","yue":"創傷","vi":"sang chấn","ar":"صدمة نفسية","fa":"آسیب روانی"}},{"w":"Dispossessed","pos":"adjective","m":"Having had your home, land, rights or belonging taken away.","parts":[["dis-","away, removal"],["possess","to own, to hold"],["-ed","having been"]],"tr":{"zh":"被剥夺家园的","yue":"被剝奪家園嘅","vi":"bị tước đoạt","ar":"محروم من الممتلكات","fa":"سلب‌مالکیت‌شده"}},{"w":"Immigration","pos":"noun","m":"The act of coming into a country to live there permanently.","parts":[["im-","into"],["migr","to move, to wander"],["-ation","the process of"]],"tr":{"zh":"移入；移民","yue":"移入；移民","vi":"sự nhập cư","ar":"الهجرة إلى","fa":"مهاجرت به"}}]},{"set":"1-2","t":"Chapters 1–2 · The Night Sea","pre":1,"words":[{"w":"Detention","pos":"noun","m":"Being held somewhere and not allowed to leave. Subhi has spent his whole life in a detention centre.","parts":[["de-","away, down"],["ten","to hold"],["-tion","the state or process of"]],"tr":{"zh":"拘留","yue":"拘留","vi":"sự giam giữ","ar":"الاحتجاز","fa":"بازداشت"}},{"w":"Imagination","pos":"noun","m":"The power of the mind to picture things that aren't in front of you. Subhi's imagination turns the camp's dirt into the Night Sea.","parts":[["imagin","picture in the mind"],["-ation","the process of"]],"tr":{"zh":"想象力","yue":"想像力","vi":"trí tưởng tượng","ar":"الخيال","fa":"تخیل"}},{"w":"Universe","pos":"noun","m":"Everything that exists — all of space and everything in it. Maá says some people can see its 'hidden bits and pieces'.","parts":[["uni-","one"],["verse","turned"]],"tr":{"zh":"宇宙","yue":"宇宙","vi":"vũ trụ","ar":"الكون","fa":"جهان هستی"}},{"w":"Treasure","pos":"noun","m":"Something precious that is kept and protected. The Night Sea washes up 'treasures' for Subhi — a shell, a feather, a photo.","tr":{"zh":"宝藏","yue":"寶藏","vi":"kho báu","ar":"كنز","fa":"گنج"}},{"w":"Compound","pos":"noun","m":"A fenced-off area containing buildings — in the novel, the camp is divided into compounds like Family and Alpha.","tr":{"zh":"围场；营区","yue":"圍場；營區","vi":"khu trại có rào","ar":"مجمّع مسيّج","fa":"محوطه محصور"}},{"w":"Lapping","pos":"verb","m":"Touching gently again and again, like small waves against a shore — Subhi hears the Night Sea 'lapping at the tent'.","tr":{"zh":"（波浪）轻拍","yue":"（波浪）輕拍","vi":"(sóng) vỗ nhẹ","ar":"تلاطم خفيف","fa":"موج زدن آرام"}}]},{"set":"3-4","t":"Chapters 3–4 · Jimmie and the fences","pre":3,"words":[{"w":"Perimeter","pos":"noun","m":"The outer edge or boundary of an area — the camp's perimeter is its fence line.","parts":[["peri-","around"],["meter","measure"]],"tr":{"zh":"周界","yue":"周界","vi":"chu vi; vành đai","ar":"المحيط الخارجي","fa":"محیط بیرونی"}},{"w":"Provisions","pos":"noun","m":"Supplies of food and equipment given out for daily living — in the camp, provisions come from the Jackets.","parts":[["pro-","ahead, forward"],["vis","to see"],["-ions","things that are (plural)"]],"tr":{"zh":"供给品","yue":"供給品","vi":"đồ tiếp tế","ar":"مؤن","fa":"آذوقه"}},{"w":"Barbed","pos":"adjective","m":"Covered in sharp hooks or spikes — like the barbed wire on the camp's fences.","parts":[["barb","a hook, a spike"],["-ed","having, covered with"]],"tr":{"zh":"有倒刺的","yue":"有倒刺嘅","vi":"có gai (dây thép gai)","ar":"شائك","fa":"خاردار"}},{"w":"Necklace","pos":"noun","m":"Jewellery worn around the neck — Jimmie's mother left her the bone sparrow necklace.","parts":[["neck","neck"],["lace","cord, tie"]],"tr":{"zh":"项链","yue":"頸鏈","vi":"vòng cổ","ar":"قلادة","fa":"گردنبند"}},{"w":"Funeral","pos":"noun","m":"The ceremony held after someone dies. After her mum's funeral, Jimmie's house went quiet.","tr":{"zh":"葬礼","yue":"葬禮","vi":"đám tang","ar":"جنازة","fa":"مراسم خاکسپاری"}},{"w":"Doona","pos":"noun","m":"An Australian word for a quilt or duvet — Jimmie hides under the yellow doona her mum gave her.","tr":{"zh":"羽绒被","yue":"羽絨被","vi":"chăn bông","ar":"لحاف","fa":"لحاف"}}]},{"set":"5","t":"Chapter 5 · Caught by Beaver","pre":5,"words":[{"w":"Nightmare","pos":"noun","m":"A frightening dream. When Subhi was little he had nightmares — and one kept coming back: Beaver.","parts":[["night","night"],["mare","an evil spirit"]],"tr":{"zh":"噩梦","yue":"惡夢","vi":"ác mộng","ar":"كابوس","fa":"کابوس"}},{"w":"Package","pos":"noun","m":"A wrapped bundle to be delivered. Subhi runs packages between people in the camp — until Beaver catches him with one.","parts":[["pack","to bundle, wrap"],["-age","a thing made or a collection"]],"tr":{"zh":"包裹","yue":"包裹","vi":"gói hàng","ar":"طرد","fa":"بسته"}},{"w":"Handcuffed","pos":"verb","m":"Locked at the wrists with metal rings. Beaver handcuffed Eli with his arms twisted behind his back.","parts":[["hand","hand"],["cuff","the band around a wrist"],["-ed","past tense"]],"tr":{"zh":"被戴上手铐","yue":"被扣上手銬","vi":"bị còng tay","ar":"مقيّد اليدين","fa":"دستبند زده شده"}},{"w":"Fouling","pos":"verb","m":"Making something dirty or sick. Fear is 'fouling' Subhi's stomach 'close to spewing'.","tr":{"zh":"使恶心；弄脏","yue":"使作嘔；整污糟","vi":"làm buồn nôn","ar":"يُفسد؛ يُقرف","fa":"به‌هم زدن (دل)"}},{"w":"Buzzing","pos":"verb","m":"Making a low continuous sound like bees — Subhi's brain is 'buzzing louder and louder' as panic rises.","tr":{"zh":"嗡嗡作响","yue":"嗡嗡響","vi":"kêu vo vo","ar":"طنين","fa":"وزوز کردن"}},{"w":"Storyteller","pos":"noun","m":"A person who tells stories. Maá's 'Listen Now' stories once filled the tent — and telling stories keeps people whole in this novel.","parts":[["story","a tale"],["tell","to speak, to count out"],["-er","a person who does"]],"tr":{"zh":"讲故事的人","yue":"講故事嘅人","vi":"người kể chuyện","ar":"راوي القصص","fa":"قصه‌گو"}}]},{"set":"6-7","t":"Chapters 6–7 · Outside looking in","pre":6,"words":[{"w":"Prejudice","pos":"noun","m":"Judging people before knowing them — an opinion formed in advance, usually unfair.","parts":[["pre-","before"],["jud","to judge"],["-ice","the state or quality of"]],"tr":{"zh":"偏见","yue":"偏見","vi":"định kiến","ar":"تحيّز","fa":"پیش‌داوری"}},{"w":"Resentment","pos":"noun","m":"Bitter feeling at being treated unfairly — or at others seeming to get more than you.","parts":[["re-","again, back"],["sent","to feel"],["-ment","the state or result of"]],"tr":{"zh":"怨恨","yue":"怨恨","vi":"sự oán giận","ar":"استياء","fa":"رنجش"}},{"w":"Isolated","pos":"adjective","m":"Cut off and far from everything else — like Jimmie's remote town, and like the camp placed beside it.","parts":[["isol","island"],["-ate","to make"],["-ed","having been"]],"tr":{"zh":"与世隔绝的","yue":"與世隔絕嘅","vi":"bị cô lập","ar":"معزول","fa":"دورافتاده"}},{"w":"Centre","pos":"noun","m":"The official name everyone uses for the detention camp — 'the Centre'.","tr":{"zh":"中心（拘留中心）","yue":"中心（拘留中心）","vi":"trung tâm (giam giữ)","ar":"المركز","fa":"مرکز (بازداشت)"}},{"w":"Illiterate","pos":"adjective","m":"Unable to read or write. Jimmie, ten years old and rarely at school, cannot read her mother's book.","parts":[["il-","not"],["liter","letters"],["-ate","having the quality of"]],"tr":{"zh":"不识字的","yue":"唔識字嘅","vi":"mù chữ","ar":"أميّ","fa":"بی‌سواد"}},{"w":"Annotation","pos":"noun","m":"A note added to a text to explain or respond to it — the exact skill you're practising as you read this novel.","parts":[["an-","to, towards"],["not","to mark"],["-ation","the process of"]],"tr":{"zh":"批注","yue":"批註","vi":"chú thích","ar":"تعليق توضيحي","fa":"حاشیه‌نویسی"}}]},{"set":"8-10","t":"Chapters 8–10 · Rats and promises","pre":8,"words":[{"w":"Alpha","pos":"noun","m":"The compound where the men live — where Eli is sent, away from Family.","tr":{"zh":"阿尔法（希腊首字母）","yue":"阿爾法（希臘首字母）","vi":"Alpha (chữ cái Hy Lạp đầu tiên)","ar":"ألفا","fa":"آلفا"}},{"w":"Delivery","pos":"noun","m":"The act of bringing something to someone — the boys' package-running 'delivery business', which the older boys take over.","parts":[["de-","away, from"],["liver","to set free, hand over"],["-y","the act of"]],"tr":{"zh":"递送","yue":"遞送","vi":"việc giao hàng","ar":"توصيل","fa":"تحویل"}},{"w":"Promise","pos":"noun","m":"Words that bind you to a future action. Subhi knows 'for sure' that Jimmie 'is the kind of person that keeps a promise'.","parts":[["pro-","forward"],["mise","sent"]],"tr":{"zh":"承诺","yue":"承諾","vi":"lời hứa","ar":"وعد","fa":"قول"}},{"w":"Symbol","pos":"noun","m":"An object that carries a bigger idea — Subhi notices Jimmie 'wearing a symbol of death around her neck'.","parts":[["sym-","together"],["bol","thrown"]],"tr":{"zh":"象征","yue":"象徵","vi":"biểu tượng","ar":"رمز","fa":"نماد"}},{"w":"Cyclone","pos":"noun","m":"A violent spinning storm — Jimmie's mum called her 'cyclone Jimmie' for the mess she leaves behind.","tr":{"zh":"旋风；气旋","yue":"旋風；氣旋","vi":"lốc xoáy","ar":"إعصار","fa":"گردباد"}},{"w":"Trapped","pos":"adjective","m":"Caught with no way out. The boys trap rats in cages — and Subhi sees the rats 'mostly don't do any harm'.","parts":[["trap","a device that catches"],["-ed","having been"]],"tr":{"zh":"被困的","yue":"被困嘅","vi":"bị mắc kẹt","ar":"محاصر","fa":"به‌دام‌افتاده"}}]},{"set":"11-14","t":"Chapters 11–14 · Anka's story","pre":11,"words":[{"w":"Ancestor","pos":"noun","m":"A family member from long ago. Anka, the girl in the book, is Jimmie's great-great-great-grandmother.","parts":[["an(te)-","before"],["cess","to go"],["-or","one who"]],"tr":{"zh":"祖先","yue":"祖先","vi":"tổ tiên","ar":"سلف؛ جدّ","fa":"نیا؛ جد"}},{"w":"Navigate","pos":"verb","m":"To find your way. Blind Anka learns to navigate by clicking her tongue and listening for the echo.","parts":[["nav","ship"],["ig","to drive"],["-ate","to make, to do"]],"tr":{"zh":"导航；找路","yue":"導航；搵路","vi":"tìm đường","ar":"يهتدي إلى الطريق","fa":"مسیریابی کردن"}},{"w":"Echo","pos":"noun","m":"A sound that bounces back. Anka listens for echoes; readers listen for them too — moments that repeat with new meaning.","tr":{"zh":"回声","yue":"回聲","vi":"tiếng vọng","ar":"صدى","fa":"پژواک"}},{"w":"Thermos","pos":"noun","m":"A flask that keeps drinks hot — Jimmie brings one full of hot chocolate, and Subhi tastes it like 'nothing he has ever tasted'.","tr":{"zh":"保温瓶","yue":"保溫壺","vi":"bình giữ nhiệt","ar":"ترمس","fa":"فلاسک"}},{"w":"Inspection","pos":"noun","m":"An official visit to examine a place. When government inspectors come, the camp suddenly serves proper food.","parts":[["in-","into"],["spect","to look"],["-ion","the process of"]],"tr":{"zh":"视察","yue":"視察","vi":"cuộc thanh tra","ar":"تفتيش","fa":"بازرسی"}},{"w":"Generation","pos":"noun","m":"All the family members born around the same time — Anka's story travels down five generations to reach Jimmie.","parts":[["gener","to give birth, produce"],["-ation","the process of"]],"tr":{"zh":"一代人","yue":"一代人","vi":"thế hệ","ar":"جيل","fa":"نسل"}}]},{"set":"15-17","t":"Chapters 15–17 · Aussie boy","pre":15,"words":[{"w":"Belonging","pos":"noun","m":"The feeling of being part of a group, place or culture. Nasir understood 'how important it is to belong'.","parts":[["be-","thoroughly, about"],["long","to go along with"],["-ing","the state of"]],"tr":{"zh":"归属感","yue":"歸屬感","vi":"cảm giác thuộc về","ar":"الانتماء","fa":"تعلق داشتن"}},{"w":"Culture","pos":"noun","m":"The language, stories, food and ways of a people — what 'Aussie boy' quietly cuts Subhi off from.","parts":[["cult","to grow, to till"],["-ure","the result of"]],"tr":{"zh":"文化","yue":"文化","vi":"văn hóa","ar":"ثقافة","fa":"فرهنگ"}},{"w":"Rohingya","pos":"noun","m":"Subhi's people — a Muslim minority from Myanmar (Burma), denied citizenship and driven out in huge numbers.","tr":{"zh":"罗兴亚人","yue":"羅興亞人","vi":"người Rohingya","ar":"الروهينغا","fa":"روهینگیا"}},{"w":"Camera","pos":"noun","m":"A device for taking photographs. Queeny gets one, and starts collecting proof of how the camp treats people.","tr":{"zh":"相机","yue":"相機","vi":"máy ảnh","ar":"كاميرا","fa":"دوربین"}},{"w":"Determination","pos":"noun","m":"Fixed, unshakeable purpose. Queeny used to be 'full of hope' — now she's full of 'anger and determination'.","parts":[["de-","completely"],["termin","boundary, end"],["-ation","the state of"]],"tr":{"zh":"决心","yue":"決心","vi":"sự quyết tâm","ar":"عزيمة","fa":"عزم"}},{"w":"Escape","pos":"verb","m":"To get free of a place that holds you. Jimmie shows Subhi the gap in the fence — and he doesn't take it.","parts":[["es-","out of"],["cape","cloak"]],"tr":{"zh":"逃脱","yue":"逃脫","vi":"trốn thoát","ar":"هروب","fa":"فرار"}}]},{"set":"18-20","t":"Chapters 18–20 · Lips sewn shut","pre":18,"words":[{"w":"Protest","pos":"noun","m":"A public act to show something is wrong. The hunger strike is a protest against the men's transfer and treatment.","parts":[["pro-","forth, in public"],["test","to witness, declare"]],"tr":{"zh":"抗议","yue":"抗議","vi":"cuộc biểu tình phản đối","ar":"احتجاج","fa":"اعتراض"}},{"w":"Transferred","pos":"verb","m":"Moved from one place to another by someone else's decision — the men of Alpha are to be transferred to another country.","parts":[["trans-","across"],["fer","to carry"],["-red","past tense"]],"tr":{"zh":"被转移","yue":"被轉移","vi":"bị chuyển đi","ar":"مُرحَّل؛ منقول","fa":"منتقل‌شده"}},{"w":"Banner","pos":"noun","m":"A large cloth with a message. The men make a banner from a bedsheet for Queeny to photograph.","tr":{"zh":"横幅","yue":"橫額","vi":"biểu ngữ","ar":"لافتة","fa":"پرچم/پارچه‌نوشته"}},{"w":"Newspaper","pos":"noun","m":"A printed publication of news. Jimmie sees the photo of the sewn lips in the paper — over her dad's breakfast.","parts":[["news","new things told"],["paper","paper (from papyrus)"]],"tr":{"zh":"报纸","yue":"報紙","vi":"tờ báo","ar":"صحيفة","fa":"روزنامه"}},{"w":"Contagious","pos":"adjective","m":"Spreading from person to person by contact — like the food poisoning that sweeps the camp, and like despair itself.","parts":[["con-","together, with"],["tag","to touch"],["-ious","full of, characterised by"]],"tr":{"zh":"传染性的","yue":"傳染性嘅","vi":"dễ lây lan","ar":"مُعدٍ","fa":"واگیردار"}},{"w":"Bystander","pos":"noun","m":"A person who watches something happen without acting — from your unit vocabulary, now standing at a breakfast table.","parts":[["by","near, beside"],["stand","to be in place"],["-er","a person who"]],"tr":{"zh":"旁观者","yue":"旁觀者","vi":"người ngoài cuộc","ar":"متفرج","fa":"تماشاگر بی‌عمل"}}]},{"set":"21-end","t":"Chapters 21–end · The whole sky","pre":21,"words":[{"w":"Courage","pos":"noun","m":"The strength to act despite fear — what Subhi calls 'a sort of brave'.","parts":[["cour","heart"],["-age","the state or quality of"]],"tr":{"zh":"勇气","yue":"勇氣","vi":"lòng can đảm","ar":"شجاعة","fa":"شجاعت"}},{"w":"Witness","pos":"noun","m":"A person who sees something and can tell others the truth of it. By the end, Subhi understands his job is to witness.","parts":[["wit","knowledge, knowing"],["-ness","the state of being"]],"tr":{"zh":"见证人","yue":"見證人","vi":"nhân chứng","ar":"شاهد","fa":"شاهد"}},{"w":"Survivor","pos":"noun","m":"A person who lives on through and beyond something terrible.","parts":[["sur-","over, beyond"],["viv","to live"],["-or","one who"]],"tr":{"zh":"幸存者","yue":"倖存者","vi":"người sống sót","ar":"ناجٍ","fa":"بازمانده"}},{"w":"Freedom","pos":"noun","m":"The state of not being controlled or held — what the birds have, on the far side of the fence diamonds.","parts":[["free","not held, beloved"],["-dom","the state or realm of"]],"tr":{"zh":"自由","yue":"自由","vi":"tự do","ar":"حرية","fa":"آزادی"}},{"w":"Memorial","pos":"noun","m":"Something made to keep a person or event remembered — a place, an object, or a story that refuses to forget.","parts":[["memor","mindful, remembering"],["-ial","relating to, serving for"]],"tr":{"zh":"纪念物","yue":"紀念物","vi":"đài/vật tưởng niệm","ar":"نصب تذكاري","fa":"یادبود"}},{"w":"Hope","pos":"noun","m":"The feeling that something better is possible — the hardest and most necessary thing in the whole novel.","tr":{"zh":"希望","yue":"希望","vi":"hy vọng","ar":"أمل","fa":"امید"}}]}];
 
 /* ==================== MODULE DIRECTORY / REPORT LABELS ====================== */
 const MODULES = [
@@ -1110,7 +1313,7 @@ const MODULES = [
  { id:"voice",n:4, t:"Voice fingerprint", d:"Whose line is it? Name the giveaway — do this before your voice memo", kind:"voice", ch:1 },
  { id:"ev",   n:5, t:"Evidence builder", d:"Find it in the passage, explain it, embed it — the rubric unlocks as you climb", kind:"ev", ch:1 },
  { id:"wk",   n:6, t:"Analysis workshop", d:"Build the WAGOLL wall against the CAT rubric, then write with your own evidence", kind:"wk", ch:5, needs:"ev" },
- { id:"rpt",  n:7, t:"My report", d:"Print or save your first-attempt report and hand it in", kind:"rpt" }
+ { id:"rpt",  n:7, t:"My report", d:"One combined report — reading, evidence and vocab together, with a verification code", kind:"rpt" }
 ];
 
 /* ============================================================================
@@ -1159,7 +1362,10 @@ function go(s, arg){
   else if(s==="voice") runVoice();
   else if(s==="ev") renderEv(0);
   else if(s==="wk") runWk();
-  else if(s==="rpt") renderReport();
+  else if(s==="rpt"){ location.href="index.html#report"; return; }
+  document.body.classList.toggle("wide", s==="wk");
+  lastArg=arg;
+  if(idOk()) glossMount();
 }
 /* Strategic hub pointers. The suite deploys side by side (class folder or
    GitHub Pages), so a relative link works everywhere. */
@@ -1352,7 +1558,7 @@ function renderQrIntro(id){
   $("body").innerHTML=`<div class="eyebrow">${esc(qr.where)} · cold-excerpt inference check</div>
   <h2>${esc(qr.title)}</h2>
   <p class="lead">${esc(qr.intro)}</p>
-  <div class="passage">${qr.passage}<span class="pg">${esc(qr.where)} — The Bone Sparrow, Zana Fraillon</span></div>
+  <div class="passage">${glossify(qr.passage)}<span class="pg">${esc(qr.where)} — The Bone Sparrow, Zana Fraillon</span></div>
   <div class="btnrow"><button class="btn btn-primary" onclick="startQr('${qr.id}')">I've finished reading — start the questions</button></div>`;
 }
 function startQr(id){
@@ -1628,48 +1834,105 @@ function evFinish(){
 let WK=null;
 function runWk(){
   WK={armed:null, placed:{}, firstTried:{}, focus:null, canvas:[], harvested:[],
-      level:WK_LEVELS[0].n, versions:{}, tried:{}};
+      level:6, versions:{}, tried:{}, wallStart:0, climbStart:0};
   renderWall();
 }
 function wallDone(){ return WK_WALL.resps.every(r=>WK.placed[r.id]!==undefined); }
+/* Light the coloured parts up one after another on the cell that just
+   landed, then let its explanation fade in underneath. */
+function wkAnimateFresh(){
+  const cell=document.querySelector(".wcell.ex.justplaced");
+  if(cell){
+    const marks=cell.querySelectorAll(".hl-feat,.hl-verb,.hl-ev,.hl-eff");
+    marks.forEach((m,i)=>{ m.style.animationDelay=(i*110)+"ms"; m.classList.add("lightup"); });
+    const exp=document.querySelector(".wcell.exp.reveal");
+    if(exp) exp.style.animationDelay=(marks.length*110+180)+"ms";
+  }
+  WK.justIdx=undefined;
+}
 function wkColourKey(){
   return `<div class="ckey">
-    <span><i class="sw feat"></i>language feature / technique</span>
+    <span><i class="sw idea"></i>idea</span>
+    <span><i class="sw ev"></i>evidence</span>
+    <span><i class="sw eff"></i>purpose — effect on the reader</span>
     <span><i class="sw verb"></i>analytical verb</span>
-    <span><i class="sw ev"></i>embedded evidence</span>
-    <span><i class="sw eff"></i>effect on the reader</span>
+    <span><i class="sw feat"></i>language feature</span>
   </div>`;
 }
-function renderWall(){
-  let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall</div>
-  <h2>${esc(WK_WALL.q)}</h2><p class="lead">${esc(WK_WALL.note)}</p>
-  ${wkColourKey()}
-  <p class="lead" style="margin-top:-4px">Watch the colours as you build it: the weakest response is almost bare, the strongest is full. That density is the difference between retelling and analysing.</p>`;
-
-  /* levels across the page, like the EAL WAGOLL table */
-  h+=`<div class="wallscroll"><div class="wallcols">`;
-  WK_WALL.levels.forEach((L,i)=>{
-    const placedResp=WK_WALL.resps.find(r=>WK.placed[r.id]===i);
-    h+=`<div class="wallcol ${placedResp?"filled":"droppable"}" onclick="wallDrop(${i})" role="button" tabindex="0">
-      <div class="wl">${esc(L.lv)} ${placedResp?"✓":""}</div>
-      <div class="wdesc">${esc(L.vic)}</div>
-      ${S.eal?`<div class="weal">${esc(L.eal)}</div>`:""}
-      ${placedResp?`<div class="wresp">${placedResp.h||esc(placedResp.t)}</div>`:`<div class="wempty">tap a response, then tap here</div>`}</div>`;
+const WAGOLL_COLS = 3;
+/* One table shape for both parts, mirroring the EAL WAGOLL sheet:
+   rows are Level / Skill focus / Example / What makes it, columns are
+   rubric levels, three at a time. In Part A the Example row is filled by
+   placing the model responses; in Part B it fills with the student's own
+   sentence at each level. */
+function wagollTable(o){
+  const levels=o.levels, total=levels.length;
+  const maxStart=Math.max(0,total-WAGOLL_COLS);
+  const start=Math.max(0,Math.min(o.start,maxStart));
+  const vis=[];
+  for(let i=start;i<Math.min(start+WAGOLL_COLS,total);i++) vis.push(i);
+  let h=`<div class="wag2">`;
+  /* header row */
+  h+=`<div class="wcell rowlab"><button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button></div>`;
+  vis.forEach(i=>{ const L=levels[i];
+    h+=`<div class="wcell head ${o.activeIdx===i?"active":""} ${o.doneIdx&&o.doneIdx(i)?"done":""}">
+      <div class="lvname">${esc(L.lv||("Level "+L.n))} ${o.doneIdx&&o.doneIdx(i)?"✓":""}</div>
+      ${S.eal&&L.eal?`<div class="lveal">${esc(L.eal)}</div>`:""}</div>`; });
+  h+=`<div class="wcell rowlab endpage"><button class="pager" ${start>=maxStart?"disabled":""} onclick="${o.pageFn}(${start+1})" aria-label="later levels">›</button></div>`;
+  /* skill focus */
+  h+=`<div class="wcell rowlab">Skill focus</div>`;
+  vis.forEach(i=>{ h+=`<div class="wcell focus ${o.activeIdx===i?"active":""}">${esc(levels[i].focus||"")}</div>`; });
+  h+=`<div class="wcell rowlab"></div>`;
+  /* rubric wording */
+  h+=`<div class="wcell rowlab">The rubric</div>`;
+  vis.forEach(i=>{ h+=`<div class="wcell vic ${o.activeIdx===i?"active":""}">${levels[i].vicH||esc(levels[i].vic||"")}</div>`; });
+  h+=`<div class="wcell rowlab"></div>`;
+  /* example — the row the student fills */
+  h+=`<div class="wcell rowlab">Example</div>`;
+  vis.forEach(i=>{ h+=o.exampleCell(i); });
+  h+=`<div class="wcell rowlab"></div>`;
+  /* explanation */
+  h+=`<div class="wcell rowlab">What makes it</div>`;
+  vis.forEach(i=>{
+    const got=o.doneIdx&&o.doneIdx(i);
+    const fresh=(o.justIdx===i)?" reveal":"";
+    h+=`<div class="wcell exp ${o.activeIdx===i?"active":""}${fresh}">`+
+       (got?(levels[i].exp||""):`<span class="explock">fills in once you get this one</span>`)+`</div>`;
   });
-  h+=`</div></div>`;
-
+  h+=`<div class="wcell rowlab"></div>`;
+  h+=`</div><div class="wagnote">Showing levels ${levels[vis[0]].n}–${levels[vis[vis.length-1]].n} of ${levels[0].n}–${levels[total-1].n} — use ‹ › to move along the rubric.</div>`;
+  return h;
+}
+function wallPage(n){ WK.wallStart=n; renderWall(); }
+function renderWall(){
+  if(WK.wallStart===undefined) WK.wallStart=0;
+  let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall</div>
+  <h2>${esc(WK_WALL.q)}</h2>
+  <p class="lead">${esc(WK_WALL.note)} The <b>Example</b> row is the one you fill in.</p>
+  ${wkColourKey()}`;
+  h+=wagollTable({
+    levels:WK_WALL.levels, start:WK.wallStart, pageFn:"wallPage", activeIdx:-1, justIdx:WK.justIdx,
+    doneIdx:(i)=>WK_WALL.resps.some(r=>WK.placed[r.id]===i),
+    exampleCell:(i)=>{
+      const r=WK_WALL.resps.find(x=>WK.placed[x.id]===i);
+      const fresh=(WK.justIdx===i)?" justplaced":"";
+      return `<div class="wcell ex ${r?"filled":"droppable"}${fresh}" onclick="wallDrop(${i})" role="button" tabindex="0">`+
+        (r?`<div class="wresp">${r.h||esc(r.t)}</div>`:`<span class="wempty">tap a response below, then tap here</span>`)+`</div>`;
+    }
+  });
   const remaining=WK_WALL.resps.filter(r=>WK.placed[r.id]===undefined);
   if(remaining.length){
-    h+=`<p class="q">Responses to place (${remaining.length} left) — tap one, then tap its level:</p><div class="respbank">`;
+    h+=`<p class="q">Responses to place (${remaining.length} left) — tap one, then tap the Example box of the level it belongs to:</p><div class="respbank">`;
     remaining.forEach(r=>{ h+=`<button class="resp ${WK.armed===r.id?"armed":""}" onclick="wallArm('${r.id}')">${r.h||esc(r.t)}</button>`; });
     h+=`</div>`;
   }
   h+=`<div class="feedback" id="fb" aria-live="polite"></div>`;
   if(wallDone()){
-    h+=`<div class="feedback ok"><b>Wall complete.</b> Read it left to right — watch the responses stop retelling and start analysing, and watch the colours fill in. This wall stays with you in Part B, and it's the same rubric your CAT is marked on.</div>
+    h+=`<div class="feedback ok"><b>Wall complete.</b> Page across it and read the Example row left to right — the responses stop retelling and start analysing, and the colour fills in as they do. Same rubric your CAT is marked on.</div>
     <div class="btnrow"><button class="btn btn-primary" onclick="renderWkBuild()">Part B: write it yourself, then climb the rubric →</button></div>`;
   }
   $("body").innerHTML=h;
+  wkAnimateFresh();
 }
 function wallArm(id){ WK.armed = WK.armed===id? null : id; renderWall(); }
 function wallDrop(i){
@@ -1680,6 +1943,8 @@ function wallDrop(i){
   if(!WK.firstTried[r.id]){ WK.firstTried[r.id]=true; recFirst("wk.wall."+r.id, correct); }
   if(correct){
     WK.placed[r.id]=i; WK.armed=null;
+    if(i<WK.wallStart) WK.wallStart=i;
+    else if(i>WK.wallStart+WAGOLL_COLS-1) WK.wallStart=i-WAGOLL_COLS+1;
     renderWall();
     const fb=$("fb"); fb.className="feedback ok";
     fb.innerHTML="<b>Placed.</b> "+esc(r.why);
@@ -1694,11 +1959,49 @@ function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); retu
    own wording, and the snapshots stack under the rubric so the climb reads
    like the EAL WAGOLL table: the same idea, said better each time. */
 function wkLevel(){ return WK_LEVELS.find(L=>L.n===WK.level); }
+function wkPage(n){ WK.climbStart=n; renderWkBuild(); }
 function wkLevelIdx(){ return WK_LEVELS.findIndex(L=>L.n===WK.level); }
 function wkAvail(list){ return list.map((x,i)=>({x,i})).filter(o=>{
   const lv=o.x.lv||[5,8]; return WK.level>=lv[0] && WK.level<=lv[1]; }); }
 function wkRetired(x){ const lv=x.lv||[5,8]; return WK.level>lv[1]; }
 function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
+/* Resolve a starter recipe (kind + tile text) into canvas refs. */
+function wkStarter(fid){
+  const lists={open:WK_BUILD.opens, subj:WK_BUILD.subjects, verb:WK_BUILD.verbs,
+               idea:WK_BUILD.ideas, eff:WK_BUILD.effects, con:WK_BUILD.cons};
+  const canvas=[], harvested=[];
+  (WK_BUILD.starters[fid]||[]).forEach(pair=>{
+    const k=pair[0], t=pair[1];
+    if(k==="q"){
+      const i=WK_BUILD.segs.findIndex(sg=>sg.t.includes(t));
+      if(i>=0){ if(!harvested.includes(i)) harvested.push(i); canvas.push({k:"q",i}); }
+    } else {
+      const i=lists[k].findIndex(x=>x.t===t);
+      if(i>=0) canvas.push({k,i});
+    }
+  });
+  return {canvas, harvested};
+}
+function wkSetFocus(fid){
+  const prev=WK.focus;
+  WK.focus=fid;
+  /* At the start of the climb, picking a focus lays the finished Level 5
+     sentence on the canvas. Switching focus before you've changed anything
+     swaps the freebie — but it never clobbers a sentence you've worked on. */
+  const startOfClimb = WK.level===6 && !WK.versions[6];
+  const untouched = !WK.canvas.length ||
+    (prev && JSON.stringify(WK.canvas)===JSON.stringify(wkStarter(prev).canvas));
+  if(startOfClimb && untouched){
+    const st=wkStarter(fid);
+    WK.canvas=st.canvas; WK.harvested=st.harvested.slice();
+    WK.versions[5]={t:wkText(st.canvas), h:wkTextHtml(st.canvas), given:true};
+  }
+  renderWkBuild();
+  if(startOfClimb && untouched){
+    const fb=$("fb"); if(fb){ fb.className="feedback warn";
+    fb.innerHTML="<b>Level 5 is done for you</b> — that whole sentence just landed on your canvas, and it's already in the wall above. Your climb starts at <b>Level 6</b>: weave the quote INSIDE the sentence with a joiner, instead of leaving it beside."; }
+  }
+}
 
 function wkTileData(c){
   if(c.k==="open") return WK_BUILD.opens[c.i];
@@ -1707,12 +2010,31 @@ function wkTileData(c){
   if(c.k==="idea") return WK_BUILD.ideas[c.i];
   if(c.k==="eff")  return WK_BUILD.effects[c.i];
   if(c.k==="con")  return WK_BUILD.cons[c.i];
-  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"“"+sg.t.replace(/[.,]$/,"")+"”", seg:sg}; }
+  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”", seg:sg}; }
   return {t:""};
+}
+function wkHlClass(k){
+  return k==="subj"?"hl-feat":k==="verb"?"hl-verb":k==="q"?"hl-ev":
+         k==="idea"?"hl-idea":k==="eff"?"hl-eff":"";
+}
+/* The student's own sentence, marked up in the same colours as the models —
+   so their writing gets read with the same eyes as the WAGOLL examples. */
+function wkTextHtml(canvas){
+  const arr=canvas||WK.canvas;
+  let out="", first=true;
+  arr.forEach(c=>{
+    let t=esc(wkTileData(c).t);
+    const cls=wkHlClass(c.k);
+    if(first){ t=t.charAt(0).toUpperCase()+t.slice(1); first=false; }
+    else if(!(t===","||t===".")) out+=" ";
+    out += cls?`<em class="${cls}">${t}</em>`:t;
+  });
+  if(out && !/[.!?]$/.test(out.replace(/<[^>]+>/g,""))) out+=".";
+  return out;
 }
 function wkKindClass(k){
   return k==="subj"?"k-subj":k==="verb"?"k-verb":k==="q"?"k-q":
-         k==="eff"?"k-eff":k==="idea"?"k-eff":k==="open"?"k-open":"k-con";
+         k==="eff"?"k-eff":k==="idea"?"k-idea":k==="open"?"k-open":"k-con";
 }
 function wkText(canvas){
   let out="";
@@ -1734,22 +2056,24 @@ function renderWkBuild(){
   let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb</div>
   <h2>${esc(WK_BUILD.prompt)}</h2>`;
 
-  /* ---- the rubric ladder, with the student's own climb stacked under it ---- */
-  h+=`<div class="climb">`;
-  WK_LEVELS.forEach(lv=>{
-    const state = lv.n<WK.level ? "done" : (lv.n===WK.level ? "now" : "locked");
-    const mine = WK.versions[lv.n];
-    h+=`<div class="climbrow ${state}">
-      <div class="climbhead">
-        <span class="cl">Level ${lv.n} · ${esc(lv.name)} ${lv.n<WK.level?"✓":""}</span>
-        <span class="cvic">${esc(lv.vic)}</span>
-        ${S.eal?`<span class="ceal">${esc(lv.eal)}</span>`:""}
-      </div>
-      ${mine?`<div class="cmine">${esc(mine)}</div><div class="cwhy">${esc(lv.why)}</div>`:""}
-      ${lv.n===WK.level?`<div class="cgoal"><b>Your job now:</b> ${esc(lv.goal)}</div>`:""}
-    </div>`;
+  /* ---- the same WAGOLL table, sliding as you climb ---- */
+  const idx=wkLevelIdx();
+  if(WK.climbStart===undefined) WK.climbStart=0;
+  if(idx<WK.climbStart) WK.climbStart=idx;
+  else if(idx>WK.climbStart+WAGOLL_COLS-1) WK.climbStart=idx-WAGOLL_COLS+1;
+  h+=wkColourKey();
+  h+=wagollTable({
+    levels:WK_LEVELS, start:WK.climbStart, pageFn:"wkPage", activeIdx:idx, justIdx:WK.justIdx,
+    doneIdx:(k)=>!!WK.versions[WK_LEVELS[k].n],
+    exampleCell:(k)=>{
+      const lv=WK_LEVELS[k], mine=WK.versions[lv.n];
+      const fresh=(WK.justIdx===k)?" justplaced":"";
+      if(mine) return `<div class="wcell ex filled${fresh}">${mine.given?`<span class="giventag">done for you</span>`:""}<div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
+      if(k===idx) return `<div class="wcell ex now"><span class="wempty">you're writing this one now — build it below</span></div>`;
+      if(lv.n===5) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
+      return `<div class="wcell ex"><span class="wempty">${k<idx?"—":"not yet"}</span></div>`;
+    }
   });
-  h+=`</div>`;
 
   /* ---- what changed at this level ---- */
   if(L.unlocks||L.retires){
@@ -1761,10 +2085,10 @@ function renderWkBuild(){
 
   /* ---- focus ---- */
   h+=`<p class="q">Your focus:</p><div class="idea-chips">`+
-    WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="WK.focus='${f.id}';renderWkBuild()">${esc(f.label)}</button>`).join("")+`</div>`;
+    WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="wkSetFocus('${f.id}')">${esc(f.label)}</button>`).join("")+`</div>`;
 
-  /* ---- passage harvest, from L6 ---- */
-  if(WK.level>=6){
+  /* ---- passage harvest ---- */
+  {
     h+=`<p class="q">Collect evidence — tap lines to add them to your quote tiles:</p>
     <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
     `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
@@ -1779,9 +2103,9 @@ function renderWkBuild(){
   if(WK.level>=8) h+=`<div class="bin opens"><h4>Lead-in</h4><div class="binbody" id="wb-open"></div></div>`;
   h+=`<div class="bin subjects"><h4>Subjects</h4><div class="binbody" id="wb-subj"></div></div>
       <div class="bin verbs"><h4>Verbs</h4><div class="binbody" id="wb-verb"></div></div>`;
-  if(WK.level>=6) h+=`<div class="bin quotes"><h4>Your quotes</h4><div class="binbody" id="wb-q"></div></div>`;
-  if(WK.level<=6) h+=`<div class="bin effects"><h4>Key ideas</h4><div class="binbody" id="wb-idea"></div></div>`;
-  else h+=`<div class="bin effects"><h4>Effect on the reader</h4><div class="binbody" id="wb-eff"></div></div>`;
+  h+=`<div class="bin ideas"><h4>Idea</h4><div class="binbody" id="wb-idea"></div></div>`;
+  h+=`<div class="bin quotes"><h4>Evidence</h4><div class="binbody" id="wb-q"></div></div>`;
+  h+=`<div class="bin effects"><h4>Purpose</h4><div class="binbody" id="wb-eff"></div></div>`;
   h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div></div>`;
 
   h+=`<div class="feedback" id="fb" aria-live="polite"></div>
@@ -1790,7 +2114,7 @@ function renderWkBuild(){
     <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
   </div>`;
   $("body").innerHTML=h;
-  wkFillBins(); wkDraw();
+  wkFillBins(); wkDraw(); wkAnimateFresh();
 }
 
 function wkHarvest(i){
@@ -1824,7 +2148,7 @@ function wkFillBins(){
     WK.harvested.forEach(i=>{
       const sg=WK_BUILD.segs[i];
       const b=document.createElement("button"); b.className="tile k-q";
-      b.textContent="“"+sg.t.replace(/[.,]$/,"")+"”";
+      b.textContent="“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”";
       b.onclick=()=>{ WK.canvas.push({k:"q",i}); wkDraw(); };
       qbin.appendChild(b);
     });
@@ -1868,6 +2192,19 @@ function wkBindDrag(el, idx){
     sx=e.clientX; sy=e.clientY; dragging=false;
     try{ el.setPointerCapture(e.pointerId); }catch(_){}
 
+    /* Commit the DOM order into WK.canvas immediately, every time the drag
+       reorders — never wait for the release. A lost pointerup (released off
+       the page, capture denied) then can't leave the model behind the DOM,
+       which used to make the next re-render "shuffle" the sentence back. */
+    const commit=()=>{
+      const cv=$("wkCanvas"); if(!cv) return;
+      const ts=[...cv.querySelectorAll(".ctile")];
+      WK.canvas = ts.map(t=>WK.canvas[+t.dataset.idx]);
+      ts.forEach((t,j)=>t.dataset.idx=j);
+      const prev=$("wkPrev");
+      if(prev && WK.canvas.length) prev.textContent=wkText();
+    };
+
     const move=ev=>{
       if(!dragging){
         if(Math.hypot(ev.clientX-sx, ev.clientY-sy) < 8) return;
@@ -1882,25 +2219,23 @@ function wkBindDrag(el, idx){
         if(ev.clientX > r.left + r.width/2) ins++; else break;
       }
       const ref=others[ins] || null;
-      if(ref!==el.nextSibling) cv.insertBefore(el, ref);
+      if(ref!==el.nextSibling){ cv.insertBefore(el, ref); commit(); }
     };
 
     const up=()=>{
-      el.removeEventListener("pointermove", move);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
       el.classList.remove("grabbing");
-      if(!dragging){
-        WK.canvas.splice(+el.dataset.idx, 1);
-      } else {
-        const cv=$("wkCanvas");
-        const order=[...cv.querySelectorAll(".ctile")].map(t=>+t.dataset.idx);
-        WK.canvas = order.map(i=>WK.canvas[i]);
-      }
+      if(!dragging) WK.canvas.splice(+el.dataset.idx, 1);
       wkDraw();
     };
 
-    el.addEventListener("pointermove", move);
-    el.addEventListener("pointerup", up, {once:true});
-    el.addEventListener("pointercancel", up, {once:true});
+    /* Listen on window: pointer events bubble up from the captured element,
+       and window still hears the release even if the tile never does. */
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   });
 }
 /* ---- grammar: order matters, not just presence ---- */
@@ -1959,9 +2294,9 @@ function wkCheck(){
       open:"This level opens with a lead-in phrase — pick one from the Lead-in bank and put it first.",
       subj:"There's no subject. Who or what is this sentence about?",
       verb:"There's no verb. What does your subject DO?",
-      idea:"Name the key idea this relates to — pick one from Key ideas.",
-      q:"This level needs evidence. Harvest a line from the passage and weave it in.",
-      eff:"This level needs an effect on the reader — what does the writing make us understand or feel?"
+      idea:"Every level needs an IDEA — pick one from the blue Ideas bank.",
+      q:"Every level needs EVIDENCE. Harvest a line from the passage and put it in.",
+      eff:"Every level needs a PURPOSE — what does the writing make the reader feel or understand?"
     }[k];
     findings.push({sev:"err", text:msg});
   });
@@ -1969,12 +2304,29 @@ function wkCheck(){
   /* grammar / word order */
   wkGrammar(kinds).forEach(f=>findings.push(f));
 
+  /* Level 6 and up: the quote has to live INSIDE the sentence, not beside it.
+     This is the actual gate between 5 and 6 — the Level 5 freebie leaves the
+     quote sitting after a full stop, and the student's first job is to weave
+     it in with a joiner. */
+  if(WK.level>=6){
+    WK.canvas.forEach((c,i)=>{
+      if(c.k!=="q") return;
+      const before=i>0?tiles[i-1]:null;
+      if(!before || (before.c.k==="con" && (before.d.t==="."||before.d.t==="and")))
+        findings.push({sev:"err", text:"Your quote is still sitting beside the sentence — from Level 6 it has to be woven in. Put 'when he says' or 'in the line' in front of it (and take out the full stop that cuts it off)."});
+    });
+  }
+
   /* quality */
   const subj=tiles.filter(t=>t.c.k==="subj"), verbs=tiles.filter(t=>t.c.k==="verb");
   if(subj.some(t=>t.d.q==="vague"))
     findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Name the actual thing — a body, a voice, a technique, or the author."});
   if(WK.level>=8 && !subj.some(t=>t.d.q==="craft"))
     findings.push({sev:"warn", text:"At this level the subject of your sentence should be a writing choice — the simile, the clipped dialogue, the narration, or Fraillon herself."});
+  if(WK.level>=9 && !verbs.some(t=>t.d.q==="pos"))
+    findings.push({sev:"warn", text:"At the top of the ladder the verb should say what the writing does to US — positions the reader to, invites the reader to question, quietly denies the reader."});
+  if(WK.level>=9 && !tiles.some(t=>(t.c.k==="eff") && t.d.q==="interp"))
+    findings.push({sev:"warn", text:"Level 9 asks what the writing withholds or makes us accept. Pick one of the interpretive endings — the ones about what the reader is given or denied."});
   if(WK.level>=7 && verbs.some(t=>t.d.q==="weak"))
     findings.push({sev:"warn", text:"That verb is flat. Trade up to an analytical verb — reveals, suggests, exposes, betrays, emphasises."});
   tiles.filter(t=>t.c.k==="q").forEach(t=>{
@@ -1992,7 +2344,8 @@ function wkCheck(){
   if(!WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
 
   if(level==="ok"){
-    WK.versions[WK.level]=wkText();
+    WK.versions[WK.level]={t:wkText(), h:wkTextHtml()};
+    WK.justIdx=wkLevelIdx();
     save();
     const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
@@ -2020,21 +2373,160 @@ function wkLift(){
     (next.retires?" <br><b>Watch out:</b> "+esc(next.retires):"");
 }
 function wkFinishClimb(){
-  if(!S.kept.includes(wkText())) S.kept.push(wkText());
+  const finalT=(WK.versions[WK.level]&&WK.versions[WK.level].t)||wkText();
+  if(!S.kept.includes(finalT)) S.kept.push(finalT);
   S.done.wk=true; save();
   const sc=scoreFor("wk");
   let h=`<h2>Analysis workshop — the climb</h2>
   <div class="panel"><p style="margin:0 0 10px"><b>${sc.got}/${sc.total} first-attempt.</b> One idea, said four ways — each level lifting the last:</p>`;
-  WK_LEVELS.forEach(lv=>{ const v=WK.versions[lv.n]; if(!v) return;
+  WK_LEVELS.forEach(lv=>{ const vv=WK.versions[lv.n]; if(!vv) return; const v=vv.t;
     h+=`<div class="climbrow done" style="margin-bottom:8px">
       <div class="climbhead"><span class="cl">Level ${lv.n} · ${esc(lv.name)}</span>
-      <span class="cvic">${esc(lv.vic)}</span></div>
-      <div class="cmine">${esc(v)}</div></div>`; });
+      <span class="cvic">${esc(lv.focus||lv.vic)}</span></div>
+      <div class="cmine">${vv.h||esc(v)}</div>
+      <div class="cwhy">${lv.exp||""}</div></div>`; });
   h+=`<p class="lead" style="margin:10px 0 0">Read the first and the last one after each other. Nothing was thrown away — you kept the same idea and kept lifting how you said it. That is exactly what redrafting is, and it is what the CAT is marked on.</p></div>
   <div class="btnrow"><button class="btn" onclick="runWk()">Climb again with a new focus</button>
   <button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
   $("body").innerHTML=h;
 }
+
+/* ---------- WORD NOTEPAD ----------
+   A little notepad in the corner, on every screen. It reads the vocab hub's
+   own storage live: sets you haven't met stay locked (word visible, parts
+   hidden) with a jump straight to that set — and the vocab hub offers the
+   trip back to exactly where you were. Mastered words also light up inside
+   the reading passages; tapping one decomposes it into its morphemes. */
+let lastArg=null;
+let GP={open:false,set:"all",az:false,exp:null};
+const GRTL={ar:1,fa:1};
+function vocabSt(){ try{ return JSON.parse(localStorage.getItem("bonesparrow.vocabhub.v1"))||{}; }catch(e){ return {}; } }
+function glossLang(){ const pr=readProfile(); return (pr&&pr.lang)||""; }
+function glossStudied(setId){ const V=vocabSt(); return !!(V.lessons&&V.lessons[setId]&&V.lessons[setId].studied); }
+function glossState(w){ const V=vocabSt(); const ws=(V.wstat||{})[w]; return (ws&&ws.mastered)?"mastered":"met"; }
+function escJs(t){ return String(t).replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
+
+function glossMount(){
+  if($("gnoteBtn")) return;
+  const b=document.createElement("button");
+  b.id="gnoteBtn"; b.title="My word notepad"; b.setAttribute("aria-label","My word notepad");
+  b.textContent="\ud83d\udcd3";
+  b.onclick=()=>{ GP.open=!GP.open; renderGloss(); };
+  document.body.appendChild(b);
+  const pn=document.createElement("div"); pn.id="gpanel"; document.body.appendChild(pn);
+  renderGloss();
+}
+function renderGloss(){
+  const pn=$("gpanel"); if(!pn) return;
+  if(!GP.open){ pn.style.display="none"; return; }
+  pn.style.display="flex"; pn.className="gpanel";
+  const lang=glossLang();
+  let sets=GLOSSARY.slice();
+  if(GP.set!=="all") sets=sets.filter(g=>g.set===GP.set);
+  let body="";
+  if(GP.az){
+    const all=[];
+    sets.forEach(g=>g.words.forEach(w=>all.push({g,w})));
+    all.sort((a,b)=>a.w.w.localeCompare(b.w.w));
+    body=all.map(o=>glossRow(o.g,o.w,lang)).join("");
+  } else {
+    sets.forEach(g=>{
+      const open=glossStudied(g.set);
+      body+=`<div class="gsec">${esc(g.t)}${open?"":" \ud83d\udd12"}</div>`;
+      if(!open) body+=`<div class="glock">Not met yet — <button class="glink" onclick="glossGo('${escJs(g.set)}')">meet these words in the Vocab Hub →</button></div>`;
+      body+=g.words.map(w=>glossRow(g,w,lang)).join("");
+    });
+  }
+  const opts=[`<option value="all"${GP.set==="all"?" selected":""}>All chapters</option>`]
+    .concat(GLOSSARY.map(g=>`<option value="${esc(g.set)}"${GP.set===g.set?" selected":""}>${esc(g.t)}</option>`)).join("");
+  pn.innerHTML=`
+   <div class="ghead"><span>\ud83d\udcd3 My word notepad</span>
+     <button class="gx" onclick="GP.open=false;renderGloss()" aria-label="close">×</button></div>
+   <div class="gtools">
+     <select onchange="GP.set=this.value;GP.exp=null;renderGloss()" aria-label="filter by chapter">${opts}</select>
+     <button class="gaz${GP.az?" on":""}" onclick="GP.az=!GP.az;renderGloss()">A–Z</button>
+   </div>
+   <div class="gbody">${body||`<div class="glock">Nothing here yet.</div>`}</div>
+   <div class="gfoot">Words you've mastered glow in the passages — tap one to watch it come apart. Locked sets unlock when you meet them in the Vocab Hub.</div>`;
+}
+function glossRow(g,w,lang){
+  if(!glossStudied(g.set)) return `<div class="gword locked"><span class="st"></span><span class="gt">${esc(w.w)}</span><span class="glk">\ud83d\udd12</span></div>`;
+  const st=glossState(w.w), on=GP.exp===w.w;
+  let d="";
+  if(on){
+    const parts=w.parts?w.parts.map(t=>`<span class="mchip"><b>${esc(t[0])}</b><small>${esc(t[1])}</small></span>`).join(`<span class="mplus">+</span>`):"";
+    const tr=(lang&&w.tr&&w.tr[lang])?`<div class="gtr"${GRTL[lang]?' dir="rtl"':""} lang="${esc(lang)}">${esc(w.tr[lang])}</div>`:"";
+    d=`<div class="gdetail">${parts?`<div class="gparts">${parts}</div>`:""}<div class="gm">${esc(w.m)}</div>${tr}
+       <button class="glink" onclick="glossGo('${escJs(g.set)}')">practise it in the Vocab Hub →</button></div>`;
+  }
+  return `<div class="gword ${st}${on?" on":""}" onclick="GP.exp=(GP.exp==='${escJs(w.w)}')?null:'${escJs(w.w)}';renderGloss()">
+    <span class="st"></span><span class="gt">${esc(w.w)}</span><span class="gpos">${esc(w.pos)}</span>${st==="mastered"?`<span class="gtick">✓</span>`:""}</div>`+d;
+}
+function glossGo(setId){
+  localStorage.setItem("bonesparrow.return.v1",
+    JSON.stringify({href:"BoneSparrowReadingHub.html", screen:screen, arg:lastArg||null}));
+  location.href="BoneSparrowVocabHub.html#set-"+encodeURIComponent(setId);
+}
+
+/* ---- mastered words light up inside passages ---- */
+function glossMastered(){
+  const V=vocabSt(); const out=[];
+  if(!V.wstat) return out;
+  GLOSSARY.forEach(g=>{ if(!glossStudied(g.set)) return;
+    g.words.forEach(w=>{ const ws=V.wstat[w.w]; if(ws&&ws.mastered) out.push(w); }); });
+  return out;
+}
+function glossFindBase(m){
+  const k=String(m).toLowerCase();
+  for(const g of GLOSSARY){ for(const w of g.words){
+    const b=w.w.toLowerCase();
+    if(k===b||k===b+"s"||k===b+"es"||k===b+"d"||k===b+"ed") return {g,w};
+  } }
+  return null;
+}
+function glossify(html){
+  const words=glossMastered().map(w=>w.w);
+  if(!words.length) return html;
+  words.sort((a,b)=>b.length-a.length);
+  const re=new RegExp("\\b("+words.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?:s|es|d|ed)?").join("|")+")\\b","gi");
+  const seen={};
+  return String(html).split(/(<[^>]*>)/).map(part=>{
+    if(part.charAt(0)==="<") return part;
+    return part.replace(re, m=>{
+      const hit=glossFindBase(m); if(!hit) return m;
+      if(seen[hit.w.w]) return m;
+      seen[hit.w.w]=1;
+      return `<button class="gw" data-w="${esc(hit.w.w)}" onclick="morphPop(event)">${m}</button>`;
+    });
+  }).join("");
+}
+function morphPop(ev){
+  ev.stopPropagation();
+  const hit=glossFindBase(ev.currentTarget.dataset.w); if(!hit) return;
+  morphPopClose();
+  const lang=glossLang();
+  const parts=hit.w.parts?hit.w.parts.map((t,i)=>`<span class="mchip pop" style="animation-delay:${140+i*170}ms"><b>${esc(t[0])}</b><small>${esc(t[1])}</small></span>`).join(`<span class="mplus">+</span>`):"";
+  const tr=(lang&&hit.w.tr&&hit.w.tr[lang])?`<div class="gtr"${GRTL[lang]?' dir="rtl"':""} lang="${esc(lang)}">${esc(hit.w.tr[lang])}</div>`:"";
+  const d=document.createElement("div"); d.className="morphpop"; d.id="morphpop";
+  d.innerHTML=`<button class="gx" onclick="morphPopClose()" aria-label="close">×</button>
+    <div class="mpw">${esc(hit.w.w)}</div>
+    ${parts?`<div class="gparts">${parts}</div>`:""}
+    <div class="gm">${esc(hit.w.m)}</div>${tr}
+    <div class="mpnote">from your word notepad — mastered ✓</div>`;
+  document.body.appendChild(d);
+  const r=d.getBoundingClientRect();
+  let x=Math.min(Math.max(8,ev.clientX-r.width/2), window.innerWidth-r.width-8);
+  let y=ev.clientY+16;
+  if(y+r.height>window.innerHeight-8) y=Math.max(8, ev.clientY-r.height-16);
+  d.style.left=x+"px"; d.style.top=y+"px";
+  setTimeout(()=>document.addEventListener("pointerdown", morphPopAway),0);
+}
+function morphPopAway(e){
+  const pp=$("morphpop");
+  if(!pp){ document.removeEventListener("pointerdown", morphPopAway); return; }
+  if(!pp.contains(e.target)){ pp.remove(); document.removeEventListener("pointerdown", morphPopAway); }
+}
+function morphPopClose(){ const pp=$("morphpop"); if(pp) pp.remove(); }
 
 /* ---------- REPORT ---------- */
 function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
@@ -2078,7 +2570,19 @@ function renderReport(){
   </div>`;
 }
 
-if(location.hash==="#report") go("rpt"); else go("home");
+(function boot(){
+  if(location.hash==="#report"){ location.replace("index.html#report"); return; }
+  if(location.hash==="#resume"){
+    /* back from the vocab hub — pick up exactly where the student left off */
+    try{
+      const m=JSON.parse(localStorage.getItem("bonesparrow.return.v1"));
+      localStorage.removeItem("bonesparrow.return.v1");
+      history.replaceState(null,"",location.pathname);
+      if(m && m.screen){ go(m.screen, m.arg||undefined); return; }
+    }catch(e){}
+  }
+  go("home");
+})();
 </script>
 </body>
 </html>

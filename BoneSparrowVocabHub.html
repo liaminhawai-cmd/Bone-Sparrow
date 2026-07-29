@@ -283,6 +283,10 @@
     .container{border:none;box-shadow:none;max-width:100%;padding:8px}
     .noprint{display:none !important}
   }
+#backTrip{position:fixed;left:16px;bottom:16px;z-index:60;border:1px solid var(--line);border-radius:24px;
+  background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:9px 16px;font-weight:700;cursor:pointer;font-size:13.5px}
+#backTrip:hover{transform:translateY(-1px)}
+#backTrip .bx{display:inline-block;margin-left:8px;color:#98917f;font-weight:400}
 </style>
 </head>
 <body>
@@ -1883,7 +1887,7 @@ function go(id){
   updateNav(id);
   if(id==="id") renderIdentity();
   if(id==="home") renderHome();
-  if(id==="report") renderReport();
+  if(id==="report"){ location.href="index.html#report"; return; }
   if(id==="morphtable") renderMorphTable();
   if(id==="glossary") renderGlossary();
 }
@@ -2881,7 +2885,28 @@ function idSubmit(){
 }
 
 /* ---- boot ---- */
-if(location.hash==="#report") go("report"); else go("home");
+(function boot(){
+  if(location.hash==="#report"){ location.replace("index.html#report"); return; }
+  const m=location.hash.match(/^#set-(.+)$/);
+  go("home");
+  if(m && idOk()){
+    const id=decodeURIComponent(m[1]);
+    if(LESSON_BY_ID[id]) openLesson(id, false);
+  }
+  /* the trip back: if another page sent the student here, offer the way home */
+  try{
+    const bk=JSON.parse(localStorage.getItem("bonesparrow.return.v1"));
+    if(bk && bk.href){
+      const b=document.createElement("button"); b.id="backTrip";
+      b.innerHTML=`↩ Back to where you were <span class="bx" title="dismiss">×</span>`;
+      b.onclick=(e)=>{
+        if(e.target.classList.contains("bx")){ localStorage.removeItem("bonesparrow.return.v1"); b.remove(); return; }
+        location.href=bk.href+"#resume";
+      };
+      document.body.appendChild(b);
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
