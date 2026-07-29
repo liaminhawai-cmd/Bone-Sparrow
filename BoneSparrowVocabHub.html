@@ -129,6 +129,7 @@
 
   /* ---- word builder ---- */
   .buildword{font-family:Georgia,serif;font-size:22px;text-align:center;margin-bottom:2px;color:var(--muted)}
+  .bclue{text-align:center;font-size:14px;color:var(--ink);margin:0 auto 12px;max-width:520px;line-height:1.5}
   .slots,.bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:14px 0}
   .slot{min-width:78px;min-height:50px;border:2px dashed var(--line);border-radius:9px;
         display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;padding:6px 12px;background:var(--bg)}
@@ -518,9 +519,9 @@ const LESSONS = [
   { w:"Asylum seeker", pos:"noun phrase", domain:"world",
     meaning:"Someone who has asked another country for protection, but whose claim has not yet been decided.",
     type:"origin",
-    originQ:"<b>Asylum</b> comes from the Greek <i>asylon</i>. What did <i>asylon</i> literally mean?",
-    originOpts:["A place that cannot be seized — where no one may be dragged away","A hospital for the sick","A ship carrying strangers","A gift given to a guest"],
-    originA:"A place that cannot be seized — where no one may be dragged away",
+    originQ:"What does <b>asylum seeker</b> mean?",
+    originOpts:["Someone who has asked another country for protection, but is still waiting for a decision","Someone who has already been granted permission to live in a new country","A soldier sent to fight in another country","A tourist visiting another country on holiday"],
+    originA:"Someone who has asked another country for protection, but is still waiting for a decision",
     note:"Greek <i>a-</i> (without) + <i>sylon</i> (right of seizure): a place where you <b>cannot be taken</b>. In ancient temples, a person who reached asylum could not legally be dragged out. That is the promise the word still carries — worth holding on to as you read what the Centre actually is.",
     apply:[
       { id:"ap_asy_scn", type:"scenario",
@@ -583,9 +584,9 @@ const LESSONS = [
   { w:"Trauma", pos:"noun", domain:"feeling",
     meaning:"A deeply distressing experience — and the lasting harm it leaves behind.",
     type:"origin",
-    originQ:"<b>Trauma</b> is Greek. What did it originally mean?",
-    originOpts:["A wound","A long journey","A bad memory","A loud noise"],
-    originA:"A wound",
+    originQ:"What does <b>trauma</b> mean?",
+    originOpts:["A deeply distressing experience, and the lasting harm it leaves behind","A minor disagreement between friends","A funny story told to cheer someone up","A long journey by boat"],
+    originA:"A deeply distressing experience, and the lasting harm it leaves behind",
     note:"Greek <i>trauma</i> = a wound. For centuries it meant only physical injury; doctors extended it to the mind roughly a century ago. That extension is the whole idea: some injuries do not show on the skin. When you meet Maá later in the novel, remember that the word for what has happened to her is a word for a wound.",
     apply:[
       { id:"ap_tra_scn", type:"scenario",
@@ -720,9 +721,9 @@ const LESSONS = [
   { w:"Treasure", pos:"noun", domain:"story",
     meaning:"Something precious that is kept and protected. The Night Sea washes up 'treasures' for Subhi — a shell, a feather, a photo.",
     type:"origin",
-    originQ:"The word <b>treasure</b> comes from the Greek <i>thesauros</i>, meaning 'a storehouse of precious things'. Which modern book keeps the same word alive?",
-    originOpts:["A thesaurus — a storehouse of words","A dictionary — a book of definitions","An atlas — a book of maps","An almanac — a book of dates"],
-    originA:"A thesaurus — a storehouse of words",
+    originQ:"What does <b>treasure</b> mean here?",
+    originOpts:["Something precious that is kept and protected","Something thrown away because it is broken","Food saved for a special occasion","A place where money is kept safe"],
+    originA:"Something precious that is kept and protected",
     note:"Greek <i>thesauros</i> — a storehouse for precious things — became French <i>trésor</i>, then English <b>treasure</b>. A <b>thesaurus</b> is literally a treasure-house of words. Subhi's treasures cost nothing and are worth everything: in a place where nobody owns anything, a shell is wealth.",
     apply:[
       { id:"ap_treas_scn", type:"scenario",
@@ -737,9 +738,9 @@ const LESSONS = [
   { w:"Compound", pos:"noun", domain:"camp",
     meaning:"A fenced-off area containing buildings — in the novel, the camp is divided into compounds like Family and Alpha.",
     type:"origin",
-    originQ:"Odd fact: <b>compound</b> (a fenced area) does NOT come from Latin. Where does it come from?",
-    originOpts:["Malay 'kampung', meaning village or enclosure","Greek 'kampos', meaning field","French 'campagne', meaning countryside","It was invented by the Australian government"],
-    originA:"Malay 'kampung', meaning village or enclosure",
+    originQ:"What does <b>compound</b> mean in the novel?",
+    originOpts:["A fenced-off area containing buildings","A chemical mixture of two or more substances","A word made by joining two smaller words","A sentence with two clauses joined by a conjunction"],
+    originA:"A fenced-off area containing buildings",
     note:"English traders in South-East Asia borrowed Malay <i>kampung</i> (village, enclosure) and reshaped it to sound like the maths word 'compound'. So the word for the fenced blocks of Subhi's camp travelled to English the same way many of the camp's people did — across the sea from Asia. Words are migrants too.",
     apply:[
       { id:"ap_comp_scn", type:"scenario",
@@ -754,9 +755,9 @@ const LESSONS = [
   { w:"Lapping", pos:"verb", domain:"feeling",
     meaning:"Touching gently again and again, like small waves against a shore — Subhi hears the Night Sea 'lapping at the tent'.",
     type:"origin",
-    originQ:"<b>Lapping</b> comes from Old English <i>lapian</i>. What did it originally describe?",
-    originOpts:["An animal drinking with its tongue","A runner finishing a lap","Fabric folded over itself","Waves crashing in a storm"],
-    originA:"An animal drinking with its tongue",
+    originQ:"What does <b>lapping</b> mean here?",
+    originOpts:["Touching gently, again and again, like small waves","Crashing loudly and violently","Running laps around a track","Folding fabric over itself"],
+    originA:"Touching gently, again and again, like small waves",
     note:"Old English <i>lapian</i>: to drink the way a dog does — little repeated touches of the tongue. That's exactly the sound of small waves. When Fraillon writes 'waves lapping at the tent', the imagined sea is gentle, almost friendly — compare it with waves <b>crashing</b> or <b>pounding</b>.",
     apply:[
       { id:"ap_lap_scn", type:"scenario",
@@ -875,9 +876,9 @@ const LESSONS = [
   { w:"Funeral", pos:"noun", domain:"feeling",
     meaning:"The ceremony held after someone dies. After her mum's funeral, Jimmie's house went quiet.",
     type:"origin",
-    originQ:"<b>Funeral</b> comes from the Latin <i>funus</i>. What did <i>funus</i> mean?",
-    originOpts:["A burial ceremony and torch-lit procession","A sad song","A black coat","A stone monument"],
-    originA:"A burial ceremony and torch-lit procession",
+    originQ:"What does <b>funeral</b> mean?",
+    originOpts:["The ceremony held after someone dies","A large party held to celebrate a birthday","A meeting where important decisions are made","A gift given when a baby is born"],
+    originA:"The ceremony held after someone dies",
     note:"Latin <i>funus</i>: the whole ceremony of farewell, once lit by torches. In chapter 3, Jimmie's grief isn't described with big words — it's a quiet house, packed-up boxes, and a doona that still smells of before. Fraillon shows the funeral's long shadow, not the funeral.",
     apply:[
       { id:"ap_fun_scn", type:"scenario",
@@ -892,9 +893,9 @@ const LESSONS = [
   { w:"Doona", pos:"noun", domain:"feeling",
     meaning:"An Australian word for a quilt or duvet — Jimmie hides under the yellow doona her mum gave her.",
     type:"origin",
-    originQ:"<b>Doona</b> is a word mostly used in Australia. Where did it come from?",
-    originOpts:["A Scandinavian word for 'down feathers', made famous here as a brand name","An Aboriginal English word for blanket","A shortening of 'eiderdown-a'","The name of its inventor, D. Oona"],
-    originA:"A Scandinavian word for 'down feathers', made famous here as a brand name",
+    originQ:"What does <b>doona</b> mean?",
+    originOpts:["A quilt or duvet","A type of pillow","A warm winter jacket","A mattress"],
+    originA:"A quilt or duvet",
     note:"From Scandinavian <i>dun</i> (down feathers) — it entered Australian English as a brand name in the 1970s and stuck. In Britain you'd say <i>duvet</i> (French for 'down'), in America <i>comforter</i>. Jimmie's yellow doona, covered in monkeys, is four years old — a gift from when her mum was alive. That detail dates her whole grief.",
     apply:[
       { id:"ap_doona_scn", type:"scenario",
@@ -997,9 +998,9 @@ const LESSONS = [
   { w:"Fouling", pos:"verb", domain:"feeling",
     meaning:"Making something dirty or sick. Fear is 'fouling' Subhi's stomach 'close to spewing'.",
     type:"origin",
-    originQ:"<b>Foul</b> comes from Old English <i>fūl</i>, meaning rotten or stinking. Where else do you hear the same word today?",
-    originOpts:["Sport — a 'foul' breaks the rules and dirties fair play","Cooking — a 'foul' is a burnt meal","Weather — a 'foul' is a light breeze","Music — a 'foul' is a wrong note"],
-    originA:"Sport — a 'foul' breaks the rules and dirties fair play",
+    originQ:"What does <b>fouling</b> mean here?",
+    originOpts:["Making something feel dirty or sick","Making something feel clean and fresh","Making a loud noise","Making something disappear"],
+    originA:"Making something feel dirty or sick",
     note:"Old English <i>fūl</i>: rotten, stinking, disgusting. Foul weather, foul smell, a foul in footy — all 'dirtied' things. When fear starts 'fouling' Subhi's stomach, the word means his own body is turning rotten on him. That's fear from the inside.",
     apply:[
       { id:"ap_foul_scn", type:"scenario",
@@ -1014,9 +1015,9 @@ const LESSONS = [
   { w:"Buzzing", pos:"verb", domain:"feeling",
     meaning:"Making a low continuous sound like bees — Subhi's brain is 'buzzing louder and louder' as panic rises.",
     type:"origin",
-    originQ:"<b>Buzz</b> is an onomatopoeia. What does that mean?",
-    originOpts:["A word built to imitate the sound it names","A word borrowed from Greek","A word with two opposite meanings","A word that is also a name"],
-    originA:"A word built to imitate the sound it names",
+    originQ:"What does <b>buzzing</b> mean here?",
+    originOpts:["Making a low, continuous sound, like bees","Completely silent","Flashing brightly","Moving very slowly"],
+    originA:"Making a low, continuous sound, like bees",
     note:"Say it aloud: <i>buzz</i>. The word performs its own sound — like hiss, crash, whisper, clang. Fraillon stacks them in this scene: teeth <b>clang</b>, brain <b>buzzes</b>. Sound-words put the reader inside Subhi's skull while Beaver towers over him.",
     apply:[
       { id:"ap_buzz_scn", type:"scenario",
@@ -1135,9 +1136,9 @@ const LESSONS = [
   { w:"Centre", pos:"noun", domain:"camp",
     meaning:"The official name everyone uses for the detention camp — 'the Centre'.",
     type:"origin",
-    originQ:"<b>Centre</b> comes from Greek <i>kentron</i>. What did <i>kentron</i> actually mean?",
-    originOpts:["A sharp spike or goad — the point a compass leg stabs into the page","A warm fireplace","A meeting hall","The middle of a circle"],
-    originA:"A sharp spike or goad — the point a compass leg stabs into the page",
+    originQ:"What does 'the Centre' mean in this novel?",
+    originOpts:["The official name everyone uses for the detention camp","The middle of the desert","A shopping centre near the camp","The main office of the government"],
+    originA:"The official name everyone uses for the detention camp",
     note:"Greek <i>kentron</i>: a spike. The 'centre' of a circle is where the compass point <b>stabs</b>. Governments call the camp a 'Centre' to make it sound neutral and administrative — but the word's buried etymology (a spike) tells the truth the euphemism hides. Language can disguise things; etymology remembers.",
     apply:[
       { id:"ap_cent_scn", type:"scenario",
@@ -1189,9 +1190,9 @@ const LESSONS = [
   { w:"Alpha", pos:"noun", domain:"camp",
     meaning:"The compound where the men live — where Eli is sent, away from Family.",
     type:"origin",
-    originQ:"<b>Alpha</b> is the first letter of which alphabet — the one that gave 'alphabet' its name?",
-    originOpts:["Greek (alpha, beta…)","Latin (a, b…)","Arabic (alif, ba…)","Cyrillic (a, be…)"],
-    originA:"Greek (alpha, beta…)",
+    originQ:"What does <b>Alpha</b> mean in this novel?",
+    originOpts:["The compound where the men live, away from Family","The name of the head guard","A rank given to the strongest detainees","The main gate of the camp"],
+    originA:"The compound where the men live, away from Family",
     note:"Greek letters: <i>alpha</i>, <i>beta</i>… — 'alphabet' is just the first two joined. Camps and armies label their sections Alpha, Beta, Delta because letters sound orderly and mean nothing. A boy is taken from 'Family' and filed under a letter: the naming system itself tells you what the camp does to people.",
     apply:[
       { id:"ap_alpha_scn", type:"scenario",
@@ -1254,9 +1255,9 @@ const LESSONS = [
   { w:"Cyclone", pos:"noun", domain:"feeling",
     meaning:"A violent spinning storm — Jimmie's mum called her 'cyclone Jimmie' for the mess she leaves behind.",
     type:"origin",
-    originQ:"<b>Cyclone</b> was coined in 1848 from Greek <i>kyklon</i>, 'moving in a circle'. Which everyday word shares its root?",
-    originOpts:["Bicycle — two circles","Ceiling — overhead cover","Cylinder — a rolled shape","Sickle — a curved blade"],
-    originA:"Bicycle — two circles",
+    originQ:"What does <b>cyclone</b> mean?",
+    originOpts:["A violent, spinning storm","A gentle breeze","A long period without rain","A sudden flood"],
+    originA:"A violent, spinning storm",
     note:"Greek <i>kyklos</i>, circle — the root of <b>cycle</b>, <b>bicycle</b>, <b>recycle</b>. A ship captain coined 'cyclone' for storms that spin in a circle. 'Cyclone Jimmie' is a mother's joke that outlives her: every time the nickname appears, the reader feels who gave it.",
     apply:[
       { id:"ap_cyc_scn", type:"scenario",
@@ -1324,9 +1325,9 @@ const LESSONS = [
   { w:"Echo", pos:"noun", domain:"story",
     meaning:"A sound that bounces back. Anka listens for echoes; readers listen for them too — moments that repeat with new meaning.",
     type:"origin",
-    originQ:"<b>Echo</b> comes from Greek myth. Who or what was Echo?",
-    originOpts:["A nymph cursed to only repeat the last words spoken to her","A god of thunder","A hollow mountain","A singing bird"],
-    originA:"A nymph cursed to only repeat the last words spoken to her",
+    originQ:"What does <b>echo</b> mean?",
+    originOpts:["A sound that bounces back and repeats","A very loud, sudden noise","Complete silence","A whispered secret"],
+    originA:"A sound that bounces back and repeats",
     note:"In the myth, the nymph Echo could only repeat others' last words. Novels echo too: Anka in her eggshell echoes Subhi in his camp; the wise old woman's bone sparrow echoes the one on Jimmie's neck. When you notice a repeat-with-a-difference, annotate it — that's an echo, and echoes are where meaning lives.",
     apply:[
       { id:"ap_echo_scn", type:"scenario",
@@ -1341,9 +1342,9 @@ const LESSONS = [
   { w:"Thermos", pos:"noun", domain:"feeling",
     meaning:"A flask that keeps drinks hot — Jimmie brings one full of hot chocolate, and Subhi tastes it like 'nothing he has ever tasted'.",
     type:"origin",
-    originQ:"<b>Thermos</b> is Greek for 'hot' — and became the flask's name as a brand. Which other word carries the same root?",
-    originOpts:["Thermometer — a heat measurer","Thesaurus — a word store","Theatre — a watching place","Theory — an idea"],
-    originA:"Thermometer — a heat measurer",
+    originQ:"What does <b>thermos</b> mean?",
+    originOpts:["A flask that keeps drinks hot","A cup used only for cold drinks","A type of kettle","A container for carrying food"],
+    originA:"A flask that keeps drinks hot",
     note:"Greek <i>thermos</i> = hot: thermometer, thermal. Like 'doona', the brand name swallowed the object. The hot chocolate scene is the novel's warmest moment in every sense: something hot, sweet and freely given, in a place of cold queues and counted rations. Fraillon spends a whole page on one sip — earned slowness.",
     apply:[
       { id:"ap_therm_scn", type:"scenario",
@@ -1427,9 +1428,9 @@ const LESSONS = [
   { w:"Rohingya", pos:"noun", domain:"world",
     meaning:"Subhi's people — a Muslim minority from Myanmar (Burma), denied citizenship and driven out in huge numbers.",
     type:"origin",
-    originQ:"The name <b>Rohingya</b> is generally traced to 'Rohang' — what was Rohang?",
-    originOpts:["An old name for the Arakan region where the Rohingya lived","A famous Rohingya king","The Burmese word for boat","A holy river"],
-    originA:"An old name for the Arakan region where the Rohingya lived",
+    originQ:"Who are the <b>Rohingya</b>?",
+    originOpts:["A Muslim minority from Myanmar (Burma), denied citizenship and driven out in huge numbers","The official government of Myanmar","A religious group native to Australia","The name of the detention centre"],
+    originA:"A Muslim minority from Myanmar (Burma), denied citizenship and driven out in huge numbers",
     note:"'Rohingya' most likely means 'people of Rohang' — the old name for Arakan (now Rakhine State). The name says: <b>we are from that place</b>. Which is exactly what Myanmar's government denies — it calls them foreigners and refuses them citizenship. A people's own name can be an act of resistance. Say it with care: roh-HIN-jah.",
     apply:[
       { id:"ap_roh_scn", type:"scenario",
@@ -1444,9 +1445,9 @@ const LESSONS = [
   { w:"Camera", pos:"noun", domain:"world",
     meaning:"A device for taking photographs. Queeny gets one, and starts collecting proof of how the camp treats people.",
     type:"origin",
-    originQ:"<b>Camera</b> is Latin — for what?",
-    originOpts:["A room (from 'camera obscura', the dark room)","An eye","A small box","A painter's easel"],
-    originA:"A room (from 'camera obscura', the dark room)",
+    originQ:"What does <b>camera</b> mean?",
+    originOpts:["A device for taking photographs","A device for recording sound only","A type of telescope","A drawing tool"],
+    originA:"A device for taking photographs",
     note:"Latin <i>camera</i> = a room! The first 'camera obscura' was a darkened ROOM with a pinhole that projected the outside world onto a wall. The machine kept the room's name. In the novel the borrowed room does a room's opposite: instead of shutting the world out, Queeny's camera lets the world in — or rather, lets the camp OUT.",
     apply:[
       { id:"ap_cam_scn", type:"scenario",
@@ -1530,9 +1531,9 @@ const LESSONS = [
   { w:"Banner", pos:"noun", domain:"world",
     meaning:"A large cloth with a message. The men make a banner from a bedsheet for Queeny to photograph.",
     type:"origin",
-    originQ:"<b>Banner</b> descends from an old Germanic word bandwa. What did it mean?",
-    originOpts:["A sign or rallying flag that a group gathers under","A loud trumpet","A piece of armour","A long speech"],
-    originA:"A sign or rallying flag that a group gathers under",
+    originQ:"What does <b>banner</b> mean?",
+    originOpts:["A large cloth carrying a message","A small flag carried by soldiers","A loud announcement made in public","An official government document"],
+    originA:"A large cloth carrying a message",
     note:"Germanic <i>bandwa</i>: the sign a fighting company rallies under — the thing that says WE are HERE, together. A bedsheet is what the camp gives them; a banner is what they make of it. The transformation of a sheet into a flag is the protest in miniature.",
     apply:[
       { id:"ap_ban_scn", type:"scenario",
@@ -1680,9 +1681,9 @@ const LESSONS = [
   { w:"Hope", pos:"noun", domain:"feeling",
     meaning:"The feeling that something better is possible — the hardest and most necessary thing in the whole novel.",
     type:"origin",
-    originQ:"<b>Hope</b> is one of English's oldest words — Old English <i>hopa</i>. Unlike most words in this hub, what is unusual about its family tree?",
-    originOpts:["It has no known deeper root — it begins with English itself","It was borrowed from Latin","It was invented by Shakespeare","It comes from a Greek goddess"],
-    originA:"It has no known deeper root — it begins with English itself",
+    originQ:"What does <b>hope</b> mean?",
+    originOpts:["The feeling that something better is possible","Certainty that something bad will happen","A promise that can never be broken","A memory of something good"],
+    originA:"The feeling that something better is possible",
     note:"Most of this hub's words unpack into borrowed Latin and Greek parts. <i>Hope</i> doesn't: it's bedrock English, older than the borrowings, with no morphemes to slice. Some words are foundations. Fraillon spreads it across the novel — Nasir's pebble of happy, Ba's poems, the whole sky — and lets the reader decide, at the end, what hope costs and what it's worth.",
     apply:[
       { id:"ap_hope_scn", type:"scenario",
@@ -2108,6 +2109,7 @@ function renderBuilder(mount, spec, opts){
   mount.innerHTML=`${opts.dots||""}
     <div class="prompt">${opts.prompt||"Build the word — tap the morphemes into place, in order"}</div>
     <div class="buildword" id="bword">? ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
+    ${spec.meaning?`<div class="bclue">Build the word that means: <b>${esc(spec.meaning)}</b></div>`:""}
     <div class="slots" id="slots">${slotHtml}</div>
     <div class="bank" id="bank"></div>
     <div class="maprow" id="maprow"></div>
@@ -2148,7 +2150,7 @@ function renderBuilder(mount, spec, opts){
 /* origin question (used in build step + review) */
 function renderOriginQ(mount, spec, opts){
   mount.innerHTML=`${opts.dots||""}
-    <div class="prompt">Word origin — this one can’t be cut into smaller meaningful parts</div>
+    <div class="prompt">This word can’t be cut into smaller meaningful parts — just match it to its meaning</div>
     <div class="buildword">${esc(spec.w)} ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
     <div class="qtext" style="text-align:center">${spec.originQ}</div>
     <div class="opts" id="oopts"></div>
@@ -2329,8 +2331,8 @@ function buildOriginPhase(l){
   if(!origins.length){ finishBuild(l); return; }
   go("build");
   const mount=document.getElementById("build-body");
-  mount.innerHTML=`<h2 style="text-align:center">Word origins — Lesson ${esc(l.id)}</h2>
-    <p class="muted" style="text-align:center;margin-bottom:12px">A few of this lesson’s words come from names or places, not word-parts — so you match their story instead of building them.</p>
+  mount.innerHTML=`<h2 style="text-align:center">Match the meaning — ${esc(l.id==="0"?"before you read":"chapters "+l.id)}</h2>
+    <p class="muted" style="text-align:center;margin-bottom:12px">A few of this lesson’s words come from names or places, not word-parts — so instead of building them, just match each one to its meaning. (Curious where a word comes from? The answer explains it once you’ve got it.)</p>
     <div id="origin-slot"></div>`;
   let queue=shuffle(origins.slice());
   function next(){
@@ -2353,7 +2355,7 @@ function finishBuild(l){
   const pct=Math.round(100*b.clean/b.total);
   const cls=pct>=80?"good":(pct>=60?"mid":"low");
   document.getElementById("build-body").innerHTML=`
-    <div class="sumbox"><div class="prompt">Lesson ${esc(l.id)} — clean builds (right first go)</div>
+    <div class="sumbox"><div class="prompt">${esc(l.id==="0"?"Before you read":"Chapters "+l.id)} — clean builds (right first go)</div>
     <div class="big ${cls}">${b.clean} / ${b.total}</div>
     <p class="muted">Every word is built. “Clean” means you placed it correctly on the first full attempt — anything you had to redo still counts as done, just not clean.</p></div>
     <div class="nextrow" style="justify-content:center">
@@ -2879,7 +2881,7 @@ function idSubmit(){
 }
 
 /* ---- boot ---- */
-go("home");
+if(location.hash==="#report") go("report"); else go("home");
 </script>
 </body>
 </html>

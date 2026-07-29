@@ -80,12 +80,32 @@ a.card .now{display:inline-block;font-size:10.5px;font-weight:800;text-transform
 .whoami .sep{color:var(--line)}
 .note{background:var(--okbg);border:1px solid var(--correct);border-radius:8px;padding:10px 13px;
       font-size:13px;color:var(--correct);margin:18px 0 0;line-height:1.55}
+
+/* ---- persistent top-right link, present on every step ---- */
+.topmini{display:flex;justify-content:flex-end;margin:0 0 14px;min-height:20px}
+.topmini .linkbtn2{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 13px;
+    font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit}
+.topmini .linkbtn2:hover{border-color:var(--accent)}
+
+/* ---- reports summary ---- */
+.repgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 4px}
+@media (max-width:560px){.repgrid{grid-template-columns:1fr}}
+.repcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.repcard.empty{background:var(--bg)}
+.repcard .rt{font-family:Georgia,serif;font-weight:700;font-size:16px;margin:0 0 8px}
+.repcard .rscore{font-size:22px;font-weight:800;margin:0 0 4px}
+.repcard .rscore span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-left:4px}
+.repcard .rd{color:var(--muted);font-size:12.5px;line-height:1.55;margin:0 0 12px}
+.repcard a.btn{display:inline-block;text-decoration:none;text-align:center}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div class="container" id="app"></div>
+<div class="container">
+  <div class="topmini noprint" id="topMini"></div>
+  <div id="app"></div>
+</div>
 
 <script>
 /* ============================================================================
@@ -242,10 +262,70 @@ function renderStep3(){
   $("editMe").onclick = ()=>{ step=1; render(); };
 }
 
+/* ---------------- REPORTS — a snapshot pulled from both hubs' own storage,
+   plus deep links into each hub's full printable report (#report opens
+   straight there). This page never duplicates the hubs' scoring data —
+   it only reads their totals, so there is one source of truth per hub. */
+function readJSON(key){ try{ return JSON.parse(localStorage.getItem(key)); }catch(e){ return null; } }
+const READING_MODULES = [
+  ["qr1","Quickread: the Night Sea"],["qr2","Quickread: caught by Beaver"],
+  ["fig","Figurative → literal"],["voice","Voice fingerprint"],
+  ["ev","Evidence builder"],["wk","Analysis workshop"]
+];
+function renderReports(){
+  const R = readJSON("bonesparrow.readinghub.v2");
+  const V = readJSON("bonesparrow.vocabhub.v1");
+  let readingBlock;
+  if(R && R.first && Object.keys(R.first).length){
+    const total=Object.keys(R.first).length, got=Object.values(R.first).filter(Boolean).length;
+    const done=READING_MODULES.filter(([id])=>R.done && R.done[id]).map(([,t])=>t);
+    readingBlock=`<div class="repcard">
+      <div class="rt">Reading &amp; Evidence Hub</div>
+      <div class="rscore">${got}/${total}<span>first attempt</span></div>
+      <div class="rd">${done.length?"Finished: "+done.map(esc).join(", "):"Nothing finished yet."}</div>
+      <a class="btn btn-ghost" href="BoneSparrowReadingHub.html#report">Open full report →</a></div>`;
+  } else {
+    readingBlock=`<div class="repcard empty">
+      <div class="rt">Reading &amp; Evidence Hub</div>
+      <div class="rd">Nothing recorded yet on this device.</div>
+      <a class="btn btn-ghost" href="BoneSparrowReadingHub.html">Go there →</a></div>`;
+  }
+  let vocabBlock;
+  if(V && V.wstat && Object.keys(V.wstat).length){
+    const drilled=Object.keys(V.wstat).length;
+    const mastered=Object.values(V.wstat).filter(w=>w.mastered).length;
+    const studiedIds=V.lessons?Object.keys(V.lessons).filter(id=>V.lessons[id]&&V.lessons[id].studied):[];
+    const setNames=studiedIds.map(id=>{ const st=VOCAB_SETS.find(x=>x.id===id); return st?st.title:id; });
+    vocabBlock=`<div class="repcard">
+      <div class="rt">Vocab Hub</div>
+      <div class="rscore">${mastered}/${drilled}<span>words mastered</span></div>
+      <div class="rd">${setNames.length?"Sets started: "+setNames.map(esc).join(", "):"No sets started yet."}</div>
+      <a class="btn btn-ghost" href="BoneSparrowVocabHub.html#report">Open full report →</a></div>`;
+  } else {
+    vocabBlock=`<div class="repcard empty">
+      <div class="rt">Vocab Hub</div>
+      <div class="rd">Nothing recorded yet on this device.</div>
+      <a class="btn btn-ghost" href="BoneSparrowVocabHub.html">Go there →</a></div>`;
+  }
+  $("app").innerHTML=`
+  <h1>Your reports</h1>
+  <p class="sub">A quick snapshot from both hubs, read from this device. Each hub keeps the full first-attempt breakdown with a verification code — open it to print or save as a PDF for your teacher.</p>
+  <div class="repgrid">${readingBlock}${vocabBlock}</div>
+  <div class="btnrow"><button class="btn btn-ghost" id="backRep">← back to my tasks</button></div>`;
+  $("backRep").onclick=()=>{ step=3; render(); };
+}
+function renderTopMini(){
+  const bar=$("topMini"); if(!bar) return;
+  bar.innerHTML = P.sid ? `<button class="linkbtn2" id="reportsLink">📊 My reports</button>` : "";
+  if(P.sid) $("reportsLink").onclick=()=>{ step="reports"; render(); };
+}
+
 function render(){
   if(step===1) renderStep1();
   else if(step===2) renderStep2();
+  else if(step==="reports") renderReports();
   else renderStep3();
+  renderTopMini();
   window.scrollTo(0,0);
 }
 render();
