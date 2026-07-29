@@ -1,41 +1,44 @@
-# The Bone Sparrow — Reading & Evidence Hub: teacher notes
+# The Bone Sparrow — interactive hubs: teacher notes
 
-Companion interactive to the **Pre-reading Trainer** (`bonesparrowtrainer (4) (3).html`, vocab + sentence types) and the **Grammar Hub** (`GrammarHuboffline.html`). Same visual suite, same rules: mastery loop, **first-attempt-only scoring**, printable report with verification code, everything offline in one file.
+Two companion interactives, same suite as the **Pre-reading Trainer** and **Grammar Hub**: mastery loop, **first-attempt-only scoring**, printable reports with verification codes, single offline files. Both also run as live pages (links below); the repo copies are the source of truth.
 
-File: `BoneSparrowReadingHub.html`
-
-## How the modules map to the proposed formative tasks
-
-| Hub module | Team proposal (22 July) | Skill ladder used |
+| File | Live page | What it is |
 |---|---|---|
-| 1. Quickreads — cold-excerpt inference checks | Reading FT 1: weekly/fortnightly 10-minute constrained-choice quiz on an unseen passage; self-marking, misread items retaught immediately | Comprehension of texts |
-| 2. Figurative → literal | Reading FT 2 (Lesson 09): match figurative lines to paraphrases plus one justification; answer-key feedback, EAL-friendly | "I can describe the meaning of different similes and metaphors" → "I can explain the effect of … figurative language" |
-| 3. Voice fingerprint | Reading FT 4 (Lesson 11, before the voice memo): sort unattributed lines to the correct character, naming one language feature as evidence; self-checking | "I can explain how language can be used to create 'voice'…" — feeds directly into the oral (character voice) |
-| 4. Evidence Builder | FT1 (Using evidence) retooled so it *serves the reading*, not just Unit 6 writing | Learning-continuum *Use of evidence* ladder: include quotes with guidance → explain relevance → embed into sentences → correctly embed within an explanation → embed multiple quotes |
-| 5. Sentence Upgrader (WAGOLL ladder) | Bridges into Unit 6 analytic writing as skill-based tasks (per last year's reflection: shorter, skill-based, not a whole essay straight away) | EAL analytical writing WAGOLL: C2 Describe → C3 Explain → C4 Analyse |
+| `BoneSparrowReadingHub.html` | https://claude.ai/code/artifact/41bce67d-b3c6-44af-8876-722be5ad5a33 | Reading, inference, voice & evidence skills |
+| `BoneSparrowVocabHub.html` | https://claude.ai/code/artifact/979349ea-a304-4f47-ad6e-73753c0d5026 | Chapter-by-chapter vocabulary (Water-in-the-World engine) |
 
-The two modules the hub can't do — the **recorded 45-second voice memo** and the **60-second micro-presentation** — are deliberately left to the classroom; module 3 is sequenced as the lesson *before* the voice memo, exactly as proposed.
+Both gates: **first name + last name + student ID (4–8 chars) before anything starts**; details print on the report with a verification code.
 
-## Rubric gating ("WAGOLL wall" behaviour)
+Both carry a **"Where are you up to?" chapter selector** — content past the student's reading position stays hidden (no spoilers). The vocab hub unlocks each chapter set one chapter early so words can be pre-taught.
 
-Modules 4 and 5 show the skill ladder on screen as clickable level cards:
+## Reading & Evidence Hub — modules vs the proposed FTs
 
-- Each card is a verbatim "I can…" descriptor (from the Learning Continuum / lesson 08 self-assessment ladder / the EAL WAGOLL levels).
-- A level unlocks when the previous one is passed; clicking an unlocked level reveals its sentence stems and scaffolds.
-- When a student completes a level, the hub tells them which descriptor they have just demonstrated — the same language that appears on their report, so self-assessment against the rubric is built into the task rather than bolted on after.
+| Module | Team proposal (22 July) |
+|---|---|
+| Quickreads ×2 (ch 1, ch 5) — passage hides, questions run cold, misses retaught with the exact line re-quoted | Reading FT 1: cold-excerpt inference check |
+| Figurative → literal (plain-English paraphrase, then name the technique) | Reading FT 2 (Lesson 09) |
+| Voice fingerprint (line → speaker → the giveaway feature) | Reading FT 4, the lesson before the voice memo |
+| Evidence builder (click evidence in the passage → explain relevance → embed a trimmed quote; the *Use of evidence* continuum ladder unlocks stems as they climb) | FT1 retooled to serve reading |
+| **Analysis workshop** — Part A: students **build the WAGOLL wall** by placing five authored responses against the CAT rubric's level 5–9 descriptors; Part B: Edward-Scissorhands-style tagged tile bank — students harvest their own quotes from the passage, then assemble sentences checked for *presence, quality and focus-match*, never syntax | Bridges to Unit 6 as skill-based tasks |
 
-## Coded feedback
+**Grammar can't be gamed.** The evidence-builder quote banks now include options that read perfectly smoothly but misreport the text (Subhi's counter-view quoted under an "Eli believes…" stem; a Maá line attributed to Queeny; cruelty evidence answering a different question). The discriminator is meaning, and every trap has coded feedback. The workshop's Part B validates what a sentence is *made of* (specific subject, analytic verb, harvested quote matching the chosen focus, idea clause) — many genuinely different strong sentences pass; students read their own sentence back for flow.
 
-Wrong answers return the *coded next step*, not a bespoke comment (per the 25 July discussion), e.g. in the Evidence Builder:
+**EAL toggle** — adds C-band equivalents (C2 Describe / C3 Explain / C4 Analyse, from the EAL WAGOLL) under the Vic-curriculum wall descriptors, plus a pattern hint in the builder. Off by default; the mainstream labels are the CAT rubric's own.
 
-- Selected a plot-retelling line → "That line retells what happens. Look for words that *show* the idea…"
-- Selected strong evidence for a different idea → "Strong line — but it proves [other idea]. For [this idea], look at…"
-- Embedded the whole sentence → "You've quoted the whole sentence. Embed just the key words…"
+**Strategic hub links** — no generic link wall. Pointers appear only where a specific failure calls for them, with exact instructions: two grammar-flow failures in the embed step → "open Grammar Hub → Sentence Structure, run one round at your level, then rebuild this sentence"; a sub-60% quickread → "open Vocab Hub → CH 1-2, run 'Meet the words' and 'Build the words', then retry." Links resolve to files when the hub is opened from the class folder, to the live pages on the web.
+
+**Workshop kept sentences** print on the student's report.
+
+## Vocab Hub
+
+The Water-in-the-World engine, re-keyed: 9 chapter sets (1–2, 3–4, 5, 6–7, 8–10, 11–14, 15–17, 18–20, 21–end), 6 words each — meaning, morpheme tiles or word-origin question, etymology note, 2 story-anchored apply tasks per word. Domains: **the camp / story & memory / feelings & the body / the outside world**. Base-camp and stretch tiers are authored for the first three sets (same morphemes in smaller/bigger words); later sets can have tiers added in the data spine any time. Key-word translations in the five languages of our EAL cohort (Mandarin, Cantonese, Vietnamese, Arabic, Farsi) appear on study cards and build reveals only — practice stays in English. Spaced review warms up each new set with previously **met** words, weighted toward past misses.
+
+**Verification note:** chapter placements and story anchors were built from the unit's own chapter summaries and the Question Booklet; the words themselves are unit/theme vocabulary rather than page-referenced quotations, so nothing depends on a specific edition. Worth a skim against your copy as you teach each band.
 
 ## Copyright note
 
-Passages are short extracts (under a page each, page-referenced), the same extracts already used in `Lesson Resources/Bone Sparrow extracts for grammar.docx` and `06e - Chapter 5 silent starter.docx`, reproduced for enrolled students under the school's Statutory Text and Artistic Works Licence (Copyright Agency). Do **not** add whole chapters, and keep the repo private. There is no legitimate way to obtain a DRM-free full ebook for redistribution — see the licence note in the main README/thread.
+Passages are short page-referenced extracts already used in the unit's printed resources (`Bone Sparrow extracts for grammar.docx`, `06e - Chapter 5 silent starter.docx`), reproduced for enrolled students under the school's Statutory Text and Artistic Works Licence (Copyright Agency). Do **not** add whole chapters; keep the repo private. There is no legitimate route to a DRM-free full ebook for redistribution — type the short passages you need from your own copy.
 
-## Adding your own passages
+## Adding content
 
-All content sits in clearly-bannered `const` blocks at the top of the file's script (the engine knows nothing about the novel). To add a quickread: copy an entry in `QUICKREADS`, paste your passage (typed from your copy, with page ref), and write the constrained-choice items — each item needs `id`, `q`, `opts`/`a`, and an `explain` that names the trap and points back to the line. To add an Evidence Builder round, follow the segment-tagging comment above `EVIDENCE_ROUNDS`.
+All content sits in bannered `const` blocks at the top of each file — the engines know nothing about the novel. Reading hub: add a quickread by copying an entry in `QUICKREADS` (each item needs `id`, `q`, `opts`, `a`, `explain`, and the `line` to re-quote on a miss, plus a `ch` tag for spoiler-gating). Vocab hub: copy a lesson object in `LESSONS` (six words minimum per set — the generated distractors need them; hyphens type the tiles: `de-` prefix, `-tion` suffix, bare = root; every item `id` globally unique).
