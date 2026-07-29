@@ -817,14 +817,10 @@ function go(s, arg){
   else if(s==="wk") runWk();
   else if(s==="rpt") renderReport();
 }
-/* Strategic hub pointers: a clickable file link when this file sits in the
-   class folder (file:), the live published URL when on the web (filled in
-   below after publishing), otherwise plain do-this-exactly instructions. */
-const HUB_LINKS = { "GrammarHuboffline.html":"", "BoneSparrowVocabHub.html":"https://claude.ai/code/artifact/979349ea-a304-4f47-ad6e-73753c0d5026" };
+/* Strategic hub pointers. The suite deploys side by side (class folder or
+   GitHub Pages), so a relative link works everywhere. */
 function hubRef(file, label, instr){
-  const local = location.protocol==="file:";
-  const url = local ? file : (HUB_LINKS[file]||"");
-  return (url?`<a href="${url}">${esc(label)}</a>`:`<b>${esc(label)}</b> (in the class folder)`) + " — " + esc(instr);
+  return `<a href="${file}">${esc(label)}</a> — ${esc(instr)}`;
 }
 function availItems(list){ return list.filter(it=>(it.ch||1)<=(S.chapter||1)); }
 
