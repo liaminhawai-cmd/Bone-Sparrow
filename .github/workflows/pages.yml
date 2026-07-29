@@ -10,8 +10,8 @@ on:
       - "BoneSparrowReadingHub.html"
       - "BoneSparrowVocabHub.html"
       - "GrammarHuboffline.html"
-      - "bonesparrowtrainer (4) (3).html"
-      - "site/**"
+      - "bonesparrowtrainer.html"
+      - "index.html"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -35,11 +35,11 @@ jobs:
       - name: Assemble site (hubs only)
         run: |
           mkdir dist
-          cp site/index.html dist/
+          cp index.html dist/
           cp BoneSparrowReadingHub.html dist/
           cp BoneSparrowVocabHub.html dist/
           cp GrammarHuboffline.html dist/
-          cp "bonesparrowtrainer (4) (3).html" dist/bonesparrowtrainer.html
+          cp bonesparrowtrainer.html dist/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
