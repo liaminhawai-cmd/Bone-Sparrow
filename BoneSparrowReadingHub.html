@@ -161,7 +161,42 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .vcode{font-family:Georgia,serif;font-size:15px;letter-spacing:1px}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
-/* ---- workshop: WAGOLL wall ---- */
+/* ---- workshop: colour language, matching the EAL WAGOLL markers ----
+   blue = language feature · orange = analytical verb ·
+   yellow = embedded evidence · green = effect on the reader        */
+:root{
+  --feat-bg:#d6eafc; --feat-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+.hl-feat,.hl-verb,.hl-ev,.hl-eff{font-style:normal;border-radius:4px;padding:1px 3px}
+.hl-feat{background:var(--feat-bg);color:var(--feat-tx)}
+.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+.hl-ev{background:var(--ev-bg);color:var(--ev-tx)}
+.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:11.5px;color:var(--muted)}
+.ckey span{display:flex;align-items:center;gap:6px}
+.ckey .sw{width:13px;height:13px;border-radius:3px;display:inline-block}
+.ckey .sw.feat{background:var(--feat-bg);border:1px solid var(--feat-tx)}
+.ckey .sw.verb{background:var(--verb-bg);border:1px solid var(--verb-tx)}
+.ckey .sw.ev{background:var(--ev-bg);border:1px solid var(--ev-tx)}
+.ckey .sw.eff{background:var(--eff-bg);border:1px solid var(--eff-tx)}
+/* ---- workshop: WAGOLL wall, horizontal ---- */
+.wallscroll{overflow-x:auto;margin:0 0 14px;padding-bottom:6px}
+.wallcols{display:flex;gap:10px;min-width:min-content}
+.wallcol{flex:0 0 240px;border:2px dashed var(--line);border-radius:10px;padding:10px 12px;background:#fff;
+  display:flex;flex-direction:column}
+.wallcol.droppable{cursor:pointer}
+.wallcol.droppable:hover{border-color:var(--ink)}
+.wallcol.filled{border-style:solid;border-color:var(--correct);background:var(--okbg)}
+.wallcol .wl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.wallcol .wdesc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.wallcol .weal{font-size:11px;color:var(--feat-tx);margin-top:3px;font-style:italic}
+.wallcol .wresp{font-family:Georgia,serif;font-size:13px;line-height:1.55;margin-top:8px;background:#fff;
+  border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+.wallcol .wempty{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--muted);font-style:italic}
+/* ---- workshop: WAGOLL wall (legacy vertical, used in the climb summary) ---- */
 .wallgrid{display:flex;flex-direction:column;gap:8px;margin:0 0 14px}
 .wallslot{border:2px dashed var(--line);border-radius:10px;padding:10px 12px;background:#fff;min-height:52px}
 .wallslot .wl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
@@ -176,6 +211,30 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
       border-radius:10px;padding:11px 13px;cursor:pointer;transition:border-color .12s}
 .resp:hover{border-color:var(--ink)}
 .resp.armed{border:2px solid var(--ink);background:var(--bg)}
+/* ---- workshop: the climb ---- */
+.climb{display:flex;flex-direction:column;gap:8px;margin:0 0 14px}
+.climbrow{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.climbrow.locked{opacity:.5}
+.climbrow.now{border:2px solid var(--ink);background:var(--bg)}
+.climbrow.done{border-color:var(--correct);background:var(--okbg)}
+.climbhead{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.climbhead .cl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+.climbhead .cvic{font-size:12.5px;color:var(--muted)}
+.climbhead .ceal{font-size:11.5px;color:var(--stem-tx);font-style:italic}
+.climbrow .cmine{font-family:Georgia,serif;font-size:15px;background:#fff;border:1px solid var(--line);
+  border-radius:8px;padding:9px 11px;margin-top:8px}
+.climbrow .cwhy{font-size:12px;color:var(--correct);margin-top:4px}
+.climbrow .cgoal{font-size:13px;margin-top:8px;line-height:1.55}
+.changed{display:flex;flex-direction:column;gap:5px;background:var(--bg);border:1px dashed var(--line);
+  border-radius:8px;padding:10px 12px;margin:0 0 14px;font-size:12.5px;line-height:1.5}
+.changed .cup,.changed .cdown{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.4px;border-radius:99px;padding:2px 8px;margin-right:6px}
+.changed .cup{color:var(--correct);background:var(--okbg);border:1px solid var(--correct)}
+.changed .cdown{color:var(--wrong);background:var(--badbg);border:1px solid var(--wrong)}
+.ctile.retired{outline:2px solid var(--wrong);opacity:.7;text-decoration:line-through}
+.ctile.grabbing{transform:scale(1.05);box-shadow:0 3px 10px rgba(0,0,0,.18);cursor:grabbing}
+.ctile{cursor:grab;touch-action:none}
+.bin.opens h4,.tile.k-open,.ctile.k-open{background:#e8e2f2;color:#4a3f63}
 /* ---- workshop: flexible builder ---- */
 .canvas{border:2px dashed var(--line);border-radius:10px;min-height:56px;padding:10px;background:#fff;
         display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}
@@ -186,11 +245,11 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ctile.flag-warn{outline:2px solid #cf8336}
 .bins5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:0 0 12px}
 @media (max-width:820px){.bins5{grid-template-columns:repeat(2,1fr)}}
-.bin.subjects h4, .tile.k-subj, .ctile.k-subj{background:var(--stem-bg);color:var(--stem-tx)}
-.bin.verbs h4, .tile.k-verb, .ctile.k-verb{background:#e1f5ee;color:#0f6e56}
-.bin.effects h4, .tile.k-eff, .ctile.k-eff{background:var(--tail-bg);color:var(--tail-tx)}
+.bin.subjects h4, .tile.k-subj, .ctile.k-subj{background:var(--feat-bg);color:var(--feat-tx)}
+.bin.verbs h4, .tile.k-verb, .ctile.k-verb{background:var(--verb-bg);color:var(--verb-tx)}
+.bin.effects h4, .tile.k-eff, .ctile.k-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .bin.connects h4, .tile.k-con, .ctile.k-con{background:#eeebe3;color:#574d3a}
-.tile.k-q, .ctile.k-q{background:var(--quote-bg);color:var(--quote-tx)}
+.bin.quotes h4, .tile.k-q, .ctile.k-q{background:var(--ev-bg);color:var(--ev-tx)}
 .seg.harv{background:var(--quote-bg);border-bottom-color:var(--quote-tx)}
 .kept{font-family:Georgia,serif;font-size:15px;background:var(--okbg);border:1px solid var(--correct);border-radius:8px;padding:9px 12px;margin:0 0 8px}
 /* ---- identity gate & home controls ---- */
@@ -221,6 +280,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
     <span class="where" id="whereLbl">Year 7 English · The Bone Sparrow · Units 5–6</span>
     <span style="display:flex;gap:16px;align-items:center;margin-left:auto">
       <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← all activities</button>
+      <button class="linkbtn menulink" onclick="go('rpt')">My report</button>
       <a class="linkbtn menulink" href="index.html">⌂ Main menu</a>
     </span>
   </div>
@@ -852,24 +912,76 @@ const WK_WALL = {
  resps:[
   { id:"w6", lvl:1,
     t:"Beaver is one of the Jackets, and Fraillon shows his cruelty through events: he tips Maá's dinner into the dirt, he handcuffs Eli, and he shoves Subhi into the bricks. Subhi even has nightmares about him.",
+    h:"Beaver is one of the Jackets, and Fraillon <em class=\"hl-verb\">shows</em> his cruelty through events: he tips Maá's dinner into the dirt, he handcuffs Eli, and he shoves Subhi into the bricks. Subhi even has nightmares about him.",
     why:"This one describes several characters and EVENTS that show the cruelty — it stays with what happens rather than the ideas behind it." },
   { id:"w9", lvl:4,
     t:"Beaver is only ever represented through Subhi's senses — a voice 'as dark as the Jackets' dogs', a hand 'hard and scratchy' — so the reader is never given Beaver's side. That narrowing is the point: to a child in detention, a guard is not a person but a force, and Fraillon makes us feel how the system erases people in both directions.",
+    h:"<em class=\"hl-feat\">Beaver is only ever represented through Subhi's senses</em> — <em class=\"hl-ev\">'as dark as the Jackets' dogs'</em>, <em class=\"hl-ev\">'hard and scratchy'</em> — so <em class=\"hl-eff\">the reader is never given Beaver's side</em>. That narrowing is the point: <em class=\"hl-eff\">to a child in detention, a guard is not a person but a force</em>, and Fraillon <em class=\"hl-verb\">makes us feel</em> <em class=\"hl-eff\">how the system erases people in both directions</em>.",
     why:"This one analyses HOW Beaver is represented — the narrowed point of view itself — and what that authorial choice means." },
   { id:"w5", lvl:0,
     t:"Beaver is really mean and scary. He catches Subhi with the package and Subhi gets hurt. It shows the idea of fear in the camp.",
+    h:"Beaver is really mean and scary. He catches Subhi with the package and Subhi gets hurt. It <em class=\"hl-verb\">shows</em> the idea of fear in the camp.",
     why:"This one names an idea and retells the frightening event — it identifies parts of the story, but doesn't yet describe how the author builds Beaver." },
   { id:"w8", lvl:3,
     t:"Fraillon builds two perspectives on Beaver's cruelty. Eli reckons losing his eye 'is what makes him so mean', but Subhi decides Beaver 'was always mean'. By letting the boys disagree, the novel asks the reader to weigh up whether cruelty is made by a place like this, or just let loose by it.",
+    h:"Fraillon <em class=\"hl-verb\">builds</em> <em class=\"hl-feat\">two perspectives</em> on Beaver's cruelty. Eli reckons losing his eye <em class=\"hl-ev\">'is what makes him so mean'</em>, but Subhi decides Beaver <em class=\"hl-ev\">'was always mean'</em>. By letting the boys disagree, the novel <em class=\"hl-verb\">asks</em> <em class=\"hl-eff\">the reader to weigh up whether cruelty is made by a place like this, or just let loose by it</em>.",
     why:"This one puts two characters' PERSPECTIVES side by side and explains what the disagreement does for the reader." },
   { id:"w7", lvl:2,
     t:"Through Beaver, the novel shows the issue of power in detention. The guards control every part of the refugees' lives, and Fraillon shows what that power feels like from below: Subhi's fear lives in his body, with his throat 'as dry as the dirt'.",
+    h:"Through Beaver, the novel <em class=\"hl-verb\">shows</em> <em class=\"hl-eff\">the issue of power in detention</em>. The guards control every part of the refugees' lives, and Fraillon <em class=\"hl-verb\">shows</em> <em class=\"hl-eff\">what that power feels like from below</em>: Subhi's fear lives in his body, with his throat <em class=\"hl-ev\">'as dry as the dirt'</em>.",
     why:"This one steps up from events to an ISSUE — power in detention — and uses embedded evidence to show it." }
  ]};
 
+/* ==================== ANALYSIS WORKSHOP · PART B DATA =======================
+   The climb. Students write a simple Level 5 sentence, then REJIG the same
+   sentence up the rubric one level at a time. The canvas is never wiped —
+   lifting a level changes the BANK underneath it: new tiles unlock, and the
+   tiles that belong to the level you've outgrown are retired. Retired tiles
+   already in your sentence are flagged so you have to trade them out. That
+   retirement is the teaching: at Level 7 you literally cannot say "shows".
+
+   Tile kinds:  open (lead-in phrase) · subj · verb · q (harvested quote)
+                idea (plain key idea, L5–6) · eff (effect on reader, L7+)
+                con (joiner / punctuation)
+   Each tile carries lv:[min,max] — the levels it is available at.
+   =========================================================================== */
+const WK_LEVELS = [
+ { n:5, name:"Identify",
+   vic:"I can identify parts of the story that relate to key ideas",
+   eal:"C2 — Describe: say what happens",
+   goal:"Write a simple sentence: name something in the text, and the key idea it relates to.",
+   need:["subj","verb","idea"],
+   model:"Beaver shows the power of the guards.",
+   unlocks:"Start simple. One thing from the story, one idea.",
+   why:"You've named a part of the story and tied it to a key idea." },
+ { n:6, name:"Describe with evidence",
+   vic:"I can describe characters and events that relate to key ideas",
+   eal:"C2/C3 — Describe in detail, begin to explain",
+   goal:"Keep your sentence, and work a quotation into it. Harvest a line from the passage first.",
+   need:["subj","verb","idea","q"],
+   unlocks:"Quotes are now available (harvest them from the passage), plus joiners to weave them in.",
+   why:"Your claim is now carrying evidence from the text." },
+ { n:7, name:"Explain the effect",
+   vic:"I can describe the ideas and issues that are illustrated through characters and events",
+   eal:"C3 — Explain: link events to ideas, with evidence",
+   goal:"Trade the flat verb for an analytical one, and swap your plain idea for what it does to the reader.",
+   need:["subj","verb","q","eff"],
+   unlocks:"Analytical verbs and effect-on-the-reader clauses unlock.",
+   retires:"Flat verbs (shows, is about, tells us) and plain idea-labels are retired — you've outgrown them.",
+   why:"You're explaining what the writing DOES, not just what is in it." },
+ { n:8, name:"Analyse the choice",
+   vic:"I can explain the way different perspectives on ideas are represented through characters and events",
+   eal:"C4 — Analyse: weigh up perspectives",
+   goal:"Make the author's technique the subject, and open with a lead-in phrase. This is CAT-standard writing.",
+   need:["open","subj","verb","q","eff"],
+   unlocks:"Lead-in phrases and technique-subjects unlock (the simile, the clipped dialogue, the first-person narration).",
+   retires:"Plot-only subjects (Beaver, Subhi, the guards) are retired — at this level the SUBJECT of your sentence is a writing choice.",
+   why:"You're analysing the author's craft and its effect on the reader — the standard the CAT is marked against." }
+];
+
 const WK_BUILD = {
  ch:5,
- prompt:"How does Fraillon show what the camp does to people? Collect your own evidence from the passage, then assemble analytical sentences from the tiles.",
+ prompt:"How does Fraillon show what the camp does to people?",
  where:"Chapter 5, page 33",
  focuses:[ {id:"fear",label:"Fear in the body"}, {id:"power",label:"Power and control"}, {id:"protect",label:"Protection and survival"} ],
  segs:[
@@ -898,28 +1010,96 @@ const WK_BUILD = {
   { t:"When I crash into the dirt, Beaver has the package. And he's opening it.", themes:{},
     note:"that's the plot moving — what happens next, not language showing an idea" }
  ],
+
+ /* ---- lead-in phrases: unlock at L8 ---- */
+ opens:[
+  { t:"In Chapter 5,", lv:[8,8] },
+  { t:"When Beaver catches him with the package,", lv:[8,8] },
+  { t:"Throughout the confrontation,", lv:[8,8] },
+  { t:"By writing the scene through Subhi's senses,", lv:[8,8] },
+  { t:"As the threat builds,", lv:[8,8] }
+ ],
+
+ /* ---- subjects: plot-level ones retire at L7/L8, craft ones unlock ---- */
  subjects:[
-  { t:"Subhi's body", q:"good" }, { t:"Beaver's voice", q:"good" },
-  { t:"the clipped dialogue", q:"good" }, { t:"Fraillon", q:"good" },
-  { t:"Eli's advice", q:"good" }, { t:"the first-person narration", q:"good" },
-  { t:"this", q:"vague" }, { t:"it", q:"vague" }, { t:"the quote", q:"vague" }, { t:"the book", q:"vague" }
+  /* plot-level — fine at 5–6, retired once you're analysing craft */
+  { t:"Beaver", q:"plot", lv:[5,7] },
+  { t:"Subhi", q:"plot", lv:[5,7] },
+  { t:"the guards", q:"plot", lv:[5,7] },
+  { t:"Eli's advice", q:"plot", lv:[5,7] },
+  /* body / voice — work at every level */
+  { t:"Subhi's body", q:"good", lv:[5,8] },
+  { t:"Beaver's voice", q:"good", lv:[5,8] },
+  { t:"Subhi's silence", q:"good", lv:[5,8] },
+  /* craft subjects — unlock at 7, essential at 8 */
+  { t:"Fraillon", q:"craft", lv:[7,8] },
+  { t:"the simile", q:"craft", lv:[7,8] },
+  { t:"the clipped dialogue", q:"craft", lv:[7,8] },
+  { t:"the first-person narration", q:"craft", lv:[7,8] },
+  { t:"the short, blunt sentences", q:"craft", lv:[7,8] },
+  { t:"the sensory description", q:"craft", lv:[7,8] },
+  /* vague — always wrong, always available as a trap */
+  { t:"this", q:"vague", lv:[5,8] },
+  { t:"it", q:"vague", lv:[5,8] },
+  { t:"the quote", q:"vague", lv:[5,8] },
+  { t:"the book", q:"vague", lv:[5,8] }
  ],
+
+ /* ---- verbs: flat ones retire at L7 ---- */
  verbs:[
-  { t:"reveals", q:"good" }, { t:"suggests", q:"good" }, { t:"exposes", q:"good" },
-  { t:"conveys", q:"good" }, { t:"betrays", q:"good" },
-  { t:"shows", q:"weak" }, { t:"is", q:"weak" }, { t:"says", q:"weak" }, { t:"tells us", q:"weak" }
+  { t:"shows", q:"weak", lv:[5,6] },
+  { t:"is about", q:"weak", lv:[5,6] },
+  { t:"tells us about", q:"weak", lv:[5,6] },
+  { t:"describes", q:"weak", lv:[5,6] },
+  { t:"reveals", q:"good", lv:[5,8] },
+  { t:"suggests", q:"good", lv:[5,8] },
+  { t:"exposes", q:"good", lv:[6,8] },
+  { t:"conveys", q:"good", lv:[6,8] },
+  { t:"betrays", q:"good", lv:[7,8] },
+  { t:"emphasises", q:"good", lv:[7,8] },
+  { t:"positions the reader to feel", q:"good", lv:[8,8] },
+  { t:"forces the reader to share", q:"good", lv:[8,8] }
  ],
+
+ /* ---- plain key ideas: the L5–6 currency, retired at L7 ---- */
+ ideas:[
+  { t:"fear in the camp", themes:["fear"], lv:[5,6] },
+  { t:"how frightening the camp is", themes:["fear"], lv:[5,6] },
+  { t:"the power of the guards", themes:["power"], lv:[5,6] },
+  { t:"who is in control", themes:["power"], lv:[5,6] },
+  { t:"how the boys survive", themes:["protect"], lv:[5,6] },
+  { t:"looking after each other", themes:["protect"], lv:[5,6] },
+  { t:"that the book is exciting", q:"weak", lv:[5,6],
+    fb:"'Exciting' is a review word, not an idea. Name what the moment is ABOUT — fear, power, or survival." }
+ ],
+
+ /* ---- effect-on-reader clauses: unlock at L7 ---- */
  effects:[
-  { t:"how completely fear takes over a child's body", themes:["fear"] },
-  { t:"that the terror is physical before it is anything else", themes:["fear"] },
-  { t:"that Beaver holds all the power, and both of them know it", themes:["power"] },
-  { t:"how the guards' control reaches into every word and silence", themes:["power"] },
-  { t:"that the boys have learned survival rules no child should need", themes:["protect"] },
-  { t:"that Eli's advice is armour, and it isn't enough", themes:["protect"] },
-  { t:"that the book is exciting", q:"weak", fb:"'Exciting' is a review word — name the idea instead." },
-  { t:"that Beaver is a bad person", q:"weak", fb:"That names a villain, not an idea. What does the moment show about fear, power or survival?" }
+  { t:"how completely fear takes over a child's body", themes:["fear"], lv:[7,8] },
+  { t:"that the terror is physical before it is anything else", themes:["fear"], lv:[7,8] },
+  { t:"the panic rising faster than Subhi can control it", themes:["fear"], lv:[7,8] },
+  { t:"that Beaver holds all the power, and both of them know it", themes:["power"], lv:[7,8] },
+  { t:"how the guards' control reaches into every word and silence", themes:["power"], lv:[7,8] },
+  { t:"that a child has no way to answer back", themes:["power"], lv:[7,8] },
+  { t:"that the boys have learned survival rules no child should need", themes:["protect"], lv:[7,8] },
+  { t:"that Eli's advice is armour, and it isn't enough", themes:["protect"], lv:[7,8] },
+  { t:"how quickly a rule for staying safe falls apart", themes:["protect"], lv:[7,8] },
+  { t:"that the book is exciting", q:"weak", lv:[7,8],
+    fb:"'Exciting' is a review word — say what the writing makes the reader understand or feel." },
+  { t:"that Beaver is a bad person", q:"weak", lv:[7,8],
+    fb:"That names a villain, not an effect. What does the moment show the reader about fear, power or survival?" }
  ],
- connectors:["when","as","because","while","and","when he says","in","—",",","."]
+
+ /* ---- joiners ---- */
+ cons:[
+  { t:"when he says", lv:[6,8] },
+  { t:"in the line", lv:[6,8] },
+  { t:"through", lv:[7,8] },
+  { t:"because", lv:[5,8] },
+  { t:"and", lv:[5,8] },
+  { t:",", lv:[5,8] },
+  { t:".", lv:[5,8] }
+ ]
 };
 
 /* ==================== MODULE DIRECTORY / REPORT LABELS ====================== */
@@ -1042,16 +1222,14 @@ function renderHome(){
     const done=!!S.done[m.id];
     const readLocked = m.ch && m.ch>S.chapter;
     const needLocked = m.needs ? !S.done[m.needs] : false;
-    const rptLocked = m.id==="rpt" && doneCount<3 && !S.done.rpt;
-    const locked = readLocked||needLocked||rptLocked;
+    const locked = readLocked||needLocked;
     const sc=scoreFor(m.id);
     const avail=moduleAvail(m);
     const fullN = m.id==="fig"?FIG_ITEMS.length : m.id==="voice"?VOICE_ITEMS.length : null;
     let tag = readLocked ? `read to chapter ${m.ch} first`
             : needLocked ? "finish the evidence builder first"
-            : rptLocked ? "finish 3 activities first"
             : done ? (sc.total? `${sc.got}/${sc.total} first try` : "done")
-            : (sc.total? "in progress" : (avail!==null&&avail<fullN ? `${avail} of ${fullN} lines at your chapter` : ""));
+            : (m.id==="rpt" ? "always available" : (sc.total? "in progress" : (avail!==null&&avail<fullN ? `${avail} of ${fullN} lines at your chapter` : "")));
     h+=`<button class="step ${done?"done":""}" ${locked?"disabled":""} onclick="go('${m.kind}','${m.id}')">
       <span class="num">${done?"✓":m.n}</span>
       <span><span class="t">${esc(m.t)}</span><br><span class="d">${esc(m.d)}</span></span>
@@ -1449,33 +1627,47 @@ function evFinish(){
 /* ---------- ANALYSIS WORKSHOP ---------- */
 let WK=null;
 function runWk(){
-  WK={armed:null, placed:{}, firstTried:{}, focus:null, canvas:[], harvested:[], checkedSlots:{}};
+  WK={armed:null, placed:{}, firstTried:{}, focus:null, canvas:[], harvested:[],
+      level:WK_LEVELS[0].n, versions:{}, tried:{}};
   renderWall();
 }
 function wallDone(){ return WK_WALL.resps.every(r=>WK.placed[r.id]!==undefined); }
+function wkColourKey(){
+  return `<div class="ckey">
+    <span><i class="sw feat"></i>language feature / technique</span>
+    <span><i class="sw verb"></i>analytical verb</span>
+    <span><i class="sw ev"></i>embedded evidence</span>
+    <span><i class="sw eff"></i>effect on the reader</span>
+  </div>`;
+}
 function renderWall(){
   let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall</div>
-  <h2>${esc(WK_WALL.q)}</h2><p class="lead">${esc(WK_WALL.note)}</p>`;
-  h+=`<div class="wallgrid">`;
+  <h2>${esc(WK_WALL.q)}</h2><p class="lead">${esc(WK_WALL.note)}</p>
+  ${wkColourKey()}
+  <p class="lead" style="margin-top:-4px">Watch the colours as you build it: the weakest response is almost bare, the strongest is full. That density is the difference between retelling and analysing.</p>`;
+
+  /* levels across the page, like the EAL WAGOLL table */
+  h+=`<div class="wallscroll"><div class="wallcols">`;
   WK_WALL.levels.forEach((L,i)=>{
     const placedResp=WK_WALL.resps.find(r=>WK.placed[r.id]===i);
-    h+=`<div class="wallslot ${placedResp?"filled":"droppable"}" onclick="wallDrop(${i})" role="button" tabindex="0">
-      <span class="wl">${esc(L.lv)} ${placedResp?"✓":""}</span>
+    h+=`<div class="wallcol ${placedResp?"filled":"droppable"}" onclick="wallDrop(${i})" role="button" tabindex="0">
+      <div class="wl">${esc(L.lv)} ${placedResp?"✓":""}</div>
       <div class="wdesc">${esc(L.vic)}</div>
       ${S.eal?`<div class="weal">${esc(L.eal)}</div>`:""}
-      ${placedResp?`<div class="wresp">${esc(placedResp.t)}</div>`:""}</div>`;
+      ${placedResp?`<div class="wresp">${placedResp.h||esc(placedResp.t)}</div>`:`<div class="wempty">tap a response, then tap here</div>`}</div>`;
   });
-  h+=`</div>`;
+  h+=`</div></div>`;
+
   const remaining=WK_WALL.resps.filter(r=>WK.placed[r.id]===undefined);
   if(remaining.length){
     h+=`<p class="q">Responses to place (${remaining.length} left) — tap one, then tap its level:</p><div class="respbank">`;
-    remaining.forEach(r=>{ h+=`<button class="resp ${WK.armed===r.id?"armed":""}" onclick="wallArm('${r.id}')">${esc(r.t)}</button>`; });
+    remaining.forEach(r=>{ h+=`<button class="resp ${WK.armed===r.id?"armed":""}" onclick="wallArm('${r.id}')">${r.h||esc(r.t)}</button>`; });
     h+=`</div>`;
   }
   h+=`<div class="feedback" id="fb" aria-live="polite"></div>`;
   if(wallDone()){
-    h+=`<div class="feedback ok"><b>Wall complete.</b> Read it top to bottom — watch the responses stop retelling and start analysing. This wall stays with you in Part B, and it's the same rubric your CAT is marked on.</div>
-    <div class="btnrow"><button class="btn btn-primary" onclick="renderWkBuild()">Part B: write with your own evidence →</button></div>`;
+    h+=`<div class="feedback ok"><b>Wall complete.</b> Read it left to right — watch the responses stop retelling and start analysing, and watch the colours fill in. This wall stays with you in Part B, and it's the same rubric your CAT is marked on.</div>
+    <div class="btnrow"><button class="btn btn-primary" onclick="renderWkBuild()">Part B: write it yourself, then climb the rubric →</button></div>`;
   }
   $("body").innerHTML=h;
 }
@@ -1497,167 +1689,351 @@ function wallDrop(i){
   }
 }
 function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
+/* ---------- ANALYSIS WORKSHOP · PART B — THE CLIMB ----------
+   One sentence, rejigged up the rubric. Each level snapshots the student's
+   own wording, and the snapshots stack under the rubric so the climb reads
+   like the EAL WAGOLL table: the same idea, said better each time. */
+function wkLevel(){ return WK_LEVELS.find(L=>L.n===WK.level); }
+function wkLevelIdx(){ return WK_LEVELS.findIndex(L=>L.n===WK.level); }
+function wkAvail(list){ return list.map((x,i)=>({x,i})).filter(o=>{
+  const lv=o.x.lv||[5,8]; return WK.level>=lv[0] && WK.level<=lv[1]; }); }
+function wkRetired(x){ const lv=x.lv||[5,8]; return WK.level>lv[1]; }
+function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
+
+function wkTileData(c){
+  if(c.k==="open") return WK_BUILD.opens[c.i];
+  if(c.k==="subj") return WK_BUILD.subjects[c.i];
+  if(c.k==="verb") return WK_BUILD.verbs[c.i];
+  if(c.k==="idea") return WK_BUILD.ideas[c.i];
+  if(c.k==="eff")  return WK_BUILD.effects[c.i];
+  if(c.k==="con")  return WK_BUILD.cons[c.i];
+  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"“"+sg.t.replace(/[.,]$/,"")+"”", seg:sg}; }
+  return {t:""};
+}
+function wkKindClass(k){
+  return k==="subj"?"k-subj":k==="verb"?"k-verb":k==="q"?"k-q":
+         k==="eff"?"k-eff":k==="idea"?"k-eff":k==="open"?"k-open":"k-con";
+}
+function wkText(canvas){
+  let out="";
+  (canvas||WK.canvas).forEach(c=>{
+    const t=wkTileData(c).t;
+    if(!out) out=t;
+    else if(t===","||t===".") out+=t;
+    else out+=" "+t;
+  });
+  if(out){
+    out=out.charAt(0).toUpperCase()+out.slice(1);
+    if(!/[.!?]$/.test(out)) out+=".";
+  }
+  return out;
+}
+
 function renderWkBuild(){
-  WK.canvas=WK.canvas||[];
-  let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B</div>
-  <h2>Write with your own evidence</h2>
-  <p class="lead">${esc(WK_BUILD.prompt)} Keep <b>two</b> sentences to finish. There is no single right answer — many strong sentences exist. The check reads what your sentence is made of, not how smooth it sounds${S.eal?". Pattern to aim for: a blue subject + a green verb + your yellow quote + a pink idea":""}.</p>
-  <details style="margin:0 0 12px"><summary style="cursor:pointer;font-size:13px;font-weight:600">Show my WAGOLL wall</summary><div class="wallgrid" style="margin-top:8px">`+
-  WK_WALL.levels.map((L,i)=>{const r=WK_WALL.resps.find(x=>x.lvl===i);
-    return `<div class="wallslot filled"><span class="wl">${esc(L.lv)}</span>${S.eal?`<div class="weal">${esc(L.eal)}</div>`:""}<div class="wresp">${esc(r.t)}</div></div>`;}).join("")+`</div></details>`;
-  h+=`<p class="q">1 · Choose your focus:</p><div class="idea-chips">`+
+  const L=wkLevel();
+  let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb</div>
+  <h2>${esc(WK_BUILD.prompt)}</h2>`;
+
+  /* ---- the rubric ladder, with the student's own climb stacked under it ---- */
+  h+=`<div class="climb">`;
+  WK_LEVELS.forEach(lv=>{
+    const state = lv.n<WK.level ? "done" : (lv.n===WK.level ? "now" : "locked");
+    const mine = WK.versions[lv.n];
+    h+=`<div class="climbrow ${state}">
+      <div class="climbhead">
+        <span class="cl">Level ${lv.n} · ${esc(lv.name)} ${lv.n<WK.level?"✓":""}</span>
+        <span class="cvic">${esc(lv.vic)}</span>
+        ${S.eal?`<span class="ceal">${esc(lv.eal)}</span>`:""}
+      </div>
+      ${mine?`<div class="cmine">${esc(mine)}</div><div class="cwhy">${esc(lv.why)}</div>`:""}
+      ${lv.n===WK.level?`<div class="cgoal"><b>Your job now:</b> ${esc(lv.goal)}</div>`:""}
+    </div>`;
+  });
+  h+=`</div>`;
+
+  /* ---- what changed at this level ---- */
+  if(L.unlocks||L.retires){
+    h+=`<div class="changed">`;
+    if(L.unlocks) h+=`<div><span class="cup">unlocked</span> ${esc(L.unlocks)}</div>`;
+    if(L.retires) h+=`<div><span class="cdown">retired</span> ${esc(L.retires)}</div>`;
+    h+=`</div>`;
+  }
+
+  /* ---- focus ---- */
+  h+=`<p class="q">Your focus:</p><div class="idea-chips">`+
     WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="WK.focus='${f.id}';renderWkBuild()">${esc(f.label)}</button>`).join("")+`</div>`;
-  h+=`<p class="q">2 · Collect evidence — tap lines in the passage to add them to your quote tiles:</p>
-  <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
-  `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
-  h+=`<p class="q">3 · Build the sentence — tap tiles to add them; tap a tile in the sentence to remove it:</p>
-  <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
-  <div class="bins5">
-    <div class="bin subjects"><h4>Subjects</h4><div class="binbody" id="wb-subj"></div></div>
-    <div class="bin verbs"><h4>Verbs</h4><div class="binbody" id="wb-verb"></div></div>
-    <div class="bin quotes"><h4>Your quotes</h4><div class="binbody" id="wb-q"></div></div>
-    <div class="bin effects"><h4>Ideas &amp; effects</h4><div class="binbody" id="wb-eff"></div></div>
-    <div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div>
-  </div>
-  <div class="feedback" id="fb" aria-live="polite"></div>
-  <div id="keptbox"></div>
+
+  /* ---- passage harvest, from L6 ---- */
+  if(WK.level>=6){
+    h+=`<p class="q">Collect evidence — tap lines to add them to your quote tiles:</p>
+    <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
+    `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
+  }
+
+  /* ---- canvas ---- */
+  h+=`<p class="q">Your sentence — <b>drag tiles to reorder them</b>, or tap one to take it out:</p>
+  <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>`;
+
+  /* ---- banks, filtered to this level ---- */
+  h+=`<div class="bins5">`;
+  if(WK.level>=8) h+=`<div class="bin opens"><h4>Lead-in</h4><div class="binbody" id="wb-open"></div></div>`;
+  h+=`<div class="bin subjects"><h4>Subjects</h4><div class="binbody" id="wb-subj"></div></div>
+      <div class="bin verbs"><h4>Verbs</h4><div class="binbody" id="wb-verb"></div></div>`;
+  if(WK.level>=6) h+=`<div class="bin quotes"><h4>Your quotes</h4><div class="binbody" id="wb-q"></div></div>`;
+  if(WK.level<=6) h+=`<div class="bin effects"><h4>Key ideas</h4><div class="binbody" id="wb-idea"></div></div>`;
+  else h+=`<div class="bin effects"><h4>Effect on the reader</h4><div class="binbody" id="wb-eff"></div></div>`;
+  h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div></div>`;
+
+  h+=`<div class="feedback" id="fb" aria-live="polite"></div>
   <div class="btnrow" id="wkrow">
     <button class="btn btn-primary" onclick="wkCheck()">Check my sentence</button>
     <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
   </div>`;
   $("body").innerHTML=h;
-  wkFillBins(); wkDraw(); wkKeptDraw();
+  wkFillBins(); wkDraw();
 }
+
 function wkHarvest(i){
   const at=WK.harvested.indexOf(i);
   if(at>=0){ WK.harvested.splice(at,1); WK.canvas=WK.canvas.filter(c=>!(c.k==="q"&&c.i===i)); }
   else WK.harvested.push(i);
   renderWkBuild();
 }
-function wkTileData(c){
-  if(c.k==="subj") return WK_BUILD.subjects[c.i];
-  if(c.k==="verb") return WK_BUILD.verbs[c.i];
-  if(c.k==="eff") return WK_BUILD.effects[c.i];
-  if(c.k==="con") return {t:WK_BUILD.connectors[c.i]};
-  if(c.k==="q"){ const sg=WK_BUILD.segs[c.i]; return {t:"\u201C"+sg.t.replace(/[.,]$/,"")+"\u201D", seg:sg}; }
-}
+
 function wkFillBins(){
-  const fill=(el,list,kind,cls)=>{
-    const bin=$(el); bin.innerHTML="";
-    list.forEach((x,i)=>{
-      const b=document.createElement("button"); b.className="tile "+cls;
-      b.textContent = kind==="q" ? "\u201C"+x.t.replace(/[.,]$/,"")+"\u201D" : (x.t!==undefined?x.t:x);
-      b.onclick=()=>{ WK.canvas.push({k:kind,i}); wkDraw(); };
+  const fill=(elId, list, kind, cls)=>{
+    const bin=$(elId); if(!bin) return;
+    bin.innerHTML="";
+    wkAvail(list).forEach(o=>{
+      const b=document.createElement("button");
+      b.className="tile "+cls;
+      b.textContent=o.x.t;
+      b.onclick=()=>{ WK.canvas.push({k:kind,i:o.i}); wkDraw(); };
       bin.appendChild(b);
     });
-    if(kind==="q"&&!list.length) bin.innerHTML=`<span class="gatednote">Tap lines in the passage above to collect quotes.</span>`;
   };
+  fill("wb-open", WK_BUILD.opens, "open", "k-open");
   fill("wb-subj", WK_BUILD.subjects, "subj", "k-subj");
   fill("wb-verb", WK_BUILD.verbs, "verb", "k-verb");
-  const qbin=$("wb-q"); qbin.innerHTML="";
-  if(!WK.harvested.length) qbin.innerHTML=`<span class="gatednote">Tap lines in the passage above to collect quotes.</span>`;
-  WK.harvested.forEach(i=>{
-    const sg=WK_BUILD.segs[i];
-    const b=document.createElement("button"); b.className="tile k-q";
-    b.textContent="\u201C"+sg.t.replace(/[.,]$/,"")+"\u201D";
-    b.onclick=()=>{ WK.canvas.push({k:"q",i}); wkDraw(); };
-    qbin.appendChild(b);
-  });
-  fill("wb-eff", WK_BUILD.effects, "eff", "k-eff");
-  fill("wb-con", WK_BUILD.connectors.map(t=>({t})), "con", "k-con");
+  fill("wb-idea", WK_BUILD.ideas, "idea", "k-eff");
+  fill("wb-eff",  WK_BUILD.effects, "eff", "k-eff");
+  fill("wb-con",  WK_BUILD.cons, "con", "k-con");
+  const qbin=$("wb-q");
+  if(qbin){
+    qbin.innerHTML = WK.harvested.length ? "" : `<span class="gatednote">Tap lines in the passage above to collect quotes.</span>`;
+    WK.harvested.forEach(i=>{
+      const sg=WK_BUILD.segs[i];
+      const b=document.createElement("button"); b.className="tile k-q";
+      b.textContent="“"+sg.t.replace(/[.,]$/,"")+"”";
+      b.onclick=()=>{ WK.canvas.push({k:"q",i}); wkDraw(); };
+      qbin.appendChild(b);
+    });
+  }
 }
-function wkText(){
-  let out="";
-  WK.canvas.forEach(c=>{
-    const t=wkTileData(c).t;
-    if(!out) out=t;
-    else if(t===","||t==="."||t==="\u2014") out+= t==="\u2014" ? " \u2014" : t;
-    else out+=" "+t;
-  });
-  if(out) out=out.charAt(0).toUpperCase()+out.slice(1);
-  return out;
-}
+
+/* ---- canvas render + drag-to-reorder ----
+   Pointer drag with an 8px threshold, so a tap still removes a tile and a
+   drag rearranges it. Works with mouse, trackpad and touch. */
 function wkDraw(){
   const cv=$("wkCanvas"); if(!cv) return;
   cv.innerHTML="";
   if(!WK.canvas.length) cv.innerHTML=`<span class="ph">Tap tiles below to build your sentence here.</span>`;
   WK.canvas.forEach((c,idx)=>{
-    const cls = c.k==="subj"?"k-subj":c.k==="verb"?"k-verb":c.k==="q"?"k-q":c.k==="eff"?"k-eff":"k-con";
-    const b=document.createElement("button"); b.className="ctile "+cls;
-    b.textContent=wkTileData(c).t;
-    b.onclick=()=>{ WK.canvas.splice(idx,1); wkDraw(); };
+    const d=wkTileData(c);
+    const b=document.createElement("button");
+    b.className="ctile "+wkKindClass(c.k)+(wkRetired(d)?" retired":"");
+    b.textContent=d.t;
+    b.dataset.idx=idx;
+    b.title=wkRetired(d)?"Retired at this level — swap it out":"Drag to move, tap to remove";
+    wkBindDrag(b, idx);
     cv.appendChild(b);
   });
   const prev=$("wkPrev");
-  prev.textContent = wkText() || "";
-  if(!WK.canvas.length) prev.innerHTML=`<span class="ph">Your sentence appears here as you build.</span>`;
-  const fb=$("fb"); if(fb){ fb.className="feedback"; }
-  const kb=$("wkrow"); if(kb && kb.querySelector("#keepBtn")) kb.querySelector("#keepBtn").remove();
+  if(prev){
+    if(WK.canvas.length) prev.textContent=wkText();
+    else prev.innerHTML=`<span class="ph">Your sentence appears here as you build.</span>`;
+  }
+  const fb=$("fb"); if(fb) fb.className="feedback";
+  const kb=$("wkrow"); const old=kb&&kb.querySelector("#liftBtn"); if(old) old.remove();
 }
-function wkKeptDraw(){
-  const box=$("keptbox"); if(!box) return;
-  box.innerHTML = S.kept.map((k,i)=>`<div class="kept">${i+1}. ${esc(k)}</div>`).join("");
+function wkBindDrag(el, idx){
+  /* Drag = move the DOM node only (no re-render mid-drag, so handlers stay
+     alive), then commit the new order from DOM position on release.
+     Insertion index = how many OTHER tiles have their midpoint left of the
+     pointer — the standard computation, and the one that matches what the
+     student sees. Under the 8px threshold it's a tap, which removes. */
+  let sx=0, sy=0, dragging=false;
+  el.addEventListener("pointerdown", e=>{
+    if(e.button) return;
+    sx=e.clientX; sy=e.clientY; dragging=false;
+    try{ el.setPointerCapture(e.pointerId); }catch(_){}
+
+    const move=ev=>{
+      if(!dragging){
+        if(Math.hypot(ev.clientX-sx, ev.clientY-sy) < 8) return;
+        dragging=true; el.classList.add("grabbing");
+      }
+      ev.preventDefault();
+      const cv=$("wkCanvas"); if(!cv) return;
+      const others=[...cv.querySelectorAll(".ctile")].filter(t=>t!==el);
+      let ins=0;
+      for(const t of others){
+        const r=t.getBoundingClientRect();
+        if(ev.clientX > r.left + r.width/2) ins++; else break;
+      }
+      const ref=others[ins] || null;
+      if(ref!==el.nextSibling) cv.insertBefore(el, ref);
+    };
+
+    const up=()=>{
+      el.removeEventListener("pointermove", move);
+      el.classList.remove("grabbing");
+      if(!dragging){
+        WK.canvas.splice(+el.dataset.idx, 1);
+      } else {
+        const cv=$("wkCanvas");
+        const order=[...cv.querySelectorAll(".ctile")].map(t=>+t.dataset.idx);
+        WK.canvas = order.map(i=>WK.canvas[i]);
+      }
+      wkDraw();
+    };
+
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerup", up, {once:true});
+    el.addEventListener("pointercancel", up, {once:true});
+  });
 }
+/* ---- grammar: order matters, not just presence ---- */
+function wkGrammar(kinds){
+  const f=[];
+  if(!kinds.length) return f;
+  const first=kinds[0], last=kinds[kinds.length-1];
+  const iOpen=kinds.indexOf("open"), iS=kinds.indexOf("subj"), iV=kinds.indexOf("verb");
+  const iE=kinds.indexOf("eff"), iI=kinds.indexOf("idea"), iQ=kinds.indexOf("q");
+  if(iOpen>0)
+    f.push({sev:"err", text:"Your lead-in phrase has to come first — drag it to the front of the sentence."});
+  if(first==="con")
+    f.push({sev:"err", text:"Your sentence starts on a joiner. Start with your subject (or a lead-in phrase), not with a connecting word."});
+  if(first==="verb")
+    f.push({sev:"err", text:"Your sentence starts on a verb. Something has to be doing it — put your subject first."});
+  if(iS>=0 && iV>=0 && iV<iS)
+    f.push({sev:"err", text:"Your verb comes before your subject. Drag the subject in front of the verb — read it aloud and you'll hear it."});
+  if(iV>=0 && iE>=0 && iE<iV)
+    f.push({sev:"err", text:"Your effect clause lands before the verb. The order is subject → verb → what it reveals."});
+  if(iV>=0 && iI>=0 && iI<iV)
+    f.push({sev:"err", text:"Your key idea lands before the verb. The order is subject → verb → idea."});
+  if(kinds.filter(k=>k==="verb").length>1)
+    f.push({sev:"err", text:"There are two verbs doing the same job. Take one out — a sentence like this needs a single main verb."});
+  if(last==="verb")
+    f.push({sev:"err", text:"Your sentence ends on a verb, so it never says what the verb does. Put the idea or effect after it."});
+  if(last==="con")
+    f.push({sev:"err", text:"Your sentence ends on a joiner — it stops mid-thought. Finish it, or take the joiner off."});
+  for(let i=0;i<kinds.length-1;i++){
+    if(kinds[i]===kinds[i+1] && (kinds[i]==="subj"||kinds[i]==="verb"))
+      f.push({sev:"err", text:"Two "+(kinds[i]==="subj"?"subjects":"verbs")+" are sitting side by side. Put a joiner between them or remove one."});
+  }
+  if(iQ>0){
+    const before=kinds[iQ-1];
+    if(!["con","verb","open"].includes(before))
+      f.push({sev:"warn", text:"Your quotation is dropped straight in. Put a joiner in front of it — 'when he says', 'in the line' — so it reads as one sentence."});
+  }
+  return f;
+}
+
 function wkCheck(){
-  const fb=$("fb");
+  const fb=$("fb"), L=wkLevel();
   if(!WK.focus){ fb.className="feedback bad"; fb.innerHTML="<b>Choose your focus first</b> — the check needs to know which idea your sentence is aiming at."; return; }
+  if(!WK.canvas.length){ fb.className="feedback bad"; fb.innerHTML="<b>The canvas is empty.</b> Tap tiles to build a sentence first."; return; }
   const tiles=WK.canvas.map(c=>({c, d:wkTileData(c)}));
-  if(!tiles.length){ fb.className="feedback bad"; fb.innerHTML="<b>The canvas is empty.</b> Tap tiles to build a sentence first."; return; }
+  const kinds=WK.canvas.map(c=>c.k);
   const findings=[];
-  const subj=tiles.filter(t=>t.c.k==="subj"), verbs=tiles.filter(t=>t.c.k==="verb"),
-        quotes=tiles.filter(t=>t.c.k==="q"), effs=tiles.filter(t=>t.c.k==="eff");
+
+  /* retired tiles must be traded out */
+  tiles.forEach(t=>{ if(wkRetired(t.d))
+    findings.push({sev:"err", text:"“"+t.d.t+"” belongs to a level you've passed. "+(L.retires||"Swap it for one of the tiles that unlocked at this level.")}); });
+
+  /* what this level requires */
+  L.need.forEach(k=>{
+    if(kinds.includes(k)) return;
+    const msg={
+      open:"This level opens with a lead-in phrase — pick one from the Lead-in bank and put it first.",
+      subj:"There's no subject. Who or what is this sentence about?",
+      verb:"There's no verb. What does your subject DO?",
+      idea:"Name the key idea this relates to — pick one from Key ideas.",
+      q:"This level needs evidence. Harvest a line from the passage and weave it in.",
+      eff:"This level needs an effect on the reader — what does the writing make us understand or feel?"
+    }[k];
+    findings.push({sev:"err", text:msg});
+  });
+
+  /* grammar / word order */
+  wkGrammar(kinds).forEach(f=>findings.push(f));
+
+  /* quality */
+  const subj=tiles.filter(t=>t.c.k==="subj"), verbs=tiles.filter(t=>t.c.k==="verb");
   if(subj.some(t=>t.d.q==="vague"))
-    findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Replace it with something specific — a technique, a body, a voice, or the author."});
-  if(!subj.length) findings.push({sev:"err", text:"There's no subject (blue). Who or what is this sentence about?"});
-  if(!verbs.length) findings.push({sev:"err", text:"There's no verb (green). What does your subject DO?"});
-  const strong=verbs.some(t=>t.d.q==="good"), weak=verbs.some(t=>t.d.q==="weak");
-  if(weak && !strong) findings.push({sev:"warn", text:"Your verb is flat ('shows', 'is', 'says'). Trade up to an analytical verb — reveals, suggests, exposes, betrays."});
-  if(!quotes.length) findings.push({sev:"warn", text:"Where's your evidence? Tap a line in the passage to collect a quote (yellow) and weave it in — analysis without evidence is just opinion."});
-  quotes.forEach(t=>{
+    findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Name the actual thing — a body, a voice, a technique, or the author."});
+  if(WK.level>=8 && !subj.some(t=>t.d.q==="craft"))
+    findings.push({sev:"warn", text:"At this level the subject of your sentence should be a writing choice — the simile, the clipped dialogue, the narration, or Fraillon herself."});
+  if(WK.level>=7 && verbs.some(t=>t.d.q==="weak"))
+    findings.push({sev:"warn", text:"That verb is flat. Trade up to an analytical verb — reveals, suggests, exposes, betrays, emphasises."});
+  tiles.filter(t=>t.c.k==="q").forEach(t=>{
     const th=t.d.seg.themes||{};
     if(!Object.keys(th).length) findings.push({sev:"warn", text:"Your quote is "+t.d.seg.note+". Swap it for a line that shows the idea."});
     else if(!th[WK.focus]) findings.push({sev:"warn", text:"That quote is "+t.d.seg.note+" — but your focus is "+wkFocusLabel()+". Match the quote to the focus, or switch focus."});
   });
-  if(!effs.length) findings.push({sev:"warn", text:"There's no idea/effect part (pink) — that's where the analysis lives. What does this moment reveal?"});
-  effs.forEach(t=>{
+  tiles.filter(t=>t.c.k==="idea"||t.c.k==="eff").forEach(t=>{
     if(t.d.q==="weak") findings.push({sev:"warn", text:t.d.fb});
     else if(t.d.themes && !t.d.themes.includes(WK.focus))
       findings.push({sev:"warn", text:"Your ending is about a different idea than your focus ("+wkFocusLabel()+"). Match them — or switch your focus chip."});
   });
+
   const level = findings.some(f=>f.sev==="err") ? "err" : findings.length ? "warn" : "ok";
-  const slot=S.kept.length;
-  if(slot<2 && !WK.checkedSlots[slot]){ WK.checkedSlots[slot]=true; recFirst("wk.build.s"+(slot+1), level==="ok"); }
+  if(!WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
+
   if(level==="ok"){
+    WK.versions[WK.level]=wkText();
+    save();
+    const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
-    fb.innerHTML="<b>Strong analytical sentence.</b> Specific subject, analytical verb, your own evidence, and an idea that matches your focus. Read it aloud once — smooth out the order if it needs it — then keep it.";
-    if(!$("keepBtn")){
-      const b=document.createElement("button"); b.id="keepBtn"; b.className="btn"; b.textContent="Keep this sentence →";
-      b.onclick=wkKeep; $("wkrow").insertBefore(b, $("wkrow").children[1]);
-    }
+    fb.innerHTML="<b>Level "+WK.level+" reached.</b> "+esc(L.why)+
+      (next?" Now keep this sentence and rejig it — you don't start again, you lift what you've already got.":" That's the top of the ladder.");
+    const btn=document.createElement("button");
+    btn.id="liftBtn"; btn.className="btn btn-primary";
+    btn.textContent = next ? "Lift it to Level "+next.n+" →" : "Finish the climb →";
+    btn.onclick = next ? wkLift : wkFinishClimb;
+    $("wkrow").insertBefore(btn, $("wkrow").firstChild);
   } else {
     fb.className="feedback "+(level==="err"?"bad":"warn");
-    fb.innerHTML="<b>"+(level==="err"?"Something needs fixing.":"A good start — here's how to lift it:")+"</b><ul>"+
+    fb.innerHTML="<b>"+(level==="err"?"Not there yet.":"Close — here's how to lift it:")+"</b><ul>"+
       findings.map(f=>"<li>"+esc(f.text)+"</li>").join("")+"</ul>";
   }
 }
-function wkKeep(){
-  const t=wkText(); if(!t) return;
-  S.kept.push(t); save();
-  WK.canvas=[];
-  if(S.kept.length>=2){ wkFinish(); return; }
+function wkLift(){
+  const next=WK_LEVELS[wkLevelIdx()+1];
+  if(!next) return wkFinishClimb();
+  WK.level=next.n;
   renderWkBuild();
-  const fb=$("fb"); fb.className="feedback ok";
-  fb.innerHTML="<b>Kept.</b> One more — try a different focus, or different evidence for the same one.";
+  const fb=$("fb");
+  fb.className="feedback warn";
+  fb.innerHTML="<b>Level "+next.n+" — "+esc(next.name)+".</b> "+esc(next.goal)+
+    (next.retires?" <br><b>Watch out:</b> "+esc(next.retires):"");
 }
-function wkFinish(){
+function wkFinishClimb(){
+  if(!S.kept.includes(wkText())) S.kept.push(wkText());
   S.done.wk=true; save();
   const sc=scoreFor("wk");
-  $("body").innerHTML=`<h2>Analysis workshop — done</h2>
-  <div class="panel"><p style="margin:0 0 8px"><b>${sc.got}/${sc.total} first-attempt.</b> Your kept sentences:</p>
-  ${S.kept.map((k,i)=>`<div class="kept">${i+1}. ${esc(k)}</div>`).join("")}
-  <p class="lead" style="margin:8px 0 0">These print on your report. Between the wall and these sentences, you've done the whole essay skill in miniature: judge quality against the rubric, then produce it with your own evidence.</p></div>
-  <div class="btnrow"><button class="btn" onclick="renderWkBuild()">Write one more</button>
+  let h=`<h2>Analysis workshop — the climb</h2>
+  <div class="panel"><p style="margin:0 0 10px"><b>${sc.got}/${sc.total} first-attempt.</b> One idea, said four ways — each level lifting the last:</p>`;
+  WK_LEVELS.forEach(lv=>{ const v=WK.versions[lv.n]; if(!v) return;
+    h+=`<div class="climbrow done" style="margin-bottom:8px">
+      <div class="climbhead"><span class="cl">Level ${lv.n} · ${esc(lv.name)}</span>
+      <span class="cvic">${esc(lv.vic)}</span></div>
+      <div class="cmine">${esc(v)}</div></div>`; });
+  h+=`<p class="lead" style="margin:10px 0 0">Read the first and the last one after each other. Nothing was thrown away — you kept the same idea and kept lifting how you said it. That is exactly what redrafting is, and it is what the CAT is marked on.</p></div>
+  <div class="btnrow"><button class="btn" onclick="runWk()">Climb again with a new focus</button>
   <button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
+  $("body").innerHTML=h;
 }
 
 /* ---------- REPORT ---------- */
@@ -1702,7 +2078,7 @@ function renderReport(){
   </div>`;
 }
 
-go("home");
+if(location.hash==="#report") go("rpt"); else go("home");
 </script>
 </body>
 </html>
