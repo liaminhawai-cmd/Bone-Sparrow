@@ -1,11 +1,17 @@
 # The Bone Sparrow — interactive hubs: teacher notes
 
-Two companion interactives, same suite as the **Pre-reading Trainer** and **Grammar Hub**: mastery loop, **first-attempt-only scoring**, printable reports with verification codes, single offline files. Both also run as live pages (links below); the repo copies are the source of truth.
+Two companion interactives, same suite as the **Pre-reading Trainer** and **Grammar Hub**: mastery loop, **first-attempt-only scoring**, printable reports with verification codes, single offline files. The whole suite is hosted on **GitHub Pages** (deployed by `.github/workflows/pages.yml`, which publishes only the hub HTML files plus `site/index.html` — never the lesson resources or PDFs):
+
+**Landing page for students: https://liaminhawai-cmd.github.io/Bone-Sparrow/**
 
 | File | Live page | What it is |
 |---|---|---|
-| `BoneSparrowReadingHub.html` | https://claude.ai/code/artifact/41bce67d-b3c6-44af-8876-722be5ad5a33 | Reading, inference, voice & evidence skills |
-| `BoneSparrowVocabHub.html` | https://claude.ai/code/artifact/979349ea-a304-4f47-ad6e-73753c0d5026 | Chapter-by-chapter vocabulary (Water-in-the-World engine) |
+| `BoneSparrowReadingHub.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/BoneSparrowReadingHub.html | Reading, inference, voice & evidence skills |
+| `BoneSparrowVocabHub.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/BoneSparrowVocabHub.html | Chapter-by-chapter vocabulary (Water-in-the-World engine) |
+| `GrammarHuboffline.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/GrammarHuboffline.html | Grammar Hub (linked strategically from the reading hub) |
+| `bonesparrowtrainer (4) (3).html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/bonesparrowtrainer.html | Pre-reading Trainer |
+
+Pages redeploys automatically on push when any hub file changes. Note the trade-off: the Pages site is public, so it holds only short page-referenced extracts (see the copyright note below).
 
 Both gates: **first name + last name + student ID (4–8 chars) before anything starts**; details print on the report with a verification code.
 
