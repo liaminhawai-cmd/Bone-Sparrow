@@ -115,6 +115,12 @@
   .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
   .vcard .morph b,.vcard .morph i{color:var(--ink)}
+  .wstate{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 9px;border-radius:20px;
+    text-transform:uppercase;flex-shrink:0;border:1px solid transparent}
+  .wstate.ok{color:var(--correct);background:var(--okbg);border-color:var(--correct)}
+  .wstate.work{color:var(--hazard-d);background:var(--hazardbg);border-color:var(--hazard-d)}
+  .wstate.new{color:var(--muted);background:var(--bg);border-color:var(--line)}
+  .wstate + .dtag{margin-left:8px}
   .dtag{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.5px;padding:3px 9px;border-radius:20px;flex-shrink:0}
   .dtag.story{color:var(--earth-d);background:var(--earthbg)}
   .dtag.camp{color:var(--hazard-d);background:var(--hazardbg)}
@@ -300,6 +306,12 @@
   <p class="subtitle">Zana Fraillon &middot; chapter by chapter &mdash; build each chapter&rsquo;s words from their morphemes and origins, then keep them alive with quick reviews</p>
   <div id="home-map"></div>
   <div class="homerow">
+    <div class="panelcard">
+      <div class="t">&#9776; My word list</div>
+      <div class="d" id="wordlist-line"></div>
+      <div class="d" id="fix-desc" style="margin-top:6px"></div>
+      <button class="btn btn-water" id="fix-start" onclick="startFixDrill()">Drill my unmastered words</button>
+    </div>
     <div class="panelcard">
       <div class="t">&#8635; Quick review</div>
       <div class="d" id="review-desc">A shuffled set of words from the lessons you&rsquo;ve already done &mdash; everyone gets a different mix, so eyes on your own screen.</div>
@@ -1810,7 +1822,41 @@ function blank(){ return { name:"", fname:"", lname:"", sid:"", lang:"", chapter
 function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&s.lessons)?s:blank(); }catch(e){ return blank(); } }
 function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 function L(id){ if(!S.lessons[id]) S.lessons[id]=blankLesson(); return S.lessons[id]; }
-function WS(w){ if(!S.wstat[w]) S.wstat[w]={wrong:0,seen:0,rev:0}; return S.wstat[w]; }
+function WS(w){ if(!S.wstat[w]) S.wstat[w]={wrong:0,seen:0,rev:0,right:0,streak:0,mastered:false}; return S.wstat[w]; }
+/* THE WORD LIST. Every encounter with a word — building it, using it, meeting
+   it again in a review — updates one running record that outlives the lesson.
+   Two correct encounters in a row and a word counts as mastered; a single miss
+   breaks the streak and puts it back in the queue. Unmastered words are then
+   weighted back into every later drill, so nothing is quietly dropped. */
+const MASTERY_STREAK = 2;
+function noteResult(word, correct){
+  const ws=WS(word);
+  ws.seen=(ws.seen||0)+1;
+  if(correct){
+    ws.right=(ws.right||0)+1;
+    ws.streak=(ws.streak||0)+1;
+    if(ws.streak>=MASTERY_STREAK) ws.mastered=true;
+  } else {
+    ws.wrong=(ws.wrong||0)+1;
+    ws.streak=0;
+    ws.mastered=false;
+  }
+  save();
+}
+function metWords(){
+  const out=[];
+  LESSONS.forEach(l=>{ const st=S.lessons[l.id]; if(!st||!st.studied) return; l.words.forEach(w=>out.push(w)); });
+  return out;
+}
+function unmasteredWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return ws && ws.seen && !ws.mastered; }); }
+function masteredWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return ws && ws.mastered; }); }
+function undrilledWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return !ws || !ws.seen; }); }
+function wordState(w){
+  const ws=S.wstat[w];
+  if(!ws || !ws.seen) return {k:"new", label:"not met yet"};
+  if(ws.mastered) return {k:"ok", label:"mastered"};
+  return {k:"work", label: ws.wrong ? `needs work (missed ${ws.wrong}${ws.wrong===1?" time":" times"})` : "nearly there"};
+}
 function resetAll(){ if(confirm("Wipe all your progress, scores and review history?")){ S=blank(); save(); go("home"); } }
 function touchStart(){ if(!S.startedAt){ S.startedAt=Date.now(); save(); } }
 
@@ -1941,6 +1987,27 @@ function renderHome(){
     }
     grid.appendChild(card);
   });
+  /* the word list at a glance */
+  const met=metWords(), unmastered=unmasteredWords(), mastered=masteredWords(), undrilled=undrilledWords();
+  const wl=document.getElementById("wordlist-line");
+  if(wl){
+    wl.innerHTML = met.length
+      ? `Your word list: <b>${met.length}</b> words · <b>${mastered.length}</b> mastered · <b>${unmastered.length}</b> to fix`
+        + (undrilled.length?` · <b>${undrilled.length}</b> not drilled yet.`:".")
+      : `Your word list starts as soon as you meet your first set of words.`;
+  }
+  const fixBtn=document.getElementById("fix-start");
+  if(fixBtn){
+    fixBtn.disabled = unmastered.length<1;
+    fixBtn.textContent = unmastered.length ? `Drill my ${unmastered.length} unmastered word${unmastered.length===1?"":"s"}` : "Nothing outstanding";
+  }
+  const fixDesc=document.getElementById("fix-desc");
+  if(fixDesc){
+    fixDesc.innerHTML = unmastered.length
+      ? `These are the words that have beaten you at least once and haven't been answered right twice in a row since. They also come back on their own inside every review — this button just goes straight at them.`
+      : (met.length ? `Every word you've met is mastered — answered correctly twice running. New sets will add to the list.`
+                    : `Words land here once you've met them and missed one.`);
+  }
   /* review availability */
   const pool=reviewPool(latestLessonIdx());
   const btn=document.getElementById("review-start");
@@ -2232,7 +2299,7 @@ function checkRow(rowEl){
   if(correct){ if(hint) hint.textContent=""; markRowDone(rowEl, w); }
   else {
     const st=L(buildCtx.l.id);
-    if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=false; WS(w.w).wrong++; save(); }
+    if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=false; noteResult(w.w,false); save(); }
     const sameSet=[...placed].sort().join("~")===[...answer].sort().join("~");
     rowEl.classList.add("wrong"); setTimeout(()=>rowEl.classList.remove("wrong"),320);
     if(hint) hint.innerHTML = sameSet
@@ -2243,7 +2310,7 @@ function checkRow(rowEl){
 function markRowDone(rowEl, w){
   const st=L(buildCtx.l.id);
   st.buildDone[w.w]=true;
-  if(st.buildFirst[w.w]===undefined) st.buildFirst[w.w]=true;
+  if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=true; noteResult(w.w,true); }
   save();
   rowEl.classList.add("done");
   rowEl.querySelector(".wbuilt").innerHTML=`<span class="wname">${esc(w.w)}</span> ${trSpan(w.w)} <span class="wtickmark">✓</span>`;
@@ -2273,7 +2340,7 @@ function buildOriginPhase(l){
     renderTaskItem(document.getElementById("origin-slot"),
       {type:"desc", q:w.originQ, a:w.originA, opts:w.originOpts.slice(), explain:w.note, tag:"ORIGIN · "+w.w},
       { onAnswer:(correct)=>{
-          if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=correct; if(!correct) WS(w.w).wrong++; save(); }
+          if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=correct; noteResult(w.w,correct); save(); }
           if(correct){ st.buildDone[w.w]=true; save(); } else queue.push(w);
         },
         onNext:next });
@@ -2425,7 +2492,7 @@ function startApply(l){
       onAnswer:(correct)=>{
         if(record && st.applyFirst[key]===undefined){
           st.applyFirst[key]=correct;
-          if(!correct) WS(applyWordName(cur.d)).wrong++;
+          noteResult(applyWordName(cur.d), correct);
           save();
         }
         if(correct){ mastered++; }
@@ -2538,6 +2605,11 @@ function reviewPool(uptoIdx){
   });
   return pool;
 }
+function startFixDrill(){
+  const pool=unmasteredWords();
+  if(!pool.length) return;
+  runReview(latestLessonIdx(), {pool, n:Math.min(6,pool.length)});
+}
 function startReviewSetup(){
   const idx=latestLessonIdx();
   if(idx<0){ return; }
@@ -2567,7 +2639,8 @@ function startReviewSetup(){
 function weightedSample(pool, n){
   const entries=pool.map(w=>{
     const ws=WS(w.w);
-    let wt=1 + 2*Math.min(ws.wrong,4) + (ws.rev===0?1.5:0);
+    /* unmastered words are the point of a review: they outweigh settled ones */
+    let wt=1 + 2*Math.min(ws.wrong,4) + (ws.rev===0?1.5:0) + (ws.seen && !ws.mastered ? 4 : 0);
     return {w, wt};
   });
   const out=[];
@@ -2594,16 +2667,20 @@ function reviewTaskFor(word, pool){
 }
 function runReview(uptoIdx, opts){
   opts=opts||{};
-  const pool=reviewPool(uptoIdx);
-  if(pool.length<4){ if(opts.contLesson) openLesson(opts.contLesson, false); else go("home"); return; }
+  const pool=opts.pool || reviewPool(uptoIdx);
+  const floor=opts.pool?1:4;
+  if(pool.length<floor){ if(opts.contLesson) openLesson(opts.contLesson, false); else go("home"); return; }
   go("review");
-  const n=Math.min(5,pool.length);
+  const n=Math.min(opts.n||5,pool.length);
   const words=weightedSample(pool,n);
-  const items=words.map(w=>{ const it=Object.assign({}, reviewTaskFor(w,pool)); it._w=w.w; it.tag="REVIEW · from lesson "+WORD_LESSON[w.w]; return it; });
+  const items=words.map(w=>{ const it=Object.assign({}, reviewTaskFor(w,pool.length>=4?pool:metWords()));
+    it._w=w.w;
+    it.tag=(opts.pool?"WORDS TO FIX · ":"REVIEW · ")+(WORD_LESSON[w.w]==="0"?"before you read":"ch "+WORD_LESSON[w.w]);
+    return it; });
   let queue=shuffle(items);
   let mastered=0;
   const firsts={};
-  words.forEach(w=>{ const ws=WS(w.w); ws.seen++; ws.rev++; });
+  words.forEach(w=>{ WS(w.w).rev++; });   /* seen is counted per answer in noteResult */
   function next(){
     document.getElementById("review-prog").textContent=(opts.contLesson?`WARM-UP REVIEW → LESSON ${opts.contLesson}`:"REVIEW")+` · mastered ${mastered}/${items.length}`;
     if(!queue.length){ finishReview(uptoIdx, words, firsts, opts); return; }
@@ -2612,7 +2689,7 @@ function runReview(uptoIdx, opts){
       onAnswer:(correct)=>{
         if(firsts[it._w]===undefined){
           firsts[it._w]=correct;
-          if(!correct) WS(it._w).wrong++;
+          noteResult(it._w, correct);
           save();
         }
         if(correct) mastered++; else queue.push(it);
@@ -2685,13 +2762,16 @@ function drawGloss(q){
   LESSONS.forEach(l=>{
     const ws=l.words.filter(w=> !q || w.w.toLowerCase().includes(q) || w.meaning.toLowerCase().includes(q));
     if(!ws.length) return;
-    html+=`<div class="topichead">Lesson ${esc(l.id)} · ${esc(l.title)}</div>`;
+    const done=ws.filter(w=>wordState(w.w).k==="ok").length;
+    html+=`<div class="topichead">${esc(l.id==="0"?"Before you read":"Chapters "+l.id)} · ${esc(l.title)} — ${done}/${ws.length} mastered</div>`;
     ws.forEach(w=>{
       const map=w.tiles
         ? w.tiles.map(t=>`<span class="mtile ${classifyMorph(t[0])}"><span class="mm">${esc(t[0])}</span><span class="gl">${esc(t[1])}</span></span>`).join(" ")
         : `<span class="muted">from a name or place — see its story in the lesson</span>`;
       const domLabel={camp:"THE CAMP",story:"STORY & MEMORY",feeling:"FEELINGS & THE BODY",world:"THE OUTSIDE WORLD"}[w.domain]||w.domain;
+      const stt=wordState(w.w);
       html+=`<div class="vcard"><div class="top"><span class="w">${esc(w.w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
+          <span class="wstate ${stt.k}">${esc(stt.label)}</span>
           <span class="dtag ${w.domain}">${domLabel}</span></div>
         <div class="meaning">${esc(w.meaning)}</div>
         <div class="morph" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px dashed var(--line-soft);padding-top:8px">${map}</div></div>`;
@@ -2764,6 +2844,10 @@ function renderReport(){
     ${S.reviews.length?`<table class="repgrid"><tr><th>When</th><th>Up to lesson</th><th>First try</th><th>Missed</th></tr>${revRows}</table>
       <p class="muted">Across all reviews: <b>${revFirst}/${revAtt}</b> first-attempt. ${S.reviews.length>12?"(last 12 shown)":""}</p>`
       :`<p class="muted">No review sessions yet — reviews are the part that makes words stick.</p>`}
+    <h3>Word list</h3>
+    <p class="muted">${(function(){ const m=metWords(), u=unmasteredWords(), k=masteredWords(), d=undrilledWords();
+      return m.length? `<b>${m.length}</b> words in the list · <b>${k.length}</b> mastered (answered correctly twice running) · <b>${u.length}</b> still coming back in drills${u.length?`: ${u.map(w=>esc(w.w)).join(", ")}`:""}${d.length?` · ${d.length} not drilled yet`:""}.`
+                     : "No words met yet."; })()}</p>
     <h3>Words needing another go</h3>
     <p class="muted">${needList.length?needList.map(w=>`${esc(w)}${needs[w]>1?` (×${needs[w]})`:""}`).join(", "):"None recorded — every first attempt so far has landed."}</p>
     <h3>Reading this report</h3>
