@@ -1,6 +1,6 @@
 # The Bone Sparrow — interactive hubs: teacher notes
 
-Two companion interactives, same suite as the **Pre-reading Trainer** and **Grammar Hub**: mastery loop, **first-attempt-only scoring**, printable reports with verification codes, single offline files. The whole suite is hosted on **GitHub Pages** (deployed by `.github/workflows/pages.yml`, which publishes only the hub HTML files plus `site/index.html` — never the lesson resources or PDFs):
+Two companion interactives, same suite as the **Pre-reading Trainer** and **Grammar Hub**: mastery loop, **first-attempt-only scoring**, printable reports with verification codes, single offline files. The whole suite is hosted on **GitHub Pages** (deployed by `.github/workflows/pages.yml`, which publishes only the hub HTML files plus the landing page `index.html` — never the lesson resources or PDFs. In repo Settings → Pages, set Source to **GitHub Actions** so this curated deploy is the only publisher):
 
 **Landing page for students: https://liaminhawai-cmd.github.io/Bone-Sparrow/**
 
@@ -9,7 +9,7 @@ Two companion interactives, same suite as the **Pre-reading Trainer** and **Gram
 | `BoneSparrowReadingHub.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/BoneSparrowReadingHub.html | Reading, inference, voice & evidence skills |
 | `BoneSparrowVocabHub.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/BoneSparrowVocabHub.html | Chapter-by-chapter vocabulary (Water-in-the-World engine) |
 | `GrammarHuboffline.html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/GrammarHuboffline.html | Grammar Hub (linked strategically from the reading hub) |
-| `bonesparrowtrainer (4) (3).html` | https://liaminhawai-cmd.github.io/Bone-Sparrow/bonesparrowtrainer.html | Pre-reading Trainer |
+| `bonesparrowtrainer.html` (clean-named copy of `bonesparrowtrainer (4) (3).html`) | https://liaminhawai-cmd.github.io/Bone-Sparrow/bonesparrowtrainer.html | Pre-reading Trainer |
 
 Pages redeploys automatically on push when any hub file changes. Note the trade-off: the Pages site is public, so it holds only short page-referenced extracts (see the copyright note below).
 
