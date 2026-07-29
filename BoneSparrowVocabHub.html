@@ -1,0 +1,2572 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bone Sparrow — Vocab Hub</title>
+<style>
+  /* Suite family with the Natural Resources trainer / Grammar Hub: same warm
+     paper, same Georgia display face, same two-accent system that encodes the
+     unit — ochre for story & memory, storm-red for the camp, plum for feelings,
+     teal for the outside world. Palette matches the Grammar Hub suite. */
+  :root{
+    --bg:#f2ece0; --paper:#fbf7ef; --ink:#211d17; --muted:#6c6353;
+    --line:#d9cfb9; --line-soft:#e8e0ce;
+    --earth:#b0741f; --earth-d:#8f5d16;      /* primary accent: outback ochre */
+    --water:#2c7488; --water-d:#215866;      /* secondary accent: river teal  */
+    --people:#7a4a6f; --people-d:#5e3755;    /* people & values: plum         */
+    --hazard:#a8432f; --hazard-d:#86331f;    /* hazards: storm red            */
+    --correct:#2f6a3e; --wrong:#a8432f;
+    --okbg:#eef4ec; --badbg:#f6ece8;
+    --waterbg:#e6f0f1; --earthbg:#f4ead7; --peoplebg:#f1e6ee; --hazardbg:#f6e4df;
+    --stretch:#1f4e5e; --stretchbg:#e2edf0;
+    --base:#7c6a3c; --basebg:#f2ecdb;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+       min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
+  .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+       max-width:920px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  h1{text-align:center;font-size:24px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.3px}
+  h2{font-family:Georgia,serif;font-size:18px;margin:4px 0 10px}
+  h3{font-family:Georgia,serif;font-size:15px;margin:18px 0 8px}
+  .subtitle{color:var(--muted);text-align:center;margin:6px 0 18px;font-size:13px}
+  .muted{color:var(--muted);font-size:13px;line-height:1.5}
+  .screen{display:none}.screen.active{display:block}
+  button{font-family:inherit}
+  .btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+       cursor:pointer;background:var(--paper);color:var(--ink);transition:all .15s ease}
+  .btn-primary{background:var(--earth);color:#fff;border-color:var(--earth)}
+  .btn-primary:hover:not(:disabled){background:var(--earth-d)}
+  .btn-primary:disabled{background:var(--line);border-color:var(--line);color:var(--muted);cursor:not-allowed}
+  .btn-water{background:var(--water);color:#fff;border-color:var(--water)}
+  .btn-water:hover:not(:disabled){background:var(--water-d)}
+  .btn-ghost{background:var(--bg);color:var(--muted)}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+  .linkbtn{background:none;border:none;color:var(--earth);font-weight:600;font-size:13px;cursor:pointer;padding:4px 8px}
+  .linkbtn:hover{text-decoration:underline}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .progress{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px}
+  button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--earth);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+  /* ---- key-word translations (EAL) ---- */
+  .langrow{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin:0 0 16px;
+       font-size:12.5px;color:var(--muted);font-weight:600}
+  .langrow select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);
+       font-family:inherit;font-size:13px;color:var(--ink)}
+  .wtr{font-size:14px;color:var(--water-d);font-weight:600;background:var(--waterbg);border-radius:6px;padding:1px 8px}
+  .wtr.big{font-size:16px}
+
+  /* ---- home: unit map ---- */
+  .topichead{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+       margin:18px 0 8px;border-bottom:1px solid var(--line-soft);padding-bottom:4px}
+  .lessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .lcard{border:1px solid var(--line-soft);border-radius:10px;background:var(--paper);padding:12px 14px;
+       text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:border-color .15s ease}
+  .lcard:hover{border-color:var(--earth)}
+  .lcard .lnum{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted)}
+  .lcard .lname{font-family:Georgia,serif;font-size:15px;font-weight:700;line-height:1.25}
+  .lcard .lstat{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+  .lcard.done{border-color:var(--correct)}
+  .chip{font-size:10px;font-weight:800;letter-spacing:.4px;border-radius:20px;padding:2px 8px;background:var(--bg);color:var(--muted)}
+  .chip.ok{background:var(--okbg);color:var(--correct)}
+  .chip.now{background:var(--earth);color:#fff}
+  .chip.part{background:var(--earthbg);color:var(--earth-d)}
+  .chip.str{background:var(--stretchbg);color:var(--stretch)}
+  .chip.base{background:var(--basebg);color:var(--base)}
+  .homerow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+  @media(max-width:640px){.homerow{grid-template-columns:1fr}}
+  .panelcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg)}
+  .panelcard .t{font-family:Georgia,serif;font-weight:700;font-size:15px;margin-bottom:4px}
+  .panelcard .d{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+  details.teach{margin-top:16px;border:1px dashed var(--line);border-radius:10px;padding:10px 14px}
+  details.teach summary{font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
+  details.teach p{font-size:12.5px;color:var(--muted);line-height:1.55;margin:8px 0}
+
+  /* ---- lesson home: step cards ---- */
+  .focusline{text-align:center;font-family:Georgia,serif;font-size:15px;color:var(--ink);
+       background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;margin:0 0 14px;line-height:1.45}
+  .steps{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+  .step{display:flex;align-items:center;gap:14px;border:1px solid var(--line-soft);border-radius:10px;
+        padding:14px 16px;background:var(--paper);text-align:left;cursor:pointer;width:100%}
+  .step:hover:not(:disabled){border-color:var(--earth)}
+  .step:disabled{opacity:.55;cursor:not-allowed}
+  .step .num{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+  .step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+  .step .t{font-weight:700;font-size:15px}
+  .step .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .step .tag{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--muted);flex-shrink:0;text-align:right}
+  .step.done .tag{color:var(--correct)}
+  .tierbar{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:13.5px;line-height:1.5;display:flex;
+       gap:12px;align-items:center;flex-wrap:wrap}
+  .tierbar .grow{flex:1;min-width:200px}
+  .tierbar b{display:block;font-family:Georgia,serif;font-size:14.5px}
+  .tierbar.base{background:var(--basebg);border:1px solid #d8c893}
+  .tierbar.stretch{background:var(--stretchbg);border:1px solid #b9d2da}
+  .tierbar .btn{padding:8px 14px;font-size:13.5px}
+
+  /* ---- study list ---- */
+  .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+  .vcard .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .vcard .w{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .vcard .pos{font-size:12px;color:var(--muted);font-style:italic}
+  .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
+  .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
+  .vcard .morph b,.vcard .morph i{color:var(--ink)}
+  .dtag{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.5px;padding:3px 9px;border-radius:20px;flex-shrink:0}
+  .dtag.story{color:var(--earth-d);background:var(--earthbg)}
+  .dtag.camp{color:var(--hazard-d);background:var(--hazardbg)}
+  .dtag.feeling{color:var(--people-d);background:var(--peoplebg)}
+  .dtag.world{color:var(--water-d);background:var(--waterbg)}
+
+  /* ---- word builder ---- */
+  .buildword{font-family:Georgia,serif;font-size:22px;text-align:center;margin-bottom:2px;color:var(--muted)}
+  .slots,.bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:14px 0}
+  .slot{min-width:78px;min-height:50px;border:2px dashed var(--line);border-radius:9px;
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;padding:6px 12px;background:var(--bg)}
+  .slot.filled{border-style:solid;border-color:var(--correct);background:var(--okbg);color:var(--correct)}
+  .joiner{align-self:center;font-size:18px;color:var(--muted);font-weight:700}
+  .tile{min-width:78px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
+        cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.15;transition:all .12s ease}
+  .tile:hover:not(:disabled){border-color:var(--earth)}
+  .tile:disabled{opacity:.3;cursor:default}
+  .tile .mm{font-weight:800;font-size:16px}
+  .tile .gl{font-size:11px;color:var(--muted)}
+  .tile.shake{animation:shake .3s;border-color:var(--wrong)}
+  .tile.shake .mm,.tile.shake .gl{color:var(--wrong)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .buildprog{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:14px}
+  .bdot{width:12px;height:12px;border-radius:50%;border:1px solid var(--line);background:var(--bg)}
+  .bdot.done{background:var(--correct);border-color:var(--correct)}
+  .bdot.now{border-color:var(--earth);background:var(--paper);box-shadow:0 0 0 2px rgba(176,116,31,.3)}
+  .maprow{margin:12px auto 2px;max-width:560px;font-size:13px;color:var(--muted);line-height:1.7;text-align:center}
+  .maprow b{color:var(--ink)}
+  .reveal{border:1px solid var(--correct);background:var(--okbg);border-radius:10px;padding:14px 16px;
+          margin:14px 0;font-size:14.5px;line-height:1.6;display:none}
+  .reveal.show{display:block}
+  .reveal .rw{font-family:Georgia,serif;font-weight:700}
+
+  /* ---- task shell (apply / review / tiers) ---- */
+  .prompt{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+  .qtext{font-size:17px;line-height:1.6;margin-bottom:16px}
+  .qtext .gap{display:inline-block;min-width:120px;border-bottom:2px solid var(--ink);text-align:center;font-weight:800;color:var(--earth)}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opts.chips{flex-direction:row;flex-wrap:wrap}
+  .opt{padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:15px;
+       text-align:left;cursor:pointer;line-height:1.5}
+  .chips .opt{flex:0 0 auto;padding:9px 16px}
+  .opt:hover:not(:disabled){border-color:var(--earth)}
+  .opt:disabled{cursor:default}
+  .opt.right{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:700}
+  .opt.wrongpick{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
+  .feedback{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.55;display:none}
+  .feedback.ok{display:block;background:var(--okbg);border:1px solid var(--correct)}
+  .feedback.bad{display:block;background:var(--badbg);border:1px solid var(--wrong)}
+  .nextrow{margin-top:16px;display:flex;justify-content:flex-end;gap:8px}
+  .reviewtag{font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--water-d);background:var(--waterbg);
+       border-radius:20px;padding:3px 10px;display:inline-block;margin-bottom:10px}
+
+  /* ---- diagrams ---- */
+  .svgbox{border:1px solid var(--line-soft);border-radius:10px;background:var(--bg);padding:10px;margin:0 auto 16px;
+          max-width:360px;display:flex;justify-content:center}
+  .svgbox svg{width:100%;height:auto;display:block}
+
+  /* ---- summary ---- */
+  .sumbox{border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0;text-align:center}
+  .sumbox .big{font-family:Georgia,serif;font-size:30px;font-weight:700}
+  .sumbox .big.good{color:var(--correct)} .sumbox .big.mid{color:#9a6b1f} .sumbox .big.low{color:var(--wrong)}
+
+  /* ---- report ---- */
+  .repgrid{width:100%;border-collapse:collapse;margin:12px 0}
+  .repgrid th,.repgrid td{border:1px solid var(--line);padding:7px 9px;font-size:13px;text-align:left}
+  .repgrid th{background:var(--bg);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  .repgrid td.score{font-weight:700;white-space:nowrap}
+  .repgrid td.nf{color:var(--muted);font-style:italic}
+  .idrow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .idrow label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+  .idrow input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;background:#fff}
+  .iderr{color:var(--wrong);font-size:12.5px;min-height:16px;margin-top:3px}
+  .vcode{font-family:'Courier New',monospace;font-size:13px;letter-spacing:2px}
+  /* ---- persistent nav ---- */
+  .topnav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:-4px 0 16px;
+       border-bottom:1px solid var(--line-soft);padding-bottom:12px}
+  .topnav button{font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.3px;color:var(--muted);
+       background:var(--bg);border:1px solid var(--line-soft);border-radius:20px;padding:7px 15px;cursor:pointer}
+  .topnav button:hover{border-color:var(--earth);color:var(--earth-d)}
+  .topnav button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* ---- morpheme colour system (prefix / root / suffix), from the EAL book ---- */
+  :root{
+    --mpre:#2c6fa8; --mpre-bg:#e5eef5;
+    --mroot:#9a5518; --mroot-bg:#f5e7d8;
+    --msuf:#3f7a4a; --msuf-bg:#e6f1e8;
+    --mcon:#6c6353; --mcon-bg:#ece7db;
+  }
+  .mlegend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:8px 0 14px;font-size:12px}
+  .mlegend span{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--ink)}
+  .mlegend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+  .mtile{border-radius:9px;padding:8px 12px;display:inline-flex;flex-direction:column;align-items:center;gap:1px;
+       line-height:1.15;font-family:inherit;cursor:grab;user-select:none;touch-action:none;border:1.5px solid;background:var(--paper)}
+  .mtile .mm{font-weight:800;font-size:16px}
+  .mtile .gl{font-size:10.5px;opacity:.85}
+  .mtile.prefix{color:var(--mpre);background:var(--mpre-bg);border-color:var(--mpre)}
+  .mtile.root{color:var(--mroot);background:var(--mroot-bg);border-color:var(--mroot)}
+  .mtile.suffix{color:var(--msuf);background:var(--msuf-bg);border-color:var(--msuf)}
+  .mtile.connector{color:var(--mcon);background:var(--mcon-bg);border-color:var(--mcon)}
+  .mtile.sel{outline:3px solid var(--ink);outline-offset:2px}
+  .mtile.dragging{opacity:.35}
+  .drag-ghost{position:fixed;transform:translate(-50%,-50%);z-index:999;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  /* colour the tap-tile builder used by the tiers, too */
+  .tile.prefix .mm{color:var(--mpre)} .tile.root .mm{color:var(--mroot)} .tile.suffix .mm{color:var(--msuf)} .tile.connector .mm{color:var(--mcon)}
+
+  .mbank{background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;padding:12px;margin-bottom:14px;position:sticky;top:6px;z-index:5}
+  .mbank .mgroup{margin-bottom:8px}
+  .mbank .mgroup:last-child{margin-bottom:0}
+  .mbank .glabel{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+  .mbank .glabel.prefix{color:var(--mpre)} .mbank .glabel.root{color:var(--mroot)} .mbank .glabel.suffix{color:var(--msuf)} .mbank .glabel.connector{color:var(--mcon)}
+  .mtiles{display:flex;flex-wrap:wrap;gap:7px}
+
+  /* ---- word-build table (drag morphemes to the matching meaning) ---- */
+  .wtable{display:flex;flex-direction:column;gap:9px}
+  .wrow{display:flex;align-items:center;gap:12px;border:1px solid var(--line-soft);border-radius:10px;
+       padding:10px 12px;background:var(--paper);transition:opacity .3s ease,transform .3s ease,background .2s}
+  .wrow.wrong{animation:shake .3s;border-color:var(--wrong)}
+  .wrow.done{border-color:var(--correct);background:var(--okbg)}
+  .wrow.gone{opacity:0;transform:translateX(40px)}
+  .wmean{flex:1 1 46%;min-width:190px;font-size:13.5px;line-height:1.45}
+  .wmean .pos{color:var(--muted);font-style:italic;font-size:12px}
+  .wslots{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .wjoin{color:var(--muted);font-weight:700}
+  .wslot{min-width:60px;min-height:46px;border:2px dashed var(--line);border-radius:8px;display:flex;
+       align-items:center;justify-content:center;background:var(--bg);cursor:pointer;padding:4px 8px}
+  .wslot .ph{color:var(--muted);font-size:10px;letter-spacing:.3px}
+  .wslot .mm{font-weight:800;font-size:15px}
+  .wslot.over{border-color:var(--ink);background:#fff}
+  .wslot.filled{border-style:solid}
+  .wslot.filled.prefix{border-color:var(--mpre);background:var(--mpre-bg);color:var(--mpre)}
+  .wslot.filled.root{border-color:var(--mroot);background:var(--mroot-bg);color:var(--mroot)}
+  .wslot.filled.suffix{border-color:var(--msuf);background:var(--msuf-bg);color:var(--msuf)}
+  .wslot.filled.connector{border-color:var(--mcon);background:var(--mcon-bg);color:var(--mcon)}
+  .wbuilt{flex:1 1 46%;min-width:190px;text-align:right;display:none}
+  .wrow.done .wslots{display:none}
+  .wrow.done .wbuilt{display:block}
+  .wbuilt .wname{font-family:Georgia,serif;font-weight:700;font-size:16px;color:var(--correct)}
+  .wbuilt .wtickmark{color:var(--correct);font-weight:800;margin-left:4px}
+  .buildhint{font-size:12.5px;color:var(--wrong);text-align:center;min-height:16px;margin:4px 0 6px;font-weight:600}
+  @media(max-width:560px){ .wmean{flex:1 1 100%} .wbuilt{flex:1 1 100%;text-align:left} }
+
+  /* ---- reference views (morpheme table + word list) ---- */
+  .reftable{width:100%;border-collapse:collapse;margin:4px 0 14px}
+  .reftable th,.reftable td{border:1px solid var(--line-soft);padding:7px 10px;font-size:13px;text-align:left;vertical-align:middle}
+  .reftable th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+  .reftable .mtile{display:inline-flex}
+  .refhead{font-family:Georgia,serif;font-size:16px;margin:18px 0 6px;padding-bottom:3px;border-bottom:2px solid var(--line-soft)}
+  .refhead.prefix{color:var(--mpre)} .refhead.root{color:var(--mroot)} .refhead.suffix{color:var(--msuf)} .refhead.connector{color:var(--mcon)}
+  .reffilter{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .reffilter input{padding:9px 13px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:var(--paper);color:var(--ink);min-width:220px}
+  .eqn{font-family:Georgia,serif;font-size:18px;letter-spacing:.5px}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .container{border:none;box-shadow:none;max-width:100%;padding:8px}
+    .noprint{display:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="topnav noprint">
+  <button data-scr="home" onclick="go('home')">&#9776; Chapters</button>
+  <button data-scr="morphtable" onclick="go('morphtable')">Morpheme table</button>
+  <button data-scr="glossary" onclick="go('glossary')">Word list</button>
+  <button data-scr="report" onclick="go('report')">My report</button>
+</div>
+
+<div class="screen" id="scr-id">
+  <h1>The Bone Sparrow — Vocab Hub</h1>
+  <p class="subtitle">Before anything starts, tell the hub who you are. Your work saves on this device under these details and they go on your printed report.</p>
+  <div id="id-body"></div>
+</div>
+
+<div class="screen active" id="scr-home">
+  <h1>The Bone Sparrow — Vocab Hub</h1>
+  <p class="subtitle">Zana Fraillon &middot; chapter by chapter &mdash; build each chapter&rsquo;s words from their morphemes and origins, then keep them alive with quick reviews</p>
+  <div id="home-map"></div>
+  <div class="homerow">
+    <div class="panelcard">
+      <div class="t">&#8635; Quick review</div>
+      <div class="d" id="review-desc">A shuffled set of words from the lessons you&rsquo;ve already done &mdash; everyone gets a different mix, so eyes on your own screen.</div>
+      <button class="btn btn-water" id="review-start" onclick="startReviewSetup()">Review earlier words</button>
+    </div>
+    <div class="panelcard">
+      <div class="t">&#9998; My report</div>
+      <div class="d">Everything you&rsquo;ve done &mdash; first-attempt scores lesson by lesson, plus your review history. Save it as a PDF for your teacher at any time.</div>
+      <button class="btn btn-ghost" onclick="go('report')">Open my report</button>
+    </div>
+  </div>
+  <div class="nextrow noprint" style="justify-content:center">
+    <button class="linkbtn" onclick="resetAll()">start over (clears everything)</button>
+  </div>
+</div>
+
+<div class="screen" id="scr-lesson">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; all lessons</button><span class="progress" id="lesson-prog"></span></div>
+  <div id="lesson-body"></div>
+</div>
+
+<div class="screen" id="scr-study">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="study-prog">STEP 1 &middot; MEET THE WORDS</span></div>
+  <div id="study-body"></div>
+</div>
+
+<div class="screen" id="scr-build">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="build-prog">STEP 2 &middot; BUILD</span></div>
+  <div id="build-body"></div>
+</div>
+
+<div class="screen" id="scr-apply">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="apply-prog">STEP 3 &middot; USE THE WORDS</span></div>
+  <div id="apply-body"></div>
+</div>
+
+<div class="screen" id="scr-base">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="base-prog">BASE CAMP</span></div>
+  <div id="base-body"></div>
+</div>
+
+<div class="screen" id="scr-stretch">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="stretch-prog">STRETCH</span></div>
+  <div id="stretch-body"></div>
+</div>
+
+<div class="screen" id="scr-review">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="review-prog">REVIEW</span></div>
+  <div id="review-body"></div>
+</div>
+
+<div class="screen" id="scr-report">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress">REPORT</span></div>
+  <div id="report-body"></div>
+</div>
+
+<div class="screen" id="scr-morphtable">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; lessons</button><span class="progress">MORPHEME TABLE</span></div>
+  <div id="morphtable-body"></div>
+</div>
+
+<div class="screen" id="scr-glossary">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; lessons</button><span class="progress">WORD LIST</span></div>
+  <div id="glossary-body"></div>
+</div>
+
+</div>
+<script>
+"use strict";
+/* ============================================================
+   WATER IN THE WORLD — VOCAB HUB
+   Companion to the Year 7 Humanities (Geography) unit, Term 3.
+
+   Clicking a lesson AUTO-RUNS a 6-word review of earlier lessons
+   first (skipped for the very first lesson), then drops into it.
+
+   One lesson = one short set of key words (5–7). For each lesson:
+     MEET  — read the words: meaning + the morphemes that build it.
+     BUILD — a single colour-coded morpheme bank (prefix/root/suffix)
+             above a table of word MEANINGS; drag (or tap) each
+             morpheme into the word it belongs to. Morphemes are
+             reused across many words, so the bank never depletes.
+             A finished word ticks off and leaves the board; you go
+             until none remain. Opaque/borrowed words (billabong,
+             hazard, El Niño…) can't be cut into parts, so they come
+             as honest word-origin questions afterwards.
+     USE   — a mixed bag of tasks (cloze, scenario, description,
+             diagram, word-sum, meaning-match, part-meaning) sampled
+             and generated so neighbouring students differ.
+
+   A persistent MORPHEME TABLE and WORD LIST are always available
+   from the top nav as look-ups.
+
+   ADAPTIVE TIERS —
+     BASE CAMP (support): the same morphemes in everyday primary-
+       school words; offered when a lesson is rough, always
+       self-selectable.
+     STRETCH (extension): heavier unit words built from known
+       parts + "word alchemy" transfer questions; unlocks on a
+       clean lesson.
+
+   All scores record FIRST attempts; wrong answers loop until
+   mastered. The REPORT prints to PDF with a verification code.
+   ============================================================ */
+/* ---------------- SIMPLE SCHEMATIC DIAGRAMS (hand-drawn SVG) ---------------- */
+const SVG_EVAP = `<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sea, cloud and arrows rising from the water">
+  <circle cx="272" cy="40" r="20" fill="#f0c268" stroke="#b0741f" stroke-width="2"/>
+  <g stroke="#b0741f" stroke-width="2" stroke-linecap="round">
+    <line x1="272" y1="8" x2="272" y2="16"/><line x1="300" y1="40" x2="308" y2="40"/>
+    <line x1="294" y1="18" x2="300" y2="12"/><line x1="294" y1="62" x2="300" y2="68"/>
+  </g>
+  <path d="M40 46 q-16 0 -16 16 q0 16 16 16 h58 q18 0 18 -18 q0 -16 -16 -16 q-2 -14 -18 -14 q-16 0 -18 16 z" fill="#e3e0d6" stroke="#8a8577" stroke-width="1.5"/>
+  <rect x="0" y="132" width="320" height="48" fill="#bfe0e4"/>
+  <path d="M0 132 q40 -8 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <g stroke="#2c7488" stroke-width="2.4" stroke-linecap="round" fill="none">
+    <path d="M58 128 V86 M52 98 L58 88 L64 98"/>
+    <path d="M112 128 V78 M106 90 L112 80 L118 90"/>
+    <path d="M166 128 V86 M160 98 L166 88 L172 98"/>
+  </g>
+  <text x="160" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">sea surface</text>
+</svg>`;
+
+const SVG_BEND = `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A curving river with a fast outer bank marked A and a slow inner bank with a sandbar marked B">
+  <rect x="0" y="0" width="320" height="200" fill="#f4ead7"/>
+  <path d="M40 0 C 40 70, 250 70, 250 110 C 250 150, 60 150, 60 200 L 130 200 C 130 160, 320 160, 320 110 C 320 55, 120 55, 120 0 Z" fill="#bfe0e4"/>
+  <path d="M40 0 C 40 70, 250 70, 250 110 C 250 150, 60 150, 60 200" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <path d="M120 0 C 120 55, 320 55, 320 110" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <g fill="none" stroke="#a8432f" stroke-width="2.6" stroke-linecap="round">
+    <path d="M232 96 q10 14 -2 30 M226 118 l4 8 l-9 -1"/>
+  </g>
+  <circle cx="255" cy="112" r="11" fill="#a8432f"/><text x="255" y="116" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">A</text>
+  <path d="M118 108 q22 -8 40 4 q-18 10 -40 4 z" fill="#e0c98c"/>
+  <circle cx="132" cy="112" r="11" fill="#2f6a3e"/><text x="132" y="116" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">B</text>
+  <path d="M70 44 l26 8" stroke="#2c7488" stroke-width="2.4" fill="none" stroke-linecap="round" marker-end="url(#ar)"/>
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#2c7488"/></marker></defs>
+  <text x="60" y="40" font-family="Georgia,serif" font-size="11" fill="#215866">flow</text>
+</svg>`;
+
+const SVG_OXBOW = `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A river that has cut a straight new channel across a loop, leaving a curved lake on its own">
+  <rect x="0" y="0" width="320" height="190" fill="#f4ead7"/>
+  <path d="M0 96 h70 c40 0 40 -70 90 -70 s50 70 90 70 h70" fill="none" stroke="#8fb9c0" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <path d="M60 96 c30 0 30 -58 100 -58 s70 58 100 58" fill="none" stroke="#8aa2a6" stroke-width="3" stroke-dasharray="5 5"/>
+  <path d="M0 96 h320" fill="none" stroke="#2c7488" stroke-width="14" stroke-linecap="round"/>
+  <path d="M60 96 c30 0 30 -58 100 -58 s70 58 100 58" fill="none" stroke="#2c7488" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="160" cy="34" r="12" fill="#2c7488"/>
+  <text x="160" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">cut-off loop</text>
+  <text x="160" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">new, straighter channel</text>
+</svg>`;
+
+const SVG_GROUND = `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A cross-section of the ground showing rain soaking down to a stored layer of water, with a well reaching it">
+  <rect x="0" y="0" width="320" height="60" fill="#e6f0f1"/>
+  <rect x="0" y="60" width="320" height="70" fill="#e0c98c"/>
+  <rect x="0" y="130" width="320" height="60" fill="#8fb9c0"/>
+  <path d="M0 130 q40 -6 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#2c7488" stroke-width="2.5"/>
+  <g stroke="#2c7488" stroke-width="2" stroke-linecap="round">
+    <line x1="60" y1="18" x2="54" y2="34"/><line x1="90" y1="14" x2="84" y2="30"/><line x1="120" y1="18" x2="114" y2="34"/>
+  </g>
+  <g stroke="#215866" stroke-width="1.6" stroke-dasharray="3 4" fill="none">
+    <path d="M70 62 v56"/><path d="M100 62 v56"/><path d="M130 62 v56"/>
+  </g>
+  <rect x="228" y="26" width="24" height="132" fill="#fbf7ef" stroke="#6c6353" stroke-width="2"/>
+  <rect x="220" y="18" width="40" height="10" fill="#8f5d16"/>
+  <rect x="232" y="136" width="16" height="18" fill="#2c7488"/>
+  <text x="66" y="52" font-family="Georgia,serif" font-size="11" fill="#215866">rain soaks in</text>
+  <text x="160" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fbf7ef">water stored in the ground</text>
+  <text x="240" y="12" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">well</text>
+</svg>`;
+
+/* ============================================================
+   LESSON DATA
+   word types — "morph": build from morpheme tiles (in order);
+                "compound": same mechanic, plain-English pieces;
+                "origin": no honest cuts -> word-origin question.
+   Each word carries its own APPLY bank; one item per word is
+   sampled per run. Review draws on the same banks.
+   ============================================================ */
+const LESSONS = [
+
+/* ================= CH 1–2 · THE NIGHT SEA ================= */
+{ id:"1-2", pre:1, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapters 1–2 · The Night Sea",
+  focus:"Subhi's world: a detention camp measured in fence diamonds — and an imagination big enough to flood it with an ocean.",
+  words:[
+  { w:"Detention", pos:"noun", domain:"camp",
+    meaning:"Being held somewhere and not allowed to leave. Subhi has spent his whole life in a detention centre.",
+    type:"morph",
+    tiles:[["de-","away, down"],["ten","to hold"],["-tion","the state or process of"]],
+    decoys:[["re-","back, again"],["-ment","the result of"],["port","to carry"]],
+    note:"Latin <i>de-</i> (away) + <i>tenere</i> (to hold): to be <b>held away</b> from ordinary life. The same <i>ten/tain</i> (hold) hides in <b>contain</b>, <b>maintain</b> and <b>detain</b>. School detention holds you back after class; Subhi's detention has held him his whole life.",
+    apply:[
+      { id:"ap_det_scn", type:"scenario",
+        q:"Subhi was born inside the centre and has never been outside its fences. Which word names the state of being held somewhere and not allowed to leave?",
+        a:"Detention", opts:["Detention","Attention","Retention","Intention"],
+        explain:"All four end in <i>-tion</i> and share the root <i>ten</i> (hold) — but only <i>de-</i> (away) + hold means being held away from your life. The look-alikes are the trap." },
+      { id:"ap_det_cloze", type:"cloze",
+        before:"Subhi measures his height against the wire because the", after:"centre is the only home he has ever known.",
+        a:"detention", opts:["detention","attention","detonation","destination"],
+        explain:"Held (<i>ten</i>) away (<i>de-</i>) — a detention centre holds people away from the world." } ] },
+
+  { w:"Imagination", pos:"noun", domain:"story",
+    meaning:"The power of the mind to picture things that aren't in front of you. Subhi's imagination turns the camp's dirt into the Night Sea.",
+    type:"morph",
+    tiles:[["imagin","picture in the mind"],["-ation","the process of"]],
+    decoys:[["in-","not"],["-able","able to be"],["migr","to move"]],
+    note:"Latin <i>imago</i> — an image, a likeness. Imagination is the mind's picture-maker. Same root in <b>image</b> and <b>imagine</b>. In this novel it isn't decoration: it's how Subhi survives.",
+    apply:[
+      { id:"ap_imag_scn", type:"scenario",
+        q:"At night the dirt outside Subhi's tent 'turns into a beautiful ocean' that no one else can see. Which power of the mind is doing this?",
+        a:"Imagination", opts:["Imagination","Immigration","Investigation","Information"],
+        explain:"<i>Imago</i> = image: the mind making pictures. Watch the look-alike <b>immigration</b> — different root entirely (<i>migrare</i>, to move)." },
+      { id:"ap_imag_cloze", type:"cloze",
+        before:"Queeny says Subhi is stupid, but Maá treats his", after:"as a gift — the power to see the hidden bits and pieces of the universe.",
+        a:"imagination", opts:["imagination","immigration","irritation","identification"],
+        explain:"The picture-making power of the mind — <i>imago</i> (image) + <i>-ation</i>." } ] },
+
+  { w:"Universe", pos:"noun", domain:"story",
+    meaning:"Everything that exists — all of space and everything in it. Maá says some people can see its 'hidden bits and pieces'.",
+    type:"morph",
+    tiles:[["uni-","one"],["verse","turned"]],
+    decoys:[["bi-","two"],["vers","against"],["-ation","the process of"]],
+    note:"Latin <i>unus</i> (one) + <i>versus</i> (turned): everything <b>turned into one</b> whole. Same <i>uni-</i> in <b>uniform</b> (one shape) and <b>unicycle</b>; same <i>vers</i> (turn) in <b>reverse</b> and <b>anniversary</b> (the year turning).",
+    apply:[
+      { id:"ap_univ_desc", type:"desc",
+        q:"Maá says some people can see 'all the hidden bits and pieces of the ________ blown in on the north wind'. Which word means everything that exists, turned into one whole?",
+        a:"Universe", opts:["Universe","Uniform","Unicorn","Reverse"],
+        explain:"<i>uni-</i> (one) + <i>verse</i> (turned): everything turned into one. The others share one morpheme each — that's how the trap works." },
+      { id:"ap_univ_scn", type:"scenario",
+        q:"A 'uniform' is clothing with ONE shape for everyone. A 'unicycle' has ONE wheel. Following the same pattern, the 'universe' is…",
+        a:"everything, turned into ONE whole", opts:["everything, turned into ONE whole","one single star","the one true story","a school for one student"],
+        explain:"Morphemes carry meaning across words: <i>uni-</i> always brings 'one' with it." } ] },
+
+  { w:"Treasure", pos:"noun", domain:"story",
+    meaning:"Something precious that is kept and protected. The Night Sea washes up 'treasures' for Subhi — a shell, a feather, a photo.",
+    type:"origin",
+    originQ:"The word <b>treasure</b> comes from the Greek <i>thesauros</i>, meaning 'a storehouse of precious things'. Which modern book keeps the same word alive?",
+    originOpts:["A thesaurus — a storehouse of words","A dictionary — a book of definitions","An atlas — a book of maps","An almanac — a book of dates"],
+    originA:"A thesaurus — a storehouse of words",
+    note:"Greek <i>thesauros</i> — a storehouse for precious things — became French <i>trésor</i>, then English <b>treasure</b>. A <b>thesaurus</b> is literally a treasure-house of words. Subhi's treasures cost nothing and are worth everything: in a place where nobody owns anything, a shell is wealth.",
+    apply:[
+      { id:"ap_treas_scn", type:"scenario",
+        q:"Subhi keeps every object the Night Sea leaves him and hides them away carefully. Why does the author call a plain shell and a feather 'treasures'?",
+        a:"In a place where the family owns almost nothing, small found things become precious", opts:["In a place where the family owns almost nothing, small found things become precious","Because shells are worth a lot of money","Because Subhi plans to sell them to the Jackets","Because Queeny gave them to him"],
+        explain:"Value depends on the world around it. The word 'treasure' measures Subhi's world, not the objects." },
+      { id:"ap_treas_cloze", type:"cloze",
+        before:"Each morning Subhi searches the wet ground for a new", after:"left behind by the Night Sea.",
+        a:"treasure", opts:["treasure","thesaurus","measure","teacher"],
+        explain:"From Greek <i>thesauros</i>, a storehouse of precious things — watch the look-alike <b>thesaurus</b>, its word-cousin." } ] },
+
+  { w:"Compound", pos:"noun", domain:"camp",
+    meaning:"A fenced-off area containing buildings — in the novel, the camp is divided into compounds like Family and Alpha.",
+    type:"origin",
+    originQ:"Odd fact: <b>compound</b> (a fenced area) does NOT come from Latin. Where does it come from?",
+    originOpts:["Malay 'kampung', meaning village or enclosure","Greek 'kampos', meaning field","French 'campagne', meaning countryside","It was invented by the Australian government"],
+    originA:"Malay 'kampung', meaning village or enclosure",
+    note:"English traders in South-East Asia borrowed Malay <i>kampung</i> (village, enclosure) and reshaped it to sound like the maths word 'compound'. So the word for the fenced blocks of Subhi's camp travelled to English the same way many of the camp's people did — across the sea from Asia. Words are migrants too.",
+    apply:[
+      { id:"ap_comp_scn", type:"scenario",
+        q:"Subhi lives in Family Compound; Eli gets moved to Alpha. In this novel, a 'compound' is:",
+        a:"A fenced-off section of the camp", opts:["A fenced-off section of the camp","A chemistry mixture","A type of sentence","The camp's kitchen"],
+        explain:"Same spelling, three different words! Compound sentence (grammar), compound (chemistry) and this one — from Malay <i>kampung</i>, an enclosure." },
+      { id:"ap_comp_desc", type:"desc",
+        q:"The word 'compound' travelled into English from Malay 'kampung'. What does that fact quietly remind us about English itself?",
+        a:"English is full of borrowed words that migrated from other languages", opts:["English is full of borrowed words that migrated from other languages","English invented all of its own words","Malay borrowed everything from English","Words never change their meanings"],
+        explain:"Languages migrate and mix, just like people — a fitting word for this novel." } ] },
+
+  { w:"Lapping", pos:"verb", domain:"feeling",
+    meaning:"Touching gently again and again, like small waves against a shore — Subhi hears the Night Sea 'lapping at the tent'.",
+    type:"origin",
+    originQ:"<b>Lapping</b> comes from Old English <i>lapian</i>. What did it originally describe?",
+    originOpts:["An animal drinking with its tongue","A runner finishing a lap","Fabric folded over itself","Waves crashing in a storm"],
+    originA:"An animal drinking with its tongue",
+    note:"Old English <i>lapian</i>: to drink the way a dog does — little repeated touches of the tongue. That's exactly the sound of small waves. When Fraillon writes 'waves lapping at the tent', the imagined sea is gentle, almost friendly — compare it with waves <b>crashing</b> or <b>pounding</b>.",
+    apply:[
+      { id:"ap_lap_scn", type:"scenario",
+        q:"Fraillon chooses 'waves LAPPING at the tent' rather than 'waves CRASHING against the tent'. What does the choice tell us about the Night Sea?",
+        a:"It is gentle and comforting — an ocean that visits, not one that threatens", opts:["It is gentle and comforting — an ocean that visits, not one that threatens","It is dangerous and about to flood the camp","It is loud enough to wake everyone","It is freezing cold"],
+        explain:"Word choice IS meaning. Lapping = the soft repeated touch of a drinking animal; crashing would make the same sea a monster." },
+      { id:"ap_lap_cloze", type:"cloze",
+        before:"Lying on his bed, Subhi listens to the imagined waves", after:"softly at the walls of the tent.",
+        a:"lapping", opts:["lapping","crashing","slamming","booming"],
+        explain:"Only 'lapping' keeps the Night Sea gentle — the other three would turn comfort into threat." } ] }
+  ],
+  base:{ intro:"Same word-parts, smaller words. If <i>ten</i> means <b>hold</b> and <i>uni-</i> means <b>one</b>, you can unlock words you've never been taught.",
+    items:[
+      { id:"b12_contain", kind:"build", w:"contain",
+        tiles:[["con-","together"],["tain","to hold"]],
+        decoys:[["de-","away, down"],["-tion","the state of"]],
+        meaning:"to hold something together inside — a lunchbox contains your lunch",
+        explain:"<i>tain</i> is the same 'hold' as in deTAINtion — er, detention!" },
+      { id:"b12_unicycle", kind:"build", w:"unicycle",
+        tiles:[["uni-","one"],["cycle","wheel, circle"]],
+        decoys:[["bi-","two"],["-ation","the process of"]],
+        meaning:"a cycle with just one wheel",
+        explain:"<i>uni-</i> = one, every time: uniform, unicorn, universe." },
+      { id:"b12_image", kind:"mcq",
+        q:"An <b>image</b> is a picture. Using the same root, <b>imagination</b> is…",
+        a:"the mind's power to make pictures", opts:["the mind's power to make pictures","a type of camera","a kind of magic","copying someone else"],
+        explain:"<i>imago</i> (image) — imagination is the picture-maker in your head." },
+      { id:"b12_detain", kind:"mcq",
+        q:"Police can <b>detain</b> a person. Using <i>de-</i> (away) + <i>tain</i> (hold), that means they…",
+        a:"hold the person and stop them leaving", opts:["hold the person and stop them leaving","drive the person home","ask the person questions","let the person go"],
+        explain:"Held away — the verb hiding inside 'detention'." } ] },
+  stretch:{ intro:"The same parts in heavier, essay-ready words.",
+    items:[
+      { id:"s12_confinement", kind:"build", w:"confinement",
+        tiles:[["con-","together, completely"],["fine","limit, boundary"],["-ment","the state of"]],
+        decoys:[["de-","away"],["-able","able to be"]],
+        meaning:"the state of being kept inside limits or boundaries — a strong essay word for life in the camp",
+        explain:"Latin <i>finis</i> = boundary (same root as 'finish' and 'final'). Confinement = held completely inside boundaries." },
+      { id:"s12_visualise", kind:"mcq",
+        q:"In an essay, instead of 'Subhi imagines the sea', you could write 'Fraillon lets the reader ________ the sea through Subhi's eyes' (<i>vis</i> = see):",
+        a:"visualise", opts:["visualise","revise","supervise","televise"],
+        explain:"All four carry <i>vis</i> (see) — but only visualise means 'make a mental picture'." },
+      { id:"s12_transform", kind:"mcq",
+        q:"'The dirt turns into an ocean.' The precise analytic verb for this — <i>trans-</i> (across) + <i>form</i> (shape) — is that the dirt is…",
+        a:"transformed", opts:["transformed","transported","translated","transplanted"],
+        explain:"Shape carried across into a new shape. The other three carry different roots: port (carry), lat (carry), plant." } ] } },
+
+/* ================= CH 3–4 · JIMMIE AND THE FENCES ================= */
+{ id:"3-4", pre:3, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapters 3–4 · Jimmie and the fences",
+  focus:"A second narrator: Jimmie, outside the fences, with a dead mother, a bone sparrow necklace, and a book she can't read.",
+  words:[
+  { w:"Perimeter", pos:"noun", domain:"camp",
+    meaning:"The outer edge or boundary of an area — the camp's perimeter is its fence line.",
+    type:"morph",
+    tiles:[["peri-","around"],["meter","measure"]],
+    decoys:[["para-","beside"],["-ion","the process of"],["port","to carry"]],
+    note:"Greek <i>peri</i> (around) + <i>metron</i> (measure): the <b>measure around</b> a shape. Same maths word you know — and the same <i>meter</i> in <b>thermometer</b> (heat-measurer). In this novel the perimeter isn't geometry: it's the line between two whole worlds.",
+    apply:[
+      { id:"ap_peri_scn", type:"scenario",
+        q:"Guards patrol the fence line that runs all the way around the camp. The word for that boundary line is the camp's…",
+        a:"perimeter", opts:["perimeter","diameter","parameter","thermometer"],
+        explain:"<i>peri</i> (around) + <i>meter</i> (measure). Diameter cuts ACROSS (<i>dia</i>); parameter is a maths look-alike; thermometer measures heat." },
+      { id:"ap_peri_cloze", type:"cloze",
+        before:"Jimmie lives outside the wire; Subhi lives inside it — the camp's", after:"divides their two worlds completely.",
+        a:"perimeter", opts:["perimeter","kilometre","perimeter fence post","diameter"],
+        explain:"The measure AROUND — the boundary." } ] },
+
+  { w:"Provisions", pos:"noun", domain:"camp",
+    meaning:"Supplies of food and equipment given out for daily living — in the camp, provisions come from the Jackets.",
+    type:"morph",
+    tiles:[["pro-","ahead, forward"],["vis","to see"],["-ions","things that are (plural)"]],
+    decoys:[["per-","through, thoroughly"],["-able","able to be"],["dic","to say"]],
+    note:"Latin <i>pro-</i> (ahead) + <i>videre</i> (to see): to provide is to <b>see ahead</b> — to plan what people will need. Same <i>vis/vid</i> (see) in <b>vision</b>, <b>video</b>, <b>invisible</b>. Bitter irony in the novel: the 'seeing ahead' never sees quite enough food.",
+    apply:[
+      { id:"ap_prov_scn", type:"scenario",
+        q:"Complaining about the food and supplies handed out by the Jackets can make life harder for a family. Those handed-out supplies are called…",
+        a:"provisions", opts:["provisions","previsions","provocations","professions"],
+        explain:"<i>pro</i> (ahead) + <i>vis</i> (see): supplies someone 'saw ahead' that you would need." },
+      { id:"ap_prov_desc", type:"desc",
+        q:"'Provide' literally means 'to see ahead' (<i>pro</i> + <i>vid</i>). Why is that a painful word for the camp in this novel?",
+        a:"The people running the camp are supposed to see ahead to everyone's needs — and don't", opts:["The people running the camp are supposed to see ahead to everyone's needs — and don't","Because nobody in the camp can see","Because the food arrives early","Because Subhi needs glasses"],
+        explain:"Etymology can carry irony: the word promises foresight the camp never shows." } ] },
+
+  { w:"Barbed", pos:"adjective", domain:"camp",
+    meaning:"Covered in sharp hooks or spikes — like the barbed wire on the camp's fences.",
+    type:"compound",
+    tiles:[["barb","a hook, a spike"],["-ed","having, covered with"]],
+    decoys:[["bard","a poet"],["-ing","in the process of"],["re-","again"]],
+    note:"Latin <i>barba</i> = beard! A barb was first the 'beard' of an arrow — the backwards hook that stops it pulling out. On the novel's cover, the barbed wire turns into flying birds: the same lines that wound become wings.",
+    apply:[
+      { id:"ap_barb_scn", type:"scenario",
+        q:"On the cover of The Bone Sparrow, the barbed wire transforms into birds. Why is that image so central to the whole novel?",
+        a:"It turns the symbol of imprisonment into a symbol of freedom", opts:["It turns the symbol of imprisonment into a symbol of freedom","It shows that birds get caught in wire","It proves the story is about farming","It was cheaper to print than a photo"],
+        explain:"Two of the book's biggest symbols in one line: the wire (imprisonment) becoming birds (freedom)." },
+      { id:"ap_barb_cloze", type:"cloze",
+        before:"The fences are topped with", after:"wire, so climbing them would tear skin and clothes.",
+        a:"barbed", opts:["barbed","bearded","barbecued","bordered"],
+        explain:"<i>Barba</i> (beard) → barb (hook) → barbed (covered in hooks). Yes — 'beard' and 'barb' are cousins." } ] },
+
+  { w:"Necklace", pos:"noun", domain:"story",
+    meaning:"Jewellery worn around the neck — Jimmie's mother left her the bone sparrow necklace.",
+    type:"compound",
+    tiles:[["neck","neck"],["lace","cord, tie"]],
+    decoys:[["-less","without"],["nick","a small cut"],["lack","to be without"]],
+    note:"Neck + <i>lace</i>, from Latin <i>laqueus</i>, a cord or snare — the same word behind shoe<b>laces</b>. Jimmie's necklace is a cord that ties her to her mother, her great-great-grandmother Anka, and a story she can't yet read. One object, carrying a whole family line.",
+    apply:[
+      { id:"ap_neck_scn", type:"scenario",
+        q:"Jimmie's mother placed the bone sparrow around her neck before she died. In the novel, the necklace works as:",
+        a:"A connection to her mother and her family's story", opts:["A connection to her mother and her family's story","A piece of valuable jewellery to sell","A lucky charm that grants wishes","A gift she plans to give Subhi"],
+        explain:"Objects in this novel carry stories — the necklace is memory made wearable." },
+      { id:"ap_neck_desc", type:"desc",
+        q:"'Lace' originally meant a cord or tie (Latin <i>laqueus</i>). Why is 'a cord that ties' the perfect hidden meaning inside Jimmie's necklace?",
+        a:"It literally ties Jimmie to the people who wore it before her", opts:["It literally ties Jimmie to the people who wore it before her","Because it is made of shoelaces","Because it is tied very tightly","Because Jimmie likes tying knots"],
+        explain:"The etymology quietly repeats the symbolism: a tie across generations." } ] },
+
+  { w:"Funeral", pos:"noun", domain:"feeling",
+    meaning:"The ceremony held after someone dies. After her mum's funeral, Jimmie's house went quiet.",
+    type:"origin",
+    originQ:"<b>Funeral</b> comes from the Latin <i>funus</i>. What did <i>funus</i> mean?",
+    originOpts:["A burial ceremony and torch-lit procession","A sad song","A black coat","A stone monument"],
+    originA:"A burial ceremony and torch-lit procession",
+    note:"Latin <i>funus</i>: the whole ceremony of farewell, once lit by torches. In chapter 3, Jimmie's grief isn't described with big words — it's a quiet house, packed-up boxes, and a doona that still smells of before. Fraillon shows the funeral's long shadow, not the funeral.",
+    apply:[
+      { id:"ap_fun_scn", type:"scenario",
+        q:"After the funeral, Jimmie and her dad packed away her mum's things, and the house has been quiet since — 'as if the house is holding its breath too'. What is Fraillon showing us?",
+        a:"Grief lives on in ordinary objects and silences, long after the ceremony ends", opts:["Grief lives on in ordinary objects and silences, long after the ceremony ends","The family has forgotten her mother","Houses can actually breathe","Jimmie's dad likes a tidy house"],
+        explain:"The personified house carries the family's held breath — grief shown, never announced." },
+      { id:"ap_fun_cloze", type:"cloze",
+        before:"Three years ago, after her mum's", after:", Jimmie's family packed her things into boxes.",
+        a:"funeral", opts:["funeral","carnival","festival","interval"],
+        explain:"From <i>funus</i>, the Latin farewell ceremony. The rhyming look-alikes are all celebrations — feel how wrong they'd be." } ] },
+
+  { w:"Doona", pos:"noun", domain:"feeling",
+    meaning:"An Australian word for a quilt or duvet — Jimmie hides under the yellow doona her mum gave her.",
+    type:"origin",
+    originQ:"<b>Doona</b> is a word mostly used in Australia. Where did it come from?",
+    originOpts:["A Scandinavian word for 'down feathers', made famous here as a brand name","An Aboriginal English word for blanket","A shortening of 'eiderdown-a'","The name of its inventor, D. Oona"],
+    originA:"A Scandinavian word for 'down feathers', made famous here as a brand name",
+    note:"From Scandinavian <i>dun</i> (down feathers) — it entered Australian English as a brand name in the 1970s and stuck. In Britain you'd say <i>duvet</i> (French for 'down'), in America <i>comforter</i>. Jimmie's yellow doona, covered in monkeys, is four years old — a gift from when her mum was alive. That detail dates her whole grief.",
+    apply:[
+      { id:"ap_doona_scn", type:"scenario",
+        q:"'She pulls herself under the yellow doona covered in monkeys that her mum gave her four years ago when she was six.' What work is this one sentence quietly doing?",
+        a:"It tells us Jimmie's age, her mum's death, and what she clings to — all through one object", opts:["It tells us Jimmie's age, her mum's death, and what she clings to — all through one object","It tells us Jimmie likes monkeys","It shows the family is wealthy","It explains why Jimmie is cold"],
+        explain:"Ten is doona-age six plus four; the doona is a time capsule. Great writers load ordinary objects." },
+      { id:"ap_doona_desc", type:"desc",
+        q:"'Doona' (Australia), 'duvet' (Britain), 'comforter' (America) — three words, one object. What does this show about English?",
+        a:"English varies from place to place, and Australian English has words of its own", opts:["English varies from place to place, and Australian English has words of its own","Australians invented quilts","Only one of the three words is correct","British people don't use blankets"],
+        explain:"Same object, three Englishes — and 'comforter' would have suited Jimmie's doona best of all." } ] }
+  ],
+  base:{ intro:"Same parts, smaller words — <i>peri-</i> (around), <i>vis</i> (see), <i>-ed</i> (covered with).",
+    items:[
+      { id:"b34_vision", kind:"build", w:"vision",
+        tiles:[["vis","to see"],["-ion","the process of"]],
+        decoys:[["pro-","ahead"],["-able","able to be"]],
+        meaning:"the power of seeing",
+        explain:"<i>vis</i> = see — the root inside proVISions (supplies someone saw ahead you'd need)." },
+      { id:"b34_spiked", kind:"build", w:"spiked",
+        tiles:[["spike","a sharp point"],["-ed","having, covered with"]],
+        decoys:[["-ing","in the process of"],["un-","not"]],
+        meaning:"covered with sharp points — like the top of the camp fence",
+        explain:"<i>-ed</i> can turn a thing into a description: barb→barbed, spike→spiked." },
+      { id:"b34_periscope", kind:"mcq",
+        q:"A submarine's <b>periscope</b> uses <i>peri-</i> (around) + <i>scope</i> (look). It lets sailors…",
+        a:"look around, above the water", opts:["look around, above the water","measure the water's depth","breathe underwater","send messages"],
+        explain:"<i>peri</i> = around, in perimeter AND periscope." },
+      { id:"b34_invisible", kind:"mcq",
+        q:"<b>Invisible</b> = <i>in-</i> (not) + <i>vis</i> (see) + <i>-ible</i> (able to be). So it means…",
+        a:"not able to be seen", opts:["not able to be seen","not able to be heard","seen from inside","very small"],
+        explain:"Three morphemes, snap-together meaning." } ] },
+  stretch:{ intro:"Boundary words for essays about the two narrators.",
+    items:[
+      { id:"s34_division", kind:"build", w:"division",
+        tiles:[["di-","apart"],["vis","to see, to separate"],["-ion","the process of"]],
+        decoys:[["peri-","around"],["-ment","the result of"]],
+        meaning:"the splitting of something into separate parts — the novel's structure is a division between two narrators",
+        explain:"An essay-ready word: 'Fraillon's division of the narrative between Subhi and Jimmie…'" },
+      { id:"s34_juxtaposition", kind:"mcq",
+        q:"Placing Subhi's chapter right next to Jimmie's so the reader compares their worlds is called (<i>juxta</i> = beside, <i>posit</i> = placed):",
+        a:"juxtaposition", opts:["juxtaposition","proposition","composition","preposition"],
+        explain:"Placed beside — the analytic term for Fraillon's alternating chapters. The distractors share <i>posit</i> but not <i>juxta</i>." },
+      { id:"s34_bereaved", kind:"mcq",
+        q:"The formal word for someone whose close family member has died — from Old English <i>bereafian</i>, 'to rob' — is:",
+        a:"bereaved", opts:["bereaved","betrayed","believed","behaved"],
+        explain:"Grief as robbery: the etymology says what Jimmie feels — something was taken." } ] } },
+
+/* ================= CH 5 · CAUGHT BY BEAVER ================= */
+{ id:"5", pre:5, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapter 5 · Caught by Beaver",
+  focus:"Beaver's story, a package run gone wrong, and fear written on the body — the chapter of this term's silent starter.",
+  words:[
+  { w:"Nightmare", pos:"noun", domain:"feeling",
+    meaning:"A frightening dream. When Subhi was little he had nightmares — and one kept coming back: Beaver.",
+    type:"compound",
+    tiles:[["night","night"],["mare","an evil spirit"]],
+    decoys:[["mar","the sea"],["-ish","somewhat like"],["day","day"]],
+    note:"Old English <i>mare</i>: an evil spirit believed to sit on sleepers' chests. Nothing to do with horses! So a nightmare is literally a <b>night-demon</b>. Subhi's recurring nightmare is Beaver — which tells you the guard has become a monster in the boy's mind.",
+    apply:[
+      { id:"ap_night_scn", type:"scenario",
+        q:"'One nightmare kept coming back. That nightmare was always about Beaver.' What does it tell us that a real man appears in Subhi's dreams as a recurring monster?",
+        a:"Beaver's cruelty has sunk deeper than daytime fear — into Subhi's sleep", opts:["Beaver's cruelty has sunk deeper than daytime fear — into Subhi's sleep","Subhi eats too late at night","Beaver visits the tents at night","Dreams predict the future in this novel"],
+        explain:"A recurring nightmare is characterisation: it measures how deep the fear goes." },
+      { id:"ap_night_desc", type:"desc",
+        q:"The 'mare' in nightmare was an evil spirit that sat on sleepers' chests. How does that OLD meaning fit what fear does to Subhi in chapter 5?",
+        a:"Fear sits on his body — dry throat, buzzing brain, sick stomach — like a weight", opts:["Fear sits on his body — dry throat, buzzing brain, sick stomach — like a weight","He dreams about horses","He can't sleep because of the heat","The spirit is real in the story"],
+        explain:"The etymology matches Fraillon's technique: fear as a physical weight on the body." } ] },
+
+  { w:"Package", pos:"noun", domain:"camp",
+    meaning:"A wrapped bundle to be delivered. Subhi runs packages between people in the camp — until Beaver catches him with one.",
+    type:"morph",
+    tiles:[["pack","to bundle, wrap"],["-age","a thing made or a collection"]],
+    decoys:[["page","a leaf of paper"],["-ish","somewhat like"],["de-","away"]],
+    note:"<i>-age</i> builds things-from-verbs: pack→package, post→postage, bag→baggage. The packages in this novel are little acts of trust in a place built on suspicion — which is exactly why being caught with one is so dangerous.",
+    apply:[
+      { id:"ap_pack_scn", type:"scenario",
+        q:"Eli's rule was that Subhi must never run a package when Beaver was working. What does the delivery 'business' show about the boys?",
+        a:"They've built their own small system of trust and usefulness inside the camp's rules", opts:["They've built their own small system of trust and usefulness inside the camp's rules","They are stealing from the Jackets","They are earning money to escape","They don't understand the danger"],
+        explain:"The packages are agency — kids making a working world inside one that doesn't work." },
+      { id:"ap_pack_cloze", type:"cloze",
+        before:"When Subhi crashes into the dirt, Beaver has the", after:"— and he's opening it.",
+        a:"package", opts:["package","postage","passage","baggage"],
+        explain:"All four end in <i>-age</i> — the morpheme is the disguise. Only one was in Subhi's hands." } ] },
+
+  { w:"Handcuffed", pos:"verb", domain:"camp",
+    meaning:"Locked at the wrists with metal rings. Beaver handcuffed Eli with his arms twisted behind his back.",
+    type:"compound",
+    tiles:[["hand","hand"],["cuff","the band around a wrist"],["-ed","past tense"]],
+    decoys:[["cough","to push air out loudly"],["-ing","in the process of"],["fist","a closed hand"]],
+    note:"A <i>cuff</i> was first the end of a sleeve — the band around your wrist. Handcuffs are a cruel pun the language plays: sleeves you cannot take off. Fraillon has Subhi remember 'the red raw on his wrists' — the mark the word leaves on a body.",
+    apply:[
+      { id:"ap_cuff_scn", type:"scenario",
+        q:"Subhi remembers Eli coming out of the offices, rubbing 'the red raw on his wrists'. Why does Fraillon show the marks instead of the handcuffing itself?",
+        a:"The aftermath on the body says more than the event — and it's how a child would remember it", opts:["The aftermath on the body says more than the event — and it's how a child would remember it","She forgot to write the scene","Handcuffs are too complicated to describe","Eli asked Subhi to look away"],
+        explain:"'The red raw' — an adjective used as a noun, in Subhi's voice, doing the remembering." },
+      { id:"ap_cuff_desc", type:"desc",
+        q:"In the phrase 'the red raw on his wrists', Fraillon uses 'raw' (an adjective) as if it were a noun. Whose voice does that grammar belong to?",
+        a:"Subhi's — the young narrator whose English bends in his own way", opts:["Subhi's — the young narrator whose English bends in his own way","Beaver's official report","A news reporter's","The author making a mistake"],
+        explain:"The bent grammar IS the fingerprint — same move as 'the bored all over her face'." } ] },
+
+  { w:"Fouling", pos:"verb", domain:"feeling",
+    meaning:"Making something dirty or sick. Fear is 'fouling' Subhi's stomach 'close to spewing'.",
+    type:"origin",
+    originQ:"<b>Foul</b> comes from Old English <i>fūl</i>, meaning rotten or stinking. Where else do you hear the same word today?",
+    originOpts:["Sport — a 'foul' breaks the rules and dirties fair play","Cooking — a 'foul' is a burnt meal","Weather — a 'foul' is a light breeze","Music — a 'foul' is a wrong note"],
+    originA:"Sport — a 'foul' breaks the rules and dirties fair play",
+    note:"Old English <i>fūl</i>: rotten, stinking, disgusting. Foul weather, foul smell, a foul in footy — all 'dirtied' things. When fear starts 'fouling' Subhi's stomach, the word means his own body is turning rotten on him. That's fear from the inside.",
+    apply:[
+      { id:"ap_foul_scn", type:"scenario",
+        q:"In the silent starter you answered this one cold: 'thinking on all of that is fouling my stomach close to spewing' most nearly means the thought is…",
+        a:"making him feel sick", opts:["making him feel sick","making him hungry","making him excited","filling him up"],
+        explain:"<i>fūl</i> = rotten: dread turning the stomach. The quickread and the word bank agree." },
+      { id:"ap_foul_cloze", type:"cloze",
+        before:"The thought of being handcuffed and taken to the offices is", after:"Subhi's stomach close to spewing.",
+        a:"fouling", opts:["fouling","fuelling","filling","following"],
+        explain:"Look-alikes everywhere: fuelling would feed it, filling would stuff it — only fouling rots it." } ] },
+
+  { w:"Buzzing", pos:"verb", domain:"feeling",
+    meaning:"Making a low continuous sound like bees — Subhi's brain is 'buzzing louder and louder' as panic rises.",
+    type:"origin",
+    originQ:"<b>Buzz</b> is an onomatopoeia. What does that mean?",
+    originOpts:["A word built to imitate the sound it names","A word borrowed from Greek","A word with two opposite meanings","A word that is also a name"],
+    originA:"A word built to imitate the sound it names",
+    note:"Say it aloud: <i>buzz</i>. The word performs its own sound — like hiss, crash, whisper, clang. Fraillon stacks them in this scene: teeth <b>clang</b>, brain <b>buzzes</b>. Sound-words put the reader inside Subhi's skull while Beaver towers over him.",
+    apply:[
+      { id:"ap_buzz_scn", type:"scenario",
+        q:"'My brain is buzzing louder and louder.' Why is 'louder and louder' as important as 'buzzing'?",
+        a:"The repetition tracks the panic rising in real time", opts:["The repetition tracks the panic rising in real time","It shows there are bees in the camp","It means Subhi is falling asleep","It describes the camp's generators"],
+        explain:"Escalation: the sentence gets louder as the fear does. Structure mirrors feeling." },
+      { id:"ap_buzz_desc", type:"desc",
+        q:"'My teeth clang on my tongue', 'my brain is buzzing' — Fraillon fills the Beaver scene with sound-words (onomatopoeia). The effect on the reader is:",
+        a:"We experience the attack from inside Subhi's body, sound by sound", opts:["We experience the attack from inside Subhi's body, sound by sound","We learn what the camp sounds like at night","The scene becomes funny","We hear Beaver's thoughts"],
+        explain:"Sensory language is Fraillon's fear-machine: the body reports, the reader feels." } ] },
+
+  { w:"Storyteller", pos:"noun", domain:"story",
+    meaning:"A person who tells stories. Maá's 'Listen Now' stories once filled the tent — and telling stories keeps people whole in this novel.",
+    type:"compound",
+    tiles:[["story","a tale"],["tell","to speak, to count out"],["-er","a person who does"]],
+    decoys:[["hist","history"],["-ing","in the process of"],["type","kind, sort"]],
+    note:"<i>Story</i> descends from Greek <i>historia</i> — the same word as <b>history</b>! For centuries 'story' and 'history' were one word. That's the novel's deepest idea hiding in plain sight: the stories Maá tells ARE the family's history, and when the stories stop, people 'start to lose that piece of themselves'.",
+    apply:[
+      { id:"ap_story_scn", type:"scenario",
+        q:"Subhi says that when people's stories stop being told, their 'brains start to mush'. In this novel, storytelling is:",
+        a:"Survival — how people hold on to who they are", opts:["Survival — how people hold on to who they are","Entertainment for bored children","A way to fall asleep faster","A school subject"],
+        explain:"Stories = memory = identity. It's the engine of the whole book, from Maá's Listen Nows to Jimmie's book." },
+      { id:"ap_story_cloze", type:"cloze",
+        before:"Because 'story' and 'history' were once the same word, calling someone a", after:"also makes them a keeper of history.",
+        a:"storyteller", opts:["storyteller","bookseller","fortune-teller","newsreader"],
+        explain:"<i>historia</i> → story: the teller keeps the past alive. Remember this when you meet Jimmie's book." } ] }
+  ],
+  base:{ intro:"Sound-words and body-words — the smaller versions of this chapter's tools.",
+    items:[
+      { id:"b5_teller", kind:"build", w:"teller",
+        tiles:[["tell","to speak, to count out"],["-er","a person who does"]],
+        decoys:[["-ed","past tense"],["re-","again"]],
+        meaning:"a person who tells — stories, or even money at a bank (they count it out)",
+        explain:"<i>tell</i> once meant 'count' — a bank teller counts; a storyteller counts out events." },
+      { id:"b5_hiss", kind:"mcq",
+        q:"Which of these is an onomatopoeia — a word that imitates its own sound?",
+        a:"hiss", opts:["hiss","quiet","loud","sound"],
+        explain:"Say it: the word performs the snake. Buzz, clang, crash are its cousins in chapter 5." },
+      { id:"b5_nightlight", kind:"build", w:"nightlight",
+        tiles:[["night","night"],["light","light"]],
+        decoys:[["mare","an evil spirit"],["-ed","past tense"]],
+        meaning:"a small light left on to keep the dark friendly",
+        explain:"Night + light — the exact opposite of night + mare." },
+      { id:"b5_sickening", kind:"mcq",
+        q:"'The smell was sickening.' Following the pattern of foul/fouling, 'sickening' means the smell was…",
+        a:"making people feel sick", opts:["making people feel sick","already sick itself","very sweet","getting weaker"],
+        explain:"<i>-ing</i> words can mean 'causing that state': fouling, sickening, terrifying." } ] },
+  stretch:{ intro:"The metalanguage for writing about this scene.",
+    items:[
+      { id:"s5_visceral", kind:"mcq",
+        q:"The precise word for fear felt in the body — from Latin <i>viscera</i>, the internal organs — is:",
+        a:"visceral", opts:["visceral","vertical","versatile","virtual"],
+        explain:"'Fraillon's visceral description of fear' — the examiner's word for dry throats and fouled stomachs." },
+      { id:"s5_menace", kind:"build", w:"menacing",
+        tiles:[["menace","a threat"],["-ing","having that quality"]],
+        decoys:[["-ment","the result of"],["mend","to fix"]],
+        meaning:"threatening — the one-word summary of Beaver's clipped questions",
+        explain:"From Latin <i>minae</i>, threats. 'Beaver's menacing dialogue' beats 'Beaver's mean words' in an essay." },
+      { id:"s5_escalate", kind:"mcq",
+        q:"'Louder and louder', 'harder and harder' — the analytic verb for tension that climbs step by step (from Latin <i>scala</i>, ladder) is to:",
+        a:"escalate", opts:["escalate","evaporate","elaborate","evacuate"],
+        explain:"<i>scala</i> = ladder — the same root as escalator. 'The panic escalates' = it climbs." } ] } },
+
+/* ================= CH 6–7 · OUTSIDE LOOKING IN ================= */
+{ id:"6-7", pre:6, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapters 6–7 · Outside looking in",
+  focus:"What the town says about the Centre, what Jimmie can't read, and how two children on opposite sides of a fence begin to meet.",
+  words:[
+  { w:"Prejudice", pos:"noun", domain:"world",
+    meaning:"Judging people before knowing them — an opinion formed in advance, usually unfair.",
+    type:"morph",
+    tiles:[["pre-","before"],["jud","to judge"],["-ice","the state or quality of"]],
+    decoys:[["post-","after"],["dic","to say"],["-ment","the result of"]],
+    note:"Latin <i>prae</i> (before) + <i>judicium</i> (judgement): a verdict reached <b>before the evidence</b>. The kids at Jimmie's school 'know' all about the Centre without ever seeing inside it. Same <i>jud</i> in <b>judge</b>, <b>judicial</b>, <b>adjudicate</b>.",
+    apply:[
+      { id:"ap_prej_scn", type:"scenario",
+        q:"Kids at Jimmie's school say the people in the Centre have 'everything — good clothes and thousands of toys and computers'. They have never been inside. This is an example of:",
+        a:"prejudice — judgement formed before the facts", opts:["prejudice — judgement formed before the facts","justice — a fair decision","evidence — proof from observation","jealousy — wanting what others have"],
+        explain:"<i>pre</i> + <i>jud</i>: the judging happened before any knowing. (Jealousy is in the mix too — but the WORD for judging-before is prejudice.)" },
+      { id:"ap_prej_cloze", type:"cloze",
+        before:"Fraillon lets the reader see both sides of the fence, so our own", after:"about who lives in the Centre gets quietly corrected.",
+        a:"prejudice", opts:["prejudice","precision","prediction","procedure"],
+        explain:"The novel's structure is the cure: judgement-before-knowing is replaced by knowing." } ] },
+
+  { w:"Resentment", pos:"noun", domain:"world",
+    meaning:"Bitter feeling at being treated unfairly — or at others seeming to get more than you.",
+    type:"morph",
+    tiles:[["re-","again, back"],["sent","to feel"],["-ment","the state or result of"]],
+    decoys:[["pre-","before"],["sens","the senses"],["-ion","the process of"]],
+    note:"Latin <i>re-</i> (again) + <i>sentire</i> (to feel): a hurt you <b>feel again and again</b> every time you remember it. Same <i>sent/sens</i> in <b>sensitive</b>, <b>consent</b>, <b>sentimental</b>. The townspeople's resentment grows from their own hard lives — Fraillon is careful to make it understandable without making it right.",
+    apply:[
+      { id:"ap_res_scn", type:"scenario",
+        q:"People in Jimmie's remote town must drive two days to see a doctor, and they believe the Centre has doctors living on site. The feeling that grows from this — felt again each time they think of it — is:",
+        a:"resentment", opts:["resentment","excitement","contentment","astonishment"],
+        explain:"<i>re</i> + <i>sent</i>: a grievance re-felt. Notice Fraillon gives the townspeople a real hardship — prejudice with an understandable root is more honest, and more dangerous." },
+      { id:"ap_res_desc", type:"desc",
+        q:"Why does Fraillon give the townspeople real problems (no doctors, no services) instead of making them simply nasty?",
+        a:"Real unfairness feeding false beliefs is how prejudice actually works", opts:["Real unfairness feeding false beliefs is how prejudice actually works","To prove the town deserves more than the Centre","Because villains are boring to write","To show doctors are important"],
+        explain:"The novel refuses easy villains: the town's resentment is real, even though what they believe about the Centre is false." } ] },
+
+  { w:"Isolated", pos:"adjective", domain:"world",
+    meaning:"Cut off and far from everything else — like Jimmie's remote town, and like the camp placed beside it.",
+    type:"morph",
+    tiles:[["isol","island"],["-ate","to make"],["-ed","having been"]],
+    decoys:[["ice","frozen water"],["-ing","in the process of"],["sol","the sun"]],
+    note:"Latin <i>insula</i> (island): to isolate is literally to <b>make someone an island</b>. Same root in <b>peninsula</b> (almost-island) and <b>insulation</b> (an island of warmth). Detention centres are put in isolated places on purpose — out of sight. Fraillon builds her whole story on who gets to see.",
+    apply:[
+      { id:"ap_iso_scn", type:"scenario",
+        q:"The Centre sits in the desert beside a tiny town, days from the nearest city. Why might a government place a detention centre somewhere so isolated?",
+        a:"So that few people ever see the people inside it", opts:["So that few people ever see the people inside it","Because the weather is better there","So the detainees can enjoy nature","Because land is prettier in the desert"],
+        explain:"Isolation = made into an island. Queeny's camera, later, is the answer to being unseen — remember this word then." },
+      { id:"ap_iso_cloze", type:"cloze",
+        before:"Both children are", after:"in their own way — Subhi behind wire, Jimmie in an empty house at the edge of nowhere.",
+        a:"isolated", opts:["isolated","insulated","installed","inspired"],
+        explain:"Made-an-island. The near-twin 'insulated' shares the root but means wrapped for warmth." } ] },
+
+  { w:"Centre", pos:"noun", domain:"camp",
+    meaning:"The official name everyone uses for the detention camp — 'the Centre'.",
+    type:"origin",
+    originQ:"<b>Centre</b> comes from Greek <i>kentron</i>. What did <i>kentron</i> actually mean?",
+    originOpts:["A sharp spike or goad — the point a compass leg stabs into the page","A warm fireplace","A meeting hall","The middle of a circle"],
+    originA:"A sharp spike or goad — the point a compass leg stabs into the page",
+    note:"Greek <i>kentron</i>: a spike. The 'centre' of a circle is where the compass point <b>stabs</b>. Governments call the camp a 'Centre' to make it sound neutral and administrative — but the word's buried etymology (a spike) tells the truth the euphemism hides. Language can disguise things; etymology remembers.",
+    apply:[
+      { id:"ap_cent_scn", type:"scenario",
+        q:"The camp is officially called 'the Centre'. Why might officials choose such a plain, neutral-sounding name for a place with barbed wire and guards?",
+        a:"Neutral words make harsh things easier to accept — a euphemism", opts:["Neutral words make harsh things easier to accept — a euphemism","Because it sits in the centre of Australia","Because 'camp' was already taken","To help visitors find it on maps"],
+        explain:"'Centre', 'facility', 'processing' — administrative words that soften what's inside. Fraillon lets the children's words ('the Jackets', 'fence diamonds') tell it straighter." },
+      { id:"ap_cent_desc", type:"desc",
+        q:"Which pair shows a neutral official word next to the reality it softens?",
+        a:"'the Centre' — a fenced camp people cannot leave", opts:["'the Centre' — a fenced camp people cannot leave","'the ocean' — the Night Sea","'the doona' — a quilt","'the sparrow' — a small bird"],
+        explain:"That's a euphemism: mild words over hard facts. The novel quietly teaches you to hear the difference." } ] },
+
+  { w:"Illiterate", pos:"adjective", domain:"story",
+    meaning:"Unable to read or write. Jimmie, ten years old and rarely at school, cannot read her mother's book.",
+    type:"morph",
+    tiles:[["il-","not"],["liter","letters"],["-ate","having the quality of"]],
+    decoys:[["ill","sick"],["litter","rubbish"],["-ation","the process of"]],
+    note:"Latin <i>in-</i> (not, becoming <i>il-</i> before L) + <i>littera</i> (letters): without letters. Same root in <b>literature</b>, <b>literal</b>, <b>literacy</b>. Jimmie owning a book of family stories she cannot read is one of the novel's saddest, cleverest inventions — and why she needs Subhi.",
+    apply:[
+      { id:"ap_illit_scn", type:"scenario",
+        q:"Jimmie carries her mother's book everywhere but cannot read it. How does Fraillon use this to bring the two children together?",
+        a:"Jimmie needs a reader, and Subhi — locked away from the world — can read; each has what the other lacks", opts:["Jimmie needs a reader, and Subhi — locked away from the world — can read; each has what the other lacks","Subhi teaches Jimmie the alphabet","Jimmie sells the book to Subhi","They both dislike reading"],
+        explain:"The friendship is built on a perfect exchange: her book and freedom, his reading and imagination." },
+      { id:"ap_illit_desc", type:"desc",
+        q:"'Illiterate' stacks <i>il-</i> (not) + <i>liter</i> (letters). Which of these words means the OPPOSITE — able to read and write well?",
+        a:"literate", opts:["literate","literal","littered","litigious"],
+        explain:"Drop the not-prefix: literate. ('Literal' = word-for-word; 'littered' = strewn with rubbish — the letters root only lives in two of these.)" } ] },
+
+  { w:"Annotation", pos:"noun", domain:"story",
+    meaning:"A note added to a text to explain or respond to it — the exact skill you're practising as you read this novel.",
+    type:"morph",
+    tiles:[["an-","to, towards"],["not","to mark"],["-ation","the process of"]],
+    decoys:[["anno","year"],["-able","able to be"],["knot","a tied loop"]],
+    note:"Latin <i>ad-</i> (to, becoming <i>an-</i>) + <i>notare</i> (to mark): to <b>mark onto</b> a text. Same <i>not</i> in <b>note</b>, <b>notation</b>, <b>notable</b>. Your pencil marks in the margins are annotations — two thousand years of readers have done the same.",
+    apply:[
+      { id:"ap_annot_scn", type:"scenario",
+        q:"You draw a loneliness symbol beside page 39 and write 'Jimmie misses her mother reading to her'. You have just made an:",
+        a:"annotation", opts:["annotation","abbreviation","announcement","anniversary"],
+        explain:"Marked-onto-the-text: <i>an</i> + <i>not</i> + <i>-ation</i>. The decoys share prefixes, not the marking root." },
+      { id:"ap_annot_cloze", type:"cloze",
+        before:"A good", after:"does more than underline — it explains why the line matters.",
+        a:"annotation", opts:["annotation","notation","quotation","rotation"],
+        explain:"All four carry <i>-ation</i>; only one means a mark-with-thinking added to a text. (Level 1: underline. Level 2: symbol. Level 3: comment — remember the coded feedback ladder.)" } ] }
+  ] },
+
+/* ================= CH 8–10 · RATS AND PROMISES ================= */
+{ id:"8-10", pre:8, topic:"Part One · Inside the fences (chapters 1–10)", title:"Chapters 8–10 · Rats and promises",
+  focus:"Eli is moved to Alpha, the older boys turn mean, and a girl with a whole real book comes back through the fence.",
+  words:[
+  { w:"Alpha", pos:"noun", domain:"camp",
+    meaning:"The compound where the men live — where Eli is sent, away from Family.",
+    type:"origin",
+    originQ:"<b>Alpha</b> is the first letter of which alphabet — the one that gave 'alphabet' its name?",
+    originOpts:["Greek (alpha, beta…)","Latin (a, b…)","Arabic (alif, ba…)","Cyrillic (a, be…)"],
+    originA:"Greek (alpha, beta…)",
+    note:"Greek letters: <i>alpha</i>, <i>beta</i>… — 'alphabet' is just the first two joined. Camps and armies label their sections Alpha, Beta, Delta because letters sound orderly and mean nothing. A boy is taken from 'Family' and filed under a letter: the naming system itself tells you what the camp does to people.",
+    apply:[
+      { id:"ap_alpha_scn", type:"scenario",
+        q:"Eli is moved from 'Family' compound to 'Alpha'. Look at those two names side by side. What does the renaming do to him?",
+        a:"It moves him from a word meaning belonging to a letter meaning nothing — the system stops seeing him as a child", opts:["It moves him from a word meaning belonging to a letter meaning nothing — the system stops seeing him as a child","It promotes him to leader, since alpha means first","It means he will learn Greek","It brings him closer to Subhi"],
+        explain:"Names carry values: Family vs Alpha is the whole tragedy in two words." },
+      { id:"ap_alpha_desc", type:"desc",
+        q:"Why do institutions label compounds Alpha, Beta, Delta instead of naming them after people or places?",
+        a:"Letters are orderly and emotionless — they keep the place feeling administrative", opts:["Letters are orderly and emotionless — they keep the place feeling administrative","Greek letters are lucky","The alphabet is easy to spell","It honours Greek history"],
+        explain:"Same trick as 'the Centre': language that files people instead of seeing them." } ] },
+
+  { w:"Delivery", pos:"noun", domain:"camp",
+    meaning:"The act of bringing something to someone — the boys' package-running 'delivery business', which the older boys take over.",
+    type:"morph",
+    tiles:[["de-","away, from"],["liver","to set free, hand over"],["-y","the act of"]],
+    decoys:[["liver","the body organ (decoy!)"],["re-","again"],["-age","a collection of"]],
+    note:"Old French <i>délivrer</i>, from Latin <i>liberare</i> — <b>to set free</b>! The same <i>liber</i> as in <b>liberty</b> and <b>liberate</b>. A delivery 'sets a thing free' into the right hands. In a camp with no liberty, the boys' little delivery business is the most freedom anyone has.",
+    apply:[
+      { id:"ap_deliv_scn", type:"scenario",
+        q:"'Delivery' secretly contains <i>liber</i> — the Latin for FREE, as in liberty. Why is that a bittersweet root for the boys' business?",
+        a:"The freest thing in the camp is handing parcels around inside a place where nobody is free", opts:["The freest thing in the camp is handing parcels around inside a place where nobody is free","Because deliveries in the camp are always free of charge","Because the boys deliver birds","Because liber also means book"],
+        explain:"(Sneaky extra: <i>liber</i> DID also mean book — library! — but the freedom root is the one inside delivery.)" },
+      { id:"ap_deliv_cloze", type:"cloze",
+        before:"When the older boys take over the", after:"business, they take Subhi's shoes and pants too.",
+        a:"delivery", opts:["delivery","liberty","bribery","battery"],
+        explain:"The <i>-(er)y</i> endings rhyme; only one is the boys' package-running trade." } ] },
+
+  { w:"Promise", pos:"noun", domain:"feeling",
+    meaning:"Words that bind you to a future action. Subhi knows 'for sure' that Jimmie 'is the kind of person that keeps a promise'.",
+    type:"morph",
+    tiles:[["pro-","forward"],["mise","sent"]],
+    decoys:[["per-","through"],["miss","to fail to hit"],["-ing","in the process of"]],
+    note:"Latin <i>pro-</i> (forward) + <i>missum</i> (sent): a promise is your word <b>sent ahead</b> of you into the future. Same <i>mis/mit</i> (send) in <b>transmit</b>, <b>submit</b>, <b>missile</b>. In a camp where official promises mean nothing, a ten-year-old girl who keeps hers is worth everything.",
+    apply:[
+      { id:"ap_prom_scn", type:"scenario",
+        q:"Official processes have promised Subhi's family 'soon' for his entire life. Jimmie says she'll come back — and does. What is Fraillon setting side by side?",
+        a:"Broken official promises against one child's kept one", opts:["Broken official promises against one child's kept one","Two equally empty promises","Proof that promises are childish","The camp's paperwork system"],
+        explain:"The novel keeps score with promises: who sends words forward and stands behind them." },
+      { id:"ap_prom_desc", type:"desc",
+        q:"A promise is literally 'sent forward' (<i>pro</i> + <i>mise</i>). Which other word means sent ACROSS (<i>trans</i> + <i>mit</i>)?",
+        a:"transmit", opts:["transmit","permit","submit","admit"],
+        explain:"All four share the send-root; only the prefixes differ: across, through, under, to." } ] },
+
+  { w:"Symbol", pos:"noun", domain:"story",
+    meaning:"An object that carries a bigger idea — Subhi notices Jimmie 'wearing a symbol of death around her neck'.",
+    type:"morph",
+    tiles:[["sym-","together"],["bol","thrown"]],
+    decoys:[["syn-","with (decoy spelling)"],["ball","a round object"],["-ic","relating to"]],
+    note:"Greek <i>sym-</i> (together) + <i>ballein</i> (to throw): things <b>thrown together</b> — an object and its meaning landing in one. The bone sparrow is the novel's master symbol: to Subhi's people a sparrow means death; to Jimmie's family it means protection and luck. One object, two meanings thrown together — that clash IS the novel.",
+    apply:[
+      { id:"ap_sym_scn", type:"scenario",
+        q:"To Subhi, a sparrow is 'a symbol of death'; to Jimmie's family the bone sparrow brings luck and protection. What is Fraillon doing by giving one object opposite meanings?",
+        a:"Showing that meaning depends on the story you were raised inside", opts:["Showing that meaning depends on the story you were raised inside","Proving one of the families is wrong","Suggesting sparrows are dangerous","Correcting an old superstition"],
+        explain:"Two cultures throw different ideas together with the same bird — symbols are made by stories, not by objects." },
+      { id:"ap_sym_cloze", type:"cloze",
+        before:"Birds, fences, the camera — each object in the novel works as a", after:"carrying an idea bigger than itself.",
+        a:"symbol", opts:["symbol","cymbal","signal","syllable"],
+        explain:"Watch the homophone: a CYMBAL crashes in a drum kit. <i>sym</i> + <i>bol</i> = thrown together." } ] },
+
+  { w:"Cyclone", pos:"noun", domain:"feeling",
+    meaning:"A violent spinning storm — Jimmie's mum called her 'cyclone Jimmie' for the mess she leaves behind.",
+    type:"origin",
+    originQ:"<b>Cyclone</b> was coined in 1848 from Greek <i>kyklon</i>, 'moving in a circle'. Which everyday word shares its root?",
+    originOpts:["Bicycle — two circles","Ceiling — overhead cover","Cylinder — a rolled shape","Sickle — a curved blade"],
+    originA:"Bicycle — two circles",
+    note:"Greek <i>kyklos</i>, circle — the root of <b>cycle</b>, <b>bicycle</b>, <b>recycle</b>. A ship captain coined 'cyclone' for storms that spin in a circle. 'Cyclone Jimmie' is a mother's joke that outlives her: every time the nickname appears, the reader feels who gave it.",
+    apply:[
+      { id:"ap_cyc_scn", type:"scenario",
+        q:"Jimmie's mum called her 'cyclone Jimmie'. Now that her mum is gone, what does the nickname do each time it appears?",
+        a:"It keeps her mother's voice alive inside one affectionate word", opts:["It keeps her mother's voice alive inside one affectionate word","It warns that Jimmie is dangerous","It describes the town's weather","It shows Jimmie runs very fast"],
+        explain:"Nicknames are tiny inheritances — like the necklace, but made of sound." },
+      { id:"ap_cyc_desc", type:"desc",
+        q:"A nickname like 'cyclone Jimmie' works as characterisation. What does it tell us about Jimmie herself?",
+        a:"She is energetic, untidy and unstoppable — and was loved for it", opts:["She is energetic, untidy and unstoppable — and was loved for it","She was born during a storm","She is afraid of weather","She spins when she is nervous"],
+        explain:"One word carries her energy AND her mother's amusement at it." } ] },
+
+  { w:"Trapped", pos:"adjective", domain:"camp",
+    meaning:"Caught with no way out. The boys trap rats in cages — and Subhi sees the rats 'mostly don't do any harm'.",
+    type:"compound",
+    tiles:[["trap","a device that catches"],["-ed","having been"]],
+    decoys:[["trip","to stumble"],["-ing","in the process of"],["un-","not"]],
+    note:"Old English <i>træppe</i> — a snare. In chapter 10 Fraillon builds the novel's plainest symbol: caged rats that 'mostly don't do any harm', watched by caged children who never did any. When you write your essay on imprisonment, this is the quote the examiners are waiting for you to see.",
+    apply:[
+      { id:"ap_trap_scn", type:"scenario",
+        q:"'There are lots of rats here, but they mostly don't do any harm.' Why does this sentence about RATS matter so much in a novel about DETENTION?",
+        a:"The trapped harmless rats mirror the trapped harmless people — symbol, not pest control", opts:["The trapped harmless rats mirror the trapped harmless people — symbol, not pest control","It shows the camp has a hygiene problem","It explains what the boys eat","It proves rats make good pets"],
+        explain:"Lesson 12's worked example, and now you know the word for the technique: symbolism." },
+      { id:"ap_trap_cloze", type:"cloze",
+        before:"Watching the baby rat in the cage, Subhi feels what it is to be", after:"— small, harmless, and held by something bigger.",
+        a:"trapped", opts:["trapped","tripped","wrapped","trained"],
+        explain:"One vowel apart, worlds apart — the snare-word is the one that mirrors the camp." } ] }
+  ] },
+
+/* ================= CH 11–14 · ANKA'S STORY ================= */
+{ id:"11-14", pre:11, topic:"Part One · Jimmie's book (chapters 11–17)", title:"Chapters 11–14 · Anka's story",
+  focus:"Subhi reads Jimmie's book aloud: Anka, the egg, the well, and Oto — a story inside the story, generations deep.",
+  words:[
+  { w:"Ancestor", pos:"noun", domain:"story",
+    meaning:"A family member from long ago. Anka, the girl in the book, is Jimmie's great-great-great-grandmother.",
+    type:"morph",
+    tiles:[["an(te)-","before"],["cess","to go"],["-or","one who"]],
+    decoys:[["anti-","against"],["cease","to stop"],["-er","more"]],
+    note:"Latin <i>ante-</i> (before) + <i>cedere</i> (to go) + <i>-or</i> (one who): <b>one who goes before</b>. Same <i>cess/ceed</i> in <b>proceed</b>, <b>succeed</b>, <b>procession</b>. Watch the trap prefix: <i>anti-</i> means against — an ancestor goes before you, not against you.",
+    apply:[
+      { id:"ap_anc_scn", type:"scenario",
+        q:"Jimmie cries when she hears that Anka — the girl in the well — is her own great-great-great-grandmother. Why does the story suddenly matter more?",
+        a:"It stops being a fairytale and becomes her family's real past — who she comes from", opts:["It stops being a fairytale and becomes her family's real past — who she comes from","Because the story has a sad ending","Because Anka was rich","Because Subhi reads it badly"],
+        explain:"story = history, remember? Anka is the proof: Jimmie's book is her bloodline written down." },
+      { id:"ap_anc_cloze", type:"cloze",
+        before:"The bone sparrow has passed from", after:"to descendant for generations, all the way down to Jimmie.",
+        a:"ancestor", opts:["ancestor","announcer","adventurer","administrator"],
+        explain:"One-who-goes-before → one-who-comes-after (descendant, from <i>de-scendere</i>, to climb down)." } ] },
+
+  { w:"Navigate", pos:"verb", domain:"story",
+    meaning:"To find your way. Blind Anka learns to navigate by clicking her tongue and listening for the echo.",
+    type:"morph",
+    tiles:[["nav","ship"],["ig","to drive"],["-ate","to make, to do"]],
+    decoys:[["nat","born"],["-ation","the process of"],["neg","to deny"]],
+    note:"Latin <i>navis</i> (ship) + <i>agere</i> (to drive): to <b>drive a ship</b>. Same <i>nav</i> in <b>navy</b> and <b>naval</b>. Now we navigate cities, websites, hard conversations — the ship sailed into metaphor. Anka navigates by sound; Subhi navigates the camp; the novel asks how anyone finds a way through.",
+    apply:[
+      { id:"ap_nav_scn", type:"scenario",
+        q:"Anka clicks her tongue and reads the echoes — real echolocation, like a bat. In the story-within-the-story, her blindness is:",
+        a:"Not a weakness but a different way of seeing — like Subhi's imagination", opts:["Not a weakness but a different way of seeing — like Subhi's imagination","A curse that is cured by magic","The reason she is left behind","A punishment for a mistake"],
+        explain:"Anka 'sees' with sound as Subhi 'sees' with imagination — the book teaches Jimmie how to read her own friend." },
+      { id:"ap_nav_desc", type:"desc",
+        q:"'Navigate' is built from <i>nav</i> (ship) + <i>agere</i> (drive). When we say someone 'navigates a difficult year', the word has become:",
+        a:"a metaphor — the ship is now invisible", opts:["a metaphor — the ship is now invisible","a mistake — years aren't ships","an onomatopoeia","a proper noun"],
+        explain:"Dead metaphors everywhere: words keep their old cargo invisibly. Etymology reveals it." } ] },
+
+  { w:"Echo", pos:"noun", domain:"story",
+    meaning:"A sound that bounces back. Anka listens for echoes; readers listen for them too — moments that repeat with new meaning.",
+    type:"origin",
+    originQ:"<b>Echo</b> comes from Greek myth. Who or what was Echo?",
+    originOpts:["A nymph cursed to only repeat the last words spoken to her","A god of thunder","A hollow mountain","A singing bird"],
+    originA:"A nymph cursed to only repeat the last words spoken to her",
+    note:"In the myth, the nymph Echo could only repeat others' last words. Novels echo too: Anka in her eggshell echoes Subhi in his camp; the wise old woman's bone sparrow echoes the one on Jimmie's neck. When you notice a repeat-with-a-difference, annotate it — that's an echo, and echoes are where meaning lives.",
+    apply:[
+      { id:"ap_echo_scn", type:"scenario",
+        q:"Anka's village is destroyed by soldiers; Subhi's family fled soldiers in Burma. The story in Jimmie's book keeps matching Subhi's life. This repetition-with-a-difference is best called:",
+        a:"an echo between the two stories", opts:["an echo between the two stories","a coincidence Fraillon didn't notice","a printing error","proof they are the same family"],
+        explain:"The story-within-the-story echoes the frame story — that's the architecture of the whole novel." },
+      { id:"ap_echo_cloze", type:"cloze",
+        before:"Blind Anka clicks her tongue and steers by the", after:"that comes back from walls and trees.",
+        a:"echo", opts:["echo","shadow","breeze","scent"],
+        explain:"Sound bounced back — named for the nymph who could only repeat." } ] },
+
+  { w:"Thermos", pos:"noun", domain:"feeling",
+    meaning:"A flask that keeps drinks hot — Jimmie brings one full of hot chocolate, and Subhi tastes it like 'nothing he has ever tasted'.",
+    type:"origin",
+    originQ:"<b>Thermos</b> is Greek for 'hot' — and became the flask's name as a brand. Which other word carries the same root?",
+    originOpts:["Thermometer — a heat measurer","Thesaurus — a word store","Theatre — a watching place","Theory — an idea"],
+    originA:"Thermometer — a heat measurer",
+    note:"Greek <i>thermos</i> = hot: thermometer, thermal. Like 'doona', the brand name swallowed the object. The hot chocolate scene is the novel's warmest moment in every sense: something hot, sweet and freely given, in a place of cold queues and counted rations. Fraillon spends a whole page on one sip — earned slowness.",
+    apply:[
+      { id:"ap_therm_scn", type:"scenario",
+        q:"Fraillon slows the story right down while Subhi tastes hot chocolate for the first time. Why give one sip so much space?",
+        a:"Every first the camp has denied him is packed into that sip — slowness makes the reader feel the deprivation", opts:["Every first the camp has denied him is packed into that sip — slowness makes the reader feel the deprivation","Hot chocolate is the author's favourite drink","To teach readers a recipe","Because nothing else happens that day"],
+        explain:"Pacing is a technique: what a writer slows down for, the reader learns to treasure." },
+      { id:"ap_therm_desc", type:"desc",
+        q:"Doona, thermos, biro, esky — what do all these Australian words have in common?",
+        a:"They began as brand names and became everyday words", opts:["They began as brand names and became everyday words","They are all Greek letters","They were invented by one author","They are all types of bedding"],
+        explain:"Generic trademarks: when a brand wins so hard it stops being a name and becomes a thing." } ] },
+
+  { w:"Inspection", pos:"noun", domain:"camp",
+    meaning:"An official visit to examine a place. When government inspectors come, the camp suddenly serves proper food.",
+    type:"morph",
+    tiles:[["in-","into"],["spect","to look"],["-ion","the process of"]],
+    decoys:[["ex-","out of"],["spir","to breathe"],["-or","one who"]],
+    note:"Latin <i>in-</i> (into) + <i>specere</i> (to look): to <b>look into</b>. Same <i>spect</i> in <b>spectator</b>, <b>respect</b> (look back at), <b>suspect</b> (look up at from below). The inspection-day food is the novel at its most quietly furious: the camp knows exactly what good treatment looks like — it performs it for visitors.",
+    apply:[
+      { id:"ap_insp_scn", type:"scenario",
+        q:"On inspection days 'everyone gets proper food'. What does this detail prove about the camp?",
+        a:"The bad conditions are a choice — the camp can do better and only does it when watched", opts:["The bad conditions are a choice — the camp can do better and only does it when watched","Inspectors bring the food with them","The cooks are lazy on other days","Food deliveries are random"],
+        explain:"One sentence of plot, an entire argument about accountability. Being SEEN changes the camp — remember Queeny's camera." },
+      { id:"ap_insp_cloze", type:"cloze",
+        before:"The morning of the government", after:", the Food Tent smells better than it has all year.",
+        a:"inspection", opts:["inspection","expedition","inspiration","installation"],
+        explain:"Looking-into (<i>in</i> + <i>spect</i>). The distractors borrow the prefix or the suffix, never the looking." } ] },
+
+  { w:"Generation", pos:"noun", domain:"story",
+    meaning:"All the family members born around the same time — Anka's story travels down five generations to reach Jimmie.",
+    type:"morph",
+    tiles:[["gener","to give birth, produce"],["-ation","the process of"]],
+    decoys:[["gen","(decoy) short for general"],["-or","one who"],["re-","again"]],
+    note:"Latin <i>generare</i> (to bring to life) — the root of <b>generous</b>, <b>gender</b>, <b>generate</b>. A generation is one 'batch' of bringing-to-life. Jimmie's book is a machine for carrying love across generations; Maá's Listen Now stories do the same. That's what the novel means by 'reading is important'.",
+    apply:[
+      { id:"ap_gen_scn", type:"scenario",
+        q:"Anka → her son → down and down to Jimmie's mum → Jimmie. The bone sparrow and the story travel together. What is Fraillon suggesting things like stories and necklaces actually DO?",
+        a:"They carry a family's love and history across generations that never met each other", opts:["They carry a family's love and history across generations that never met each other","They bring good luck to whoever holds them","They are worth more as they age","They should be kept in museums"],
+        explain:"Objects + stories = inheritance you can't spend. Both children live off this kind of wealth." },
+      { id:"ap_gen_cloze", type:"cloze",
+        before:"The story in Jimmie's book has been retold for five", after:"— from Anka all the way down to Jimmie.",
+        a:"generations", opts:["generations","generators","celebrations","destinations"],
+        explain:"Bring-to-life batches. A generator (one that produces) shares the root — power stations and grandmothers, both producers." } ] }
+  ] },
+
+/* ================= CH 15–17 · AUSSIE BOY ================= */
+{ id:"15-17", pre:15, topic:"Part One · Jimmie's book (chapters 11–17)", title:"Chapters 15–17 · Aussie boy",
+  focus:"Nasir dies, Queeny picks up a camera, and being called 'Aussie boy' makes Subhi feel less Rohingya, not more welcome.",
+  words:[
+  { w:"Belonging", pos:"noun", domain:"feeling",
+    meaning:"The feeling of being part of a group, place or culture. Nasir understood 'how important it is to belong'.",
+    type:"compound",
+    tiles:[["be-","thoroughly, about"],["long","to go along with"],["-ing","the state of"]],
+    decoys:[["short","not long"],["-ed","past tense"],["un-","not"]],
+    note:"'Belong' grew from <i>be-</i> + an old sense of <i>long</i>: to go along with, to be proper to. Subhi was born in the camp — Australia won't have him, and 'Aussie boy' cuts him off from being Rohingya too. He belongs to a fence line. The word names the novel's deepest wound.",
+    apply:[
+      { id:"ap_belong_scn", type:"scenario",
+        q:"People call Subhi 'Aussie boy' to be kind, but it makes him sad. Why?",
+        a:"It tells him he isn't quite Rohingya — while Australia still won't let him belong either", opts:["It tells him he isn't quite Rohingya — while Australia still won't let him belong either","He would prefer a different nickname","He doesn't know what Aussie means","He wants to be called by his surname"],
+        explain:"A compliment that erases: the nickname takes his culture without giving him a country." },
+      { id:"ap_belong_cloze", type:"cloze",
+        before:"Nasir never called him Aussie boy, because Nasir understood", after:"— that a person needs their own culture to stand inside.",
+        a:"belonging", opts:["belonging","behaving","beginning","believing"],
+        explain:"The be- words rhyme; only one names the being-part-of that Nasir protected." } ] },
+
+  { w:"Culture", pos:"noun", domain:"world",
+    meaning:"The language, stories, food and ways of a people — what 'Aussie boy' quietly cuts Subhi off from.",
+    type:"morph",
+    tiles:[["cult","to grow, to till"],["-ure","the result of"]],
+    decoys:[["cut","to slice"],["-ture","(decoy ending)"],["col","with"]],
+    note:"Latin <i>colere/cultus</i>: to till, to grow — the same root as <b>agriculture</b> and <b>cultivate</b>. A culture is everything a people has GROWN together: language, stories, songs, food. You can't buy one or borrow one overnight — like a crop, it takes generations. That's why losing it is the deepest theft in the novel.",
+    apply:[
+      { id:"ap_cult_scn", type:"scenario",
+        q:"'Culture' comes from the word for growing crops. Why is that a powerful way to think about what the Rohingya people in the camp are losing?",
+        a:"A culture is grown over generations, like a crop — and it can wither if it can't be tended", opts:["A culture is grown over generations, like a crop — and it can wither if it can't be tended","Because the Rohingya are farmers","Because the camp grows vegetables","Because crops and stories are both green"],
+        explain:"Maá's stories, the word 'né', the Listen Nows — tending the crop inside the wire." },
+      { id:"ap_cult_desc", type:"desc",
+        q:"Which item from the novel is a piece of CULTURE being kept alive inside the camp?",
+        a:"Maá's Listen Now stories, told in the family's own way", opts:["Maá's Listen Now stories, told in the family's own way","The Jackets' uniforms","The meal queue tokens","The perimeter fence"],
+        explain:"Culture = the grown things: stories, language, ways. The other three belong to the system, not the people." } ] },
+
+  { w:"Rohingya", pos:"noun", domain:"world",
+    meaning:"Subhi's people — a Muslim minority from Myanmar (Burma), denied citizenship and driven out in huge numbers.",
+    type:"origin",
+    originQ:"The name <b>Rohingya</b> is generally traced to 'Rohang' — what was Rohang?",
+    originOpts:["An old name for the Arakan region where the Rohingya lived","A famous Rohingya king","The Burmese word for boat","A holy river"],
+    originA:"An old name for the Arakan region where the Rohingya lived",
+    note:"'Rohingya' most likely means 'people of Rohang' — the old name for Arakan (now Rakhine State). The name says: <b>we are from that place</b>. Which is exactly what Myanmar's government denies — it calls them foreigners and refuses them citizenship. A people's own name can be an act of resistance. Say it with care: roh-HIN-jah.",
+    apply:[
+      { id:"ap_roh_scn", type:"scenario",
+        q:"Myanmar's government refuses to recognise the Rohingya as citizens; the name 'Rohingya' itself means 'people of that place'. Why does the NAME matter so much?",
+        a:"Using their name accepts their claim to belong; refusing it erases them twice", opts:["Using their name accepts their claim to belong; refusing it erases them twice","Names are easier to spell than places","It is a very old word","Because Subhi likes the sound of it"],
+        explain:"This is the real-world weight under the novel: what people are called decides what can be done to them." },
+      { id:"ap_roh_desc", type:"desc",
+        q:"Subhi has never seen Burma — he was born in the camp. Yet being Rohingya still matters to him because:",
+        a:"Identity travels through family, language and story, not just through a birthplace", opts:["Identity travels through family, language and story, not just through a birthplace","His passport says so","He plans to return soon","The Jackets require it"],
+        explain:"Maá's stories and Ba's poems carry Burma to a boy who's never touched it — culture as luggage." } ] },
+
+  { w:"Camera", pos:"noun", domain:"world",
+    meaning:"A device for taking photographs. Queeny gets one, and starts collecting proof of how the camp treats people.",
+    type:"origin",
+    originQ:"<b>Camera</b> is Latin — for what?",
+    originOpts:["A room (from 'camera obscura', the dark room)","An eye","A small box","A painter's easel"],
+    originA:"A room (from 'camera obscura', the dark room)",
+    note:"Latin <i>camera</i> = a room! The first 'camera obscura' was a darkened ROOM with a pinhole that projected the outside world onto a wall. The machine kept the room's name. In the novel the borrowed room does a room's opposite: instead of shutting the world out, Queeny's camera lets the world in — or rather, lets the camp OUT.",
+    apply:[
+      { id:"ap_cam_scn", type:"scenario",
+        q:"Queeny stops talking about the future and starts photographing the camp instead. What has she decided?",
+        a:"Hope from waiting is finished — change will only come if the outside world SEES the truth", opts:["Hope from waiting is finished — change will only come if the outside world SEES the truth","Photography is her new hobby","She wants to remember the camp fondly","The camera was expensive so she must use it"],
+        explain:"Remember inspection day: the camp behaves when watched. Queeny is building permanent watching." },
+      { id:"ap_cam_cloze", type:"cloze",
+        before:"With Eli's access to the computer room, Queeny's", after:"can send the truth of the camp out to the newspapers.",
+        a:"camera", opts:["camera","cinema","chamber","calendar"],
+        explain:"Chamber is camera's twin (both mean room) — but only one shoots photographs." } ] },
+
+  { w:"Determination", pos:"noun", domain:"feeling",
+    meaning:"Fixed, unshakeable purpose. Queeny used to be 'full of hope' — now she's full of 'anger and determination'.",
+    type:"morph",
+    tiles:[["de-","completely"],["termin","boundary, end"],["-ation","the state of"]],
+    decoys:[["term","a school period (decoy)"],["-or","one who"],["exter-","outside"]],
+    note:"Latin <i>terminus</i> (boundary, end-point — the god of boundary stones!): to determine is to <b>set the end-point completely</b>. Determination = having your end fixed and marching at it. Same root in <b>terminate</b>, <b>terminal</b>, <b>exterminate</b>. Queeny has chosen her terminus: the truth, published.",
+    apply:[
+      { id:"ap_deter_scn", type:"scenario",
+        q:"Subhi mourns the old, hopeful Queeny. But is her hard new determination presented as a loss, a strength, or both?",
+        a:"Both — the camp has cost her softness, and forged something that may actually change things", opts:["Both — the camp has cost her softness, and forged something that may actually change things","Only a loss — she was better before","Only a strength — hope was useless","Neither — she hasn't changed"],
+        explain:"Fraillon lets characters be two things at once. Essay gold: 'Queeny's determination is both wound and weapon.'" },
+      { id:"ap_deter_cloze", type:"cloze",
+        before:"Where Subhi still dreams, Queeny now plans — her", after:"has a fixed end-point: the photos reaching the papers.",
+        a:"determination", opts:["determination","deterioration","destination","denomination"],
+        explain:"End-point-set-completely. 'Destination' shares the feel but comes from <i>destinare</i> — the -in- is the giveaway." } ] },
+
+  { w:"Escape", pos:"verb", domain:"camp",
+    meaning:"To get free of a place that holds you. Jimmie shows Subhi the gap in the fence — and he doesn't take it.",
+    type:"morph",
+    tiles:[["es-","out of"],["cape","cloak"]],
+    decoys:[["cap","head"],["-ing","in the process of"],["scape","view (decoy)"]],
+    note:"Latin <i>ex-</i> (out of) + <i>cappa</i> (cloak): to escape was to <b>slip out of your cloak</b> when someone grabbed it — leaving your captor holding cloth. Two thousand years later the picture still works. Subhi finally has a way out of the cloak… and stays. Ask yourself why: that question is an essay.",
+    apply:[
+      { id:"ap_esc_scn", type:"scenario",
+        q:"Jimmie has shown Subhi the gap in the fence. He could slip out — and doesn't. Why not?",
+        a:"Everyone he loves is inside; leaving alone would tear him from Maá, Queeny and Eli", opts:["Everyone he loves is inside; leaving alone would tear him from Maá, Queeny and Eli","He is too frightened of the dark","The gap is too small for him","He has promised Beaver to stay"],
+        explain:"Same choice Eli makes about the others. In this novel freedom without your people isn't freedom." },
+      { id:"ap_esc_desc", type:"desc",
+        q:"'Escape' literally means slipping OUT OF YOUR CLOAK to leave a captor holding cloth. Which moment in the novel is the closest to a real 'cloak trick'?",
+        a:"Jimmie slipping in and out through the gap the fence-menders never find", opts:["Jimmie slipping in and out through the gap the fence-menders never find","Subhi's Night Sea dreams","The rats in their traps","Inspection day food"],
+        explain:"Jimmie is the escape artist of the book — the one the wire cannot hold." } ] }
+  ] },
+
+/* ================= CH 18–20 · LIPS SEWN SHUT ================= */
+{ id:"18-20", pre:18, topic:"Part Two · The whole world watching (chapters 18–22)", title:"Chapters 18–20 · Lips sewn shut",
+  focus:"Maá won't wake, the men of Alpha sew their lips shut, and Queeny's photo reaches a breakfast table on the outside.",
+  words:[
+  { w:"Protest", pos:"noun", domain:"world",
+    meaning:"A public act to show something is wrong. The hunger strike is a protest against the men's transfer and treatment.",
+    type:"morph",
+    tiles:[["pro-","forth, in public"],["test","to witness, declare"]],
+    decoys:[["anti-","against"],["taste","to try food (decoy)"],["-ion","the process of"]],
+    note:"Latin <i>pro-</i> (forth) + <i>testari</i> (to witness — same root as 'testify' and 'testimony'): to protest is to <b>declare as a witness, in public</b>. The men who sew their lips shut cannot speak — so they make their bodies the declaration. A protest of pure witness.",
+    apply:[
+      { id:"ap_prot_scn", type:"scenario",
+        q:"The men sew their lips shut — silencing themselves as their protest. What makes this so much more powerful than shouting?",
+        a:"It turns what the camp has done to their voices into something no one can look away from", opts:["It turns what the camp has done to their voices into something no one can look away from","It saves their energy for the strike","Shouting is against the rules","It is easier than making banners"],
+        explain:"'We just need to show them who we are, that we're people.' The sewn lips SAY the silencing." },
+      { id:"ap_prot_cloze", type:"cloze",
+        before:"The hunger strike is an event; the treatment of refugees is the issue — and the strike is a", after:"designed to force the issue into view.",
+        a:"protest", opts:["protest","contest","pretest","protein"],
+        explain:"Declare-forth-as-witness. Lesson 13's event/issue distinction, wearing its right word." } ] },
+
+  { w:"Transferred", pos:"verb", domain:"camp",
+    meaning:"Moved from one place to another by someone else's decision — the men of Alpha are to be transferred to another country.",
+    type:"morph",
+    tiles:[["trans-","across"],["fer","to carry"],["-red","past tense"]],
+    decoys:[["port","to carry (decoy twin)"],["-ing","in the process of"],["fur","animal coat"]],
+    note:"Latin <i>trans-</i> (across) + <i>ferre</i> (to carry): <b>carried across</b>. Its twin is transport (<i>portare</i>, also carry). Notice the grammar of the camp: people don't move, they ARE moved — transferred, processed, detained. The passive voice is what powerlessness sounds like in official English.",
+    apply:[
+      { id:"ap_trans_scn", type:"scenario",
+        q:"'The men are going to be transferred.' Nobody asks them. What does the word 'transferred' — used for parcels and money — do when applied to people?",
+        a:"It turns people into cargo — objects carried across, not humans choosing", opts:["It turns people into cargo — objects carried across, not humans choosing","It makes the move sound exciting","It means they will come back soon","It suggests a promotion"],
+        explain:"Watch the camp's verbs: transferred, processed, detained. Language does the dehumanising before anyone lifts a hand." },
+      { id:"ap_trans_cloze", type:"cloze",
+        before:"Eli breaks down crying — the last time men were", after:"to that country, the violence left people dead.",
+        a:"transferred", opts:["transferred","transformed","translated","transmitted"],
+        explain:"Four trans- twins: carried, shaped, worded, sent. Only 'carried across' fits people-as-cargo." } ] },
+
+  { w:"Banner", pos:"noun", domain:"world",
+    meaning:"A large cloth with a message. The men make a banner from a bedsheet for Queeny to photograph.",
+    type:"origin",
+    originQ:"<b>Banner</b> descends from an old Germanic word bandwa. What did it mean?",
+    originOpts:["A sign or rallying flag that a group gathers under","A loud trumpet","A piece of armour","A long speech"],
+    originA:"A sign or rallying flag that a group gathers under",
+    note:"Germanic <i>bandwa</i>: the sign a fighting company rallies under — the thing that says WE are HERE, together. A bedsheet is what the camp gives them; a banner is what they make of it. The transformation of a sheet into a flag is the protest in miniature.",
+    apply:[
+      { id:"ap_ban_scn", type:"scenario",
+        q:"The men's banner is made from a bedsheet. Why does Fraillon make sure we know what it's made of?",
+        a:"They own nothing — so even their flag must be built from the camp's own equipment, turned back against it", opts:["They own nothing — so even their flag must be built from the camp's own equipment, turned back against it","Bedsheets are the best material for banners","To show the camp provides art supplies","Because it was raining"],
+        explain:"Resourcefulness as resistance: the same hands that built delivery businesses build this." },
+      { id:"ap_ban_cloze", type:"cloze",
+        before:"Queeny's photo shows the", after:"stretched wide, its message facing the fences and the cameras beyond.",
+        a:"banner", opts:["banner","dinner","manner","scanner"],
+        explain:"The rally-sign — from a word meaning the flag a group stands under." } ] },
+
+  { w:"Newspaper", pos:"noun", domain:"world",
+    meaning:"A printed publication of news. Jimmie sees the photo of the sewn lips in the paper — over her dad's breakfast.",
+    type:"compound",
+    tiles:[["news","new things told"],["paper","paper (from papyrus)"]],
+    decoys:[["papyr","a river reed"],["-er","one who"],["past","time gone by"]],
+    note:"News + paper — and 'paper' descends from <i>papyrus</i>, the Nile reed Egyptians pressed into sheets 5000 years ago. Queeny's plan works: the photo crosses the fence and lands on a breakfast table. Then Jimmie's dad says 'What's the world coming to?' — and turns to the sports. The truth arrived. It just didn't matter enough.",
+    apply:[
+      { id:"ap_news_scn", type:"scenario",
+        q:"Jimmie's dad sees the sewn-lips photo, sighs 'What's the world coming to?', and turns the page to the sports. This tiny scene shows:",
+        a:"Ordinary people can see the truth, feel a second of pity, and keep their lives unchanged", opts:["Ordinary people can see the truth, feel a second of pity, and keep their lives unchanged","Her dad supports the protest","The photo was printed too small","Sports matter more than politics to everyone"],
+        explain:"The novel's quietest, most damning moment: the bystander at breakfast. Queeny's photos reached him — and bounced." },
+      { id:"ap_news_desc", type:"desc",
+        q:"Queeny believed being SEEN would change everything; the newspaper scene tests her belief. What is Fraillon's answer?",
+        a:"Seeing is necessary but not enough — people must also let themselves care", opts:["Seeing is necessary but not enough — people must also let themselves care","Queeny was completely right","Photos never change anything","Newspapers hide the truth"],
+        explain:"The camera got the truth out; the reader must ask what makes anyone act on it. That question includes us." } ] },
+
+  { w:"Contagious", pos:"adjective", domain:"feeling",
+    meaning:"Spreading from person to person by contact — like the food poisoning that sweeps the camp, and like despair itself.",
+    type:"morph",
+    tiles:[["con-","together, with"],["tag","to touch"],["-ious","full of, characterised by"]],
+    decoys:[["tang","a sharp taste (decoy)"],["-ous","full of"],["de-","away"]],
+    note:"Latin <i>con-</i> (with) + <i>tangere</i> (to touch): spread <b>by touching together</b>. Same <i>tag/tact</i> in <b>contact</b>, <b>tangible</b>, <b>intact</b> (untouched). In chapter 18 the food poisoning spreads through the crowded camp — and so does something else: sadness and anger move through the tents the same way.",
+    apply:[
+      { id:"ap_cont_scn", type:"scenario",
+        q:"Fraillon describes sickness moving through the camp, and a 'sense of sadness and anger' moving with it. What is she suggesting about crowded detention?",
+        a:"In a packed, powerless place, both disease and despair are contagious", opts:["In a packed, powerless place, both disease and despair are contagious","The kitchen needs new cooks","Anger causes food poisoning","The rain spreads illness"],
+        explain:"The metaphor rides on the literal: bodies packed together share germs; minds packed together share moods." },
+      { id:"ap_cont_cloze", type:"cloze",
+        before:"In tents pitched wall to wall, the food poisoning is", after:"— and so, Subhi notices, is the anger.",
+        a:"contagious", opts:["contagious","courageous","outrageous","advantageous"],
+        explain:"All four end -ageous/-agious; only touched-together carries the spreading." } ] },
+
+  { w:"Bystander", pos:"noun", domain:"world",
+    meaning:"A person who watches something happen without acting — from your unit vocabulary, now standing at a breakfast table.",
+    type:"compound",
+    tiles:[["by","near, beside"],["stand","to be in place"],["-er","a person who"]],
+    decoys:[["buy","to purchase"],["sit","to rest"],["-ing","in the process of"]],
+    note:"By (beside) + stand + -er: <b>one who stands beside</b> — present, watching, not acting. You met this word before reading; now the novel has shown you one: a dad with a newspaper. The opposite, coined recently, is <b>upstander</b> — one who stands UP. Queeny and Jimmie are the book's upstanders.",
+    apply:[
+      { id:"ap_bys_scn", type:"scenario",
+        q:"Who is the clearest BYSTANDER in chapters 18–20 — present at the truth, doing nothing?",
+        a:"Jimmie's dad, reading the protest photo and turning to the sports", opts:["Jimmie's dad, reading the protest photo and turning to the sports","Queeny, photographing the protest","Eli, refusing to leave the others","The men sewing their lips"],
+        explain:"The other three all ACT. The bystander is the one the photo was for — who looked, and looked away." },
+      { id:"ap_bys_desc", type:"desc",
+        q:"Fraillon shows the bystander as an ordinary, tired, not-cruel man. Why does that make the idea MORE uncomfortable, not less?",
+        a:"Because it means bystanders aren't monsters — they're us on an ordinary morning", opts:["Because it means bystanders aren't monsters — they're us on an ordinary morning","Because cruel people read newspapers","Because dads should read every page","Because the photo was blurry"],
+        explain:"The novel's challenge to its reader lives in this word. Your essay can meet it head-on." } ] }
+  ] },
+
+/* ================= CH 21–END · THE WHOLE SKY ================= */
+{ id:"21-end", pre:21, topic:"Part Two · The whole world watching (chapters 18–22)", title:"Chapters 21–end · The whole sky",
+  focus:"The novel's final movement — courage, loss, and what survives to be told. (Unlocks when you've read past chapter 20.)",
+  words:[
+  { w:"Courage", pos:"noun", domain:"feeling",
+    meaning:"The strength to act despite fear — what Subhi calls 'a sort of brave'.",
+    type:"morph",
+    tiles:[["cour","heart"],["-age","the state or quality of"]],
+    decoys:[["car","a vehicle (decoy)"],["-ish","somewhat like"],["en-","to make"]],
+    note:"Latin <i>cor</i>, French <i>coeur</i>: the <b>heart</b>. Courage is literally 'heart-ness' — same root in <b>encourage</b> (put heart in) and <b>discourage</b> (take heart out). Fraillon lets Subhi rename it 'a sort of brave': his English builds the same word from different bricks.",
+    apply:[
+      { id:"ap_cour_scn", type:"scenario",
+        q:"'Knowing Jimmie has a whole real book in her hands gives me a sort of brave.' Where does courage come FROM in this novel?",
+        a:"From other people — friendship, stories and love put the heart in", opts:["From other people — friendship, stories and love put the heart in","From being naturally fearless","From growing older","From the Jackets' training"],
+        explain:"En-COUR-age: to put heart IN. Every brave act in the book is powered by someone else's love." },
+      { id:"ap_cour_cloze", type:"cloze",
+        before:"It takes a different kind of", after:"to stay — as Eli does — than it takes to run.",
+        a:"courage", opts:["courage","carriage","coverage","language"],
+        explain:"Heart-ness. The -age twins carry different roots: carry, cover, tongue." } ] },
+
+  { w:"Witness", pos:"noun", domain:"world",
+    meaning:"A person who sees something and can tell others the truth of it. By the end, Subhi understands his job is to witness.",
+    type:"compound",
+    tiles:[["wit","knowledge, knowing"],["-ness","the state of being"]],
+    decoys:[["with","alongside"],["white","the colour"],["-less","without"]],
+    note:"Old English <i>wit</i>: knowledge (as in 'quick-witted'). A witness is a <b>knowing-one</b> — someone whose seeing turns into telling. The whole novel has been training Subhi for this: Maá's stories, Jimmie's book, Queeny's photos. Somebody has to carry what happened. The storyteller is the witness who survives.",
+    apply:[
+      { id:"ap_wit_scn", type:"scenario",
+        q:"Jimmie told Subhi his future: 'you'll be a storyteller.' By the end of the novel, why is being a storyteller the same job as being a witness?",
+        a:"Because the camp's truth only leaves the fences inside someone who can tell it", opts:["Because the camp's truth only leaves the fences inside someone who can tell it","Because stories are more fun than facts","Because witnesses get paid","Because Subhi wants to be famous"],
+        explain:"Queeny's photos and Subhi's stories are the same act in different languages: seen → known → told." },
+      { id:"ap_wit_cloze", type:"cloze",
+        before:"A", after:"is a knowing-one: someone whose seeing becomes telling.",
+        a:"witness", opts:["witness","fitness","wilderness","weakness"],
+        explain:"<i>wit</i> = knowledge + <i>-ness</i> = the state of. The rhymes carry fit, wild and weak instead." } ] },
+
+  { w:"Survivor", pos:"noun", domain:"feeling",
+    meaning:"A person who lives on through and beyond something terrible.",
+    type:"morph",
+    tiles:[["sur-","over, beyond"],["viv","to live"],["-or","one who"]],
+    decoys:[["sub-","under"],["vive","(decoy spelling)"],["-ed","past tense"]],
+    note:"Latin <i>super-</i> (beyond) + <i>vivere</i> (to live): <b>one who lives beyond</b>. Same <i>viv</i> in <b>vivid</b> (full of life), <b>revive</b> (live again). The novel is careful with this word: surviving isn't a happy ending — it's a responsibility. The one who lives beyond carries the ones who didn't.",
+    apply:[
+      { id:"ap_surv_scn", type:"scenario",
+        q:"In this novel, what does a survivor OWE, according to the way Subhi ends the story?",
+        a:"To live beyond it AND carry the story of those who couldn't", opts:["To live beyond it AND carry the story of those who couldn't","Nothing — surviving is enough","Revenge on those responsible","Silence, to avoid the pain"],
+        explain:"Survivor + witness + storyteller: by the last page the three words have become one job." },
+      { id:"ap_surv_desc", type:"desc",
+        q:"'Vivid' means full of life; 'revive' means bring back to life. The shared root <i>viv</i> means:",
+        a:"to live", opts:["to live","to see","to remember","to grow"],
+        explain:"One root, a family of words — morphemes are the loaves you keep slicing." } ] },
+
+  { w:"Freedom", pos:"noun", domain:"world",
+    meaning:"The state of not being controlled or held — what the birds have, on the far side of the fence diamonds.",
+    type:"compound",
+    tiles:[["free","not held, beloved"],["-dom","the state or realm of"]],
+    decoys:[["fee","a payment"],["-dumb","(decoy spelling)"],["un-","not"]],
+    note:"Old English <i>frēo</i> once meant both 'free' and '<b>beloved</b>' — your free people were the ones you loved, as against those enslaved. So freedom and love grew from one word. The novel agrees with the etymology: Subhi's choices show that for him, freedom without the people he loves isn't freedom at all. And <i>-dom</i> (kingdom, wisdom) makes it a realm — a place you live in.",
+    apply:[
+      { id:"ap_free_scn", type:"scenario",
+        q:"Given the chance to slip through the fence, Subhi stays with his family. Old English 'frēo' meant both FREE and BELOVED. How does the novel agree with that ancient double meaning?",
+        a:"It shows freedom and love are inseparable — escape without your beloved people is just another kind of loss", opts:["It shows freedom and love are inseparable — escape without your beloved people is just another kind of loss","It shows love is a trap","It proves the fence is unclimbable","It suggests freedom is only for birds"],
+        explain:"Etymology and theme in perfect agreement — a paragraph-opener for your essay if ever there was one." },
+      { id:"ap_free_cloze", type:"cloze",
+        before:"On the cover, the barbed wire turns into birds — imprisonment transforming into", after:"before the reader has opened the book.",
+        a:"freedom", opts:["freedom","boredom","kingdom","wisdom"],
+        explain:"All the -doms are realms; only one is the realm the birds fly in." } ] },
+
+  { w:"Memorial", pos:"noun", domain:"story",
+    meaning:"Something made to keep a person or event remembered — a place, an object, or a story that refuses to forget.",
+    type:"morph",
+    tiles:[["memor","mindful, remembering"],["-ial","relating to, serving for"]],
+    decoys:[["memo","a short note (decoy)"],["-ish","somewhat like"],["im-","not"]],
+    note:"Latin <i>memor</i> (mindful) — the root of <b>memory</b>, <b>remember</b>, <b>commemorate</b>. A memorial can be stone, but the oldest memorials are stories: Anka lives because five generations kept telling her. By its final page the novel itself becomes a memorial — ask yourself for whom.",
+    apply:[
+      { id:"ap_mem_scn", type:"scenario",
+        q:"There is no gravestone in the camp for the people the story loses. What becomes their memorial instead?",
+        a:"The telling — Subhi carrying their stories, as Jimmie's family carried Anka's", opts:["The telling — Subhi carrying their stories, as Jimmie's family carried Anka's","The camp's official records","A statue by the gates","The newspaper archives"],
+        explain:"'When the stories stop, people start to lose that piece of themselves' — the memorial is the not-stopping." },
+      { id:"ap_mem_cloze", type:"cloze",
+        before:"Retold for five generations, Anka's story works as a living", after:"— stronger than stone, because it travels.",
+        a:"memorial", opts:["memorial","material","ministerial","memorandum"],
+        explain:"<i>memor</i> = mindful. The story is the monument." } ] },
+
+  { w:"Hope", pos:"noun", domain:"feeling",
+    meaning:"The feeling that something better is possible — the hardest and most necessary thing in the whole novel.",
+    type:"origin",
+    originQ:"<b>Hope</b> is one of English's oldest words — Old English <i>hopa</i>. Unlike most words in this hub, what is unusual about its family tree?",
+    originOpts:["It has no known deeper root — it begins with English itself","It was borrowed from Latin","It was invented by Shakespeare","It comes from a Greek goddess"],
+    originA:"It has no known deeper root — it begins with English itself",
+    note:"Most of this hub's words unpack into borrowed Latin and Greek parts. <i>Hope</i> doesn't: it's bedrock English, older than the borrowings, with no morphemes to slice. Some words are foundations. Fraillon spreads it across the novel — Nasir's pebble of happy, Ba's poems, the whole sky — and lets the reader decide, at the end, what hope costs and what it's worth.",
+    apply:[
+      { id:"ap_hope_scn", type:"scenario",
+        q:"Queeny lost hope and found determination; Subhi keeps hope and pays for it; Eli hopes for everyone but himself. What is the novel's final position on hope?",
+        a:"It refuses one answer — hope is shown as costly, fragile and still worth carrying", opts:["It refuses one answer — hope is shown as costly, fragile and still worth carrying","Hope always wins in the end","Hope is for children only","Hope is the same as luck"],
+        explain:"Great novels ask; they don't settle. Your essay's job is to show HOW the question is asked — through character, symbol and story." },
+      { id:"ap_hope_cloze", type:"cloze",
+        before:"A pebble of happy, a duck that talks, a sea made of dirt — each one is", after:"made small enough for a boy to carry.",
+        a:"hope", opts:["hope","proof","food","noise"],
+        explain:"The novel's smallest objects carry its biggest cargo." } ] }
+  ] }
+];
+
+/* ==== Key-word translations — the five languages of our EAL cohort.
+   Shown on study cards and build reveals when a language is chosen —
+   preteaching is scaffolded in the home language, practice stays in English. ==== */
+const LANGS = [
+  ["zh","中文（简体）· Mandarin"],
+  ["yue","中文（繁體）· Cantonese"],
+  ["vi","Tiếng Việt · Vietnamese"],
+  ["ar","العربية · Arabic"],
+  ["fa","فارسی · Farsi"],
+];
+const RTL = { ar:1, fa:1 };
+const TR = {
+"Detention":{zh:"拘留",yue:"拘留",vi:"sự giam giữ",ar:"الاحتجاز",fa:"بازداشت"},
+"Imagination":{zh:"想象力",yue:"想像力",vi:"trí tưởng tượng",ar:"الخيال",fa:"تخیل"},
+"Universe":{zh:"宇宙",yue:"宇宙",vi:"vũ trụ",ar:"الكون",fa:"جهان هستی"},
+"Treasure":{zh:"宝藏",yue:"寶藏",vi:"kho báu",ar:"كنز",fa:"گنج"},
+"Compound":{zh:"围场；营区",yue:"圍場；營區",vi:"khu trại có rào",ar:"مجمّع مسيّج",fa:"محوطه محصور"},
+"Lapping":{zh:"（波浪）轻拍",yue:"（波浪）輕拍",vi:"(sóng) vỗ nhẹ",ar:"تلاطم خفيف",fa:"موج زدن آرام"},
+"Perimeter":{zh:"周界",yue:"周界",vi:"chu vi; vành đai",ar:"المحيط الخارجي",fa:"محیط بیرونی"},
+"Provisions":{zh:"供给品",yue:"供給品",vi:"đồ tiếp tế",ar:"مؤن",fa:"آذوقه"},
+"Barbed":{zh:"有倒刺的",yue:"有倒刺嘅",vi:"có gai (dây thép gai)",ar:"شائك",fa:"خاردار"},
+"Necklace":{zh:"项链",yue:"頸鏈",vi:"vòng cổ",ar:"قلادة",fa:"گردنبند"},
+"Funeral":{zh:"葬礼",yue:"葬禮",vi:"đám tang",ar:"جنازة",fa:"مراسم خاکسپاری"},
+"Doona":{zh:"羽绒被",yue:"羽絨被",vi:"chăn bông",ar:"لحاف",fa:"لحاف"},
+"Nightmare":{zh:"噩梦",yue:"惡夢",vi:"ác mộng",ar:"كابوس",fa:"کابوس"},
+"Package":{zh:"包裹",yue:"包裹",vi:"gói hàng",ar:"طرد",fa:"بسته"},
+"Handcuffed":{zh:"被戴上手铐",yue:"被扣上手銬",vi:"bị còng tay",ar:"مقيّد اليدين",fa:"دستبند زده شده"},
+"Fouling":{zh:"使恶心；弄脏",yue:"使作嘔；整污糟",vi:"làm buồn nôn",ar:"يُفسد؛ يُقرف",fa:"به‌هم زدن (دل)"},
+"Buzzing":{zh:"嗡嗡作响",yue:"嗡嗡響",vi:"kêu vo vo",ar:"طنين",fa:"وزوز کردن"},
+"Storyteller":{zh:"讲故事的人",yue:"講故事嘅人",vi:"người kể chuyện",ar:"راوي القصص",fa:"قصه‌گو"},
+"Prejudice":{zh:"偏见",yue:"偏見",vi:"định kiến",ar:"تحيّز",fa:"پیش‌داوری"},
+"Resentment":{zh:"怨恨",yue:"怨恨",vi:"sự oán giận",ar:"استياء",fa:"رنجش"},
+"Isolated":{zh:"与世隔绝的",yue:"與世隔絕嘅",vi:"bị cô lập",ar:"معزول",fa:"دورافتاده"},
+"Centre":{zh:"中心（拘留中心）",yue:"中心（拘留中心）",vi:"trung tâm (giam giữ)",ar:"المركز",fa:"مرکز (بازداشت)"},
+"Illiterate":{zh:"不识字的",yue:"唔識字嘅",vi:"mù chữ",ar:"أميّ",fa:"بی‌سواد"},
+"Annotation":{zh:"批注",yue:"批註",vi:"chú thích",ar:"تعليق توضيحي",fa:"حاشیه‌نویسی"},
+"Alpha":{zh:"阿尔法（希腊首字母）",yue:"阿爾法（希臘首字母）",vi:"Alpha (chữ cái Hy Lạp đầu tiên)",ar:"ألفا",fa:"آلفا"},
+"Delivery":{zh:"递送",yue:"遞送",vi:"việc giao hàng",ar:"توصيل",fa:"تحویل"},
+"Promise":{zh:"承诺",yue:"承諾",vi:"lời hứa",ar:"وعد",fa:"قول"},
+"Symbol":{zh:"象征",yue:"象徵",vi:"biểu tượng",ar:"رمز",fa:"نماد"},
+"Cyclone":{zh:"旋风；气旋",yue:"旋風；氣旋",vi:"lốc xoáy",ar:"إعصار",fa:"گردباد"},
+"Trapped":{zh:"被困的",yue:"被困嘅",vi:"bị mắc kẹt",ar:"محاصر",fa:"به‌دام‌افتاده"},
+"Ancestor":{zh:"祖先",yue:"祖先",vi:"tổ tiên",ar:"سلف؛ جدّ",fa:"نیا؛ جد"},
+"Navigate":{zh:"导航；找路",yue:"導航；搵路",vi:"tìm đường",ar:"يهتدي إلى الطريق",fa:"مسیریابی کردن"},
+"Echo":{zh:"回声",yue:"回聲",vi:"tiếng vọng",ar:"صدى",fa:"پژواک"},
+"Thermos":{zh:"保温瓶",yue:"保溫壺",vi:"bình giữ nhiệt",ar:"ترمس",fa:"فلاسک"},
+"Inspection":{zh:"视察",yue:"視察",vi:"cuộc thanh tra",ar:"تفتيش",fa:"بازرسی"},
+"Generation":{zh:"一代人",yue:"一代人",vi:"thế hệ",ar:"جيل",fa:"نسل"},
+"Belonging":{zh:"归属感",yue:"歸屬感",vi:"cảm giác thuộc về",ar:"الانتماء",fa:"تعلق داشتن"},
+"Culture":{zh:"文化",yue:"文化",vi:"văn hóa",ar:"ثقافة",fa:"فرهنگ"},
+"Rohingya":{zh:"罗兴亚人",yue:"羅興亞人",vi:"người Rohingya",ar:"الروهينغا",fa:"روهینگیا"},
+"Camera":{zh:"相机",yue:"相機",vi:"máy ảnh",ar:"كاميرا",fa:"دوربین"},
+"Determination":{zh:"决心",yue:"決心",vi:"sự quyết tâm",ar:"عزيمة",fa:"عزم"},
+"Escape":{zh:"逃脱",yue:"逃脫",vi:"trốn thoát",ar:"هروب",fa:"فرار"},
+"Protest":{zh:"抗议",yue:"抗議",vi:"cuộc biểu tình phản đối",ar:"احتجاج",fa:"اعتراض"},
+"Transferred":{zh:"被转移",yue:"被轉移",vi:"bị chuyển đi",ar:"مُرحَّل؛ منقول",fa:"منتقل‌شده"},
+"Banner":{zh:"横幅",yue:"橫額",vi:"biểu ngữ",ar:"لافتة",fa:"پرچم/پارچه‌نوشته"},
+"Newspaper":{zh:"报纸",yue:"報紙",vi:"tờ báo",ar:"صحيفة",fa:"روزنامه"},
+"Contagious":{zh:"传染性的",yue:"傳染性嘅",vi:"dễ lây lan",ar:"مُعدٍ",fa:"واگیردار"},
+"Bystander":{zh:"旁观者",yue:"旁觀者",vi:"người ngoài cuộc",ar:"متفرج",fa:"تماشاگر بی‌عمل"},
+"Courage":{zh:"勇气",yue:"勇氣",vi:"lòng can đảm",ar:"شجاعة",fa:"شجاعت"},
+"Witness":{zh:"见证人",yue:"見證人",vi:"nhân chứng",ar:"شاهد",fa:"شاهد"},
+"Survivor":{zh:"幸存者",yue:"倖存者",vi:"người sống sót",ar:"ناجٍ",fa:"بازمانده"},
+"Freedom":{zh:"自由",yue:"自由",vi:"tự do",ar:"حرية",fa:"آزادی"},
+"Memorial":{zh:"纪念物",yue:"紀念物",vi:"đài/vật tưởng niệm",ar:"نصب تذكاري",fa:"یادبود"},
+"Hope":{zh:"希望",yue:"希望",vi:"hy vọng",ar:"أمل",fa:"امید"},
+};
+
+const SVGS = { SVG_EVAP, SVG_BEND, SVG_OXBOW, SVG_GROUND };
+const LESSON_BY_ID = {}; LESSONS.forEach(l=>LESSON_BY_ID[l.id]=l);
+const ALL_WORDS = []; const WORD_LESSON = {};
+LESSONS.forEach(l=>l.words.forEach(w=>{ ALL_WORDS.push(w); WORD_LESSON[w.w]=l.id; }));
+const ITEM_WORD = {}; // apply item id -> word object
+LESSONS.forEach(l=>l.words.forEach(w=>(w.apply||[]).forEach(it=>ITEM_WORD[it.id]=w)));
+const WORD_BY_NAME = {}; ALL_WORDS.forEach(w=>WORD_BY_NAME[w.w]=w);
+
+/* morpheme index: unique word-parts across every buildable word, typed + with examples */
+function classifyMorph(piece){
+  if(/^-.*-$/.test(piece)) return "connector";   // e.g. -o-
+  if(/^-/.test(piece)) return "suffix";
+  if(/-$/.test(piece)) return "prefix";
+  return "root";
+}
+const MORPHS = [];                 // {piece, gloss, type, examples:[wordName]}
+const MORPH_BY_PIECE = {};
+LESSONS.forEach(l=>l.words.forEach(w=>(w.tiles||[]).forEach(([p,g])=>{
+  if(!MORPH_BY_PIECE[p]){ const m={piece:p, gloss:g, type:classifyMorph(p), examples:[]}; MORPH_BY_PIECE[p]=m; MORPHS.push(m); }
+  if(MORPH_BY_PIECE[p].examples.indexOf(w.w)<0) MORPH_BY_PIECE[p].examples.push(w.w);
+})));
+const ALL_GLOSSES = [...new Set(MORPHS.map(m=>m.gloss))];
+const MTYPE_LABEL = {prefix:"Prefixes", root:"Roots & base words", suffix:"Suffixes", connector:"Joiners"};
+const MTYPE_ORDER = ["prefix","root","suffix","connector"];
+
+/* ================= STATE ================= */
+/* storage shim: real localStorage as a standalone file / on GitHub Pages;
+   silent in-memory fallback if storage is blocked (e.g. a sandboxed preview). */
+const store = (function(){
+  try{ const k="__wvh_probe"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return localStorage; }
+  catch(e){ const m={}; return { getItem:k=>(k in m?m[k]:null), setItem:(k,v)=>{m[k]=String(v);}, removeItem:k=>{delete m[k];} }; }
+})();
+const KEY = "bonesparrow.vocabhub.v1";
+let S = load();
+function blankLesson(){ return { studied:false, buildDone:{}, buildFirst:{}, buildComplete:false,
+  applySample:[], applyFirst:{}, applyDone:false,
+  baseDone:false, baseFirst:{}, stretchDone:false, stretchFirst:{} }; }
+function blank(){ return { name:"", fname:"", lname:"", sid:"", lang:"", chapter:5, startedAt:null, lessons:{}, reviews:[], wstat:{} }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&s.lessons)?s:blank(); }catch(e){ return blank(); } }
+function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function L(id){ if(!S.lessons[id]) S.lessons[id]=blankLesson(); return S.lessons[id]; }
+function WS(w){ if(!S.wstat[w]) S.wstat[w]={wrong:0,seen:0,rev:0}; return S.wstat[w]; }
+function resetAll(){ if(confirm("Wipe all your progress, scores and review history?")){ S=blank(); save(); go("home"); } }
+function touchStart(){ if(!S.startedAt){ S.startedAt=Date.now(); save(); } }
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function esc(t){ const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+let cur = null; // current lesson id
+function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S.lname||"").trim() && sid.length>=4 && sid.length<=8; }
+function go(id){
+  if(!idOk() && id!=="id") id="id";
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("scr-"+id).classList.add("active");
+  window.scrollTo(0,0);
+  updateNav(id);
+  if(id==="id") renderIdentity();
+  if(id==="home") renderHome();
+  if(id==="report") renderReport();
+  if(id==="morphtable") renderMorphTable();
+  if(id==="glossary") renderGlossary();
+}
+function updateNav(id){
+  const group={morphtable:"morphtable", glossary:"glossary", report:"report"}[id] || "home";
+  document.querySelectorAll(".topnav button").forEach(b=>b.classList.toggle("on", b.dataset.scr===group));
+}
+function goLesson(){ if(cur) openLesson(cur, false); else go("home"); }
+
+/* translations */
+function trSpan(w, big){
+  if(!S.lang || !TR[w]) return "";
+  const t = TR[w][S.lang]; if(!t) return "";
+  return `<span class="wtr${big?" big":""}" ${RTL[S.lang]?'dir="rtl"':""} lang="${esc(S.lang)}">${esc(t)}</span>`;
+}
+
+/* ================= SCORE HELPERS ================= */
+function buildCounts(l){
+  const st=L(l.id);
+  const done=l.words.filter(w=>st.buildDone[w.w]).length;
+  const clean=l.words.filter(w=>st.buildFirst[w.w]===true).length;
+  return {done, clean, total:l.words.length};
+}
+/* apply sample = descriptors: {k:"a",id} authored, or {k:"g",g:type,w:name} generated */
+function applyKey(d){ return d.k==="a" ? d.id : ("g:"+d.g+":"+d.w); }
+function applyItem(d){
+  if(d.k==="a"){ const w=ITEM_WORD[d.id]; return w.apply.find(x=>x.id===d.id); }
+  return genTask(d.g, WORD_BY_NAME[d.w]);
+}
+function applyWordName(d){ return d.k==="a" ? ITEM_WORD[d.id].w : d.w; }
+function applyCounts(l){
+  const st=L(l.id);
+  const ds=st.applySample||[];
+  const ans=ds.filter(d=>st.applyFirst[applyKey(d)]!==undefined).length;
+  const got=ds.filter(d=>st.applyFirst[applyKey(d)]===true).length;
+  return {ans, got, total:ds.length||l.words.length};
+}
+function lessonCleanRate(l){
+  const b=buildCounts(l), a=applyCounts(l);
+  const attempted=b.done+a.ans; if(!attempted) return null;
+  return (b.clean+a.got)/attempted;
+}
+function lessonDone(l){ const st=L(l.id); return st.buildComplete && st.applyDone; }
+function tierCounts(items, firsts){
+  const ans=items.filter(it=>firsts[it.id]!==undefined).length;
+  const got=items.filter(it=>firsts[it.id]===true).length;
+  return {ans, got, total:items.length};
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  const wrap=document.getElementById("home-map"); wrap.innerHTML="";
+  /* reading-progress gate: word sets unlock one chapter ahead of where you're up to */
+  const crow=document.createElement("div");
+  crow.className="langrow noprint";
+  let copts="";
+  for(let c=1;c<=20;c++) copts+=`<option value="${c}"${S.chapter===c?" selected":""}>I've read to the end of chapter ${c}</option>`;
+  copts+=`<option value="99"${S.chapter>20?" selected":""}>I've finished the novel</option>`;
+  crow.innerHTML=`<label for="chsel">Where are you up to?</label> <select id="chsel">${copts}</select>
+    <span style="font-size:12px;color:var(--muted);font-style:italic">Each chapter set unlocks one chapter early, so you can meet the words before you read them.</span>`;
+  wrap.appendChild(crow);
+  crow.querySelector("#chsel").onchange=(e)=>{ S.chapter=+e.target.value; save(); renderHome(); };
+  /* language toggle */
+  const lrow=document.createElement("div");
+  lrow.className="langrow noprint";
+  let lopts=`<option value="">English only</option>`;
+  LANGS.forEach(([c,n])=>{ lopts+=`<option value="${c}"${S.lang===c?" selected":""}>${esc(n)}</option>`; });
+  lrow.innerHTML=`<label for="langsel">Key words in my language:</label> <select id="langsel">${lopts}</select>`;
+  wrap.appendChild(lrow);
+  lrow.querySelector("#langsel").onchange=(e)=>{ S.lang=e.target.value; save(); };
+
+  let topic="";
+  let firstOpen=null;
+  LESSONS.forEach(l=>{
+    if(l.topic!==topic){ topic=l.topic;
+      const h=document.createElement("div"); h.className="topichead"; h.textContent=topic; wrap.appendChild(h);
+      const grid=document.createElement("div"); grid.className="lessons"; grid.dataset.grid="1"; wrap.appendChild(grid);
+    }
+    const grid=wrap.querySelectorAll(".lessons")[wrap.querySelectorAll(".lessons").length-1];
+    const st=L(l.id), b=buildCounts(l), a=applyCounts(l);
+    const chips=[];
+    if(lessonDone(l)) chips.push(`<span class="chip ok">DONE ✓</span>`);
+    else if(b.done||st.studied){ chips.push(`<span class="chip now">IN PROGRESS</span>`); if(firstOpen===null) firstOpen=l.id; }
+    if(st.studied) chips.push(`<span class="chip part">met</span>`);
+    if(b.done) chips.push(`<span class="chip ${st.buildComplete?"ok":"part"}">built ${st.buildComplete?`${b.clean}/${b.total} clean`:`${b.done}/${b.total}`}</span>`);
+    if(a.ans) chips.push(`<span class="chip ${st.applyDone?"ok":"part"}">used ${a.got}/${st.applyDone?a.total:a.ans}</span>`);
+    if(st.baseDone) chips.push(`<span class="chip base">base camp ✓</span>`);
+    if(st.stretchDone) chips.push(`<span class="chip str">stretch ✓</span>`);
+    const card=document.createElement("button");
+    const rlocked = (l.pre||1)-1 > (S.chapter||1);
+    card.className="lcard"+(lessonDone(l)?" done":"");
+    if(rlocked){
+      card.disabled=true; card.style.opacity=".55";
+      card.innerHTML=`<span class="lnum">CH ${esc(l.id)} · ${l.words.length} WORDS</span>
+        <span class="lname">${esc(l.title)}</span>
+        <span class="lstat"><span class="chip">unlocks when you've read to chapter ${(l.pre||1)-1}</span></span>`;
+    } else {
+      card.innerHTML=`<span class="lnum">CH ${esc(l.id)} · ${l.words.length} WORDS</span>
+        <span class="lname">${esc(l.title)}</span>
+        <span class="lstat">${chips.join("")||`<span class="chip">not started</span>`}</span>`;
+      card.onclick=()=>openLesson(l.id, true);
+    }
+    grid.appendChild(card);
+  });
+  /* review availability */
+  const pool=reviewPool(latestLessonIdx());
+  const btn=document.getElementById("review-start");
+  btn.disabled = pool.length<4;
+  document.getElementById("review-desc").innerHTML = pool.length<4
+    ? "A quick look back is <b>baked into the start of every lesson</b> once you’ve done your first one. This button is here for extra practice any time."
+    : `Extra practice — a shuffled set from the <b>${pool.length} words</b> you’ve met so far (this also runs automatically when you open a lesson). Everyone gets a different mix. Done ${S.reviews.length} review${S.reviews.length===1?"":"s"} so far.`;
+}
+
+/* ================= LESSON HOME ================= */
+function openLesson(id, fromHome){
+  cur=id;
+  const l=LESSON_BY_ID[id], st=L(id);
+  if(fromHome){
+    const idx=LESSONS.findIndex(x=>x.id===id);
+    const pool=reviewPool(idx);
+    if(pool.length>=4){ runReview(idx, {contLesson:id}); return; }
+  }
+  document.getElementById("lesson-prog").textContent=`CHAPTERS ${id}`;
+  const b=buildCounts(l), a=applyCounts(l);
+  const rate=lessonCleanRate(l);
+  const steps=[
+    { t:"Meet the words", d:`Read this lesson’s ${l.words.length} words — meaning, morphemes and where each came from.`,
+      done:st.studied, locked:false, fn:()=>renderStudy(l), tag:st.studied?"READ":"" },
+    { t:"Build the words", d:"Drag the colour-coded morphemes into the word each one belongs to. Finished words tick off and leave the board.",
+      done:st.buildComplete, locked:!st.studied, fn:()=>startBuild(l),
+      tag:st.buildComplete?`${b.clean}/${b.total} CLEAN`:(b.done?`${b.done}/${b.total} built`:"") },
+    { t:"Use the words", d:"Your own sample of apply tasks — scenarios, sentences, diagrams. Your neighbour’s set will be different.",
+      done:st.applyDone, locked:!st.buildComplete, fn:()=>startApply(l),
+      tag:st.applyDone?`${a.got}/${a.total} FIRST TRY`:(a.ans?`${a.ans}/${a.total} done`:"") },
+  ];
+  const mount=document.getElementById("lesson-body");
+  mount.innerHTML=`<h2 style="text-align:center">${esc(l.id)} · ${esc(l.title)}</h2>
+    <p class="focusline">${l.focus}</p><div class="steps" id="lsteps"></div><div id="ltiers"></div>`;
+  const wrap=mount.querySelector("#lsteps");
+  steps.forEach((stp,i)=>{
+    const btn=document.createElement("button");
+    btn.className="step"+(stp.done?" done":"");
+    btn.disabled=stp.locked;
+    btn.innerHTML=`<span class="num">${stp.done?"✓":i+1}</span><span><span class="t">${stp.t}</span><br><span class="d">${stp.d}</span></span><span class="tag">${stp.locked?"LOCKED":stp.tag}</span>`;
+    btn.onclick=stp.fn;
+    wrap.appendChild(btn);
+  });
+  /* adaptive tiers */
+  const tiers=mount.querySelector("#ltiers");
+  if(l.base){
+    const bc=tierCounts(l.base.items, st.baseFirst);
+    const struggling = st.buildComplete && rate!==null && rate<0.5 && !st.baseDone;
+    const t=document.createElement("div"); t.className="tierbar base";
+    t.innerHTML=`<span class="grow"><b>⛺ Base camp${st.baseDone?` — done (${bc.got}/${bc.total} first try)`:""}</b>
+      ${struggling?"That was a tough climb — these are the same word-parts inside easy words you already know. Five minutes here makes the lesson words much friendlier.":"The same morphemes in everyday words. Start here any time you want a warm-up — it all counts on your report."}</span>
+      <button class="btn btn-ghost" onclick="startBase('${l.id}')">${st.baseDone?"Do it again":"Warm up"}</button>`;
+    tiers.appendChild(t);
+  }
+  if(l.stretch){
+    const sc=tierCounts(l.stretch.items, st.stretchFirst);
+    const unlocked = st.applyDone;
+    const t=document.createElement("div"); t.className="tierbar stretch";
+    t.innerHTML=`<span class="grow"><b>⛰ Stretch${st.stretchDone?` — done (${sc.got}/${sc.total} first try)`:""}</b>
+      ${unlocked?(rate!==null&&rate>=0.85?"You cleared this lesson in style. These heavier words are built from parts you now own — go get them.":"Heavier words built from the parts you just learned — including some that show up in the CAT."):"Finish “Use the words” to unlock the heavy gear."}</span>
+      <button class="btn btn-water" ${unlocked?"":"disabled"} onclick="startStretch('${l.id}')">${st.stretchDone?"Do it again":"Stretch"}</button>`;
+    tiers.appendChild(t);
+  }
+  go("lesson");
+}
+
+/* ================= STUDY ================= */
+function renderStudy(l){
+  const mount=document.getElementById("study-body");
+  document.getElementById("study-prog").textContent=`STEP 1 · MEET THE WORDS · ${l.id}`;
+  let html=`<h2>Lesson ${esc(l.id)} — ${esc(l.title)}</h2>
+    <p class="muted" style="margin-bottom:14px">Read each word: its meaning, and how its <b>morphemes</b> build that meaning. Tags show each word’s domain.</p>`;
+  mount.innerHTML=html;
+  l.words.forEach(v=>{
+    const map=(v.type==="origin")?"":v.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" &nbsp;+&nbsp; ");
+    const d=document.createElement("div"); d.className="vcard";
+    const domLabel={camp:"THE CAMP",story:"STORY & MEMORY",feeling:"FEELINGS & THE BODY",world:"THE OUTSIDE WORLD"}[v.domain]||v.domain;
+    d.innerHTML=`<div class="top"><span class="w">${esc(v.w)}</span><span class="pos">${esc(v.pos)}</span>${trSpan(v.w)}
+        <span class="dtag ${v.domain}">${domLabel}</span></div>
+      <div class="meaning">${esc(v.meaning)}</div>
+      <div class="morph">${ v.type==="origin" ? v.note : (map+" &nbsp;→&nbsp; "+esc(v.w)+"<br>"+v.note) }</div>`;
+    mount.appendChild(d);
+  });
+  const row=document.createElement("div"); row.className="nextrow noprint";
+  row.innerHTML=`<button class="btn btn-primary">I’ve read them — start building →</button>`;
+  row.querySelector("button").onclick=()=>{ L(l.id).studied=true; touchStart(); save(); startBuild(l); };
+  mount.appendChild(row);
+  go("study");
+}
+
+/* ================= GENERIC BUILDER (words + tier builds) ================= */
+function renderBuilder(mount, spec, opts){
+  /* spec: {w, pos?, tiles, decoys, meaning, note?/explain?} ; opts: {dots, prompt, onFirst, onDone} */
+  const pieces=spec.tiles.map(t=>t[0]);
+  const bank=shuffle(spec.tiles.concat(spec.decoys||[]));
+  let pos=0, errored=false;
+  const slotHtml=pieces.map((_,i)=>(i?`<span class="joiner">+</span>`:"")+`<span class="slot">&nbsp;</span>`).join("");
+  mount.innerHTML=`${opts.dots||""}
+    <div class="prompt">${opts.prompt||"Build the word — tap the morphemes into place, in order"}</div>
+    <div class="buildword" id="bword">? ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
+    <div class="slots" id="slots">${slotHtml}</div>
+    <div class="bank" id="bank"></div>
+    <div class="maprow" id="maprow"></div>
+    <div class="reveal" id="reveal"></div>
+    <div class="nextrow noprint"><button class="btn btn-primary" id="bnext" style="display:none">Next →</button></div>`;
+  const bankEl=mount.querySelector("#bank");
+  const slots=mount.querySelectorAll("#slots .slot");
+  bank.forEach(([piece,gloss])=>{
+    const t=document.createElement("button"); t.className="tile "+classifyMorph(piece);
+    t.innerHTML=`<span class="mm">${esc(piece)}</span><span class="gl">${esc(gloss)}</span>`;
+    t.onclick=()=>{
+      if(pos>=pieces.length) return;
+      if(piece===pieces[pos] && !t.disabled){
+        slots[pos].textContent=piece; slots[pos].classList.add("filled");
+        t.disabled=true; pos++;
+        if(pos===pieces.length){
+          mount.querySelector("#bword").innerHTML=`${esc(spec.w)} ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""} ${trSpan(spec.w)}`;
+          opts.onFirst && opts.onFirst(!errored);
+          const mr=mount.querySelector("#maprow");
+          mr.innerHTML=spec.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" &nbsp;+&nbsp; ")+" &nbsp;→&nbsp; <b>"+esc(spec.w)+"</b>";
+          const r=mount.querySelector("#reveal");
+          r.className="reveal show";
+          r.innerHTML=`<span class="rw">${esc(spec.w)}</span> — ${esc(spec.meaning)}${(spec.note||spec.explain)?`<br><span class="muted">${spec.note||spec.explain}</span>`:""}`;
+          const nb=mount.querySelector("#bnext");
+          nb.style.display="inline-block"; nb.onclick=opts.onDone;
+          nb.focus();
+        }
+      } else {
+        errored=true;
+        t.classList.add("shake");
+        setTimeout(()=>t.classList.remove("shake"),320);
+      }
+    };
+    bankEl.appendChild(t);
+  });
+}
+
+/* origin question (used in build step + review) */
+function renderOriginQ(mount, spec, opts){
+  mount.innerHTML=`${opts.dots||""}
+    <div class="prompt">Word origin — this one can’t be cut into smaller meaningful parts</div>
+    <div class="buildword">${esc(spec.w)} ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
+    <div class="qtext" style="text-align:center">${spec.originQ}</div>
+    <div class="opts" id="oopts"></div>
+    <div class="reveal" id="reveal"></div>
+    <div class="nextrow noprint"><button class="btn btn-primary" id="bnext" style="display:none">Next →</button></div>`;
+  const optsEl=mount.querySelector("#oopts");
+  let first=true;
+  shuffle(spec.originOpts.slice()).forEach(o=>{
+    const btn=document.createElement("button"); btn.className="opt"; btn.textContent=o;
+    btn.onclick=()=>{
+      const correct=(o===spec.originA);
+      if(first){ opts.onFirst && opts.onFirst(correct); first=false; }
+      if(correct){
+        btn.classList.add("right");
+        optsEl.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        const r=mount.querySelector("#reveal");
+        r.className="reveal show";
+        r.innerHTML=`<span class="rw">${esc(spec.w)}</span> ${trSpan(spec.w)} — ${esc(spec.meaning)}<br><span class="muted">${spec.note}</span>`;
+        const nb=mount.querySelector("#bnext");
+        nb.style.display="inline-block"; nb.onclick=opts.onDone; nb.focus();
+      } else {
+        btn.classList.add("wrongpick"); btn.disabled=true;
+      }
+    };
+    optsEl.appendChild(btn);
+  });
+}
+
+/* ================= STEP 2 · BUILD — colour-coded drag-and-drop morpheme table ================= */
+let buildCtx=null; // {l, tapSel}
+function startBuild(l){
+  touchStart();
+  const st=L(l.id);
+  const buildable=l.words.filter(w=>w.type==="morph"||w.type==="compound");
+  if(buildable.every(w=>st.buildDone[w.w])){ buildOriginPhase(l); return; }
+  go("build");
+  renderBuildTable(l, buildable);
+}
+function buildProgressText(l){
+  const st=L(l.id);
+  const done=l.words.filter(w=>st.buildDone[w.w]).length;
+  document.getElementById("build-prog").textContent=`STEP 2 · BUILD · ${done}/${l.words.length} words`;
+}
+function renderBuildTable(l, buildable){
+  const st=L(l.id);
+  buildCtx={l, tapSel:null};
+  /* one shared morpheme bank: every part these words need, deduped, plus a few decoys */
+  const need=new Map();
+  buildable.forEach(w=>w.tiles.forEach(([p,g])=>{ if(!need.has(p)) need.set(p,g); }));
+  const realSet=new Set(need.keys());
+  const decoyPool=[]; const seenD=new Set();
+  buildable.forEach(w=>(w.decoys||[]).forEach(([p,g])=>{ if(!realSet.has(p)&&!seenD.has(p)){ seenD.add(p); decoyPool.push([p,g]); } }));
+  const bankArr=[...need.entries()].map(([p,g])=>({piece:p,gloss:g,type:classifyMorph(p)}))
+    .concat(shuffle(decoyPool).slice(0,3).map(([p,g])=>({piece:p,gloss:g,type:classifyMorph(p)})));
+  let bankHtml="";
+  MTYPE_ORDER.forEach(type=>{
+    const group=bankArr.filter(m=>m.type===type);
+    if(!group.length) return;
+    bankHtml+=`<div class="mgroup"><div class="glabel ${type}">${MTYPE_LABEL[type]}</div><div class="mtiles">`+
+      shuffle(group).map(m=>`<button class="mtile ${m.type}" data-piece="${esc(m.piece)}" data-gloss="${esc(m.gloss)}" data-type="${m.type}"><span class="mm">${esc(m.piece)}</span><span class="gl">${esc(m.gloss)}</span></button>`).join("")+
+      `</div></div>`;
+  });
+  const active=shuffle(buildable.filter(w=>!st.buildDone[w.w]));
+  const rowsHtml=active.map(w=>{
+    const slots=w.tiles.map((_,si)=>(si?`<span class="wjoin">+</span>`:"")+`<span class="wslot" data-i="${si}"><span class="ph">drop</span></span>`).join("");
+    return `<div class="wrow" data-w="${esc(w.w)}">
+      <div class="wmean"><span class="pos">${esc(w.pos)}</span> — ${esc(w.meaning)}</div>
+      <div class="wslots">${slots}</div>
+      <div class="wbuilt"></div></div>`;
+  }).join("");
+  const mount=document.getElementById("build-body");
+  mount.innerHTML=`
+    <h2 style="text-align:center">Build the words — Chapters ${esc(l.id)}</h2>
+    <p class="muted" style="text-align:center;margin-bottom:8px">Drag each morpheme into the word it belongs to — or tap a morpheme, then tap a slot. Build <b>prefix → root → suffix</b>, left to right. A finished word ticks off and leaves the board; keep going until none are left.</p>
+    <div class="mlegend"><span><i style="background:var(--mpre)"></i>Prefix (start)</span><span><i style="background:var(--mroot)"></i>Root (heart)</span><span><i style="background:var(--msuf)"></i>Suffix (end)</span></div>
+    <div class="mbank">${bankHtml}</div>
+    <div class="buildhint" id="buildhint"></div>
+    <div class="wtable" id="wtable">${rowsHtml}</div>`;
+  buildProgressText(l);
+  wireBuildDnD(mount);
+}
+function wireBuildDnD(mount){
+  mount.querySelectorAll(".mtile").forEach(tile=>{
+    const info={piece:tile.dataset.piece, gloss:tile.dataset.gloss, type:tile.dataset.type};
+    tile.addEventListener("pointerdown", e=>startTileDrag(e, tile, info));
+  });
+  mount.querySelectorAll(".wslot").forEach(slot=>{
+    slot.addEventListener("click", ()=>{
+      if(slot.dataset.piece){ clearSlot(slot); return; }
+      if(buildCtx.tapSel){ const s=buildCtx.tapSel; setTapSel(null); fillSlot(slot, s); }
+    });
+  });
+}
+function setTapSel(info){
+  buildCtx.tapSel=info;
+  document.querySelectorAll("#build-body .mtile").forEach(t=>{
+    t.classList.toggle("sel", !!info && t.dataset.piece===info.piece && t.dataset.type===info.type);
+  });
+}
+function startTileDrag(e, tile, info){
+  e.preventDefault();
+  const sx=e.clientX, sy=e.clientY; let moved=false, ghost=null;
+  try{ tile.setPointerCapture(e.pointerId); }catch(_){}
+  function mv(ev){
+    if(!moved && Math.hypot(ev.clientX-sx, ev.clientY-sy)>6){ moved=true; tile.classList.add("dragging"); ghost=mkGhost(info); }
+    if(moved && ghost){ ghost.style.left=ev.clientX+"px"; ghost.style.top=ev.clientY+"px"; hoverSlot(ev); }
+  }
+  function up(ev){
+    tile.removeEventListener("pointermove",mv); tile.removeEventListener("pointerup",up);
+    try{ tile.releasePointerCapture(e.pointerId); }catch(_){}
+    if(moved){
+      tile.classList.remove("dragging"); if(ghost) ghost.remove(); clearHover();
+      const slot=slotAt(ev);
+      if(slot && !slot.dataset.piece) fillSlot(slot, info);
+    } else {
+      const same=buildCtx.tapSel && buildCtx.tapSel.piece===info.piece && buildCtx.tapSel.type===info.type;
+      setTapSel(same ? null : info);
+    }
+  }
+  tile.addEventListener("pointermove",mv); tile.addEventListener("pointerup",up);
+}
+function mkGhost(info){
+  const g=document.createElement("div"); g.className="drag-ghost mtile "+info.type;
+  g.innerHTML=`<span class="mm">${esc(info.piece)}</span><span class="gl">${esc(info.gloss)}</span>`;
+  document.body.appendChild(g); return g;
+}
+function slotAt(ev){ const el=document.elementFromPoint(ev.clientX,ev.clientY); return el?el.closest(".wslot"):null; }
+function hoverSlot(ev){ clearHover(); const s=slotAt(ev); if(s && !s.dataset.piece) s.classList.add("over"); }
+function clearHover(){ document.querySelectorAll("#build-body .wslot.over").forEach(s=>s.classList.remove("over")); }
+function fillSlot(slot, info){
+  slot.dataset.piece=info.piece; slot.dataset.type=info.type;
+  slot.className="wslot filled "+info.type; slot.innerHTML=`<span class="mm">${esc(info.piece)}</span>`;
+  checkRow(slot.closest(".wrow"));
+}
+function clearSlot(slot){
+  delete slot.dataset.piece; delete slot.dataset.type;
+  slot.className="wslot"; slot.innerHTML=`<span class="ph">drop</span>`;
+  const h=document.getElementById("buildhint"); if(h) h.textContent="";
+}
+function checkRow(rowEl){
+  const w=WORD_BY_NAME[rowEl.dataset.w];
+  const slots=[...rowEl.querySelectorAll(".wslot")];
+  if(slots.some(s=>!s.dataset.piece)) return;
+  const placed=slots.map(s=>s.dataset.piece);
+  const answer=w.tiles.map(t=>t[0]);
+  const correct=placed.length===answer.length && placed.every((p,i)=>p===answer[i]);
+  const hint=document.getElementById("buildhint");
+  if(correct){ if(hint) hint.textContent=""; markRowDone(rowEl, w); }
+  else {
+    const st=L(buildCtx.l.id);
+    if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=false; WS(w.w).wrong++; save(); }
+    const sameSet=[...placed].sort().join("~")===[...answer].sort().join("~");
+    rowEl.classList.add("wrong"); setTimeout(()=>rowEl.classList.remove("wrong"),320);
+    if(hint) hint.innerHTML = sameSet
+      ? "Right pieces — check the <b>order</b> (prefix → root → suffix). Tap a slot to send its piece back."
+      : "Not a match yet — reread the meaning. Tap any slot to send its piece back.";
+  }
+}
+function markRowDone(rowEl, w){
+  const st=L(buildCtx.l.id);
+  st.buildDone[w.w]=true;
+  if(st.buildFirst[w.w]===undefined) st.buildFirst[w.w]=true;
+  save();
+  rowEl.classList.add("done");
+  rowEl.querySelector(".wbuilt").innerHTML=`<span class="wname">${esc(w.w)}</span> ${trSpan(w.w)} <span class="wtickmark">✓</span>`;
+  buildProgressText(buildCtx.l);
+  setTimeout(()=>{
+    rowEl.classList.add("gone");
+    setTimeout(()=>{
+      rowEl.remove();
+      if(!document.querySelector("#wtable .wrow")) buildOriginPhase(buildCtx.l);
+    },320);
+  },850);
+}
+function buildOriginPhase(l){
+  const st=L(l.id);
+  const origins=l.words.filter(w=>w.type==="origin" && !st.buildDone[w.w]);
+  if(!origins.length){ finishBuild(l); return; }
+  go("build");
+  const mount=document.getElementById("build-body");
+  mount.innerHTML=`<h2 style="text-align:center">Word origins — Lesson ${esc(l.id)}</h2>
+    <p class="muted" style="text-align:center;margin-bottom:12px">A few of this lesson’s words come from names or places, not word-parts — so you match their story instead of building them.</p>
+    <div id="origin-slot"></div>`;
+  let queue=shuffle(origins.slice());
+  function next(){
+    buildProgressText(l);
+    if(!queue.length){ finishBuild(l); return; }
+    const w=queue.shift();
+    renderTaskItem(document.getElementById("origin-slot"),
+      {type:"desc", q:w.originQ, a:w.originA, opts:w.originOpts.slice(), explain:w.note, tag:"ORIGIN · "+w.w},
+      { onAnswer:(correct)=>{
+          if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=correct; if(!correct) WS(w.w).wrong++; save(); }
+          if(correct){ st.buildDone[w.w]=true; save(); } else queue.push(w);
+        },
+        onNext:next });
+  }
+  next();
+}
+function finishBuild(l){
+  const st=L(l.id); st.buildComplete=true; save();
+  const b=buildCounts(l);
+  const pct=Math.round(100*b.clean/b.total);
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  document.getElementById("build-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">Lesson ${esc(l.id)} — clean builds (right first go)</div>
+    <div class="big ${cls}">${b.clean} / ${b.total}</div>
+    <p class="muted">Every word is built. “Clean” means you placed it correctly on the first full attempt — anything you had to redo still counts as done, just not clean.</p></div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="goLesson()">back to lesson</button>
+      <button class="btn btn-primary" onclick="startApply(LESSON_BY_ID['${l.id}'])">Use the words →</button></div>`;
+}
+
+/* ================= SHARED MCQ ITEM RENDERER ================= */
+function renderTaskItem(mount, it, hooks){
+  /* it: {type, q/before/after/svg(string name or raw), a, opts, explain, tag?} */
+  const box=document.createElement("div");
+  if(it.tag) box.innerHTML+=`<span class="reviewtag">${esc(it.tag)}</span>`;
+  let fb, nextBtn;
+  const isRight=(o)=>o===it.a;
+  function finishItem(correct){
+    fb.className="feedback "+(correct?"ok":"bad");
+    fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — the answer is “${esc(it.a)}”.</b> `)+(it.explain||"");
+    if(!correct) fb.innerHTML+=" <i>This one will come back around.</i>";
+    nextBtn.style.display="inline-block";
+    hooks.onAnswer && hooks.onAnswer(correct);
+  }
+  const kind=it.type||"desc";
+  if(kind==="diagram"){
+    const svg=SVGS[it.svg]||it.svg;
+    box.innerHTML+=`<div class="prompt">Read the diagram, then choose</div><div class="svgbox">${svg}</div>`;
+    const qd=document.createElement("div"); qd.className="qtext"; qd.innerHTML=it.q; box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",null));
+  } else if(kind==="cloze"){
+    box.innerHTML+=`<div class="prompt">Choose the word that fits the sentence</div>`;
+    const qd=document.createElement("div"); qd.className="qtext";
+    qd.innerHTML=`${esc(it.before)} <span class="gap">&nbsp;</span> ${esc(it.after)}`;
+    box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",qd.querySelector(".gap")));
+  } else {
+    const prompts={scenario:"Read the scenario, then choose",desc:"Match the word",morphmatch:"Read the morphemes, then choose the word they build",alchemy:"Word alchemy — use the parts to work it out",wordsum:"Add the morphemes — which word do they make?",meaningmatch:"Which word fits the meaning?",morphmeaning:"What does the word-part mean?"};
+    box.innerHTML+=`<div class="prompt">${prompts[kind]||prompts.desc}</div>`;
+    const qd=document.createElement("div"); qd.className="qtext"; qd.innerHTML=it.q; box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",null));
+  }
+  fb=document.createElement("div"); fb.className="feedback"; box.appendChild(fb);
+  const row=document.createElement("div"); row.className="nextrow noprint";
+  nextBtn=document.createElement("button"); nextBtn.className="btn btn-primary"; nextBtn.textContent="Next →";
+  nextBtn.style.display="none"; nextBtn.onclick=hooks.onNext;
+  row.appendChild(nextBtn); box.appendChild(row);
+  mount.innerHTML=""; mount.appendChild(box);
+}
+function buildOpts(it, isRight, finishItem, locked, gapEl){
+  const optList=shuffle(it.opts.slice());
+  const opts=document.createElement("div");
+  opts.className=optList.every(o=>o.length<28)?"opts chips":"opts";
+  optList.forEach(o=>{
+    const btn=document.createElement("button"); btn.className="opt"; btn.textContent=o;
+    btn.onclick=()=>{
+      if(locked()) return;
+      const correct=isRight(o);
+      btn.classList.add(correct?"right":"wrongpick");
+      if(!correct) opts.querySelectorAll(".opt").forEach(x=>{ if(isRight(x.textContent)) x.classList.add("right"); });
+      opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+      if(gapEl && correct) gapEl.textContent=o;
+      finishItem(correct);
+    };
+    opts.appendChild(btn);
+  });
+  return opts;
+}
+
+/* ================= GENERATED TASKS (for variety + anti-copying) ================= */
+function sameLessonDistractors(word, n){
+  const l=LESSON_BY_ID[WORD_LESSON[word.w]];
+  return shuffle(l.words.filter(x=>x.w!==word.w).map(x=>x.w)).slice(0,n);
+}
+function morphMap(word){
+  return word.tiles ? word.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" + ")+" → <b>"+esc(word.w)+"</b>" : (word.note||"");
+}
+function genTypesFor(word){ return word.tiles ? ["meaningmatch","wordsum","morphmeaning"] : ["meaningmatch"]; }
+function genTask(gtype, word){
+  if(gtype==="wordsum" && word.tiles){
+    const eq=word.tiles.map(t=>`<b>${esc(t[0])}</b>`).join(" + ");
+    return { type:"wordsum", q:`Which word do these parts build?<br><span class="eqn">${eq}</span>`,
+      a:word.w, opts:[word.w].concat(sameLessonDistractors(word,3)), explain:morphMap(word) };
+  }
+  if(gtype==="morphmeaning" && word.tiles){
+    const roots=word.tiles.filter(t=>classifyMorph(t[0])==="root");
+    const t=pick(roots.length?roots:word.tiles);
+    const wrong=shuffle(ALL_GLOSSES.filter(g=>g!==t[1])).slice(0,3);
+    return { type:"morphmeaning", q:`In <b>${esc(word.w)}</b>, what does the part <b>${esc(t[0])}</b> mean?`,
+      a:t[1], opts:[t[1]].concat(wrong), explain:`<b>${esc(t[0])}</b> = ${esc(t[1])}. &nbsp; ${morphMap(word)}` };
+  }
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${esc(word.meaning)}</i>`,
+    a:word.w, opts:[word.w].concat(sameLessonDistractors(word,3)), explain:morphMap(word) };
+}
+
+/* ================= STEP 3 · USE THE WORDS ================= */
+function startApply(l){
+  touchStart();
+  const st=L(l.id);
+  if(!st.applySample.length){
+    st.applySample=l.words.map(w=>{
+      const gts=genTypesFor(w);
+      if(Math.random()<0.5 && w.apply && w.apply.length) return {k:"a", id:pick(w.apply).id};
+      return {k:"g", g:pick(gts), w:w.w};
+    });
+    save();
+  }
+  go("apply");
+  const descs=st.applySample.slice();
+  const record = !st.applyDone; /* re-runs don't change the report */
+  let queue=shuffle(descs.map(d=>({d, it:Object.assign({}, applyItem(d))})));
+  let mastered=0;
+  function next(){
+    document.getElementById("apply-prog").textContent=`STEP 3 · USE THE WORDS · mastered ${mastered}/${descs.length}`;
+    if(!queue.length){ finishApply(l, record); return; }
+    const cur=queue.shift();
+    const key=applyKey(cur.d);
+    renderTaskItem(document.getElementById("apply-body"), cur.it, {
+      onAnswer:(correct)=>{
+        if(record && st.applyFirst[key]===undefined){
+          st.applyFirst[key]=correct;
+          if(!correct) WS(applyWordName(cur.d)).wrong++;
+          save();
+        }
+        if(correct) mastered++; else queue.push(cur);
+      },
+      onNext:next,
+    });
+  }
+  next();
+}
+function finishApply(l, recorded){
+  const st=L(l.id);
+  if(recorded){ st.applyDone=true; save(); }
+  const a=applyCounts(l);
+  const pct=a.total?Math.round(100*a.got/a.total):0;
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  const rate=lessonCleanRate(l);
+  let follow="";
+  if(rate!==null && rate<0.5 && l.base && !st.baseDone){
+    follow=`<div class="tierbar base"><span class="grow"><b>⛺ Base camp?</b> Those words fought back. The same word-parts live inside easy words you already know — a five-minute warm-up there, then this lesson will feel different.</span>
+      <button class="btn btn-ghost" onclick="startBase('${l.id}')">Warm up</button></div>`;
+  } else if(rate!==null && rate>=0.85 && l.stretch && !st.stretchDone){
+    follow=`<div class="tierbar stretch"><span class="grow"><b>⛰ Stretch unlocked.</b> You own these morphemes now — take on the heavier words built from them.</span>
+      <button class="btn btn-water" onclick="startStretch('${l.id}')">Stretch</button></div>`;
+  }
+  document.getElementById("apply-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">Lesson ${esc(l.id)} — first attempts</div>
+    <div class="big ${cls}">${a.got} / ${a.total}</div>
+    <p class="muted">Every task is mastered — wrong answers looped back until you cleared them. The score above is your FIRST attempt on each.${recorded?"":" (Practice run — your report kept the original scores.)"}</p></div>
+    ${follow}
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="goLesson()">back to lesson</button>
+      <button class="btn btn-primary" onclick="go('home')">all lessons</button></div>`;
+}
+
+/* ================= TIERS: BASE CAMP & STRETCH ================= */
+function runTier(lid, tierKey){
+  const l=LESSON_BY_ID[lid], st=L(lid);
+  const tier=l[tierKey];
+  const firsts = tierKey==="base" ? st.baseFirst : st.stretchFirst;
+  const doneFlag = tierKey==="base" ? "baseDone" : "stretchDone";
+  const scr = tierKey==="base" ? "base" : "stretch";
+  const label = tierKey==="base" ? "BASE CAMP" : "STRETCH";
+  touchStart();
+  go(scr);
+  const mount=document.getElementById(scr+"-body");
+  const progEl=document.getElementById(scr+"-prog");
+  const record=!st[doneFlag];
+  let queue=shuffle(tier.items.slice());
+  let mastered=0; const total=tier.items.length;
+  let intro=true;
+  function recFirst(id, correct){
+    if(record && firsts[id]===undefined){ firsts[id]=correct; save(); }
+  }
+  function next(){
+    progEl.textContent=`${label} · ${lid} · mastered ${mastered}/${total}`;
+    if(!queue.length){
+      if(record){ st[doneFlag]=true; save(); }
+      const tc=tierCounts(tier.items, firsts);
+      const pct=Math.round(100*tc.got/tc.total);
+      const cls=pct>=80?"good":(pct>=60?"mid":"low");
+      mount.innerHTML=`<div class="sumbox"><div class="prompt">${label} · lesson ${esc(lid)} — first attempts</div>
+        <div class="big ${cls}">${tc.got} / ${tc.total}</div>
+        <p class="muted">${tierKey==="base"?"Foundations set. Those same parts are waiting inside the lesson words — go back and use them.":"Heavy words carried. These count as bonus territory on your report."}</p></div>
+        <div class="nextrow" style="justify-content:center">
+        <button class="btn btn-primary" onclick="goLesson()">back to lesson</button></div>`;
+      return;
+    }
+    const it=queue.shift();
+    if(it.kind==="build"){
+      renderBuilder(mount, it, { prompt:"Build the word — tap the pieces into place, in order",
+        onFirst:(clean)=>recFirst(it.id, clean),
+        onDone:()=>{ mastered++; next(); } });
+    } else {
+      renderTaskItem(mount, {type:"alchemy", q:it.q, a:it.a, opts:it.opts, explain:it.explain}, {
+        onAnswer:(correct)=>{ recFirst(it.id, correct); if(correct) mastered++; else queue.push(it); },
+        onNext:next });
+    }
+  }
+  if(intro){
+    mount.innerHTML=`<h2 style="text-align:center">${tierKey==="base"?"⛺ Base camp":"⛰ Stretch"} · Lesson ${esc(lid)}</h2>
+      <p class="focusline">${tier.intro}</p>
+      <div class="nextrow" style="justify-content:center"><button class="btn btn-primary" id="tstart">Start →</button></div>`;
+    mount.querySelector("#tstart").onclick=()=>{ intro=false; next(); };
+  }
+}
+function startBase(lid){ runTier(lid,"base"); }
+function startStretch(lid){ runTier(lid,"stretch"); }
+
+/* ================= REVIEW ================= */
+function latestLessonIdx(){
+  let idx=-1;
+  LESSONS.forEach((l,i)=>{ const st=S.lessons[l.id]; if(st && (st.studied||Object.keys(st.buildDone).length)) idx=i; });
+  return idx;
+}
+function reviewPool(uptoIdx){
+  /* every word from lessons BEFORE this one that the student has actually MET
+     (studied) — with chapter-gating, skipped-ahead students shouldn't be
+     warm-up-quizzed on words from chapter sets they never opened */
+  const pool=[];
+  LESSONS.forEach((l,i)=>{
+    if(uptoIdx>=0 && i>=uptoIdx) return;
+    const st=S.lessons[l.id];
+    if(!st || !st.studied) return;
+    l.words.forEach(w=>pool.push(w));
+  });
+  return pool;
+}
+function startReviewSetup(){
+  const idx=latestLessonIdx();
+  if(idx<0){ return; }
+  go("review");
+  const mount=document.getElementById("review-body");
+  document.getElementById("review-prog").textContent="REVIEW · SET-UP";
+  let opts="";
+  LESSONS.forEach((l,i)=>{
+    const st=S.lessons[l.id];
+    const started=st&&(st.studied||Object.keys(st.buildDone).length);
+    if(started||i<=idx) opts+=`<option value="${i}"${i===idx?" selected":""}>${l.id} · ${esc(l.title)}</option>`;
+  });
+  mount.innerHTML=`<h2 style="text-align:center">Quick review</h2>
+    <p class="focusline">Five words drawn from earlier lessons — weighted so the ones you’ve missed before come back more often. Gap-fill or match to meaning. Every run is a different mix.</p>
+    <div class="idrow" style="justify-content:center">
+      <span><label for="rev-upto">We’re currently learning lesson…</label>
+      <select id="rev-upto" class="btn" style="font-weight:600">${opts}</select></span>
+    </div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-water" id="rev-go">Shuffle my five →</button>
+    </div>`;
+  mount.querySelector("#rev-go").onclick=()=>{
+    const upto=parseInt(mount.querySelector("#rev-upto").value,10);
+    runReview(upto);
+  };
+}
+function weightedSample(pool, n){
+  const entries=pool.map(w=>{
+    const ws=WS(w.w);
+    let wt=1 + 2*Math.min(ws.wrong,4) + (ws.rev===0?1.5:0);
+    return {w, wt};
+  });
+  const out=[];
+  while(out.length<n && entries.length){
+    let total=entries.reduce((s,e)=>s+e.wt,0);
+    let r=Math.random()*total;
+    let k=0;
+    for(let i=0;i<entries.length;i++){ r-=entries[i].wt; if(r<=0){ k=i; break; } }
+    out.push(entries[k].w);
+    entries.splice(k,1);
+  }
+  return out;
+}
+function reviewTaskFor(word, pool){
+  /* quick warm-up tasks only: GAP-FILL a sentence, or MATCH the word to its definition.
+     Both are backed by the lesson data (authored cloze items + word meanings). */
+  const clozes=(word.apply||[]).filter(it=>it.type==="cloze");
+  if(clozes.length && Math.random()<0.5) return Object.assign({}, pick(clozes));
+  /* match word -> definition, with distractors drawn from the review pool */
+  const others=shuffle(pool.filter(x=>x.w!==word.w)).slice(0,3).map(x=>x.w);
+  const opts=[word.w].concat(others.length>=3?others:sameLessonDistractors(word,3));
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${esc(word.meaning)}</i>`,
+    a:word.w, opts, explain:morphMap(word) };
+}
+function runReview(uptoIdx, opts){
+  opts=opts||{};
+  const pool=reviewPool(uptoIdx);
+  if(pool.length<4){ if(opts.contLesson) openLesson(opts.contLesson, false); else go("home"); return; }
+  go("review");
+  const n=Math.min(5,pool.length);
+  const words=weightedSample(pool,n);
+  const items=words.map(w=>{ const it=Object.assign({}, reviewTaskFor(w,pool)); it._w=w.w; it.tag="REVIEW · from lesson "+WORD_LESSON[w.w]; return it; });
+  let queue=shuffle(items);
+  let mastered=0;
+  const firsts={};
+  words.forEach(w=>{ const ws=WS(w.w); ws.seen++; ws.rev++; });
+  function next(){
+    document.getElementById("review-prog").textContent=(opts.contLesson?`WARM-UP REVIEW → LESSON ${opts.contLesson}`:"REVIEW")+` · mastered ${mastered}/${items.length}`;
+    if(!queue.length){ finishReview(uptoIdx, words, firsts, opts); return; }
+    const it=queue.shift();
+    renderTaskItem(document.getElementById("review-body"), it, {
+      onAnswer:(correct)=>{
+        if(firsts[it._w]===undefined){
+          firsts[it._w]=correct;
+          if(!correct) WS(it._w).wrong++;
+          save();
+        }
+        if(correct) mastered++; else queue.push(it);
+      },
+      onNext:next,
+    });
+  }
+  if(opts.contLesson){
+    const mount=document.getElementById("review-body");
+    mount.innerHTML=`<div class="sumbox"><div class="prompt">Before Lesson ${esc(opts.contLesson)}</div>
+      <p class="muted" style="margin:6px 0 0">Quick warm-up first — <b>5 words from earlier lessons</b>, drawn at random (ones you’ve missed come back more often). Just gap-fill a sentence or match the word to its meaning. Then we jump into the new lesson.</p></div>
+      <div class="nextrow" style="justify-content:center"><button class="btn btn-water" id="rev-begin">Start warm-up →</button>
+      <button class="btn btn-ghost" onclick="openLesson('${opts.contLesson}', false)">Skip to lesson</button></div>`;
+    mount.querySelector("#rev-begin").onclick=next;
+  } else next();
+}
+function finishReview(uptoIdx, words, firsts, opts){
+  opts=opts||{};
+  const got=words.filter(w=>firsts[w.w]===true).length;
+  const missed=words.filter(w=>firsts[w.w]===false).map(w=>w.w);
+  S.reviews.push({ when:Date.now(), upTo:LESSONS[uptoIdx]?LESSONS[uptoIdx].id:"—", total:words.length, got, missed });
+  save();
+  const pct=Math.round(100*got/words.length);
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  const buttons = opts.contLesson
+    ? `<button class="btn btn-primary" onclick="openLesson('${opts.contLesson}', false)">Start Lesson ${esc(opts.contLesson)} →</button>
+       <button class="btn btn-ghost" onclick="go('home')">home</button>`
+    : `<button class="btn btn-water" onclick="startReviewSetup()">Another five</button>
+       <button class="btn btn-ghost" onclick="go('home')">home</button>
+       <button class="btn btn-ghost" onclick="go('report')">my report</button>`;
+  document.getElementById("review-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">${opts.contLesson?"Warm-up review":"Review"} — first attempts</div>
+    <div class="big ${cls}">${got} / ${words.length}</div>
+    <p class="muted">${missed.length?`Back for another visit soon: <b>${esc(missed.join(", "))}</b> — the shuffle remembers.`:"Clean sweep — these words are sticking."}</p></div>
+    <div class="nextrow" style="justify-content:center">${buttons}</div>`;
+}
+
+/* ================= REFERENCE LOOK-UPS (always available from the nav) ================= */
+function renderMorphTable(){
+  const m=document.getElementById("morphtable-body");
+  let html=`<h2 style="text-align:center">Morpheme table</h2>
+    <p class="muted" style="text-align:center;margin-bottom:6px">Every word-part in the unit, colour-coded. Learn a part once and you can read it inside dozens of words.</p>
+    <div class="mlegend"><span><i style="background:var(--mpre)"></i>Prefix</span><span><i style="background:var(--mroot)"></i>Root / base</span><span><i style="background:var(--msuf)"></i>Suffix</span></div>`;
+  MTYPE_ORDER.forEach(type=>{
+    const group=MORPHS.filter(mm=>mm.type===type).slice().sort((a,b)=>a.piece.replace(/-/g,"").localeCompare(b.piece.replace(/-/g,"")));
+    if(!group.length) return;
+    html+=`<div class="refhead ${type}">${MTYPE_LABEL[type]}</div>
+      <table class="reftable"><tr><th>Part</th><th>Meaning</th><th>Words that use it</th></tr>`;
+    group.forEach(mm=>{
+      html+=`<tr><td><span class="mtile ${type}"><span class="mm">${esc(mm.piece)}</span></span></td>
+        <td>${esc(mm.gloss)}</td><td class="muted">${mm.examples.map(esc).join(", ")}</td></tr>`;
+    });
+    html+=`</table>`;
+  });
+  m.innerHTML=html;
+}
+function renderGlossary(){
+  const m=document.getElementById("glossary-body");
+  m.innerHTML=`<h2 style="text-align:center">Word list</h2>
+    <p class="muted" style="text-align:center;margin-bottom:10px">Every key word in the unit — meaning, parts and (if you’ve chosen a language) your translation. Search or scroll.</p>
+    <div class="reffilter"><input id="gloss-search" placeholder="Search a word or meaning…" aria-label="search words"></div>
+    <div id="gloss-list"></div>`;
+  const input=m.querySelector("#gloss-search");
+  input.addEventListener("input", ()=>drawGloss(input.value.trim().toLowerCase()));
+  drawGloss("");
+}
+function drawGloss(q){
+  const wrap=document.getElementById("gloss-list"); if(!wrap) return;
+  let html="";
+  LESSONS.forEach(l=>{
+    const ws=l.words.filter(w=> !q || w.w.toLowerCase().includes(q) || w.meaning.toLowerCase().includes(q));
+    if(!ws.length) return;
+    html+=`<div class="topichead">Lesson ${esc(l.id)} · ${esc(l.title)}</div>`;
+    ws.forEach(w=>{
+      const map=w.tiles
+        ? w.tiles.map(t=>`<span class="mtile ${classifyMorph(t[0])}"><span class="mm">${esc(t[0])}</span><span class="gl">${esc(t[1])}</span></span>`).join(" ")
+        : `<span class="muted">from a name or place — see its story in the lesson</span>`;
+      const domLabel={camp:"THE CAMP",story:"STORY & MEMORY",feeling:"FEELINGS & THE BODY",world:"THE OUTSIDE WORLD"}[w.domain]||w.domain;
+      html+=`<div class="vcard"><div class="top"><span class="w">${esc(w.w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
+          <span class="dtag ${w.domain}">${domLabel}</span></div>
+        <div class="meaning">${esc(w.meaning)}</div>
+        <div class="morph" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px dashed var(--line-soft);padding-top:8px">${map}</div></div>`;
+    });
+  });
+  wrap.innerHTML=html || `<p class="muted" style="text-align:center">No words match “${esc(q)}”.</p>`;
+}
+
+/* ================= REPORT ================= */
+function vcode(str){
+  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
+function fmtWhen(t){
+  try{ return new Date(t).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}); }
+  catch(e){ return ""; }
+}
+function renderReport(){
+  const m=document.getElementById("report-body");
+  const name=S.name||"", sid=S.sid||"";
+  const dt=new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
+  let rows="", aggFirst=0, aggAtt=0, sig="";
+  LESSONS.forEach(l=>{
+    const st=S.lessons[l.id];
+    if(!st){ rows+=`<tr><td>${esc(l.id)} ${esc(l.title)}</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td><td class="nf">—</td></tr>`; return; }
+    const b=buildCounts(l), a=applyCounts(l);
+    const bTxt = b.done? (st.buildComplete?`${b.clean}/${b.total}`:`${b.clean}/${b.done} (${b.done}/${b.total} built)`) : "—";
+    const aTxt = a.ans? (st.applyDone?`${a.got}/${a.total}`:`${a.got}/${a.ans} (unfinished)`) : "—";
+    const bc=l.base?tierCounts(l.base.items, st.baseFirst):null;
+    const sc=l.stretch?tierCounts(l.stretch.items, st.stretchFirst):null;
+    const bcTxt = bc&&bc.ans? `${bc.got}/${st.baseDone?bc.total:bc.ans}` : "—";
+    const scTxt = sc&&sc.ans? `${sc.got}/${st.stretchDone?sc.total:sc.ans}` : "—";
+    aggFirst += b.clean + a.got; aggAtt += b.done + a.ans;
+    sig += `|${l.id}:${b.clean}.${a.got}`;
+    rows+=`<tr><td>${esc(l.id)} ${esc(l.title)}</td>
+      <td class="score">${bTxt}</td><td class="score">${aTxt}</td>
+      <td class="score">${bcTxt}</td><td class="score">${scTxt}</td></tr>`;
+  });
+  /* review log */
+  let revRows="";
+  S.reviews.slice(-12).forEach(r=>{
+    revRows+=`<tr><td>${esc(fmtWhen(r.when))}</td><td>${esc(r.upTo)}</td><td class="score">${r.got}/${r.total}</td>
+      <td${r.missed.length?"":" class='nf'"}>${r.missed.length?esc(r.missed.join(", ")):"none"}</td></tr>`;
+  });
+  /* words needing another go */
+  const needs={};
+  LESSONS.forEach(l=>{
+    const st=S.lessons[l.id]; if(!st) return;
+    l.words.forEach(w=>{ if(st.buildFirst[w.w]===false) needs[w.w]=(needs[w.w]||0)+1; });
+    (st.applySample||[]).forEach(d=>{ if(st.applyFirst[applyKey(d)]===false) needs[applyWordName(d)]=(needs[applyWordName(d)]||0)+1; });
+  });
+  S.reviews.forEach(r=>r.missed.forEach(w=>{ needs[w]=(needs[w]||0)+1; }));
+  const needList=Object.keys(needs).sort((x,y)=>needs[y]-needs[x]);
+  const revFirst=S.reviews.reduce((s,r)=>s+r.got,0), revAtt=S.reviews.reduce((s,r)=>s+r.total,0);
+  const code=vcode(`${name}|${sid}|${aggFirst}/${aggAtt}|${revFirst}/${revAtt}${sig}`);
+  m.innerHTML=`
+    <div class="idrow noprint">
+      <span style="align-self:flex-end"><button class="btn btn-primary" onclick="saveIdAndPrint()">Save as PDF</button></span>
+      <span style="align-self:flex-end"><button class="btn btn-ghost" onclick="go('id')">Edit my details</button></span>
+    </div>
+    <p class="muted noprint" style="margin-bottom:14px">Click <b>Save as PDF</b>, choose “Save as PDF” as the destination in the print box, then send the file to your teacher.</p>
+    <h2>The Bone Sparrow — Vocab Report</h2>
+    <p class="muted">${name?`<b>${esc(name)}</b>`:"<i>(name not entered)</i>"} · ID ${sid?`<b>${esc(sid)}</b>`:"<i>(not entered)</i>"} · ${dt}</p>
+    <table class="repgrid">
+      <tr><th>Lesson</th><th>Build (clean)</th><th>Use (1st try)</th><th>Base camp</th><th>Stretch</th></tr>
+      ${rows}
+      <tr><td><b>All lesson items attempted</b></td><td class="score" colspan="2"><b>${aggAtt?`${aggFirst}/${aggAtt} (${Math.round(100*aggFirst/aggAtt)}%)`:"—"}</b></td><td colspan="2">first attempts; everything was then mastered via the retry loop</td></tr>
+    </table>
+    <h3>Review sessions (${S.reviews.length})</h3>
+    ${S.reviews.length?`<table class="repgrid"><tr><th>When</th><th>Up to lesson</th><th>First try</th><th>Missed</th></tr>${revRows}</table>
+      <p class="muted">Across all reviews: <b>${revFirst}/${revAtt}</b> first-attempt. ${S.reviews.length>12?"(last 12 shown)":""}</p>`
+      :`<p class="muted">No review sessions yet — reviews are the part that makes words stick.</p>`}
+    <h3>Words needing another go</h3>
+    <p class="muted">${needList.length?needList.map(w=>`${esc(w)}${needs[w]>1?` (×${needs[w]})`:""}`).join(", "):"None recorded — every first attempt so far has landed."}</p>
+    <h3>Reading this report</h3>
+    <p class="muted">Each lesson runs meet → build (assemble the word from its morphemes) → use (apply tasks sampled from a bank). Base camp is the support tier — the same morphemes in everyday words; Stretch is the extension tier. Reviews shuffle words from earlier lessons, weighted toward ones previously missed. All scores are FIRST attempts; wrong answers loop until mastered, so a rough first-attempt score with everything cleared still shows honest, finished work.</p>
+    <p class="muted">Verification code: <span class="vcode">${code}</span> · The Bone Sparrow Vocab Hub</p>`;
+}
+function saveIdAndPrint(){
+  renderReport();
+  setTimeout(()=>window.print(),150);
+}
+
+function renderIdentity(){
+  document.getElementById("id-body").innerHTML=`
+  <div class="idrow" style="flex-direction:column;max-width:460px">
+    <span><label for="idf">First name</label><input id="idf" style="width:100%" value="${esc(S.fname||"")}" autocomplete="off"><div class="iderr" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" style="width:100%" value="${esc(S.lname||"")}" autocomplete="off"><div class="iderr" id="el"></div></span>
+    <span><label for="ids">Student ID</label><input id="ids" style="width:100%" maxlength="8" value="${esc(S.sid||"")}" autocomplete="off"><div class="iderr" id="es"></div></span>
+    <span><button class="btn btn-primary" onclick="idSubmit()">Start →</button></span>
+  </div>`;
+}
+function idSubmit(){
+  const f=document.getElementById("idf").value.trim(), l=document.getElementById("idl").value.trim(), sid=document.getElementById("ids").value.trim();
+  document.getElementById("ef").textContent = f? "" : "First name needed.";
+  document.getElementById("el").textContent = l? "" : "Last name needed.";
+  document.getElementById("es").textContent = (sid.length>=4&&sid.length<=8)? "" : "That doesn’t look right — check your student ID and try again.";
+  if(!f||!l||sid.length<4||sid.length>8) return;
+  S.fname=f; S.lname=l; S.sid=sid; S.name=f+" "+l; touchStart(); save();
+  go("home");
+}
+
+/* ---- boot ---- */
+go("home");
+</script>
+</body>
+</html>
