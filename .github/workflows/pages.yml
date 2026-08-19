@@ -9,6 +9,7 @@ on:
     paths:
       - "BoneSparrowReadingHub.html"
       - "BoneSparrowVocabHub.html"
+      - "BoneSparrowWagollSheets.html"
       - "GrammarHuboffline.html"
       - "bonesparrowtrainer.html"
       - "index.html"
@@ -38,6 +39,7 @@ jobs:
           cp index.html dist/
           cp BoneSparrowReadingHub.html dist/
           cp BoneSparrowVocabHub.html dist/
+          cp BoneSparrowWagollSheets.html dist/
           cp GrammarHuboffline.html dist/
           cp bonesparrowtrainer.html dist/
       - uses: actions/configure-pages@v5
