@@ -15,6 +15,7 @@ Every hub screen carries a **⌂ Main menu** link, so nothing traps a student mi
 | `BoneSparrowVocabHub.html` | …/BoneSparrowVocabHub.html | Vocabulary: "before you read" set + chapter by chapter |
 | `GrammarHuboffline.html` | …/GrammarHuboffline.html | Grammar Hub — reached only from a hub's coded feedback |
 | `bonesparrowtrainer.html` | …/bonesparrowtrainer.html | The old Pre-reading Trainer, kept so existing links still work; its vocabulary now lives in the Vocab Hub and its sentence work in the Grammar Hub |
+| `BoneSparrowWagollSheets.html` | …/BoneSparrowWagollSheets.html | Print masters: the analytical writing WAGOLL as one A3 sheet per level, Foundation to Level 10 |
 
 Pages redeploys automatically on push when any hub file changes. Note the trade-off: the Pages site is public, so it holds only short page-referenced extracts (see the copyright note below).
 
@@ -33,6 +34,43 @@ Both carry a **"Where are you up to?" chapter selector** — content past the st
 | Voice fingerprint (line → speaker → the giveaway feature) | Reading FT 4, the lesson before the voice memo |
 | Evidence builder (click evidence in the passage → explain relevance → embed a trimmed quote; the *Use of evidence* continuum ladder unlocks stems as they climb) | FT1 retooled to serve reading |
 | **Analysis workshop** — Part A: students **build the WAGOLL wall** by placing five authored responses against the CAT rubric's level 5–9 descriptors, laid out **horizontally like the EAL WAGOLL table** and **colour-coded on your convention** (blue = language feature, orange = analytical verb, yellow = embedded evidence, green = effect on the reader). The weakest response is almost bare of colour and the strongest is full — that density *is* the argument. Part B: **the climb** — students write one simple Level 5 sentence, then rejig that same sentence up the rubric. Each level changes the bank underneath it: new tiles unlock and outgrown ones retire (at Level 7 "shows" is literally removed and flagged in your sentence), and each level's wording is snapshotted so the versions stack under the rubric, EAL-WAGOLL style. Tiles **drag to reorder**, and the checker reads word order, not just presence | Bridges to Unit 6 as skill-based tasks |
+
+## Quickreads 3-8, and the gate in front of them
+
+Six more quickreads sit after the Analysis workshop: chapters 6, 8, 10, 14, 17
+and 20, so there is one for roughly every second or third chapter across the
+taught range. Same mechanic as the first two, with a second phase on the end.
+
+**They are gated on the workshop, not on reading position alone.** A module can
+now declare `needs:"wk"`, and the home screen holds it shut with the reason
+written on the button ("finish analysis workshop first"). The order is
+deliberate: quickreads 3-8 finish by asking a student to state an idea, choose
+the line that proves it and say what makes it proof, which is the workshop's own
+move performed cold on a passage nobody has walked them through. Doing that
+before the wall has been built is guessing. Chapter gating still applies on top,
+so a student who has read to chapter 10 sees three of the six.
+
+**The second phase: connect evidence to ideas.** Each of the six ends with two
+`links` items. Step one gives an idea about the novel and four real lines, one
+of which proves it. Step two asks what makes that line the proof, and the
+distractors there are the answers students actually give: "it is shocking", "it
+shows she is angry", "it uses 'like', so it is a simile". Both steps are scored
+as first attempts, and both draw parallel items from the redundancy bank on a
+miss, so a wrong answer hands back a different idea to prove rather than the
+same one with the options shuffled.
+
+**The passages are shorter than the first two on purpose.** Chapters 1 and 5 are
+reproduced at length in `Lesson Resources/Bone Sparrow extracts for grammar.docx`;
+the later chapters are not, so these six quote the short page-referenced
+extracts that appear in the unit's own resources and in the publisher packs
+(chapter 6 at p 43, chapter 14 at p 96, chapter 17 at p 113, and so on). A
+three-sentence passage still hides when the questions start, and short extracts
+are what the statutory licence covers. Two things follow. **Page numbers differ
+between editions**: the lesson documents put chapter 6 at p 43 and the Question
+Booklet puts it at pp 51-57, so the quickreads cite the CHAPTER on screen and
+keep the page in a comment beside the extract. And **the extracts are worth a
+skim against your own copy** as you teach each band, the same caveat the vocab
+hub carries.
 
 **A miss costs you a new question, not the same one.** Both hubs now run a redundancy bank. In the reading hub, missing a question requeues a *parallel* item — same skill, same passage where possible, different material — and a fresh one again each time it's missed, so the only way out of the loop is to do the skill rather than remember which option was highlighted. In the vocab hub, a missed word comes back from a different angle (another authored task, or a generated word-sum / morpheme-meaning / meaning-match on the same word). Parallel items are never scored: the report still shows first attempts on the real set, so the loop is a consequence, not a punishment on paper.
 
@@ -63,3 +101,53 @@ Passages are short page-referenced extracts already used in the unit's printed r
 ## Adding content
 
 All content sits in bannered `const` blocks at the top of each file — the engines know nothing about the novel. Reading hub: add a quickread by copying an entry in `QUICKREADS` (each item needs `id`, `q`, `opts`, `a`, `explain`, and the `line` to re-quote on a miss, plus a `ch` tag for spoiler-gating). Vocab hub: copy a lesson object in `LESSONS` (six words minimum per set — the generated distractors need them; hyphens type the tiles: `de-` prefix, `-tion` suffix, bare = root; every item `id` globally unique).
+
+## The analytical writing WAGOLL, on paper
+
+`BoneSparrowWagollSheets.html` prints the same ladder the Analysis workshop
+climbs, one **A3 portrait** sheet per rung, **Foundation to Level 10**. Open it
+and print from the browser; the page carries its own `@page` size, so the only
+thing to check in the print dialogue is that scaling is at 100% and background
+graphics are on.
+
+It is built the way the History family's Batman level sheets are built, and for
+the same reason: a student who is not yet at the expected level needs to see
+what the rung below them looks like, written out, rather than a rubric line
+telling them they are not there yet.
+
+Each sheet carries the question, the passage, what a student at that rung
+already knows, the worked example with every phrase marked, what each marked
+phrase does, and the continuum wording for that level.
+
+- **Eight rungs.** Foundation to Level 2 and Levels 3 and 4 are the Victorian
+  Curriculum's own two-year bands, then Levels 5 to 10 one at a time. Level 7
+  carries the "expected at Year 7" badge.
+- **Five criteria, and they arrive one at a time.** The idea, the language
+  feature, the analytical verb, the embedded evidence, the effect on the reader,
+  in the workshop's colours exactly: blue, purple, orange, yellow, green. The
+  Foundation sheet names two of the five and says so in the key. That is the
+  ladder working, not a sheet with holes in it, and the lower sheets print what
+  the next rung adds rather than padding the space.
+- **A different passage from the workshop's.** The workshop models chapter 5,
+  Beaver; the sheets model chapter 1, the Night Sea. A student who has done both
+  has climbed the ladder twice on two pieces of writing.
+- **The continuum is quoted, not paraphrased.** Wording comes from the school's
+  Learning Continuum master sheet, English tab, and each row names the strand it
+  came from. `Use of evidence` is blank at Level 5 on that sheet, so the Level 5
+  card says "Not on the school's continuum until Level 6" rather than inventing a
+  descriptor. The CAT rubric band underneath runs Levels 5 to 9 only, and the
+  rungs outside that range say so.
+- **EAL bands** (C2, C3, C4, VCE 1) come from the EAL analytical writing WAGOLL
+  and sit in the header. The rungs below Level 5 carry no band, because that
+  sheet does not describe one.
+- **Two channels for every signal**: each criterion has a colour and an underline
+  pattern, so the sheets survive a greyscale photocopy.
+
+**If you edit it**, everything printable is in the DATA block at the top of the
+script; the renderer under it holds no wall text. After any edit, print to PDF
+and **count the pages: eight in, eight out**. A sheet that grows by two lines
+silently becomes two pages, and the page count is the only test that catches it.
+The type scale is a formula with a floor and a ceiling, tuned so the longest
+sheet (Level 10) fits and the shortest (Foundation) is not swimming in white
+space; a measured autofit was tried and removed, because type size changes where
+lines wrap and the loop overshot by a whole line each pass.
