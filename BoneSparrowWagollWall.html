@@ -17,9 +17,11 @@
    site is. Opened straight off a USB stick as file://, the browser blocks it
    and the page says so and points at the printable sheets instead.)
 
-   It is GATED: it opens once the Analysis workshop has been finished on this
-   device, which the hub records in its own localStorage. Soft on purpose, a
-   classroom lock rather than a security one. ?teacher=1 opens it anyway.
+   It is OPEN. It was gated on finishing the Analysis workshop for about a day,
+   on the argument that reading the wall before building it is a weaker lesson.
+   That is still true, and it is a teaching decision rather than a lock: the
+   workshop is where the wall gets built, and this page is the reference to
+   write against afterwards.
    =========================================================================== */
 :root{
   --bg:#f6f2e9; --panel:#fffdf8; --ink:#22251f; --muted:#6b6357; --line:#ded3c0;
@@ -103,31 +105,6 @@ const HUB = "BoneSparrowReadingHub.html";
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const out = document.getElementById("out");
 
-/* ---- the gate ----
-   The hub writes its progress under this key on the same origin, so the wall
-   can read it without either page knowing about the other's internals beyond
-   this one field. */
-function workshopDone(){
-  if(new URLSearchParams(location.search).get("teacher")==="1") return true;
-  try{
-    const S=JSON.parse(localStorage.getItem("bonesparrow.readinghub.v2"));
-    return !!(S && S.done && S.done.wk);
-  }catch(e){ return false; }
-}
-
-function gate(){
-  out.innerHTML=`<h1>The full WAGOLL wall</h1>
-  <div class="gate">
-    <h2>Not open yet</h2>
-    <p>This page shows every level of the wall at once, with the model response for each one.
-       It opens after you have built the wall yourself in the Analysis workshop, because reading
-       the answers first is not the same lesson.</p>
-    <p><a class="btn" href="${HUB}">Go to the Analysis workshop →</a></p>
-  </div>
-  <p class="foot">Teachers: add <code>?teacher=1</code> to this page's address to open it without doing the workshop,
-     or print the <a href="BoneSparrowWagollSheets.html">A3 anchor sheets</a>, which are not gated.</p>`;
-}
-
 /* ---- the content ----
    Pull the two data blocks straight out of the hub. Both are bannered `const`
    declarations in a single file, so a bounded slice from the declaration to
@@ -156,7 +133,7 @@ function render(d){
   const byLevel = n => WK_LEVELS.find(L=>L.n===n);
   out.innerHTML = `<h1>The full WAGOLL wall</h1>
   <p class="lead">${esc(WK_WALL.q)} Five answers to one question, one per rubric level.
-     You built this wall a response at a time; here it is whole, to write against.</p>
+     The workshop builds this wall a response at a time; here it is whole, to write against.</p>
   <div class="ckey">
     <span><i class="sw feat"></i>subject</span>
     <span><i class="sw verb"></i>analytical verb</span>
@@ -189,7 +166,6 @@ function render(d){
 }
 
 (async function boot(){
-  if(!workshopDone()){ gate(); return; }
   out.innerHTML = `<h1>The full WAGOLL wall</h1><p class="lead">Loading the wall…</p>`;
   try{
     render(await load());

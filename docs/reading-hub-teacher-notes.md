@@ -200,15 +200,11 @@ rubric line it is marked against, and what unlocks and retires on the way up.
 It is a reference to write against, and it has its own address so it can be
 handed out as a link or left open on a second screen.
 
-**It is gated, twice.** The card in the reading hub stays shut until the
-Analysis workshop is finished, and the page checks the same flag when it is
-opened directly, because reading the answers before building the wall is a much
-weaker lesson than building it. Both checks read the hub's own progress record
-on that device, so a student who has done the workshop on the class computer
-will find it locked at home. That is a classroom lock, not a security one.
-
-**Teachers open it with `?teacher=1` on the end of the address**, which skips
-the gate. The printable A3 sheets are not gated at all.
+**Nothing is locked.** It was gated on finishing the workshop for about a day,
+and the argument for that still holds: reading the wall before building it is a
+weaker lesson than building it. That is now a decision about when you hand the
+link out, not something the page enforces. Neither the card in the hub nor the
+page itself checks anything, and the printable A3 sheets were never gated.
 
 The page holds no wall text of its own: it reads `WK_WALL` and `WK_LEVELS` out
 of the reading hub when it loads, so it always shows what the workshop is
