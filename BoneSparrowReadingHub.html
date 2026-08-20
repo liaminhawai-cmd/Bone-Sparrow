@@ -133,7 +133,7 @@ p.lead{color:var(--muted);font-size:13.5px;margin:0 0 10px}
 .bin h4{margin:0;padding:7px 10px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line-soft)}
 .bin .binbody{padding:8px;display:flex;flex-direction:column;gap:6px;max-height:230px;overflow-y:auto}
 .tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13.5px;text-align:left;
-      cursor:pointer;font-family:inherit;transition:transform .1s, border-color .12s}
+      cursor:grab;font-family:inherit;transition:transform .1s, border-color .12s;touch-action:none}
 .tile:hover{border-color:var(--ink)}
 .tile.used{opacity:.4}
 .bin.stems h4, .tile.k-stem{background:var(--stem-bg);color:var(--stem-tx)}
@@ -316,6 +316,74 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .bin.quotes h4, .tile.k-q, .ctile.k-q{background:var(--ev-bg);color:var(--ev-tx)}
 .seg.harv{background:var(--quote-bg);border-bottom-color:var(--quote-tx)}
 .kept{font-family:Georgia,serif;font-size:15px;background:var(--okbg);border:1px solid var(--correct);border-radius:8px;padding:9px 12px;margin:0 0 8px}
+/* ---- teacher mode: the projector deck ----
+   Sized for the back of a classroom, not for a phone: the type is deliberately
+   large and the slide never scrolls if it can be helped. It borrows the
+   workshop's tile and colour classes so what the room sees on the wall is what
+   students meet on their screens. */
+.teach{max-width:1100px;margin:0 auto;padding:6px 0 30px}
+.tmbar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.tmtag{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+  background:var(--ink);color:#fff;border-radius:99px;padding:3px 10px}
+.tmcount{font-size:12px;color:var(--muted)}
+.tmbar .linkbtn{margin-left:auto}
+.tmh{font-size:clamp(26px,4.2vw,44px);line-height:1.06;margin:0 0 10px}
+.tmlead{font-size:clamp(15px,1.9vw,21px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:44em}
+.tmnote{font-size:15px;color:var(--muted);font-style:italic}
+.tmnav{display:flex;gap:10px;margin-top:26px}
+.tmnav .btn{font-size:16px;padding:11px 20px}
+
+.tmcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.tmcard{border:1px solid var(--line);border-left:6px solid;border-radius:12px;padding:16px 18px;background:#fff}
+.tmcard h3{font-size:20px;margin:0 0 8px}
+.tmcard p{font-size:15px;line-height:1.5;margin:0 0 8px}
+.tmcard .tmex{font-family:Georgia,serif;font-size:15px;border-radius:8px;padding:8px 10px;margin:0}
+.tmcard.tm-idea{border-left-color:var(--idea-tx)} .tmcard.tm-idea h3{color:var(--idea-tx)} .tmcard.tm-idea .tmex{background:var(--idea-bg);color:var(--idea-tx)}
+.tmcard.tm-ev{border-left-color:var(--ev-tx)}     .tmcard.tm-ev h3{color:var(--ev-tx)}     .tmcard.tm-ev .tmex{background:var(--ev-bg);color:var(--ev-tx)}
+.tmcard.tm-eff{border-left-color:var(--eff-tx)}   .tmcard.tm-eff h3{color:var(--eff-tx)}   .tmcard.tm-eff .tmex{background:var(--eff-bg);color:var(--eff-tx)}
+
+.tmpairs{display:flex;flex-direction:column;gap:18px}
+.tmpair{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.tmside{font-family:Georgia,serif;font-size:clamp(15px,1.7vw,19px);line-height:1.5;border-radius:9px;
+  padding:11px 13px;margin-bottom:8px;position:relative;padding-left:96px}
+.tmside span{position:absolute;left:12px;top:11px;font-family:inherit;font-size:10.5px;font-weight:800;
+  letter-spacing:.5px;text-transform:uppercase;font-family:system-ui,sans-serif;border-radius:99px;padding:2px 9px}
+.tmside.bad{background:var(--badbg)} .tmside.bad span{background:var(--wrong);color:#fff}
+.tmside.good{background:var(--okbg)} .tmside.good span{background:var(--correct);color:#fff}
+.tmwhy{font-size:14px;color:var(--muted);line-height:1.5;margin:0}
+
+.tmwall{display:flex;flex-direction:column;gap:14px}
+.tmlv{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.tmlv h3{font-size:15px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;color:var(--muted)}
+.tmresp{font-family:Georgia,serif;font-size:clamp(15px,1.8vw,20px);line-height:1.55;margin-bottom:8px}
+
+.tmclimb{display:flex;flex-direction:column;gap:6px}
+.tmrung{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;border:1px solid var(--line);
+  border-radius:10px;padding:11px 14px;background:#fff}
+.tmrung .tmn{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+  background:var(--bg);border-radius:99px;padding:3px 10px}
+.tmrung b{font-size:17px}
+.tmrung .tmvic{font-size:13.5px;color:var(--muted);flex:1 1 260px}
+
+.tmlist{font-size:clamp(15px,1.8vw,19px);line-height:1.7;padding-left:1.2em;margin:0}
+.tmlist li{margin-bottom:6px}
+
+.tmdemo{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
+.tmcanvas{border:2px dashed var(--line);border-radius:10px;min-height:74px;padding:12px;display:flex;
+  flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.tmcanvas .ctile{font-size:clamp(14px,1.6vw,18px);cursor:default}
+.tmcanvas .ctile:after{content:""}
+.tmread{font-family:Georgia,serif;font-size:clamp(15px,1.8vw,20px);line-height:1.5;background:var(--okbg);
+  border:1px solid var(--correct);border-radius:9px;padding:10px 13px;margin-bottom:12px}
+.tmbanks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px}
+.tmbank{border:1px solid var(--line);border-radius:9px;padding:7px 8px;background:var(--bg)}
+.tmbank h4{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 5px}
+.tmbank .tile{display:inline-block;cursor:default;font-size:13px}
+.tmsay{font-size:clamp(15px,1.8vw,19px);line-height:1.5;margin:0 0 10px}
+.tmdots{display:flex;gap:5px}
+.tmdots i{width:22px;height:4px;border-radius:2px;background:var(--line)}
+.tmdots i.on{background:var(--ink)}
+
 /* ---- identity gate & home controls ---- */
 .idcard{max-width:520px;margin:20px auto}
 .idcard input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;background:#fff}
@@ -536,8 +604,8 @@ I still can't talk. He shoves me backwards so hard that my feet leave the ground
     line:"…thinking on all of that is fouling my stomach close to spewing." }
 ]},
 /* ---------------------------------------------------------------------------
-   QUICKREADS 3-8 — one for every second or third chapter, gated behind the
-   Analysis workshop (see MODULES: needs:"wk"). Same cold-read mechanic, plus
+   QUICKREADS 3-8 — one for every second or third chapter, open on reading
+   position alone (see MODULES). Same cold-read mechanic, plus
    a second phase: CONNECT EVIDENCE TO IDEAS. A `links` entry states an idea
    about the novel and asks which line proves it, then asks what makes that
    line the proof. Both steps are scored like any other first attempt.
@@ -1845,6 +1913,97 @@ const WK_BUILD = {
  ]
 };
 
+
+/* ==================== TEACHER MODE · THE SLIDES ============================
+   A projector deck for the front of the room, driven by one key: →. It teaches
+   the three parts of an analytical sentence (idea, evidence, effect), then
+   DEMONSTRATES the builder itself, one move at a time, so a class watches the
+   tiles go in before anyone touches a device.
+
+   It is teaching, not assessment: nothing here is scored, nothing is saved, and
+   it never touches a student's WK state. Wording is pulled from WK_LEVELS and
+   WK_WALL where the same thing is already written, so the deck cannot drift
+   away from the rubric the workshop marks against.
+   =========================================================================== */
+const TEACH = {
+ title:"Analytical writing — the three parts, and how to build them",
+ slides:[
+
+ { k:"title", h:"Idea · Evidence · Effect",
+   lead:"Every analytical sentence you write this term has the same three parts. Today we name them, then we build one together.",
+   note:"Drive with the → key, or the Next button. ← goes back. Esc leaves the deck." },
+
+ { k:"cards", h:"The three parts",
+   lead:"Miss one and the sentence stops being analysis. That is the whole test.",
+   cards:[
+    {c:"idea", t:"The idea", d:"What the writing is <b>about</b>, underneath the plot. Not what happens, what it means.", ex:"the way fear works in the camp"},
+    {c:"ev",   t:"The evidence", d:"The author's <b>own words</b>, inside your sentence, short enough to fit the clause.", ex:"“My throat is as dry as the dirt”"},
+    {c:"eff",  t:"The effect", d:"What the writing does to <b>the reader</b>. Not what you felt, what it makes anyone understand.", ex:"makes the reader feel the fear before it is named"}
+   ] },
+
+ { k:"pairs", h:"Part one: the idea",
+   lead:"An idea is arguable. If nobody could disagree with your sentence, you have written a summary.",
+   pairs:[
+    {bad:"This part is about Subhi getting caught by Beaver.", good:"This part is about how little control a child has in detention.",
+     why:"The first one retells. The second one could be argued with, which is what makes it an idea."},
+    {bad:"Subhi is scared.", good:"Fraillon writes fear as something the body does before the mind names it.",
+     why:"“Scared” is a feeling. The second is a claim about how the book is written."}
+   ] },
+
+ { k:"pairs", h:"Part two: the evidence",
+   lead:"The quote goes INSIDE your sentence. If you can lift the quotation marks out and it still reads, you have embedded it.",
+   pairs:[
+    {bad:"Subhi is frightened. “My throat is as dry as the dirt”.", good:"Subhi's throat goes “as dry as the dirt” before Beaver has even touched him.",
+     why:"Same quotation. In the first it sits beside the point; in the second the sentence runs straight through it."},
+    {bad:"The author says “My throat is as dry as the dirt and I've never been handcuffed before and I've never been taken into the offices”.",
+     good:"His throat is “as dry as the dirt”.",
+     why:"Cut to the words you are actually going to talk about. A long quotation is usually a short one hiding."}
+   ] },
+
+ { k:"pairs", h:"Part three: the effect",
+   lead:"Push past “it makes the reader feel sad”. Say what the writing makes a reader <b>understand</b>.",
+   pairs:[
+    {bad:"…which makes you feel sorry for him.", good:"…which makes the reader understand that the fear is physical before it is anything else.",
+     why:"The first reports your reaction. The second says what the choice achieves, and that is what the rubric is asking for."}
+   ] },
+
+ { k:"wall", h:"All three, at two levels",
+   lead:"The same three parts, done simply and then done well. The colour is the point: watch how much of the sentence is doing work." },
+
+ { k:"climb", h:"What changes as you climb",
+   lead:"The parts never change. What changes is how grown-up each one is. This is the ladder the builder walks you up." },
+
+ { k:"demo", h:"Now the builder", steps:0,
+   lead:"This is what the class is about to use. Press → and watch a sentence get built one tile at a time." },
+
+ { k:"go", h:"Over to them",
+   lead:"Send them to Part A first: they place five real responses against the rubric and build the wall. Part B is where this builder opens.",
+   bullets:[
+     "Part A is placing, not writing. It takes about ten minutes.",
+     "Part B gives them Level 5 for free, then they lift the same sentence up the rubric one level at a time.",
+     "Tiles retire as they climb. At Level 7 the word “shows” is taken off them, and the sentence has to be rebuilt without it.",
+     "Every sentence they keep prints on their report."
+   ] }
+ ]
+};
+
+/* The builder demonstration, as a list of moves. Each press of → plays one.
+   The tiles are the real ones from WK_BUILD, so what the room sees on the wall
+   is what they meet on their screens. */
+const TEACH_DEMO = [
+ { say:"An empty canvas, and the banks of tiles underneath. Nothing is typed: everything is chosen.", act:null },
+ { say:"Start with the subject — who or what the sentence is about.", act:{bank:"subj", at:0} },
+ { say:"Then the verb. At Level 5 a flat verb is honest work, so “shows” is allowed here.", act:{bank:"verb", at:1} },
+ { say:"The idea comes next. This is the part that has to be arguable.", act:{bank:"idea", at:2} },
+ { say:"A joiner to carry the quotation in. This is the difference between a quote inside the sentence and one dumped beside it.", act:{bank:"lead", at:3} },
+ { say:"Now the evidence, collected by tapping the passage. It lands inside the clause, not after a full stop.", act:{bank:"q", at:4} },
+ { say:"One more joiner, then the effect on the reader. All three parts are present.", act:{bank:"con", at:5}, then:{bank:"eff", at:6} },
+ { say:"Read it back. Idea, evidence, effect — a complete Level 5 sentence, and the whole climb is lifting this same one.", act:null, read:true },
+ { say:"Wrong place? Don't delete it. Drag it — the tile moves in one motion and everything else shuffles to make room.", act:{move:[4,1]} },
+ { say:"And back. This is the move to show them: pick a tile up, drop it where it belongs, in one go.", act:{move:[1,4]} },
+ { say:"Tap a tile in the sentence to take it out. Tap one in the bank to add it to the end. Drag to put it exactly where you want.", act:null }
+];
+
 /* ==================== SHARED GLOSSARY (generated) ==========================
    Generated from the Vocab Hub's LESSONS + TR by scratchpad/gen_glossary.js —
    regenerate there if the vocab data changes. Word, meaning, morpheme parts
@@ -1861,17 +2020,26 @@ const MODULES = [
  { id:"voice",n:4, t:"Voice fingerprint", d:"Whose line is it? Name the giveaway — do this before your voice memo", kind:"voice", ch:1 },
  { id:"ev",   n:5, t:"Evidence builder", d:"Find it in the passage, explain it, embed it — the rubric unlocks as you climb", kind:"ev", ch:1 },
  { id:"wk",   n:6, t:"Analysis workshop", d:"Build the WAGOLL wall against the CAT rubric, then write with your own evidence", kind:"wk", ch:5, needs:"ev" },
- /* Quickreads 3-8 sit AFTER the workshop on purpose: each one ends by asking
-    students to connect evidence to an idea, which is the workshop's move done
-    cold, on a passage they have not been walked through. needs:"wk" holds them
-    shut until the wall has been built and the climb written. */
- { id:"qr3",  n:7, t:"Quickread: lucky", d:"Chapter 6 · what the town says about the Centre — then connect evidence to ideas", kind:"qr", ch:6, needs:"wk" },
- { id:"qr4",  n:8, t:"Quickread: what Alpha does to a person", d:"Chapter 8 · the men's compound, and a sentence that changes length", kind:"qr", ch:8, needs:"wk" },
- { id:"qr5",  n:9, t:"Quickread: the bone sparrow", d:"Chapter 10 · one object, two meanings — evidence into ideas", kind:"qr", ch:10, needs:"wk" },
- { id:"qr6",  n:10, t:"Quickread: a story from just Outside", d:"Chapter 14 · three sentences, and why the shortest carries the weight", kind:"qr", ch:14, needs:"wk" },
- { id:"qr7",  n:11, t:"Quickread: Aussie Boy", d:"Chapter 17 · a compliment that costs something", kind:"qr", ch:17, needs:"wk" },
- { id:"qr8",  n:12, t:"Quickread: Jimmie wants to know", d:"Chapter 20 · fragments, anaphora, and a full stop where a question mark should be", kind:"qr", ch:20, needs:"wk" },
- { id:"rpt",  n:13, t:"My report", d:"One combined report — reading, evidence and vocab together, with a verification code", kind:"rpt" }
+ /* Quickreads 3-8 sit after the workshop in the list, because each one ends by
+    asking students to connect evidence to an idea and the workshop is where
+    that move is taught. They are NOT gated on it: the teacher decides the
+    order, and a class that has not reached the workshop can still read. The
+    chapter gate is the only lock left on them, so nothing spoils the novel.
+    (`needs` still works, and the workshop still uses it for the evidence
+    builder, if a lock is ever wanted here again.) */
+ { id:"qr3",  n:7, t:"Quickread: lucky", d:"Chapter 6 · what the town says about the Centre — then connect evidence to ideas", kind:"qr", ch:6 },
+ { id:"qr4",  n:8, t:"Quickread: what Alpha does to a person", d:"Chapter 8 · the men's compound, and a sentence that changes length", kind:"qr", ch:8 },
+ { id:"qr5",  n:9, t:"Quickread: the bone sparrow", d:"Chapter 10 · one object, two meanings — evidence into ideas", kind:"qr", ch:10 },
+ { id:"qr6",  n:10, t:"Quickread: a story from just Outside", d:"Chapter 14 · three sentences, and why the shortest carries the weight", kind:"qr", ch:14 },
+ { id:"qr7",  n:11, t:"Quickread: Aussie Boy", d:"Chapter 17 · a compliment that costs something", kind:"qr", ch:17 },
+ { id:"qr8",  n:12, t:"Quickread: Jimmie wants to know", d:"Chapter 20 · fragments, anaphora, and a full stop where a question mark should be", kind:"qr", ch:20 },
+ /* Its own page and its own address, so it can be handed out as a link or
+    left open on a second screen. It is gated twice, and deliberately: this
+    card stays shut until the workshop is finished, and the page itself checks
+    the same flag when opened directly. Reading the wall before building it is
+    a different, much weaker lesson. */
+ { id:"wagoll", n:13, t:"The full WAGOLL wall", d:"Every level's model response on one page — opens once you've built the wall yourself", kind:"wagoll", needs:"wk" },
+ { id:"rpt",  n:14, t:"My report", d:"One combined report — reading, evidence and vocab together, with a verification code", kind:"rpt" }
 ];
 
 /* ============================================================================
@@ -1911,7 +2079,7 @@ function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S
 function go(s, arg){
   if(!idOk() && s!=="id") s="id";
   screen=s;
-  $("homeBtn").style.display = (s==="home"||s==="id") ? "none" : "inline";
+  $("homeBtn").style.display = (s==="home"||s==="id"||s==="teach") ? "none" : "inline";
   window.scrollTo({top:0,behavior:"smooth"});
   if(s==="id") renderIdentity();
   else if(s==="home") renderHome();
@@ -1920,7 +2088,9 @@ function go(s, arg){
   else if(s==="voice") runVoice();
   else if(s==="ev") renderEv(0);
   else if(s==="wk") runWk();
+  else if(s==="teach") runTeach();
   else if(s==="rpt"){ location.href="index.html#report"; return; }
+  else if(s==="wagoll"){ location.href="BoneSparrowWagollWall.html"; return; }
   document.body.classList.toggle("wide", s==="wk");
   lastArg=arg;
   if(idOk()) glossMount();
@@ -1981,6 +2151,7 @@ function renderHome(){
     <button class="switch ${S.eal?"on":""}" onclick="S.eal=!S.eal;save();writeProfile();renderHome()" aria-pressed="${S.eal}">
       <span class="track"></span>EAL support ${S.eal?"on":"off"}</button>
     <span class="gatednote">Questions about pages you haven't reached stay hidden — no spoilers.</span>
+    <button class="linkbtn" onclick="go('teach')" title="Slides for the front of the room">Teacher mode · slides</button>
   </div>`;
   MODULES.forEach(m=>{
     const done=!!S.done[m.id];
@@ -2504,7 +2675,8 @@ function wagollTable(o){
 function wallPage(n){ WK.wallStart=n; renderWall(); }
 function renderWall(){
   if(WK.wallStart===undefined) WK.wallStart=0;
-  let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall</div>
+  let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall
+    <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode · teach it first</button></div>
   <h2>${esc(WK_WALL.q)}</h2>
   <p class="lead">${esc(WK_WALL.note)} The <b>Example</b> row is the one you fill in.</p>
   ${wkColourKey()}`;
@@ -2698,7 +2870,7 @@ function renderWkBuild(){
   }
 
   /* ---- canvas ---- */
-  h+=`<p class="q">Your sentence — <b>drag tiles to reorder them</b>, or tap one to take it out:</p>
+  h+=`<p class="q">Your sentence — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
   <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>`;
 
   /* ---- banks, filtered to this level ---- */
@@ -2735,7 +2907,8 @@ function wkFillBins(){
       const b=document.createElement("button");
       b.className="tile "+cls;
       b.textContent=o.x.t;
-      b.onclick=()=>{ WK.canvas.push({k:kind,i:o.i}); wkDraw(); };
+      b.title="Drag into your sentence, or tap to add it to the end";
+      wkBindDrag(b, {make:()=>({k:kind,i:o.i})});
       bin.appendChild(b);
     });
   };
@@ -2752,19 +2925,18 @@ function wkFillBins(){
       const sg=WK_BUILD.segs[i];
       const b=document.createElement("button"); b.className="tile k-q";
       b.textContent="“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”";
-      b.onclick=()=>{ WK.canvas.push({k:"q",i}); wkDraw(); };
+      b.title="Drag into your sentence, or tap to add it to the end";
+      wkBindDrag(b, {make:()=>({k:"q",i})});
       qbin.appendChild(b);
     });
   }
 }
 
-/* ---- canvas render + drag-to-reorder ----
-   Pointer drag with an 8px threshold, so a tap still removes a tile and a
-   drag rearranges it. Works with mouse, trackpad and touch. */
+/* ---- canvas render ---- */
 function wkDraw(){
   const cv=$("wkCanvas"); if(!cv) return;
   cv.innerHTML="";
-  if(!WK.canvas.length) cv.innerHTML=`<span class="ph">Tap tiles below to build your sentence here.</span>`;
+  if(!WK.canvas.length) cv.innerHTML=`<span class="ph">Drag a tile up from the banks below, or tap one to add it to the end.</span>`;
   WK.canvas.forEach((c,idx)=>{
     const d=wkTileData(c);
     const b=document.createElement("button");
@@ -2772,7 +2944,7 @@ function wkDraw(){
     b.textContent=d.t;
     b.dataset.idx=idx;
     b.title=wkRetired(d)?"Retired at this level — swap it out":"Drag to move, tap to remove";
-    wkBindDrag(b, idx);
+    wkBindDrag(b, {});
     cv.appendChild(b);
   });
   const prev=$("wkPrev");
@@ -2783,22 +2955,38 @@ function wkDraw(){
   const fb=$("fb"); if(fb) fb.className="feedback";
   const kb=$("wkrow"); const old=kb&&kb.querySelector("#liftBtn"); if(old) old.remove();
 }
-function wkBindDrag(el, idx){
-  /* Drag = move the DOM node only (no re-render mid-drag, so handlers stay
-     alive), then commit the new order from DOM position on release.
-     Insertion index = how many OTHER tiles have their midpoint left of the
-     pointer — the standard computation, and the one that matches what the
-     student sees. Under the 8px threshold it's a tap, which removes. */
-  let sx=0, sy=0, dragging=false;
+
+/* ---- one drag gesture, both directions ----
+   A bank tile and a canvas tile start the SAME gesture. The only difference is
+   that a bank tile has no canvas node yet, so the first move past the threshold
+   materialises one and the rest of the drag is the identical code path. That is
+   what makes "drag it straight into the middle of the sentence" one motion
+   instead of tap-to-the-end-then-drag-it-back.
+
+   Under the 8px threshold it is a tap, and a tap keeps its old meaning: on a
+   bank tile it appends, on a canvas tile it removes. Bank tiles keep a real
+   click handler as well, so a keyboard or screen reader can still add one; the
+   _dragged flag swallows the click that follows a mouse drag.
+
+   Drag = move the DOM node only, no re-render mid-drag, so the handlers stay
+   alive. The model is committed from DOM order on every reorder rather than on
+   release: a lost pointerup (released off the page, capture denied) then cannot
+   leave WK.canvas behind the DOM, which used to make the next render shuffle
+   the sentence back. */
+function wkBindDrag(el, o){
+  const fromBank = !!o.make;
+
+  if(fromBank) el.addEventListener("click", ()=>{
+    if(el._dragged){ el._dragged=false; return; }
+    WK.canvas.push(o.make()); wkDraw();
+  });
+
   el.addEventListener("pointerdown", e=>{
     if(e.button) return;
-    sx=e.clientX; sy=e.clientY; dragging=false;
+    const sx=e.clientX, sy=e.clientY;
+    let dragging=false, node = fromBank ? null : el;
     try{ el.setPointerCapture(e.pointerId); }catch(_){}
 
-    /* Commit the DOM order into WK.canvas immediately, every time the drag
-       reorders — never wait for the release. A lost pointerup (released off
-       the page, capture denied) then can't leave the model behind the DOM,
-       which used to make the next re-render "shuffle" the sentence back. */
     const commit=()=>{
       const cv=$("wkCanvas"); if(!cv) return;
       const ts=[...cv.querySelectorAll(".ctile")];
@@ -2808,29 +2996,66 @@ function wkBindDrag(el, idx){
       if(prev && WK.canvas.length) prev.textContent=wkText();
     };
 
+    /* Give the dragged bank tile a body on the canvas. It goes on the end and
+       the very next move puts it where the pointer is, so the student never
+       sees it land in the wrong place. */
+    const materialise=()=>{
+      const cv=$("wkCanvas"); if(!cv) return null;
+      const c=o.make();
+      WK.canvas.push(c);
+      const d=wkTileData(c);
+      const ph=cv.querySelector(".ph"); if(ph) ph.remove();
+      const b=document.createElement("button");
+      b.className="ctile "+wkKindClass(c.k)+(wkRetired(d)?" retired":"");
+      b.textContent=d.t;
+      b.dataset.idx=WK.canvas.length-1;
+      cv.appendChild(b);
+      return b;
+    };
+
     const move=ev=>{
       if(!dragging){
         if(Math.hypot(ev.clientX-sx, ev.clientY-sy) < 8) return;
-        dragging=true; el.classList.add("grabbing");
+        dragging=true;
+        if(fromBank){ node=materialise(); if(!node){ dragging=false; return; } el.classList.add("used"); }
+        node.classList.add("grabbing");
       }
       ev.preventDefault();
       const cv=$("wkCanvas"); if(!cv) return;
-      const others=[...cv.querySelectorAll(".ctile")].filter(t=>t!==el);
+      /* Insertion index = how many other tiles have their midpoint left of the
+         pointer, which is what the student sees. Rows wrap, so tiles on a line
+         below the pointer are behind it: compare the row first. */
+      const others=[...cv.querySelectorAll(".ctile")].filter(t=>t!==node);
       let ins=0;
       for(const t of others){
         const r=t.getBoundingClientRect();
-        if(ev.clientX > r.left + r.width/2) ins++; else break;
+        const below = ev.clientY > r.bottom;
+        if(below || (ev.clientY >= r.top && ev.clientX > r.left + r.width/2)) ins++;
+        else break;
       }
       const ref=others[ins] || null;
-      if(ref!==el.nextSibling){ cv.insertBefore(el, ref); commit(); }
+      if(ref!==node.nextSibling){ cv.insertBefore(node, ref); commit(); }
     };
 
-    const up=()=>{
+    const up=ev=>{
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
-      el.classList.remove("grabbing");
-      if(!dragging) WK.canvas.splice(+el.dataset.idx, 1);
+      if(fromBank) el.classList.remove("used");
+      if(node) node.classList.remove("grabbing");
+      if(dragging){
+        if(fromBank){
+          el._dragged=true;
+          /* Dragged back out and dropped away from the canvas: that is a
+             cancel, not an add. Anything dropped on or near the canvas stays. */
+          const cv=$("wkCanvas"), r=cv&&cv.getBoundingClientRect(), x=ev&&ev.clientX, y=ev&&ev.clientY;
+          const outside = r && x!=null &&
+            (x < r.left-40 || x > r.right+40 || y < r.top-40 || y > r.bottom+40);
+          if(outside){ const at=+node.dataset.idx; WK.canvas.splice(at,1); }
+        }
+      } else if(!fromBank){
+        WK.canvas.splice(+el.dataset.idx, 1);   /* tap on a canvas tile removes it */
+      }
       wkDraw();
     };
 
@@ -3305,6 +3530,166 @@ function morphPopAway(e){
   if(!pp.contains(e.target)){ pp.remove(); document.removeEventListener("pointerdown", morphPopAway); }
 }
 function morphPopClose(){ const pp=$("morphpop"); if(pp) pp.remove(); }
+
+
+/* ---------- TEACHER MODE · the deck ----------
+   State lives here and nowhere else: TM is thrown away on exit, so nothing a
+   teacher does at the front of the room can touch a student's saved work. */
+let TM=null;
+
+/* The demo's tiles, written out rather than looked up, so a change to the
+   bank's ordering cannot silently rewrite the demonstration. Every one of them
+   is a real tile from WK_BUILD's `fear` starter. */
+const TEACH_TILES = {
+  subj:{k:"subj", t:"Subhi's body"},
+  verb:{k:"verb", t:"shows"},
+  idea:{k:"idea", t:"fear in the camp"},
+  lead:{k:"con",  t:"when he says"},
+  q:   {k:"q",    t:"“My throat is as dry as the dirt”"},
+  con: {k:"con",  t:"which"},
+  eff: {k:"eff",  t:"makes you feel sorry for him"}
+};
+
+function runTeach(){
+  TM={i:0, demo:0};
+  document.addEventListener("keydown", teachKeys);
+  renderTeach();
+}
+function teachExit(){
+  document.removeEventListener("keydown", teachKeys);
+  TM=null;
+  go("home");
+}
+function teachKeys(e){
+  if(!TM) return;
+  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); teachNext(); }
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); teachPrev(); }
+  else if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
+}
+function teachSlide(){ return TEACH.slides[TM.i]; }
+function teachNext(){
+  const sl=teachSlide();
+  /* The demo slide holds the deck until its moves are played out. */
+  if(sl.k==="demo" && TM.demo < TEACH_DEMO.length-1){ TM.demo++; teachPlay(); return; }
+  if(TM.i < TEACH.slides.length-1){ TM.i++; TM.demo=0; renderTeach(); }
+}
+function teachPrev(){
+  const sl=teachSlide();
+  if(sl.k==="demo" && TM.demo>0){ TM.demo--; renderTeach(); return; }
+  if(TM.i>0){ TM.i--; TM.demo=0; renderTeach(); }
+}
+
+/* Rebuild the demo canvas from the moves played so far. Called on every render
+   so that stepping backwards, or landing on the slide again, always shows a
+   board that matches the step counter. */
+function teachDemoTiles(upTo){
+  const tiles=[];
+  for(let s=0;s<=upTo;s++){
+    const step=TEACH_DEMO[s]; if(!step) break;
+    [step.act, step.then].forEach(a=>{
+      if(!a) return;
+      if(a.bank) tiles.push(TEACH_TILES[a.bank]);
+      else if(a.move){ const [from,to]=a.move; const t=tiles.splice(from,1)[0]; if(t) tiles.splice(to,0,t); }
+    });
+  }
+  return tiles;
+}
+/* The sentence as the room should read it: tiles joined, punctuation tidied,
+   and a full stop on the end, the same way the builder's own preview does it. */
+function teachSentence(tiles){
+  const t=tiles.map(x=>x.t).join(" ").replace(/\s+([.,;:])/g,"$1").trim();
+  return /[.!?]$/.test(t) ? t : t+".";
+}
+function teachDemoHtml(){
+  const step=TEACH_DEMO[TM.demo];
+  const tiles=teachDemoTiles(TM.demo);
+  const banks=[["subj","Subjects"],["verb","Verbs"],["idea","Idea"],["q","Evidence"],["con","Joiners"],["eff","Purpose"]];
+  const used=tiles.map(t=>t.k);
+  return `<div class="tmdemo">
+    <div class="tmcanvas" id="tmCanvas">${
+      tiles.length ? tiles.map((t,i)=>`<span class="ctile ${wkKindClass(t.k)}" data-key="${t.k}${i}">${esc(t.t)}</span>`).join("")
+                   : `<span class="ph">The sentence gets built here.</span>`}</div>
+    ${step.read || tiles.length>=7 ? `<div class="tmread">${esc(teachSentence(tiles))}</div>` : ""}
+    <div class="tmbanks">${banks.map(([k,label])=>
+      `<div class="tmbank"><h4>${esc(label)}</h4>
+        <span class="tile ${wkKindClass(TEACH_TILES[k].k).replace("k-","k-")}${used.includes(k)?" used":""}">${esc(TEACH_TILES[k].t)}</span></div>`).join("")}</div>
+    <p class="tmsay">${esc(step.say)}</p>
+    <div class="tmdots">${TEACH_DEMO.map((_,i)=>`<i class="${i<=TM.demo?"on":""}"></i>`).join("")}</div>
+  </div>`;
+}
+
+/* Play one move with a FLIP animation: measure, reorder, invert, release. A
+   tile sliding to its new place is the whole point of this slide, so the move
+   has to be visible rather than a jump. */
+function teachPlay(){
+  const cv=$("tmCanvas");
+  const step=TEACH_DEMO[TM.demo];
+  if(!cv || !step.act || !step.act.move){ renderTeach(); return; }
+  const before=new Map([...cv.children].map(el=>[el.dataset.key, el.getBoundingClientRect()]));
+  renderTeach();
+  const cv2=$("tmCanvas"); if(!cv2) return;
+  [...cv2.children].forEach(el=>{
+    const b=before.get(el.dataset.key); if(!b) return;
+    const a=el.getBoundingClientRect();
+    const dx=b.left-a.left, dy=b.top-a.top;
+    if(!dx && !dy) return;
+    el.style.transition="none";
+    el.style.transform=`translate(${dx}px, ${dy}px)`;
+    requestAnimationFrame(()=>{
+      el.style.transition="transform .42s cubic-bezier(.2,.8,.2,1)";
+      el.style.transform="";
+    });
+  });
+}
+
+function renderTeach(){
+  const sl=teachSlide(), n=TEACH.slides.length;
+  let inner="";
+  if(sl.k==="cards"){
+    inner=`<div class="tmcards">${sl.cards.map(c=>
+      `<div class="tmcard tm-${c.c}"><h3>${esc(c.t)}</h3><p>${c.d}</p><p class="tmex">${esc(c.ex)}</p></div>`).join("")}</div>`;
+  } else if(sl.k==="pairs"){
+    inner=`<div class="tmpairs">${sl.pairs.map(p=>
+      `<div class="tmpair">
+        <div class="tmside bad"><span>not yet</span>${esc(p.bad)}</div>
+        <div class="tmside good"><span>this</span>${esc(p.good)}</div>
+        <p class="tmwhy">${esc(p.why)}</p>
+      </div>`).join("")}</div>`;
+  } else if(sl.k==="wall"){
+    const pick=["w5","w7"].map(id=>WK_WALL.resps.find(r=>r.id===id)).filter(Boolean);
+    inner=wkColourKey()+`<div class="tmwall">${pick.map(r=>{
+      const lv=WK_WALL.levels[r.lvl];
+      return `<div class="tmlv"><h3>${esc(lv.lv)} — ${esc(lv.focus)}</h3>
+        <div class="tmresp">${r.h||esc(r.t)}</div>
+        <p class="tmwhy">${esc(r.why)}</p></div>`;}).join("")}</div>`;
+  } else if(sl.k==="climb"){
+    inner=`<div class="tmclimb">${WK_LEVELS.map(L=>
+      `<div class="tmrung"><span class="tmn">Level ${L.n}</span><b>${esc(L.focus)}</b>
+        <span class="tmvic">“${esc(L.vic)}”</span></div>`).join("")}</div>`;
+  } else if(sl.k==="demo"){
+    inner=teachDemoHtml();
+  } else if(sl.k==="go"){
+    inner=`<ul class="tmlist">${sl.bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>`;
+  } else if(sl.note){
+    inner=`<p class="tmnote">${esc(sl.note)}</p>`;
+  }
+  const last = TM.i===n-1 && !(sl.k==="demo" && TM.demo<TEACH_DEMO.length-1);
+  $("body").innerHTML=`<div class="teach">
+    <div class="tmbar noprint">
+      <span class="tmtag">Teacher mode</span>
+      <span class="tmcount">${TM.i+1} / ${n}</span>
+      <button class="linkbtn" onclick="teachExit()">Leave the deck (Esc)</button>
+    </div>
+    <h1 class="tmh">${esc(sl.h)}</h1>
+    ${sl.lead?`<p class="tmlead">${sl.lead}</p>`:""}
+    ${inner}
+    <div class="tmnav noprint">
+      <button class="btn btn-ghost" onclick="teachPrev()" ${TM.i===0&&TM.demo===0?"disabled":""}>← Back</button>
+      ${last ? `<button class="btn btn-primary" onclick="teachExit()">Done — back to the hub</button>`
+             : `<button class="btn btn-primary" onclick="teachNext()">Next →</button>`}
+    </div>
+  </div>`;
+}
 
 /* ---------- REPORT ---------- */
 function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
