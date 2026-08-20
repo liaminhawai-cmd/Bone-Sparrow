@@ -211,3 +211,32 @@ of the reading hub when it loads, so it always shows what the workshop is
 currently teaching. That read needs the files served over http, which the Pages
 site does. Opened straight off a USB stick as a `file://` address the browser
 blocks it, and the page says so and points at the printable sheets instead.
+
+## Scores are colour-coded, and the longest answer is no longer the right one
+
+**Colour bands on every first-attempt score.** The hub home, the hub's own
+report and the front door's combined report now colour a score by band: green
+at 85% and above, olive from 70 to 84, orange from 50 to 69, red below 50. The
+number is still the information and the colour is a second reading of it, so
+nothing is lost in greyscale or to a colour-blind student. The bands are on
+first attempts, which is the only score this suite reports.
+
+**The length tell is gone.** Options have always been shuffled, so position was
+never a giveaway, but length was: across the whole hub the correct answer was
+the single longest option in **88%** of the 117 multiple-choice items. That is a
+strategy a student can run without reading the passage, and some of them will.
+Every offending item has been rewritten, almost always by making a distractor
+carry its weight rather than by trimming the answer, since a four-word
+distractor ("It shows she is angry") is a weak distractor as well as a short
+one. Where the correct answer was a long quotation it was trimmed to the words
+doing the work, which is the thing those items teach anyway.
+
+It now sits at **28%**, against a chance rate of 25% for four options, and only
+two items have a correct answer more than 15% longer than its nearest rival.
+Both draw their options from `FIG_TECHS`, the shared list of technique names,
+which every item in that module reuses: its longest label is correct only some
+of the time, so length buys a student nothing there.
+
+**Adding an item?** At least one distractor has to be as long as the correct
+answer or longer. There is a note above `REDUNDANCY` in the hub with the rule
+and how to re-run the count.
