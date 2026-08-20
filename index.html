@@ -254,10 +254,9 @@ function renderStep3(){
   const langName = (LANGS.find(l=>l[0]===P.lang)||[])[1];
   const open = ["the Chapter 1 quickread, figurative language, voice fingerprints and the evidence builder"];
   if(P.chapter>=5) open.push("the Chapter 5 quickread and the analysis workshop");
-  /* The later quickreads are held shut until the analysis workshop is finished,
-     so name them as a promise rather than as something to click today. */
+  /* The later quickreads open on reading position alone. */
   const laterQr=[6,8,10,14,17,20].filter(c=>c<=P.chapter);
-  if(laterQr.length) open.push(`once the workshop is done, ${laterQr.length} more quickread${laterQr.length===1?"":"s"} (chapter${laterQr.length===1?" "+laterQr[0]:"s "+laterQr.join(", ")}) that finish by connecting evidence to ideas`);
+  if(laterQr.length) open.push(`${laterQr.length} more quickread${laterQr.length===1?"":"s"} (chapter${laterQr.length===1?" "+laterQr[0]:"s "+laterQr.join(", ")}) that finish by connecting evidence to ideas`);
   $("app").innerHTML = railHtml(4) + `
   <h1>Ready, ${esc(P.fname)}.</h1>
   <p class="sub">Zana Fraillon · Units 5–6 · reading, vocabulary, evidence and analysis.</p>
@@ -281,7 +280,7 @@ function renderStep3(){
   </a>
 
   <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right, but the report shows the honest first go — that's the point of it.</div>
-  <div class="note">For teachers: <a href="BoneSparrowWagollSheets.html">analytical writing anchor sheets</a> — one A3 sheet per level, Foundation to Level 10, print from the browser at A3 portrait.</div>`;
+  <div class="note">For teachers: <a href="BoneSparrowWagollSheets.html">analytical writing anchor sheets</a> — one A3 sheet per level, Foundation to Level 10, print from the browser at A3 portrait. The on-screen <a href="BoneSparrowWagollWall.html">full WAGOLL wall</a> opens for a student once they have finished the analysis workshop.</div>`;
   $("editMe").onclick = ()=>{ step=1; render(); };
 }
 
@@ -294,8 +293,8 @@ const READING_MODULES = [
   ["qr1","Quickread: the Night Sea"],["qr2","Quickread: caught by Beaver"],
   ["fig","Figurative → literal"],["voice","Voice fingerprint"],
   ["ev","Evidence builder"],["wk","Analysis workshop"],
-  /* Quickreads 3-8 open only after the analysis workshop, and each one ends
-     on evidence-to-idea questions. Same order as the hub's own module list. */
+  /* Quickreads 3-8, each ending on evidence-to-idea questions. Same order as
+     the hub's own module list. */
   ["qr3","Quickread: lucky (ch 6)"],["qr4","Quickread: what Alpha does to a person (ch 8)"],
   ["qr5","Quickread: the bone sparrow (ch 10)"],["qr6","Quickread: a story from just Outside (ch 14)"],
   ["qr7","Quickread: Aussie Boy (ch 17)"],["qr8","Quickread: Jimmie wants to know (ch 20)"]
