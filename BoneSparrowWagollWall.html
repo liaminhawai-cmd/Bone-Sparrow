@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Bone Sparrow — the full WAGOLL wall</title>
+<meta name="description" content="The whole analytical writing wall, Levels 5 to 9: the model response at every level, what makes each one that level, and what unlocks and retires as you climb.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>BS</text></svg>">
+<style>
+/* ===========================================================================
+   THE FULL WAGOLL WALL — its own page, its own URL.
+
+   It holds NO wall text of its own. The wall and the rubric are read at load
+   time out of BoneSparrowReadingHub.html, which stays the single source for
+   both, so this page cannot drift away from the workshop students build.
+   (That fetch needs the files to be served over http, which the GitHub Pages
+   site is. Opened straight off a USB stick as file://, the browser blocks it
+   and the page says so and points at the printable sheets instead.)
+
+   It is GATED: it opens once the Analysis workshop has been finished on this
+   device, which the hub records in its own localStorage. Soft on purpose, a
+   classroom lock rather than a security one. ?teacher=1 opens it anyway.
+   =========================================================================== */
+:root{
+  --bg:#f6f2e9; --panel:#fffdf8; --ink:#22251f; --muted:#6b6357; --line:#ded3c0;
+  --deep:#1d3c34; --accent:#9a3324; --okbg:#e8f3ea; --correct:#2c7a4b;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --feat-bg:#e7ddf6; --feat-tx:#4b2f7a;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+     line-height:1.55;padding:18px}
+.wrap{max-width:1000px;margin:0 auto}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:12px;
+     text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-bottom:14px}
+.top a{color:var(--accent);text-transform:none;letter-spacing:0}
+.top .sp{margin-left:auto}
+h1{font-size:clamp(24px,3.4vw,36px);line-height:1.1;margin-bottom:8px;color:var(--deep)}
+.lead{font-size:16px;max-width:46em;margin-bottom:18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+
+.ckey{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 18px;font-size:12.5px;color:var(--muted)}
+.ckey span{display:flex;align-items:center;gap:6px}
+.ckey i{width:13px;height:13px;border-radius:50%;display:inline-block}
+/* the same swatches appear inline inside the level explanations */
+.sw{width:11px;height:11px;border-radius:50%;display:inline-block;vertical-align:middle;margin:0 3px 2px 0}
+.sw.idea{background:#9ccbf2;border:1px solid var(--idea-tx)}
+.sw.feat{background:#c3aee8;border:1px solid var(--feat-tx)}
+.sw.verb{background:#f3b785;border:1px solid var(--verb-tx)}
+.sw.ev{background:#f2d34a;border:1px solid var(--ev-tx)}
+.sw.eff{background:#a4d4ae;border:1px solid var(--eff-tx)}
+
+.hl-feat,.hl-verb,.hl-ev,.hl-eff,.hl-idea{font-style:normal;border-radius:4px;padding:1px 3px}
+.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
+.hl-feat{background:var(--feat-bg);color:var(--feat-tx)}
+.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+.hl-ev{background:var(--ev-bg);color:var(--ev-tx)}
+.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+
+.rung{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.rhead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;margin-bottom:10px}
+.rlv{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+     background:var(--deep);color:#fff;border-radius:99px;padding:3px 11px}
+.rfocus{font-size:18px;font-weight:700}
+.real{font-size:12px;color:var(--muted);font-style:italic;border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.rvic{font-size:13.5px;color:var(--muted);flex:1 1 100%}
+.resp{font-family:Georgia,"Times New Roman",serif;font-size:clamp(15px,1.7vw,18px);line-height:1.6;
+      border-left:4px solid var(--line);padding:2px 0 2px 14px;margin-bottom:10px}
+.why{font-size:14px;line-height:1.5;color:var(--ink);background:var(--okbg);border-radius:8px;padding:9px 12px;margin-bottom:8px}
+.exp{font-size:13.5px;color:var(--muted);line-height:1.55}
+.change{display:flex;flex-direction:column;gap:4px;font-size:13px;margin-top:9px}
+.change b{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+  border-radius:99px;padding:2px 8px;margin-right:6px}
+.change .up b{color:var(--correct);background:var(--okbg);border:1px solid var(--correct)}
+.change .down b{color:#9a3324;background:#fbe9e6;border:1px solid #9a3324}
+
+.gate{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;text-align:center}
+.gate h2{font-size:20px;margin-bottom:8px}
+.gate p{font-size:15px;color:var(--muted);max-width:34em;margin:0 auto 14px}
+.btn{display:inline-block;border:1px solid var(--deep);background:var(--deep);color:#fff;border-radius:9px;
+     padding:10px 16px;font-size:15px;font-family:inherit;text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--deep)}
+.foot{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span>Year 7 English · The Bone Sparrow</span>
+    <span class="sp"></span>
+    <a href="index.html">⌂ Main menu</a>
+    <a href="BoneSparrowReadingHub.html">Reading hub</a>
+    <a href="BoneSparrowWagollSheets.html">Printable A3 sheets</a>
+  </div>
+  <main id="out"></main>
+</div>
+
+<script>
+const HUB = "BoneSparrowReadingHub.html";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const out = document.getElementById("out");
+
+/* ---- the gate ----
+   The hub writes its progress under this key on the same origin, so the wall
+   can read it without either page knowing about the other's internals beyond
+   this one field. */
+function workshopDone(){
+  if(new URLSearchParams(location.search).get("teacher")==="1") return true;
+  try{
+    const S=JSON.parse(localStorage.getItem("bonesparrow.readinghub.v2"));
+    return !!(S && S.done && S.done.wk);
+  }catch(e){ return false; }
+}
+
+function gate(){
+  out.innerHTML=`<h1>The full WAGOLL wall</h1>
+  <div class="gate">
+    <h2>Not open yet</h2>
+    <p>This page shows every level of the wall at once, with the model response for each one.
+       It opens after you have built the wall yourself in the Analysis workshop, because reading
+       the answers first is not the same lesson.</p>
+    <p><a class="btn" href="${HUB}">Go to the Analysis workshop →</a></p>
+  </div>
+  <p class="foot">Teachers: add <code>?teacher=1</code> to this page's address to open it without doing the workshop,
+     or print the <a href="BoneSparrowWagollSheets.html">A3 anchor sheets</a>, which are not gated.</p>`;
+}
+
+/* ---- the content ----
+   Pull the two data blocks straight out of the hub. Both are bannered `const`
+   declarations in a single file, so a bounded slice from the declaration to
+   its terminator is enough, and evaluating that slice keeps this page free of
+   any copy of the wall. If the hub is ever restructured, the slice fails
+   loudly here rather than showing a stale wall. */
+function slice(src, startsWith, endsWith){
+  const a = src.indexOf(startsWith);
+  if(a < 0) return null;
+  const b = src.indexOf(endsWith, a);
+  if(b < 0) return null;
+  return src.slice(a, b + endsWith.length);
+}
+async function load(){
+  const res = await fetch(HUB, {cache:"no-cache"});
+  if(!res.ok) throw new Error("hub returned "+res.status);
+  const src = await res.text();
+  const wall   = slice(src, "const WK_WALL = {", "\n ]};");
+  const levels = slice(src, "const WK_LEVELS = [", "\n];");
+  if(!wall || !levels) throw new Error("could not find WK_WALL / WK_LEVELS in the hub");
+  return new Function(wall + "\n" + levels + "\nreturn {WK_WALL, WK_LEVELS};")();
+}
+
+function render(d){
+  const {WK_WALL, WK_LEVELS} = d;
+  const byLevel = n => WK_LEVELS.find(L=>L.n===n);
+  out.innerHTML = `<h1>The full WAGOLL wall</h1>
+  <p class="lead">${esc(WK_WALL.q)} Five answers to one question, one per rubric level.
+     You built this wall a response at a time; here it is whole, to write against.</p>
+  <div class="ckey">
+    <span><i class="sw feat"></i>subject</span>
+    <span><i class="sw verb"></i>analytical verb</span>
+    <span><i class="sw idea"></i>idea</span>
+    <span><i class="sw ev"></i>evidence</span>
+    <span><i class="sw eff"></i>purpose — effect on the reader</span>
+  </div>` +
+  WK_WALL.levels.map((lv,i)=>{
+    const r = WK_WALL.resps.find(x=>x.lvl===i);
+    const L = byLevel(lv.n);
+    return `<section class="rung">
+      <div class="rhead">
+        <span class="rlv">${esc(lv.lv)}</span>
+        <span class="rfocus">${esc(lv.focus)}</span>
+        ${lv.eal?`<span class="real">EAL ${esc(lv.eal)}</span>`:""}
+        <span class="rvic">“${esc(lv.vic)}”</span>
+      </div>
+      ${r?`<div class="resp">${r.h || esc(r.t)}</div>
+           <div class="why">${esc(r.why)}</div>`:""}
+      <div class="exp">${lv.exp||""}</div>
+      ${L && (L.unlocks||L.retires) ? `<div class="change">
+        ${L.unlocks?`<div class="up"><b>unlocks</b>${esc(L.unlocks)}</div>`:""}
+        ${L.retires?`<div class="down"><b>retires</b>${esc(L.retires)}</div>`:""}
+      </div>`:""}
+    </section>`;
+  }).join("") +
+  `<p class="foot">The same ladder prints as one A3 sheet per level, Foundation to Level 10, in the
+   <a href="BoneSparrowWagollSheets.html">anchor sheets</a>. Wall text and rubric wording are read from
+   the reading hub at load time, so this page always shows what the workshop is teaching.</p>`;
+}
+
+(async function boot(){
+  if(!workshopDone()){ gate(); return; }
+  out.innerHTML = `<h1>The full WAGOLL wall</h1><p class="lead">Loading the wall…</p>`;
+  try{
+    render(await load());
+  }catch(e){
+    out.innerHTML = `<h1>The full WAGOLL wall</h1>
+    <div class="gate">
+      <h2>Couldn't read the wall</h2>
+      <p>This page reads the wall out of the reading hub rather than keeping its own copy, and the
+         browser would not let it: ${esc(e.message)}.</p>
+      <p>That happens when the files are opened straight off a disk (a <code>file://</code> address)
+         instead of the class website. Open it from the site, or use the printable sheets.</p>
+      <p><a class="btn" href="BoneSparrowWagollSheets.html">Printable A3 sheets →</a>
+         <a class="btn ghost" href="${HUB}">Reading hub</a></p>
+    </div>`;
+  }
+})();
+</script>
+</body>
+</html>

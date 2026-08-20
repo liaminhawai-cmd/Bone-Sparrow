@@ -16,6 +16,7 @@ Every hub screen carries a **⌂ Main menu** link, so nothing traps a student mi
 | `GrammarHuboffline.html` | …/GrammarHuboffline.html | Grammar Hub — reached only from a hub's coded feedback |
 | `bonesparrowtrainer.html` | …/bonesparrowtrainer.html | The old Pre-reading Trainer, kept so existing links still work; its vocabulary now lives in the Vocab Hub and its sentence work in the Grammar Hub |
 | `BoneSparrowWagollSheets.html` | …/BoneSparrowWagollSheets.html | Print masters: the analytical writing WAGOLL as one A3 sheet per level, Foundation to Level 10 |
+| `BoneSparrowWagollWall.html` | …/BoneSparrowWagollWall.html | The full WAGOLL wall on screen, Levels 5 to 9, opening once a student has finished the workshop |
 
 Pages redeploys automatically on push when any hub file changes. Note the trade-off: the Pages site is public, so it holds only short page-referenced extracts (see the copyright note below).
 
@@ -41,14 +42,16 @@ Six more quickreads sit after the Analysis workshop: chapters 6, 8, 10, 14, 17
 and 20, so there is one for roughly every second or third chapter across the
 taught range. Same mechanic as the first two, with a second phase on the end.
 
-**They are gated on the workshop, not on reading position alone.** A module can
-now declare `needs:"wk"`, and the home screen holds it shut with the reason
-written on the button ("finish analysis workshop first"). The order is
-deliberate: quickreads 3-8 finish by asking a student to state an idea, choose
-the line that proves it and say what makes it proof, which is the workshop's own
-move performed cold on a passage nobody has walked them through. Doing that
-before the wall has been built is guessing. Chapter gating still applies on top,
-so a student who has read to chapter 10 sees three of the six.
+**Reading position is the only lock on them.** They sit after the workshop in
+the list, because the workshop is where the evidence-to-idea move is taught, but
+nothing holds them shut: you decide the order, and a class that has not reached
+the workshop can still read. A student who has read to chapter 10 sees three of
+the six, and the rest stay hidden so nothing spoils the novel.
+
+The machinery for a lock is still there. Any module can declare `needs:"<id>"`
+and the home screen holds it shut with the reason on the button, naming the
+module it is waiting on. The Analysis workshop still uses it, on the evidence
+builder.
 
 **The second phase: connect evidence to ideas.** Each of the six ends with two
 `links` items. Step one gives an idea about the novel and four real lines, one
@@ -151,3 +154,64 @@ The type scale is a formula with a floor and a ceiling, tuned so the longest
 sheet (Level 10) fits and the shortest (Foundation) is not swimming in white
 space; a measured autofit was tried and removed, because type size changes where
 lines wrap and the loop overshot by a whole line each pass.
+
+## Teacher mode: the slides
+
+The reading hub home screen and Part A of the Analysis workshop both carry a
+**Teacher mode · slides** link. It opens a projector deck for the front of the
+room, driven by one key: **→** for next, **←** for back, **Esc** to leave.
+
+Nine slides. The three parts of an analytical sentence (idea, evidence,
+effect), one slide each on what separates a weak version from a strong one,
+the same three parts shown at two rubric levels, the ladder, and then a
+**live demonstration of the builder**: ten steps that put a sentence together
+one tile at a time, embed the quotation with a joiner, and then drag a tile to
+a different position and back, so the class sees the move before anyone tries
+it.
+
+Two things about it are deliberate. Nothing in the deck is scored or saved, so
+you can drive it on a student's device without touching their work. And the
+wall text, the rubric wording and the demo's tiles all come from the same data
+the workshop uses, so the deck cannot drift away from the lesson it is
+introducing.
+
+## Dragging a tile into place
+
+The builder used to make you tap a tile (which put it on the end of the
+sentence) and then drag it back to where you wanted it. Now a tile drags
+**straight from the bank into the spot you want**, in one motion: pick it up,
+the sentence opens a gap where the pointer is, let go and it lands there.
+
+The mechanics, in case they ever need changing: a bank tile and a canvas tile
+run the same gesture, and the only difference is that a bank tile has no tile
+on the canvas yet, so the first movement past the threshold materialises one
+and everything after that is the identical code path. Under 8 pixels it is a
+tap, and a tap still means what it always did — on a bank tile it adds to the
+end, on a tile in the sentence it takes it out. Dragging a tile out of the
+canvas and dropping it well away cancels the add. It works with a mouse, a
+trackpad and a finger; the tiles set `touch-action:none` so a drag on a tablet
+does not scroll the page instead.
+
+## The full WAGOLL wall, on its own address
+
+`BoneSparrowWagollWall.html` puts all five levels of the wall on one page: the
+model response at each level with its colours, what makes it that level, the
+rubric line it is marked against, and what unlocks and retires on the way up.
+It is a reference to write against, and it has its own address so it can be
+handed out as a link or left open on a second screen.
+
+**It is gated, twice.** The card in the reading hub stays shut until the
+Analysis workshop is finished, and the page checks the same flag when it is
+opened directly, because reading the answers before building the wall is a much
+weaker lesson than building it. Both checks read the hub's own progress record
+on that device, so a student who has done the workshop on the class computer
+will find it locked at home. That is a classroom lock, not a security one.
+
+**Teachers open it with `?teacher=1` on the end of the address**, which skips
+the gate. The printable A3 sheets are not gated at all.
+
+The page holds no wall text of its own: it reads `WK_WALL` and `WK_LEVELS` out
+of the reading hub when it loads, so it always shows what the workshop is
+currently teaching. That read needs the files served over http, which the Pages
+site does. Opened straight off a USB stick as a `file://` address the browser
+blocks it, and the page says so and points at the printable sheets instead.
