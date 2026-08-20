@@ -116,6 +116,9 @@ table.rpt td.dim,.dim{color:#98917f}
   body{background:#fff}
   .wrap,.card{box-shadow:none;border:0;max-width:none;padding:0}
 }
+
+/* first-attempt score bands, matching the reading hub */
+.band4{color:#1e6b3a} .band3{color:#7a6410} .band2{color:#a8541b} .band1{color:#9a3324}
 </style>
 </head>
 <body>
@@ -310,7 +313,15 @@ const VIC_LEVELS = {
 };
 const EAL_BANDS = { 5:"C2", 6:"C2/C3", 7:"C3", 8:"C4", 9:"C4+" };
 function pct(got,total){ return total? Math.round(100*got/total)+"%" : "—"; }
-function scoreCell(got,total){ return total? `<b>${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">—</span>`; }
+/* Score bands, the same four the reading hub uses. The colour is a second read
+   of the number rather than the only one, so nothing is lost in greyscale or
+   to a colour-blind reader. */
+function scoreBand(got,total){
+  if(!total) return "";
+  const p=got/total;
+  return p>=0.85 ? "band4" : p>=0.7 ? "band3" : p>=0.5 ? "band2" : "band1";
+}
+function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">—</span>`; }
 function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
 function renderReports(){
   const R = readJSON("bonesparrow.readinghub.v2")||{};
