@@ -311,7 +311,51 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .changed .cup{color:var(--correct);background:var(--okbg);border:1px solid var(--correct)}
 .changed .cdown{color:var(--wrong);background:var(--badbg);border:1px solid var(--wrong)}
 .ctile.retired{outline:2px solid var(--wrong);opacity:.7;text-decoration:line-through}
-.ctile.grabbing{transform:scale(1.05);box-shadow:0 3px 10px rgba(0,0,0,.18);cursor:grabbing}
+/* ---- teacher demo: the same machinery, smaller ----
+   A demonstration on a projector needs to be legible from the back and fit on
+   one screen. It does NOT need to be a pixel copy of what is on the student's
+   laptop, so on rails the tiles, the rubric table and the dock all come down a
+   size, the bank scrolls instead of growing, and the page stops scrolling. */
+body.rails .container{max-width:min(1720px,99vw);padding:14px 18px}
+body.rails h2{font-size:17px;margin-bottom:4px}
+body.rails .eyebrow{margin-bottom:2px}
+body.rails .wag2 .wcell{padding:5px 7px;font-size:11px;line-height:1.35}
+body.rails .wag2 .head .lvname{font-size:10.5px}
+body.rails .wag2 .focus{font-size:11.5px}
+body.rails .ckey{font-size:10.5px;margin-bottom:6px}
+body.rails .dock{padding:8px 0 6px}
+body.rails .canvas{min-height:44px;padding:7px;gap:5px}
+body.rails .ctile{font-size:12.5px;padding:4px 7px}
+body.rails .preview{font-size:14px;padding:7px 10px}
+body.rails .bins5{grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:6px;margin-bottom:8px}
+body.rails .bin{padding:5px 6px}
+body.rails .bin h4{font-size:9px;margin-bottom:3px}
+body.rails .binbody{max-height:104px;overflow-y:auto;overflow-x:hidden;padding:5px;gap:4px}
+/* A 1366x768 laptop is the smallest screen these get projected from, and it
+   was 34px short. The bank is the block that can afford to scroll: it is a
+   list you pick from, not something you read straight through. */
+@media (max-height:820px){
+  body.rails .binbody{max-height:74px}
+  body.rails .wag2 .wcell{padding:4px 6px;font-size:10.5px}
+  body.rails .dock{padding:6px 0 4px}
+  body.rails .railbar{margin-bottom:6px}
+}
+body.rails .tile{font-size:11.5px;padding:4px 6px;border-radius:6px;line-height:1.3}
+body.rails .q{font-size:12px;margin:4px 0}
+body.rails .feedback{font-size:12.5px;padding:8px 10px}
+body.rails .railbar{padding:6px 10px;font-size:12.5px;margin-bottom:8px}
+
+/* the tile in your hand: fixed to the pointer, free of every container */
+.dragghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;margin:0;
+  transform-origin:top left;box-shadow:0 10px 26px rgba(30,22,8,.3);
+  transform:rotate(-1.5deg);opacity:.96;cursor:grabbing}
+/* where it will land */
+.dropgap{display:inline-block;min-width:54px;align-self:stretch;min-height:34px;border-radius:8px;
+  border:2px dashed var(--ink);background:rgba(31,31,31,.06);animation:gapin .12s ease-out}
+@keyframes gapin{from{min-width:0;opacity:0}to{min-width:54px;opacity:1}}
+body.dragging{cursor:grabbing}
+body.dragging .tile,body.dragging .ctile{cursor:grabbing}
+.tile.used,.ctile.lifted{opacity:.32}
 .ctile{cursor:grab;touch-action:none}
 .bin.opens h4,.tile.k-open,.ctile.k-open{background:#e6e1d6;color:#5c503b}
 /* ---- workshop: flexible builder ---- */
@@ -1742,7 +1786,7 @@ const WK_LEVELS = [
    need:["subj","verb","idea","q","eff"],
    exp:`The <i class="sw idea"></i> idea becomes an <em class="hl-idea">issue</em>, the verb becomes <em class="hl-verb">analytical</em>, and the <i class="sw eff"></i> purpose says what we <em class="hl-eff">understand</em>.`,
    unlocks:"Issue-level ideas unlock, and so do clause endings (“that…”, “how…”) with the joiners that carry them — “which shows”, “which makes the reader see”.",
-   retires:"Reporting verbs (shows, is about, describes) and plain feeling-endings retire — you've outgrown them. Analytical verbs like reveals, conveys and emphasises stay: they're good writing at every level.",
+   retires:"Plain ideas, reporting verbs (shows, is about, describes) and feeling-endings all retire — you've outgrown them. Analytical verbs like reveals, conveys and emphasises stay: they're good writing at every level.",
    why:"All three parts are still there, and each one has grown up." },
  { n:8, name:"Analyse the choice", focus:"Analyse the choice",
    vic:"I can explain the way different perspectives on ideas are represented through characters and events",
@@ -2926,13 +2970,13 @@ function renderWkBuild(){
       const fresh=(WK.justIdx===k)?" justplaced":"";
       if(mine) return `<div class="wcell ex filled${fresh}">${mine.given?`<span class="giventag">done for you</span>`:""}<div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
       if(k===idx) return `<div class="wcell ex now"><span class="wempty">you're writing this one now — build it below</span></div>`;
-      if(lv.n===5) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
+      if(lv.n===5 && !WK.rails) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
       return `<div class="wcell ex"><span class="wempty">${k<idx?"—":"not yet"}</span></div>`;
     }
   });
 
-  /* ---- what changed at this level ---- */
-  if(L.unlocks||L.retires){
+  /* ---- what changed at this level (the demo says it out loud instead) ---- */
+  if(!WK.rails && (L.unlocks||L.retires)){
     h+=`<div class="changed">`;
     if(L.unlocks) h+=`<div><span class="cup">unlocked</span> ${esc(L.unlocks)}</div>`;
     if(L.retires) h+=`<div><span class="cdown">retired</span> ${esc(L.retires)}</div>`;
@@ -2941,14 +2985,15 @@ function renderWkBuild(){
 
   /* ---- focus (locked on rails: the demo is one sentence, not a menu) ---- */
   if(WK.rails){
-    h+=`<p class="q">Focus: <b>${esc(wkFocusLabel())}</b> — locked for the demo.</p>`;
+    /* nothing: the focus is locked and the banks already show only its tiles */
   } else {
     h+=`<p class="q">Your focus:</p><div class="idea-chips">`+
       WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="wkSetFocus('${f.id}')">${esc(f.label)}</button>`).join("")+`</div>`;
   }
 
-  /* ---- passage harvest ---- */
-  {
+  /* ---- passage harvest: skipped on rails, where the quote is already in the
+         sentence and the passage is the tallest block on the page ---- */
+  if(!WK.rails){
     h+=`<p class="q">Collect evidence — tap lines to add them to your quote tiles:</p>
     <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
     `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
@@ -2960,7 +3005,7 @@ function renderWkBuild(){
      banks push the sentence off the top of the screen exactly when a student
      needs to see what they are adding to. */
   h+=`<div class="dock">
-    <p class="q">Your sentence — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
+    <p class="q">${WK.rails ? "The sentence" : "Your sentence"} — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
     <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
   </div>`;
 
@@ -3075,83 +3120,109 @@ function wkBindDrag(el, o){
   el.addEventListener("pointerdown", e=>{
     if(e.button) return;
     const sx=e.clientX, sy=e.clientY;
-    let dragging=false, node = fromBank ? null : el;
+    const r0=el.getBoundingClientRect();
+    const grabX=sx-r0.left, grabY=sy-r0.top;
+    let dragging=false, ghost=null, gap=null;
     try{ el.setPointerCapture(e.pointerId); }catch(_){}
 
-    const commit=()=>{
-      const cv=$("wkCanvas"); if(!cv) return;
-      const ts=[...cv.querySelectorAll(".ctile")];
-      WK.canvas = ts.map(t=>WK.canvas[+t.dataset.idx]);
-      ts.forEach((t,j)=>t.dataset.idx=j);
-      const prev=$("wkPrev");
-      if(prev && WK.canvas.length) prev.textContent=wkText();
-    };
+    /* The tile you are holding is a real floating object: a clone fixed to the
+       pointer, free to travel anywhere on the page. The canvas answers it with
+       a GAP that opens where the tile would land. Nothing is added to the
+       sentence until you let go over the canvas.
 
-    /* Give the dragged bank tile a body on the canvas. It goes on the end and
-       the very next move puts it where the pointer is, so the student never
-       sees it land in the wrong place. */
-    const materialise=()=>{
-      const cv=$("wkCanvas"); if(!cv) return null;
-      const c=o.make();
-      WK.canvas.push(c);
-      const d=wkTileData(c);
-      const ph=cv.querySelector(".ph"); if(ph) ph.remove();
-      const b=document.createElement("button");
-      b.className="ctile "+wkKindClass(c.k)+(wkRetired(d)?" retired":"");
-      b.textContent=d.t;
-      b.dataset.idx=WK.canvas.length-1;
-      cv.appendChild(b);
-      return b;
+       The previous version materialised the tile into the canvas on the first
+       millimetre of movement, so the tile appeared to jump out of your hand
+       into the box and then shuffle about inside it. */
+    const makeGhost=()=>{
+      const g=el.cloneNode(true);
+      g.className=(fromBank ? "ctile "+el.className.replace(/^tile\s*/,"") : el.className)+" dragghost";
+      g.style.width=r0.width+"px";
+      document.body.appendChild(g);
+      return g;
+    };
+    const makeGap=()=>{
+      const d=document.createElement("span");
+      d.className="dropgap";
+      return d;
+    };
+    const overCanvas=(x,y)=>{
+      const cv=$("wkCanvas"); if(!cv) return false;
+      const r=cv.getBoundingClientRect();
+      return x>=r.left-24 && x<=r.right+24 && y>=r.top-24 && y<=r.bottom+24;
+    };
+    /* Where the gap belongs: how many tiles sit before the pointer. Rows wrap,
+       so a tile on a line above the pointer is always before it. */
+    const slotAt=(x,y)=>{
+      const cv=$("wkCanvas"); if(!cv) return 0;
+      const ts=[...cv.querySelectorAll(".ctile")].filter(t=>t!==el);
+      let ins=0;
+      for(const t of ts){
+        const r=t.getBoundingClientRect();
+        if(y>r.bottom || (y>=r.top && x>r.left+r.width/2)) ins++; else break;
+      }
+      return ins;
+    };
+    const placeGap=(x,y)=>{
+      const cv=$("wkCanvas"); if(!cv) return;
+      if(!gap) gap=makeGap();
+      const ph=cv.querySelector(".ph"); if(ph) ph.style.display="none";
+      const ts=[...cv.querySelectorAll(".ctile")].filter(t=>t!==el);
+      const ref=ts[slotAt(x,y)] || null;
+      if(gap.parentNode!==cv || gap.nextSibling!==ref) cv.insertBefore(gap, ref);
+    };
+    const clearGap=()=>{
+      if(gap && gap.parentNode) gap.parentNode.removeChild(gap);
+      const cv=$("wkCanvas"); const ph=cv&&cv.querySelector(".ph");
+      if(ph) ph.style.display="";
     };
 
     const move=ev=>{
       if(!dragging){
         if(Math.hypot(ev.clientX-sx, ev.clientY-sy) < 8) return;
         dragging=true;
-        if(fromBank){ node=materialise(); if(!node){ dragging=false; return; } el.classList.add("used"); }
-        node.classList.add("grabbing");
+        ghost=makeGhost();
+        el.classList.add(fromBank ? "used" : "lifted");
+        document.body.classList.add("dragging");
       }
       ev.preventDefault();
-      const cv=$("wkCanvas"); if(!cv) return;
-      /* Insertion index = how many other tiles have their midpoint left of the
-         pointer, which is what the student sees. Rows wrap, so tiles on a line
-         below the pointer are behind it: compare the row first. */
-      const others=[...cv.querySelectorAll(".ctile")].filter(t=>t!==node);
-      let ins=0;
-      for(const t of others){
-        const r=t.getBoundingClientRect();
-        const below = ev.clientY > r.bottom;
-        if(below || (ev.clientY >= r.top && ev.clientX > r.left + r.width/2)) ins++;
-        else break;
-      }
-      const ref=others[ins] || null;
-      if(ref!==node.nextSibling){ cv.insertBefore(node, ref); commit(); }
+      ghost.style.transform=`translate(${ev.clientX-grabX}px, ${ev.clientY-grabY}px)`;
+      if(overCanvas(ev.clientX, ev.clientY)) placeGap(ev.clientX, ev.clientY);
+      else clearGap();
     };
 
     const up=ev=>{
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
-      if(fromBank) el.classList.remove("used");
-      if(node) node.classList.remove("grabbing");
-      if(dragging){
-        if(fromBank){
-          el._dragged=true;
-          /* Dragged back out and dropped away from the canvas: that is a
-             cancel, not an add. Anything dropped on or near the canvas stays. */
-          const cv=$("wkCanvas"), r=cv&&cv.getBoundingClientRect(), x=ev&&ev.clientX, y=ev&&ev.clientY;
-          const outside = r && x!=null &&
-            (x < r.left-40 || x > r.right+40 || y < r.top-40 || y > r.bottom+40);
-          if(outside){ const at=+node.dataset.idx; WK.canvas.splice(at,1); }
-        }
-      } else if(!fromBank){
-        WK.canvas.splice(+el.dataset.idx, 1);   /* tap on a canvas tile removes it */
+      el.classList.remove("used","lifted");
+      document.body.classList.remove("dragging");
+      if(ghost) ghost.remove();
+
+      if(!dragging){
+        /* a tap: bank adds to the end, a tile in the sentence comes out */
+        if(!fromBank) WK.canvas.splice(+el.dataset.idx, 1);
+        else { WK.canvas.push(o.make()); }
+        clearGap(); wkDraw(); return;
       }
+
+      el._dragged=true;
+      const landed = gap && gap.parentNode && ev && overCanvas(ev.clientX, ev.clientY);
+      if(landed){
+        /* read the slot off the gap itself, so what lands is what was shown */
+        const cv=$("wkCanvas");
+        const slot=[...cv.children].filter(n=>n===gap||n.classList.contains("ctile")).indexOf(gap);
+        if(fromBank){
+          WK.canvas.splice(slot, 0, o.make());
+        } else {
+          const from=+el.dataset.idx;
+          const [moved]=WK.canvas.splice(from,1);
+          WK.canvas.splice(slot > from ? slot-1 : slot, 0, moved);
+        }
+      }
+      clearGap();
       wkDraw();
     };
 
-    /* Listen on window: pointer events bubble up from the captured element,
-       and window still hears the release even if the tile never does. */
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
@@ -3296,9 +3367,12 @@ function wkFindings(canvas, level, focus){
   const findings=[];
   const wasLevel=WK.level; WK.level=level;   /* wkRetired reads the live level */
 
-  /* retired tiles must be traded out */
+  /* Retired tiles must be traded out, and the advice has to be about the tile
+     in front of them. It used to append the level's blanket `retires` note to
+     every kind, so a retired IDEA was answered with a paragraph about verbs
+     and feeling-endings, which is the wrong category and reads as a bug. */
   tiles.forEach(t=>{ if(wkRetired(t.d))
-    findings.push({sev:"err", text:"“"+t.d.t+"” belongs to a level you've passed. "+(L.retires||"Swap it for one of the tiles that unlocked at this level.")}); });
+    findings.push({sev:"err", text:"“"+t.d.t+"” belongs to a level you've passed. "+wkRetiredHint(t.c.k, level)}); });
 
   /* what this level requires */
   L.need.forEach(k=>{
@@ -3355,6 +3429,19 @@ function wkFindings(canvas, level, focus){
 
   WK.level=wasLevel;
   return findings;
+}
+
+/* What to trade a retired tile FOR, by the kind of tile it is. */
+function wkRetiredHint(kind, level){
+  if(kind==="idea") return level>=9
+    ? "Up here the idea is the representation itself: how a person or a place is put in front of the reader."
+    : "Grow it into an issue: the Idea bank now offers “the issue of…” tiles that name what the moment is about.";
+  if(kind==="verb") return "Reporting verbs (shows, is about, describes) retire here. Trade it for an analytical one: reveals, conveys, exposes, emphasises.";
+  if(kind==="eff")  return level>=9
+    ? "The interpretive endings are the ones up here: what the writing withholds, or makes the reader accept."
+    : "Plain feeling-endings retire. Say what the writing makes the reader understand, not what it makes them feel.";
+  if(kind==="subj") return "Plot-only subjects retire. Up here the subject of your sentence is a writing choice: the simile, the narration, the clipped dialogue, or Fraillon herself.";
+  return "Swap it for one of the tiles that unlocked at this level.";
 }
 
 function wkVerdict(findings){
@@ -3692,6 +3779,7 @@ function teachLight(hl){
 function teachExit(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
+  document.body.classList.remove("rails");
   go("home");
 }
 function teachKeys(e){
@@ -3704,6 +3792,7 @@ function teachKeys(e){
 /* The one slide: four colours, four questions, nothing else on it. */
 function teachColours(){
   TM={};
+  document.body.classList.remove("rails");
   document.addEventListener("keydown", teachKeys);
   document.body.classList.remove("wide");
   $("homeBtn").style.display="none";
@@ -3757,7 +3846,7 @@ function teachRails(){
   });
   screen="wk";
   $("homeBtn").style.display="inline";
-  document.body.classList.add("wide");
+  document.body.classList.add("wide","rails");
   renderWkBuild();
 }
 
