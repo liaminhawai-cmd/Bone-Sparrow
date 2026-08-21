@@ -303,13 +303,13 @@
 
 <div class="screen" id="scr-id">
   <h1>The Bone Sparrow — Vocab Hub</h1>
-  <p class="subtitle">Before anything starts, tell the hub who you are. Your work saves on this device under these details and they go on your printed report.</p>
+  <p class="subtitle"> Your work saves on this device under these details and they go on your printed report.</p>
   <div id="id-body"></div>
 </div>
 
 <div class="screen active" id="scr-home">
   <h1>The Bone Sparrow — Vocab Hub</h1>
-  <p class="subtitle">Zana Fraillon &middot; chapter by chapter &mdash; build each chapter&rsquo;s words from their morphemes and origins, then keep them alive with quick reviews</p>
+  <p class="subtitle">Zana Fraillon &middot; chapter by chapter</p>
   <div id="home-map"></div>
   <div class="homerow">
     <div class="panelcard">
@@ -635,7 +635,7 @@ const LESSONS = [
         a:"It shows that whose story gets told changes how it sounds", opts:["It shows that whose story gets told changes how it sounds","It proves one of the words is wrong","It means the family moved twice","It shows English has too many words"],
         explain:"Point of view is built into the vocabulary — and this novel gives you two narrators for exactly that reason." } ] }
   ],
-  base:{ intro:"The same word-parts inside words you already own. Get these and the big ones come free.",
+  base:{ intro:"The same word-parts inside words you already know.",
     items:[
       { id:"b0_escape", kind:"build", w:"refuge",
         tiles:[["re-","back, away"],["fuge","to flee"]],
@@ -2010,7 +2010,7 @@ function renderHome(){
   const fixDesc=document.getElementById("fix-desc");
   if(fixDesc){
     fixDesc.innerHTML = unmastered.length
-      ? `These are the words that have beaten you at least once and haven't been answered right twice in a row since. They also come back on their own inside every review — this button just goes straight at them.`
+      ? `Words you have missed and not yet answered right twice running.`
       : (met.length ? `Every word you've met is mastered — answered correctly twice running. New sets will add to the list.`
                     : `Words land here once you've met them and missed one.`);
   }
@@ -2019,7 +2019,7 @@ function renderHome(){
   const btn=document.getElementById("review-start");
   btn.disabled = pool.length<4;
   document.getElementById("review-desc").innerHTML = pool.length<4
-    ? "A quick look back is <b>baked into the start of every lesson</b> once you’ve done your first one. This button is here for extra practice any time."
+    ? "Available after your first lesson."
     : `Extra practice — a shuffled set from the <b>${pool.length} words</b> you’ve met so far (this also runs automatically when you open a lesson). Everyone gets a different mix. Done ${S.reviews.length} review${S.reviews.length===1?"":"s"} so far.`;
 }
 
@@ -2064,7 +2064,7 @@ function openLesson(id, fromHome){
     const struggling = st.buildComplete && rate!==null && rate<0.5 && !st.baseDone;
     const t=document.createElement("div"); t.className="tierbar base";
     t.innerHTML=`<span class="grow"><b>⛺ Base camp${st.baseDone?` — done (${bc.got}/${bc.total} first try)`:""}</b>
-      ${struggling?"That was a tough climb — these are the same word-parts inside easy words you already know. Five minutes here makes the lesson words much friendlier.":"The same morphemes in everyday words. Start here any time you want a warm-up — it all counts on your report."}</span>
+      ${struggling?"The same word-parts inside everyday words.":"The same morphemes in everyday words. Start here any time you want a warm-up — it all counts on your report."}</span>
       <button class="btn btn-ghost" onclick="startBase('${l.id}')">${st.baseDone?"Do it again":"Warm up"}</button>`;
     tiers.appendChild(t);
   }
@@ -2073,7 +2073,7 @@ function openLesson(id, fromHome){
     const unlocked = st.applyDone;
     const t=document.createElement("div"); t.className="tierbar stretch";
     t.innerHTML=`<span class="grow"><b>⛰ Stretch${st.stretchDone?` — done (${sc.got}/${sc.total} first try)`:""}</b>
-      ${unlocked?(rate!==null&&rate>=0.85?"You cleared this lesson in style. These heavier words are built from parts you now own — go get them.":"Heavier words built from the parts you just learned — including some that show up in the CAT."):"Finish “Use the words” to unlock the heavy gear."}</span>
+      ${unlocked?(rate!==null&&rate>=0.85?"Heavier words built from the parts you just learned.":"Heavier words built from the parts you just learned — including some that show up in the CAT."):"Finish “Use the words” to unlock."}</span>
       <button class="btn btn-water" ${unlocked?"":"disabled"} onclick="startStretch('${l.id}')">${st.stretchDone?"Do it again":"Stretch"}</button>`;
     tiers.appendChild(t);
   }
@@ -2622,10 +2622,10 @@ function finishApply(l, recorded){
   const rate=lessonCleanRate(l);
   let follow="";
   if(rate!==null && rate<0.5 && l.base && !st.baseDone){
-    follow=`<div class="tierbar base"><span class="grow"><b>⛺ Base camp?</b> Those words fought back. The same word-parts live inside easy words you already know — a five-minute warm-up there, then this lesson will feel different.</span>
+    follow=`<div class="tierbar base"><span class="grow"><b>⛺ Base camp</b> The same word-parts live inside easy words you already know — a five-minute warm-up there, then this lesson will feel different.</span>
       <button class="btn btn-ghost" onclick="startBase('${l.id}')">Warm up</button></div>`;
   } else if(rate!==null && rate>=0.85 && l.stretch && !st.stretchDone){
-    follow=`<div class="tierbar stretch"><span class="grow"><b>⛰ Stretch unlocked.</b> You own these morphemes now — take on the heavier words built from them.</span>
+    follow=`<div class="tierbar stretch"><span class="grow"><b>⛰ Stretch</b> — heavier words built from the same morphemes.</span>
       <button class="btn btn-water" onclick="startStretch('${l.id}')">Stretch</button></div>`;
   }
   document.getElementById("apply-body").innerHTML=`
@@ -2666,7 +2666,7 @@ function runTier(lid, tierKey){
       const cls=pct>=80?"good":(pct>=60?"mid":"low");
       mount.innerHTML=`<div class="sumbox"><div class="prompt">${label} · lesson ${esc(lid)} — first attempts</div>
         <div class="big ${cls}">${tc.got} / ${tc.total}</div>
-        <p class="muted">${tierKey==="base"?"Foundations set. Those same parts are waiting inside the lesson words — go back and use them.":"Heavy words carried. These count as bonus territory on your report."}</p></div>
+        <p class="muted">${tierKey==="base"?"The same parts appear in this lesson's words.":"Recorded on your report as extension."}</p></div>
         <div class="nextrow" style="justify-content:center">
         <button class="btn btn-primary" onclick="goLesson()">back to lesson</button></div>`;
       return;
@@ -2805,7 +2805,7 @@ function runReview(uptoIdx, opts){
   if(opts.contLesson){
     const mount=document.getElementById("review-body");
     mount.innerHTML=`<div class="sumbox"><div class="prompt">Before Lesson ${esc(opts.contLesson)}</div>
-      <p class="muted" style="margin:6px 0 0">Quick warm-up first — <b>5 words from earlier lessons</b>, drawn at random (ones you’ve missed come back more often). Just gap-fill a sentence or match the word to its meaning. Then we jump into the new lesson.</p></div>
+      <p class="muted" style="margin:6px 0 0">Quick warm-up first — <b>5 words from earlier lessons</b>, drawn at random (ones you’ve missed come back more often). Just gap-fill a sentence or match the word to its meaning. </p></div>
       <div class="nextrow" style="justify-content:center"><button class="btn btn-water" id="rev-begin">Start warm-up →</button>
       <button class="btn btn-ghost" onclick="openLesson('${opts.contLesson}', false)">Skip to lesson</button></div>`;
     mount.querySelector("#rev-begin").onclick=next;
@@ -2828,7 +2828,7 @@ function finishReview(uptoIdx, words, firsts, opts){
   document.getElementById("review-body").innerHTML=`
     <div class="sumbox"><div class="prompt">${opts.contLesson?"Warm-up review":"Review"} — first attempts</div>
     <div class="big ${cls}">${got} / ${words.length}</div>
-    <p class="muted">${missed.length?`Back for another visit soon: <b>${esc(missed.join(", "))}</b> — the shuffle remembers.`:"Clean sweep — these words are sticking."}</p></div>
+    <p class="muted">${missed.length?`Coming back in later reviews: <b>${esc(missed.join(", "))}</b>`:"All correct first try."}</p></div>
     <div class="nextrow" style="justify-content:center">${buttons}</div>`;
 }
 
@@ -2836,7 +2836,7 @@ function finishReview(uptoIdx, words, firsts, opts){
 function renderMorphTable(){
   const m=document.getElementById("morphtable-body");
   let html=`<h2 style="text-align:center">Morpheme table</h2>
-    <p class="muted" style="text-align:center;margin-bottom:6px">Every word-part in the unit, colour-coded. Learn a part once and you can read it inside dozens of words.</p>
+    <p class="muted" style="text-align:center;margin-bottom:6px">Every word-part in the unit, colour-coded. </p>
     <div class="mlegend"><span><i style="background:var(--mpre)"></i>Prefix</span><span><i style="background:var(--mroot)"></i>Root / base</span><span><i style="background:var(--msuf)"></i>Suffix</span></div>`;
   MTYPE_ORDER.forEach(type=>{
     const group=MORPHS.filter(mm=>mm.type===type).slice().sort((a,b)=>a.piece.replace(/-/g,"").localeCompare(b.piece.replace(/-/g,"")));
@@ -2948,7 +2948,7 @@ function renderReport(){
     <h3>Review sessions (${S.reviews.length})</h3>
     ${S.reviews.length?`<table class="repgrid"><tr><th>When</th><th>Up to lesson</th><th>First try</th><th>Missed</th></tr>${revRows}</table>
       <p class="muted">Across all reviews: <b>${revFirst}/${revAtt}</b> first-attempt. ${S.reviews.length>12?"(last 12 shown)":""}</p>`
-      :`<p class="muted">No review sessions yet — reviews are the part that makes words stick.</p>`}
+      :`<p class="muted">No review sessions yet.</p>`}
     <h3>Word list</h3>
     <p class="muted">${(function(){ const m=metWords(), u=unmasteredWords(), k=masteredWords(), d=undrilledWords();
       return m.length? `<b>${m.length}</b> words in the list · <b>${k.length}</b> mastered (answered correctly twice running) · <b>${u.length}</b> still coming back in drills${u.length?`: ${u.map(w=>esc(w.w)).join(", ")}`:""}${d.length?` · ${d.length} not drilled yet`:""}.`

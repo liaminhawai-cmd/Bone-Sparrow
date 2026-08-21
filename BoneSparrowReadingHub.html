@@ -614,7 +614,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
    =========================================================================== */
 const QUICKREADS = [
 { id:"qr1", ch:1, step:"Quickread 1", title:"The Night Sea", where:"Chapter 1, pages 1–2",
-  intro:"Read the opening of the novel carefully — twice is better. When you start the questions, the passage disappears. That's the point: this checks what you understood, not what you can look up.",
+  intro:"Read the opening of the novel carefully — twice is better. When you start the questions, the passage disappears.",
   passage:`Sometimes, at night, the dirt outside turns into a beautiful ocean. As red as the sun and as deep as the sky.<br><br>
 I lie on my bed, Queeny's feet pushing against my cheek, and listen to the waves lapping at the tent. Queeny says I'm stupid, saying that kind of stuff. But it's true. She just doesn't see it, is all. Our maá says there are some people in this world who can see all the hidden bits and pieces of the universe blown in on the north wind and scattered about in the shadows. Queeny, she never tries to look in the shadows. She doesn't even squint.<br><br>
 Maá sees though. She can hear the ocean outside too. 'You hear it, né?' I whisper, my fingers feeling for her smile in the dark.<br><br>
@@ -2109,11 +2109,11 @@ const GLOSSARY = [{"set":"0","t":"The words of the unit","pre":1,"words":[{"w":"
 
 /* ==================== MODULE DIRECTORY / REPORT LABELS ====================== */
 const MODULES = [
- { id:"qr1",  n:1, t:"Quickread: the Night Sea",  d:"Chapter 1 · read it, lose it, prove you understood it", kind:"qr", ch:1 },
+ { id:"qr1",  n:1, t:"Quickread: the Night Sea",  d:"Chapter 1 · the passage hides before the questions", kind:"qr", ch:1 },
  { id:"qr2",  n:2, t:"Quickread: caught by Beaver", d:"Chapter 5 · inference under pressure — the silent-starter, self-marking", kind:"qr", ch:5 },
  { id:"fig",  n:3, t:"Figurative → literal", d:"Match the line to its plain meaning, then name the technique", kind:"fig", ch:1 },
  { id:"voice",n:4, t:"Voice fingerprint", d:"Whose line is it? Name the giveaway — do this before your voice memo", kind:"voice", ch:1 },
- { id:"ev",   n:5, t:"Evidence builder", d:"Find it in the passage, explain it, embed it — the rubric unlocks as you climb", kind:"ev", ch:1 },
+ { id:"ev",   n:5, t:"Evidence builder", d:"Find, explain and embed evidence", kind:"ev", ch:1 },
  { id:"wk",   n:6, t:"Analysis workshop", d:"Build the WAGOLL wall against the CAT rubric, then write with your own evidence", kind:"wk", ch:5, needs:"ev" },
  /* Quickreads 3-8 sit after the workshop in the list, because each one ends by
     asking students to connect evidence to an idea and the workshop is where
@@ -2217,7 +2217,7 @@ function scoreBand(got,total){
 function renderIdentity(){
   $("body").innerHTML=`<div class="idcard">
   <h1>The Bone Sparrow — Reading &amp; Evidence Hub</h1>
-  <p class="sub">Before anything starts, tell the hub who you are. Your work is saved on this device under these details and they go on your printed report.</p>
+  <p class="sub"> Your work is saved on this device under these details and they go on your printed report.</p>
   <div style="display:flex;flex-direction:column;gap:10px">
     <span><label for="idf" style="font-size:12px;font-weight:700">First name</label><input id="idf" value="${esc(S.fname||"")}" autocomplete="off"><div class="err" id="ef"></div></span>
     <span><label for="idl" style="font-size:12px;font-weight:700">Last name</label><input id="idl" value="${esc(S.lname||"")}" autocomplete="off"><div class="err" id="el"></div></span>
@@ -2247,7 +2247,7 @@ function moduleAvail(m){
 function renderHome(){
   const doneCount=MODULES.filter(m=>S.done[m.id]).length;
   let h=`<h1>The Bone Sparrow — Reading &amp; Evidence Hub</h1>
-  <p class="sub">${esc(S.fname)} ${esc(S.lname)} · reading, inference, voice &amp; evidence.
+  <p class="sub">${esc(S.fname)} ${esc(S.lname)}
   Wrong answers get retried until you master them, but <b>your first attempt at each question is what goes on your report</b>.</p>`;
   h+=`<div class="homectl noprint">
     <span><label for="chSel">Where are you up to?&nbsp;</label>
@@ -2256,7 +2256,7 @@ function renderHome(){
   h+=`<option value="99" ${S.chapter>20?"selected":""}>I've finished the novel</option></select></span>
     <button class="switch ${S.eal?"on":""}" onclick="S.eal=!S.eal;save();writeProfile();renderHome()" aria-pressed="${S.eal}">
       <span class="track"></span>EAL support ${S.eal?"on":"off"}</button>
-    <span class="gatednote">Questions about pages you haven't reached stay hidden — no spoilers.</span>
+    <span class="gatednote"></span>
   </div>`;
   MODULES.forEach(m=>{
     const done=!!S.done[m.id];
@@ -2330,7 +2330,7 @@ function runQuizzer(cfg){
     let h=`<div class="eyebrow">${esc(cfg.where)}</div><h2>${esc(cfg.title)}</h2>`;
     if(cfg.subnote) h+=`<p class="lead">${esc(cfg.subnote)}</p>`;
     h+=`<div class="progress-track"><div class="progress-fill" style="width:${Math.min(100,answered/total*100)}%"></div></div>`;
-    if(item.redundant) h+=`<p class="lead"><b>Same skill, new question.</b> You'll get a fresh one every time you miss it — the way through is to do it again, not to remember the answer. This one isn't scored; your first attempt is already saved.</p>`;
+    if(item.redundant) h+=`<p class="lead"><b>New question, same skill.</b> Not scored.</p>`;
     else if(round>1) h+=`<p class="lead">Mastery round ${round} — the questions you missed, replaced with new ones on the same skill. (Your first attempts are already saved.)</p>`;
     if(item.stim) h+=`<div class="stim">${item.stim}${item.page?`<span class="pg">(${esc(item.page)})</span>`:""}</div>`;
     h+=`<p class="q">${esc(step.q)}</p><div class="opts ${step.chips?"chips":""}" id="opts"></div>
@@ -2438,7 +2438,7 @@ function startQr(id){
     missLabel:(item,step)=>item.id,
     doneNote: id==="qr1" ? "Next quickread: Chapter 5, the moment Beaver catches Subhi." :
       id==="qr2" ? "If the figurative lines here interested you, the next activity digs into exactly how they work." :
-      (qr.links&&qr.links.length ? "The last questions were the workshop's move done cold: an idea, the line that proves it, and what makes it proof. That is a body paragraph in three sentences. "+(later?"Next: "+later.t.replace(/^Quickread: /,"the ")+", at chapter "+later.ch+".":"You have finished every quickread in the hub.")
+      (qr.links&&qr.links.length ? ""+(later?"Next: "+later.t.replace(/^Quickread: /,"the ")+", at chapter "+later.ch+".":"You have finished every quickread in the hub.")
         : "")
   });
 }
@@ -2454,7 +2454,7 @@ function runFig(){
       { key:"tech", skill:"figtech", q:"Which feature is doing the work?", opts:it.tech.opts.map(i=>FIG_TECHS[i]), a:it.tech.a, explain:it.tech.explain }
     ]})),
     missLabel:(item,step)=>item.id,
-    doneNote:"You've just practised the two halves of writing about language: SAY what it means, then NAME how it's done. The Evidence builder puts those together."
+    doneNote:"Next: the Evidence builder."
   });
 }
 
@@ -2469,7 +2469,7 @@ function runVoice(){
       { key:"feat", skill:"voicefeat", q:"Now name the giveaway. Which language feature marks it as theirs?", opts:it.feat.opts, a:it.feat.a, explain:it.feat.explain }
     ]})),
     missLabel:(item,step)=>item.id,
-    doneNote:"For your oral presentation you'll be building one of these voices yourself. Steal the fingerprints: a borrowed word, a dropped 'am', an adjective where a noun should be."
+    doneNote:"You will build one of these voices yourself for your oral presentation."
   });
 }
 
@@ -2505,7 +2505,7 @@ function renderEvIdea(){
   h+=evLadderHtml(1);
   h+=`<p class="lead">${esc(r.question)}</p><div class="idea-chips">`;
   r.ideas.forEach(idea=>{ h+=`<button class="fchoice" onclick="evPickIdea('${idea.id}')">${esc(idea.label)}</button>`; });
-  h+=`</div><p class="lead">Pick the idea you want to prove, then the passage opens for evidence-hunting.</p>`;
+  h+=`</div><p class="lead">Pick the idea you want to prove.</p>`;
   $("body").innerHTML=h;
 }
 function evPickIdea(id){ EV.idea=id; EV.picked=new Set(); EV.locked=false; renderEvSelect(); }
@@ -2604,7 +2604,7 @@ function renderEvBuilder(){
   EV.builderChecked=false;
   let h=`<div class="eyebrow">${esc(r.where)} · evidence builder · level 3</div><h2>${esc(r.title)}</h2>`;
   h+=evLadderHtml(3);
-  h+=`<p class="lead">${esc(B.intro)} Tap a tile to place it; tap a placed tile to remove it. Colours are the parts: <b style="color:var(--stem-tx)">blue = stem</b>, <b style="color:var(--quote-tx)">yellow = quote</b>, <b style="color:var(--tail-tx)">pink = ending</b>.</p>
+  h+=`<p class="lead">${esc(B.intro)}  Colours are the parts: <b style="color:var(--stem-tx)">blue = stem</b>, <b style="color:var(--quote-tx)">yellow = quote</b>, <b style="color:var(--tail-tx)">pink = ending</b>.</p>
   <div class="slotrow">
     <div class="slot" id="slot-stem"><span class="slabel">Stem</span><span id="in-stem"></span></div>
     <div class="slot" id="slot-frag"><span class="slabel">Quote</span><span id="in-frag"></span></div>
@@ -2645,7 +2645,7 @@ function drawSlots(B){
   if(stem||frag||tail){
     let s=(stem?stem.t:"…")+" "+(frag?"“"+frag.t+"”":"“…”")+(tail?tail.t:" …");
     prev.textContent=s;
-  } else prev.innerHTML=`<span class="ph">Your sentence appears here as you build it.</span>`;
+  } else prev.innerHTML=`<span class="ph"></span>`;
   const fb=$("fb"); if(fb) fb.className="feedback";
 }
 function evBuildCheck(){
@@ -2674,7 +2674,7 @@ function evBuildCheck(){
   if(!EV.builderChecked){ recFirst("ev."+r.id+".l3", pass); EV.builderChecked=true; }
   if(pass){
     fb.className="feedback ok";
-    let msg="<b>Strong analytical sentence.</b> Stem, embedded quote and an ending that explains — read it back once more, out loud if you can. This is the level to aim for in your essay.";
+    let msg="<b>Strong analytical sentence.</b> Stem, embedded quote and an ending that explains.";
     if(tail.q==="bonus") msg+=" <b>And you've woven in a second quote — that's above the standard: “I can correctly embed multiple quotes into an explanation.”</b>";
     fb.innerHTML=msg+`<div style="margin-top:8px"><b>Level 3 achieved:</b> ${esc(EV_LADDER[2].text)}.</div>`;
     S.evLv=Math.max(S.evLv, r.id==="r2"?4:3); save();
@@ -2694,9 +2694,7 @@ function evFinish(){
   $("body").innerHTML=`<h2>Evidence builder — done</h2>
   ${evLadderHtml(5)}
   <div class="panel"><p style="margin:0"><b>${sc.got}/${sc.total} levels passed on the first check.</b>
-  You've climbed the same ladder that's on your assessment rubric: find it → explain it → embed it → make it explain something.
-  The wrong turns you met on the way — retelling, overreaching, pointing at the quote — are the exact traps to avoid in your essay.</p></div>
-  <div class="panel" style="background:var(--bg)"><p class="lead" style="margin:0">The <b>Analysis workshop</b> has just unlocked on the hub${S.chapter<5?" (it opens once you've read to chapter 5)":""} — build the WAGOLL wall against the CAT rubric, then write with your own harvested evidence.</p></div>
+</p></div>
   <div class="btnrow"><button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
 }
 
@@ -2815,7 +2813,7 @@ function renderWall(){
   let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall
     <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button></div>
   <h2>${esc(WK_WALL.q)}</h2>
-  <p class="lead">${esc(WK_WALL.note)} The <b>Example</b> row is the one you fill in.</p>
+  <p class="lead">${esc(WK_WALL.note)} </p>
   ${wkColourKey()}`;
   h+=wagollTable({
     levels:WK_WALL.levels, start:WK.wallStart, pageFn:"wallPage", activeIdx:-1, justIdx:WK.justIdx,
@@ -2837,7 +2835,7 @@ function renderWall(){
   }
   h+=`<div class="feedback" id="fb" aria-live="polite"></div>`;
   if(wallDone()){
-    h+=`<div class="feedback ok"><b>Wall complete.</b> Page across it and read the Example row left to right — the responses stop retelling and start analysing, and the colour fills in as they do. Same rubric your CAT is marked on.</div>
+    h+=`<div class="feedback ok"><b>Wall complete.</b></div>
     <div class="btnrow"><button class="btn btn-primary" onclick="renderWkBuild()">Part B: write it yourself, then climb the rubric →</button></div>`;
   }
   $("body").innerHTML=h;
@@ -2908,7 +2906,7 @@ function wkSetFocus(fid){
   renderWkBuild();
   if(startOfClimb && untouched){
     const fb=$("fb"); if(fb){ fb.className="feedback warn";
-    fb.innerHTML="<b>Level 5 is done for you</b> — that whole sentence just landed on your canvas, and it's already in the wall above. Your climb starts at <b>Level 6</b>: weave the quote INSIDE the sentence with a joiner, instead of leaving it beside."; }
+    fb.innerHTML="<b>Level 5 is done for you.</b> At <b>Level 6</b>, weave the quote inside the sentence with a joiner."; }
   }
 }
 
@@ -2995,7 +2993,7 @@ function renderWkBuild(){
       const lv=tLevels[k], mine=WK.versions[lv.n];
       const fresh=(WK.justIdx===k)?" justplaced":"";
       if(mine) return `<div class="wcell ex filled${fresh}">${mine.given?`<span class="giventag">done for you</span>`:""}<div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
-      if(k===tIdx) return `<div class="wcell ex now"><span class="wempty">${WK.rails?"this is what we are building — watch the banks below":"you're writing this one now — build it below"}</span></div>`;
+      if(k===tIdx) return `<div class="wcell ex now"><span class="wempty">${WK.rails?"":"you're writing this one now — build it below"}</span></div>`;
       if(lv.n===5 && !WK.rails) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
       return `<div class="wcell ex"><span class="wempty">${k<tIdx?"—":"not yet"}</span></div>`;
     }
@@ -3104,7 +3102,7 @@ function wkFillBins(){
 function wkDraw(){
   const cv=$("wkCanvas"); if(!cv) return;
   cv.innerHTML="";
-  if(!WK.canvas.length) cv.innerHTML=`<span class="ph">Drag a tile up from the banks below, or tap one to add it to the end.</span>`;
+  if(!WK.canvas.length) cv.innerHTML=`<span class="ph"></span>`;
   WK.canvas.forEach((c,idx)=>{
     const d=wkTileData(c);
     const b=document.createElement("button");
@@ -3118,7 +3116,7 @@ function wkDraw(){
   const prev=$("wkPrev");
   if(prev){
     if(WK.canvas.length) prev.textContent=wkText();
-    else prev.innerHTML=`<span class="ph">Your sentence appears here as you build.</span>`;
+    else prev.innerHTML=`<span class="ph"></span>`;
   }
   const fb=$("fb"); if(fb) fb.className="feedback";
   const kb=$("wkrow"); const old=kb&&kb.querySelector("#liftBtn"); if(old) old.remove();
@@ -3537,14 +3535,14 @@ function wkFinishClimb(){
   S.done.wk=true; save();
   const sc=scoreFor("wk");
   let h=`<h2>Analysis workshop — the climb</h2>
-  <div class="panel"><p style="margin:0 0 10px"><b>${sc.got}/${sc.total} first-attempt.</b> One idea, said four ways — each level lifting the last:</p>`;
+  <div class="panel"><p style="margin:0 0 10px"><b>${sc.got}/${sc.total} first-attempt.</b> Your sentences:</p>`;
   WK_LEVELS.forEach(lv=>{ const vv=WK.versions[lv.n]; if(!vv) return; const v=vv.t;
     h+=`<div class="climbrow done" style="margin-bottom:8px">
       <div class="climbhead"><span class="cl">Level ${lv.n} · ${esc(lv.name)}</span>
       <span class="cvic">${esc(lv.focus||lv.vic)}</span></div>
       <div class="cmine">${vv.h||esc(v)}</div>
       <div class="cwhy">${lv.exp||""}</div></div>`; });
-  h+=`<p class="lead" style="margin:10px 0 0">Read the first and the last one after each other. Nothing was thrown away — you kept the same idea and kept lifting how you said it. That is exactly what redrafting is, and it is what the CAT is marked on.</p></div>
+  h+=`<p class="lead" style="margin:10px 0 0"></p></div>
   <div class="btnrow"><button class="btn" onclick="runWk()">Climb again with a new focus</button>
   <button class="btn btn-primary" onclick="go('home')">Back to the hub →</button></div>`;
   $("body").innerHTML=h;
@@ -3646,7 +3644,7 @@ function renderGloss(){
      <button class="gx" onclick="GP.open=false;renderGloss()" aria-label="close">×</button></div>
    <div class="gtools">${tools}</div>
    <div class="gbody">${body||`<div class="glock">Nothing here yet.</div>`}</div>
-   <div class="gfoot"><i class="hint ok"></i> words you've unlocked · <i class="hint todo"></i> still waiting in the Vocab Hub — both glow in the passage, and tapping one brings you here.</div>`;
+   <div class="gfoot"><i class="hint ok"></i> unlocked · <i class="hint todo"></i> still in the Vocab Hub</div>`;
   const on=pn.querySelector(".gword.on");
   if(on) on.scrollIntoView({block:"nearest"});
 }
@@ -3933,7 +3931,7 @@ function renderReport(){
   const scAll=mods.reduce((a,m)=>{const x=scoreFor(m);return{got:a.got+x.got,total:a.total+x.total}},{got:0,total:0});
   const code=vcode(JSON.stringify(S.first)+S.fname+S.lname+S.sid);
   const teach = !anyDone ? "" :
-    `This student worked through the Reading &amp; Evidence Hub (reading progress set to ${S.chapter>20?"the whole novel":"chapter "+S.chapter}${S.eal?", EAL support on":""}). Every wrong answer was retried until correct (mastery loop), but the scores above are <b>first attempts only</b> — genuine independent reading, not final-state guessing. `
+    `This student worked through the Reading &amp; Evidence Hub (reading progress set to ${S.chapter>20?"the whole novel":"chapter "+S.chapter}${S.eal?", EAL support on":""}). Every wrong answer was retried until correct (mastery loop), but the scores above are <b>first attempts only</b>  `
     + (worst!==null && worstErr>0.34 ? `The clearest next step: <b>${esc(MISS_LABELS[worst])}</b> — ${esc(RECOMMEND[worst])}` :
        worst!==null && worstErr>0 ? `Errors were spread thin; the softest area was <b>${esc(MISS_LABELS[worst])}</b>. ${esc(RECOMMEND[worst])}` :
        `A clean first-attempt run across everything attempted — extension: the 'stretch' rows of 12w, or drafting the voice memo unassisted.`);

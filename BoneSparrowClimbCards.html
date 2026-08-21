@@ -262,12 +262,12 @@ function render({B,L}){
 
   if(problems.length){
     out.innerHTML = `<div class="err"><b>The pack is out of step with the hub.</b> These parts no longer
-      resolve, so the page will not print a set a student cannot build in the app:
+      resolve:
       <ul>${problems.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
     return;
   }
 
-  const foot = `Part B of the Analysis workshop (BoneSparrowReadingHub.html), on paper. Every part is a tile from the app's own bank, read from the hub at load time. ${esc(B.prompt)} ${esc(B.where)}. The Bone Sparrow, Zana Fraillon, Hachette Australia, 2016.`;
+  const foot = `${esc(B.prompt)} ${esc(B.where)}. The Bone Sparrow, Zana Fraillon, Hachette Australia, 2016.`;
 
   /* One sheet per theme, four complete sets on it, and nothing on the page that
      is not a card. The teacher cuts three vertical lines and hands a column to
@@ -304,7 +304,7 @@ function render({B,L}){
     <header class="head">
       <div class="kicker">The Bone Sparrow · the climb · teacher key</div>
       <h1>The six sentences</h1>
-      <p>What each theme's parts join into. This page stays on your desk. Any order that reads aloud cleanly and keeps every part is right — these are the versions the app builds.</p>
+      <p>Any order that reads aloud cleanly and keeps every part is right.</p>
     </header>
     <div class="keys">${Object.keys(CLIMB).map(f=>[7,8].map(n=>`
       <div class="krow">
