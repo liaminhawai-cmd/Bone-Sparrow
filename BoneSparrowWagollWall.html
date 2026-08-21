@@ -132,8 +132,7 @@ function render(d){
   const {WK_WALL, WK_LEVELS} = d;
   const byLevel = n => WK_LEVELS.find(L=>L.n===n);
   out.innerHTML = `<h1>The full WAGOLL wall</h1>
-  <p class="lead">${esc(WK_WALL.q)} Five answers to one question, one per rubric level.
-     The workshop builds this wall a response at a time; here it is whole, to write against.</p>
+  <p class="lead">${esc(WK_WALL.q)}</p>
   <div class="ckey">
     <span><i class="sw feat"></i>subject</span>
     <span><i class="sw verb"></i>analytical verb</span>
@@ -161,8 +160,7 @@ function render(d){
     </section>`;
   }).join("") +
   `<p class="foot">The same ladder prints as one A3 sheet per level, Foundation to Level 10, in the
-   <a href="BoneSparrowWagollSheets.html">anchor sheets</a>. Wall text and rubric wording are read from
-   the reading hub at load time, so this page always shows what the workshop is teaching.</p>`;
+   <a href="BoneSparrowWagollSheets.html">anchor sheets</a>.</p>`;
 }
 
 (async function boot(){
@@ -173,10 +171,9 @@ function render(d){
     out.innerHTML = `<h1>The full WAGOLL wall</h1>
     <div class="gate">
       <h2>Couldn't read the wall</h2>
-      <p>This page reads the wall out of the reading hub rather than keeping its own copy, and the
-         browser would not let it: ${esc(e.message)}.</p>
-      <p>That happens when the files are opened straight off a disk (a <code>file://</code> address)
-         instead of the class website. Open it from the site, or use the printable sheets.</p>
+      <p>${esc(e.message)}</p>
+      <p>Open it from the class website rather than off a disk (a <code>file://</code> address),
+         or use the printable sheets.</p>
       <p><a class="btn" href="BoneSparrowWagollSheets.html">Printable A3 sheets →</a>
          <a class="btn ghost" href="${HUB}">Reading hub</a></p>
     </div>`;

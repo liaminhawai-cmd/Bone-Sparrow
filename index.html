@@ -216,7 +216,7 @@ function renderStep2(){
     + `<option value="99" ${P.chapter>20?"selected":""}>I've finished the novel</option>`;
   $("app").innerHTML = railHtml(2) + `
   <h1>Hi, ${esc(P.fname)}.</h1>
-  <p class="sub">Two settings and you're in. You can change both whenever you like.</p>
+  <p class="sub">You can change both later.</p>
 
   <div class="eyebrow">Do you use EAL support?</div>
   <p class="lead">EAL support shows key words in your first language while you're learning them, and adds the EAL writing levels (C2, C3, C4) beside the Year 7 ones.</p>
@@ -265,7 +265,7 @@ function renderStep2(){
 const DIRECTORY = [
  { g:"For students", items:[
    {u:"BoneSparrowVocabHub.html", t:"Vocab Hub", d:"words, chapter by chapter"},
-   {u:"BoneSparrowReadingHub.html", t:"Reading & Evidence Hub", d:"everything below, in one place"},
+   {u:"BoneSparrowReadingHub.html", t:"Reading & Evidence Hub", d:""},
    {u:"GrammarHuboffline.html", t:"Grammar Hub", d:"sentence structure, when a hub sends you here"} ]},
  { g:"Straight to one activity", items:[
    {u:"BoneSparrowReadingHub.html#qr1", t:"Quickread 1 — the Night Sea", d:"chapter 1"},
@@ -320,10 +320,10 @@ function renderStep3(){
     <div class="d">Open at ${esc(chapLabel)}: ${open.join(", and ")}. Work top to bottom unless your teacher says otherwise, and print your report when you're asked for it.</div>
   </a>
 
-  <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right, but the report shows the honest first go — that's the point of it.</div>
+  <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right.</div>
 
   <details class="dir"><summary>Every link in this suite, separately</summary>
-    <p class="dirnote">Each of these opens on its own, so you can post one straight into Classroom without sending students through the front door.</p>
+    <p class="dirnote"></p>
     ${DIRECTORY.map(g=>`<div class="dirgrp"><h4>${esc(g.g)}</h4>${g.items.map(it=>
       `<div class="dirrow"><a href="${it.u}">${esc(it.t)}</a><span>${esc(it.d)}</span></div>`).join("")}</div>`).join("")}
   </details>`;
@@ -413,7 +413,7 @@ function renderReports(){
       ? `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
           <div class="catlv">Level ${climbed}${P.eal&&EAL_BANDS[climbed]?` <span class="dim">· EAL ${EAL_BANDS[climbed]}</span>`:""}</div>
           <div class="catvic">“${esc(VIC_LEVELS[climbed])}”</div>
-          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:" — top of the ladder."}</div></div>`
+          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:"."}</div></div>`
       : `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
           <div class="catlv dim">Not yet reached</div>
           <div class="catvic">Working towards “${esc(VIC_LEVELS[5])}”</div></div>`;
@@ -428,7 +428,7 @@ function renderReports(){
   </div>
   <h1 style="margin-bottom:2px">The Bone Sparrow — my report</h1>
   <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
-  <p class="sub">One report for everything. Every score is a <b>first attempt</b> — wrong answers came back until they were mastered, but the honest first go is what's shown here.</p>
+  <p class="sub">One report for everything. Every score is a <b>first attempt</b>.</p>
 
   <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt (${pct(rGot,rTot)})`:""}</h2>
   <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rrows}</table>
@@ -437,11 +437,11 @@ function renderReports(){
 
   <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items (${pct(vGot,vTot)})`:""}</h2>
   <table class="rpt"><tr><th>Chapter set</th><th>Build (1st try)</th><th>Use (1st try)</th><th>Status</th></tr>${vrows}</table>
-  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them (${pct(revFirst,revAtt)}).`:"none yet — reviews are what make the words stick."}</p>
+  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them (${pct(revFirst,revAtt)}).`:"none yet."}</p>
   <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered (${pct(mastered.length,wk.length)})</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
   :`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowVocabHub.html">go meet some words</a>.</p>`}
 
-  <p class="sub">Verification code: <b class="vc">${code}</b> · changes if any name, ID or score changes — so a report can't be quietly edited after printing.</p>`;
+  <p class="sub">Verification code: <b class="vc">${code}</b></p>`;
   $("backRep").onclick=()=>{ document.querySelector(".container").classList.remove("report"); step=3; render(); };
 }
 function renderTopMini(){

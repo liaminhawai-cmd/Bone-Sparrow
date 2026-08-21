@@ -462,7 +462,7 @@
 </div>
 <div class="container">
   <h1>Grammar Hub</h1>
-  <p class="subtitle">ELC grammar progression · pick skills, practise, get a report</p>
+  <p class="subtitle">ELC grammar progression</p>
 
   <!-- ============ SELECT ============ -->
   <section class="screen active" id="selectScreen">
@@ -485,7 +485,7 @@
       <button class="btn btn-ghost" id="reviewWeakBtn" style="display:none;margin-top:8px">Review what you missed</button>
     </div>
     <p class="muted" style="text-align:center;margin-top:14px" id="helpText">
-      Click any skill to focus on it. You'll learn the key vocabulary first, see worked examples, then practise that skill plus the level below (review) and above (stretch).
+      Click any skill to focus on it. 
     </p>
   </section>
 
@@ -560,7 +560,7 @@
     <div id="reportSummary"></div>
 
     <h3>Your rubric now</h3>
-    <p class="muted" id="reportRubricHint">Ticks are mastered, orange is half-mastered, crosses need another go, grey wasn't included. We've moved your selection up a level where you mastered it — start again or adjust below.</p>
+    <p class="muted" id="reportRubricHint">Ticks are mastered, orange is half-mastered, crosses need another go, grey wasn't included. </p>
     <div class="matrix" id="reportRubric"></div>
     <div class="matrix-legend" id="reportRubricLegend"></div>
 
@@ -603,7 +603,7 @@
     </div>
     <p class="muted noprint" id="progPdfHint" style="text-align:center">
       Add your name and student code, then Save as PDF and send it to your teacher.
-      Going back keeps your place — your progress isn't cleared.
+      
     </p>
   </section>
 </div>
@@ -3296,7 +3296,7 @@ window.VIC_MAP = {
       return;
     }
     $("helpText").innerHTML = mode === "teaching"
-      ? `Click any skill to focus on it. You'll learn the key vocabulary first, see worked examples, then practise that skill plus the level below (review) and above (stretch).`
+      ? `Click any skill to focus on it. `
       : `Click the cell you want to revise — it's <b>ringed</b> and the band just before it comes along (marked <b>review</b>). Click the strand name to revise from C1. Each run pulls a random couple of questions per skill.`;
   }
 
@@ -3577,7 +3577,7 @@ window.VIC_MAP = {
       ? `<span class="clause-punct">${escapeHtmlE(w)}</span>`
       : `<span class="clause-word${i >= m.span[0] && i <= m.span[1] ? " correct" : ""}">${escapeHtmlE(w)}</span>`).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">Watch me find the whole thing</div>` +
+      `<div class="teach-phase">Worked example</div>` +
       `<div class="clause-ask">Find ${clauseLabel(cp, m.find)} — every word of it.</div>` +
       `<div class="clause-sentence">${chips}</div>` +
       `<div class="teach-feedback good">${escapeHtmlE(m.explain)}</div>`;
@@ -3621,7 +3621,7 @@ window.VIC_MAP = {
       ? `<span class="clause-punct">${escapeHtmlE(w)}</span>`
       : `<button type="button" class="clause-word" data-i="${i}">${escapeHtmlE(w)}</button>`).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">${youdo ? "Find it yourself" : "Now you try"}</div>` +
+      `<div class="teach-phase">"Your turn"</div>` +
       `<div class="clause-ask">Select <b>every word</b> of ${clauseLabel(cp, item.find)}, then Check.</div>` +
       `<div class="clause-sentence" id="clauseRow">${chips}</div>` +
       `<div class="teach-feedback" id="clauseFb" aria-live="polite"></div>` +
@@ -3695,7 +3695,7 @@ window.VIC_MAP = {
     $("preteachBar").style.width = "82%";
 
     const banner = (target && (target.vocab || []).length)
-      ? `<div class="teach-banner">✓ Metalanguage done — now the skill</div>` : "";
+      ? `<div class="teach-banner"></div>` : "";
     const goalLine = g
       ? `<div class="li-box"><div class="li-eyebrow">Now you can</div>
            <div class="li-text" style="font-size:17px">${linkifyGlossary(escapeHtmlE(g.skillGoal))}</div></div>` : "";
@@ -3831,7 +3831,7 @@ window.VIC_MAP = {
         (here ? `<div class="rested">${escapeHtmlE(m.text)}</div>` : ``) + `</div>`;
     }).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">Watch how I sort this</div>` +
+      `<div class="teach-phase">Worked example</div>` +
       `<div class="sort-prompt">${escapeHtmlE(sort.prompt)}</div>` +
       `<div class="zones">${zonesHtml}</div>` +
       `<div class="teach-feedback good">${escapeHtmlE(m.explain)}</div>`;
@@ -3883,7 +3883,7 @@ window.VIC_MAP = {
     const zonesHtml = sort.zones.map((z) =>
       `<button type="button" class="zone" data-zone="${escapeHtmlE(z)}" aria-label="Put “${escapeHtmlE(item.text)}” in ${escapeHtmlE(z)}"><span class="zone-label">${escapeHtmlE(z)}</span></button>`).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">${youdo ? "Sort it yourself" : "Now you try"}</div>` +
+      `<div class="teach-phase">"Your turn"</div>` +
       `<div class="sort-prompt">${escapeHtmlE(sort.prompt)}</div>` +
       `<div class="sort-stage"><span class="sort-tile" id="sortTile">${escapeHtmlE(item.text)}</span></div>` +
       `<div class="sort-help">Drag the word into a box, or tap a box to put it there.</div>` +
@@ -4086,15 +4086,15 @@ window.VIC_MAP = {
       const up = nextDrillableAbove(category, bandIndex);
       if (up !== null) {
         nextBand = up;
-        msg = `Great work on ${bandLabel(bandIndex)}! Moving to ${bandLabel(up)} — you'll get the vocabulary and skill preteach first.`;
+        msg = `Next: ${bandLabel(up)}.`;
       } else {
         nextBand = null;
-        msg = `Almost there! You've reached the top of the strand.`;
+        msg = `Top of the strand.`;
       }
     } else {
       // target not mastered — stay
       nextBand = bandIndex;
-      msg = `Nearly there. Let's have another go at ${bandLabel(bandIndex)} with a refresher.`;
+      msg = `Repeating ${bandLabel(bandIndex)}.`;
     }
 
     // show placement screen
@@ -4956,7 +4956,7 @@ window.VIC_MAP = {
       ? `<div class="prog-section-title">Your progress over time</div>` +
         `<table class="prog-table"><tr><th>Skill</th><th>First try &#10003;</th><th>Rate</th><th>Sessions</th></tr>${otRows}</table>` +
         `<p class="muted">Totals from every completed session saved on this device.</p>`
-      : `<div class="prog-section-title">Your progress over time</div><p class="prog-empty">Finish a session and your skills will start showing up here.</p>`;
+      : `<div class="prog-section-title">Your progress over time</div><p class="prog-empty">No completed sessions yet.</p>`;
   }
   function openProgress() {
     progCameFrom = activeScreenName();
