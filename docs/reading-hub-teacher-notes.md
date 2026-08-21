@@ -164,23 +164,30 @@ catches it. The type scale is a formula with a floor and a ceiling, tuned so the
 longest sheet (Level 10) fits and the shortest (Foundation) is not swimming in
 white space.
 
-## The climb as cut and join
+## The climb as cut and paste
 
 `BoneSparrowClimbCards.html` is Part B on paper — the sentence builder, with
 scissors. One pack per theme (fear in the body, power and control, protection
-and survival), two A4 sheets each, plus a single key sheet for all three.
+and survival), one A4 sheet each, plus a single key sheet for all three — four
+sheets for the whole activity, and a student only needs their own theme's.
 
-1. **Two done, two to build.** The Level 5 and Level 6 sentences arrive
-   written and colour-coded, because the paper task should start where the
-   difficulty starts. Under them, the note says what the one change from 5 to 6
-   was: the quote moved inside the sentence. Then two boards, Level 7 and
-   Level 8, each with its rubric line, the task in a sentence, and ruled space
-   to lay the parts on.
-2. **The parts.** The sentence cut into strips, scrambled, dashed to cut along,
-   coloured on the same four-colour key as the app. Every strip belongs in the
-   sentence — none are spare and none are wrong, so the task is ordering, not
-   elimination. Seven strips for Level 7, ten for Level 8.
+1. **Two done.** The Level 5 and Level 6 sentences arrive written and
+   colour-coded, because the paper task should start where the difficulty
+   starts. Under them, the note says what the one change from 5 to 6 was: the
+   quote moved inside the sentence.
+2. **Two to build.** Under each of Level 7 and Level 8 — its rubric line and
+   the task in a sentence — sits that sentence cut into strips, scrambled, in
+   two columns, coloured on the same four-colour key as the app. Every strip
+   belongs in the sentence; none are spare and none are wrong, so the task is
+   ordering, not elimination. Seven strips for Level 7, ten for Level 8.
+   There are no ruled paste boxes: the strips get joined on the desk and stuck
+   into an exercise book, which halves the pack.
 3. **The key.** All six target sentences on one page for your desk.
+
+There was a Part A pack too — the five wall responses as cards to sort against
+the rubric — and it is gone. It cost three sheets a student before anybody had
+written anything, and the sorting it asked for is what the on-screen wall
+already does. The cut-and-paste link now points here.
 
 **The parts are the app's own tiles.** Each pack is a list of tile names
 resolved against the hub's banks at load time, exactly the way the app lays
@@ -193,25 +200,6 @@ longer exists.
 Level 8 carries **two quotations**, because its idea claims two perspectives
 and one quote cannot show two. That is also what makes it visibly bigger than
 Level 7 on the desk.
-
-## The wall as cut and paste
-
-`BoneSparrowWallCards.html` is Part A on paper: three A4 portrait pages, print
-double-sided or separately.
-
-1. **The cards.** The five wall responses, shuffled and lettered A to E, dashed
-   borders to cut along, colour and underline patterns intact. The letters are
-   a fixed scramble, not a random one, so every printed set matches the key.
-2. **The board.** Five rubric rows, Level 5 to 9, each with the skill focus,
-   the rubric line in quotation marks, and a lined paste box sized for a card.
-3. **The key.** Letters against levels with each response's "why" line, for
-   your desk.
-
-Like the on-screen wall, it reads the responses and rubric wording out of the
-hub at load time, so it cannot drift from what students see. That means it has
-to be opened from the website (or any http serve of the folder), not
-double-clicked as a bare file; opened wrongly it says so instead of printing a
-blank.
 
 ## Teacher mode: five slides, one climb, and the Frayer
 
@@ -345,8 +333,8 @@ applies: a link to a quickread past a student's reading position sends them home
 rather than spoiling it.
 
 The print masters and the wall are their own files, so they were already
-linkable: `BoneSparrowWagollSheets.html`, `BoneSparrowWallCards.html`,
-`BoneSparrowClimbCards.html`, `BoneSparrowWagollWall.html`.
+linkable: `BoneSparrowWagollSheets.html`, `BoneSparrowClimbCards.html`,
+`BoneSparrowWagollWall.html`.
 
 **Teacher mode is now a button**, dark and labelled, in the hub's top bar on
 every screen except the deck itself. It used to be a line of small red text in
