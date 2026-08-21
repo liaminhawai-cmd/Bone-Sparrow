@@ -165,33 +165,37 @@ to be opened from the website (or any http serve of the folder), not
 double-clicked as a bare file; opened wrongly it says so instead of printing a
 blank.
 
-## Teacher mode: the slides, then the builder on rails
+## Teacher mode: one climb, then four colours
 
 The Analysis workshop carries a **teacher mode** link in its breadcrumb, in
-both Part A and Part B, and there is a **▶ Teacher mode** button in the hub's
-top bar. It also has its own address: `BoneSparrowReadingHub.html#teach`.
+both parts, there is a **▶ Teacher mode** button in the hub's top bar, and it
+has its own address: `BoneSparrowReadingHub.html#teach`.
 
-Six slides, one sentence: the Year 7 response from the wall, read out of the
-workshop's own data so the deck cannot drift from it. The first slide shows it
-whole with the colour key; the next four light one part at a time, idea,
-analytical verb, evidence, effect on the reader, with a sentence each. There is
-no slide explaining what the deck is or which key to press. → and ← move, Esc
-leaves.
+It opens straight into the builder, holding a Year 4 sentence:
 
-The last slide opens the **builder on rails**: the real Part B, holding the
-Level 5 sentence students are handed for free, with the level set to 7. Three
-of its tiles have retired on the way up and the builder flags all three, so the
-demonstration is a climb rather than a swap. Trade the reporting verb for
-"reveals", grow "fear in the camp" into "the issue of fear in detention", trade
-"makes you feel sorry for him" for what the reader understands, and put the
-quote inside the sentence with "when he says" instead of after a full stop. The
-checker will also catch "which" colliding with a clause, which is the moment to
-show them "which shows". It lands on Level 7.
+> Subhi **shows** **fear in the camp**. "My throat is as dry as the dirt" which
+> **makes you feel sorry for him**.
+
+The level is set to 7, so the three bold tiles are already flagged as retired
+and the demonstration is one pass across two rungs: trade the reporting verb
+for "reveals", grow the idea into "the issue of fear in detention", trade the
+feeling for what the reader understands, and put the quote inside the sentence
+with "when he says" instead of after a full stop. The checker catches "which"
+colliding with a clause on the way, which is the moment to show them "which
+shows". Reaching Level 7 turns the lift button into **The four colours →**.
+
+That last screen is the whole deck: four cards, four questions.
+
+| | |
+|---|---|
+| **Idea** | what |
+| **Purpose** | why |
+| **Evidence** | when |
+| **Verb** | how |
 
 Nothing in teacher mode is scored or saved. The rails flag turns every write to
-the student record into a no-op, so the whole demonstration can be driven on a
-signed-in student's device and their first attempts, kept sentences and
-progress are untouched.
+the student record into a no-op, so the demonstration can be driven on a
+signed-in student's device without leaving a mark on it.
 
 ## Dragging a tile into place
 
@@ -302,3 +306,26 @@ Foundation to Level 5, **Evidence** at Levels 6 and 7, and **Embedded
 evidence** from Level 8, where the rubric says so. The green row reads **How it
 makes you feel** on the two access rungs before it becomes **Effect on the
 reader**.
+
+## Level 9 was not punishing, it was closed
+
+The top rung asks for three things at once: a craft subject, a positioning verb
+and an interpretive ending. Each was a warning, and a warning blocks the level,
+so a Level 9 sentence has to come back completely clean.
+
+The banks could not supply one. Counting what was available at Level 9 and
+filtered to a focus: **Fear had two ideas and one interpretive ending. Protect
+had one of each.** Both of those endings carried a `needs` constraint, which
+only a matching verb can licence, and a `needs` ending cannot be satisfied at
+all in the ordinary sentence shape, where the thing in front of the ending is a
+joiner rather than the verb. Run over every combination of the L9 banks in that
+shape: **Fear 0 of 240 passed, Protect 0 of 120, Power 480 of 720.** Two of the
+three focuses had no legal sentence in them.
+
+Six wh-endings with no `needs` and four more representation-level ideas were
+added, spread across the three focuses. The same sweep now passes 75%, 80% and
+75%. The `needs` endings are still there: they are good writing, and they are
+now one option among several rather than the only door.
+
+If you add tiles at Level 9, check the count per focus rather than the total.
+The total looked healthy the whole time.
