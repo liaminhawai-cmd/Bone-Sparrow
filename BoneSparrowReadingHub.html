@@ -341,60 +341,18 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .tmbar .linkbtn{margin-left:auto}
 .tmh{font-size:clamp(26px,4.2vw,44px);line-height:1.06;margin:0 0 10px}
 .tmlead{font-size:clamp(15px,1.9vw,21px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:44em}
-.tmnote{font-size:15px;color:var(--muted);font-style:italic}
 .tmnav{display:flex;gap:10px;margin-top:26px}
 .tmnav .btn{font-size:16px;padding:11px 20px}
 
-.tmcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.tmcard{border:1px solid var(--line);border-left:6px solid;border-radius:12px;padding:16px 18px;background:#fff}
-.tmcard h3{font-size:20px;margin:0 0 8px}
-.tmcard p{font-size:15px;line-height:1.5;margin:0 0 8px}
-.tmcard .tmex{font-family:Georgia,serif;font-size:15px;border-radius:8px;padding:8px 10px;margin:0}
-.tmcard.tm-idea{border-left-color:var(--idea-tx)} .tmcard.tm-idea h3{color:var(--idea-tx)} .tmcard.tm-idea .tmex{background:var(--idea-bg);color:var(--idea-tx)}
-.tmcard.tm-ev{border-left-color:var(--ev-tx)}     .tmcard.tm-ev h3{color:var(--ev-tx)}     .tmcard.tm-ev .tmex{background:var(--ev-bg);color:var(--ev-tx)}
-.tmcard.tm-eff{border-left-color:var(--eff-tx)}   .tmcard.tm-eff h3{color:var(--eff-tx)}   .tmcard.tm-eff .tmex{background:var(--eff-bg);color:var(--eff-tx)}
-
-.tmpairs{display:flex;flex-direction:column;gap:18px}
-.tmpair{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
-.tmside{font-family:Georgia,serif;font-size:clamp(15px,1.7vw,19px);line-height:1.5;border-radius:9px;
-  padding:11px 13px;margin-bottom:8px;position:relative;padding-left:96px}
-.tmside span{position:absolute;left:12px;top:11px;font-family:inherit;font-size:10.5px;font-weight:800;
-  letter-spacing:.5px;text-transform:uppercase;font-family:system-ui,sans-serif;border-radius:99px;padding:2px 9px}
-.tmside.bad{background:var(--badbg)} .tmside.bad span{background:var(--wrong);color:#fff}
-.tmside.good{background:var(--okbg)} .tmside.good span{background:var(--correct);color:#fff}
-.tmwhy{font-size:14px;color:var(--muted);line-height:1.5;margin:0}
-
-.tmwall{display:flex;flex-direction:column;gap:14px}
-.tmlv{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
-.tmlv h3{font-size:15px;text-transform:uppercase;letter-spacing:.4px;margin:0 0 8px;color:var(--muted)}
-.tmresp{font-family:Georgia,serif;font-size:clamp(15px,1.8vw,20px);line-height:1.55;margin-bottom:8px}
-
-.tmclimb{display:flex;flex-direction:column;gap:6px}
-.tmrung{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;border:1px solid var(--line);
-  border-radius:10px;padding:11px 14px;background:#fff}
-.tmrung .tmn{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
-  background:var(--bg);border-radius:99px;padding:3px 10px}
-.tmrung b{font-size:17px}
-.tmrung .tmvic{font-size:13.5px;color:var(--muted);flex:1 1 260px}
-
-.tmlist{font-size:clamp(15px,1.8vw,19px);line-height:1.7;padding-left:1.2em;margin:0}
-.tmlist li{margin-bottom:6px}
-
-.tmdemo{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
-.tmcanvas{border:2px dashed var(--line);border-radius:10px;min-height:74px;padding:12px;display:flex;
-  flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
-.tmcanvas .ctile{font-size:clamp(14px,1.6vw,18px);cursor:default}
-.tmcanvas .ctile:after{content:""}
-.tmread{font-family:Georgia,serif;font-size:clamp(15px,1.8vw,20px);line-height:1.5;background:var(--okbg);
-  border:1px solid var(--correct);border-radius:9px;padding:10px 13px;margin-bottom:12px}
-.tmbanks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px}
-.tmbank{border:1px solid var(--line);border-radius:9px;padding:7px 8px;background:var(--bg)}
-.tmbank h4{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 5px}
-.tmbank .tile{display:inline-block;cursor:default;font-size:13px}
-.tmsay{font-size:clamp(15px,1.8vw,19px);line-height:1.5;margin:0 0 10px}
-.tmdots{display:flex;gap:5px}
-.tmdots i{width:22px;height:4px;border-radius:2px;background:var(--line)}
-.tmdots i.on{background:var(--ink)}
+.tmsent{font-family:Georgia,serif;font-size:clamp(21px,2.9vw,33px);line-height:1.6;background:#fff;
+  border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin:0 0 18px}
+.tmbrief{font-size:clamp(17px,2.1vw,23px);line-height:1.5;max-width:38em}
+.tmnote{font-size:15px;color:var(--muted);font-style:italic;margin-top:14px}
+.tmh-idea{color:var(--idea-tx)} .tmh-verb{color:var(--verb-tx)}
+.tmh-ev{color:var(--ev-tx)}     .tmh-eff{color:var(--eff-tx)}
+.railbar{background:var(--bg);border:1px dashed var(--ink);border-radius:10px;padding:11px 14px;
+  margin:0 0 14px;font-size:14px;line-height:1.55}
+.railbar .linkbtn{margin-left:10px}
 
 /* ---- identity gate & home controls ---- */
 .idcard{max-width:520px;margin:20px auto}
@@ -1946,93 +1904,39 @@ const WK_BUILD = {
 
 
 /* ==================== TEACHER MODE · THE SLIDES ============================
-   A projector deck for the front of the room, driven by one key: →. It teaches
-   the three parts of an analytical sentence (idea, evidence, effect), then
-   DEMONSTRATES the builder itself, one move at a time, so a class watches the
-   tiles go in before anyone touches a device.
+   A projector deck driven by one key: →. One sentence, the Year 7 response
+   from the WAGOLL wall, on every slide; each slide lights up one of its four
+   parts and says briefly what that part is. The last slide opens the builder
+   on rails so the class watches a sentence get fixed before they touch one.
 
-   It is teaching, not assessment: nothing here is scored, nothing is saved, and
-   it never touches a student's WK state. Wording is pulled from WK_LEVELS and
-   WK_WALL where the same thing is already written, so the deck cannot drift
-   away from the rubric the workshop marks against.
+   The sentence is read out of WK_WALL at render time, so the deck cannot
+   drift from the wall the students place. Nothing here is scored or saved.
    =========================================================================== */
 const TEACH = {
- title:"Analytical writing — the three parts, and how to build them",
  slides:[
-
- { k:"title", h:"Idea · Evidence · Effect",
-   lead:"Every analytical sentence you write this term has the same three parts. Today we name them, then we build one together.",
+ { k:"title", h:"One sentence, four colours",
+   lead:"This is the Year 7 response from the wall. Every slide shows the same sentence, with one part lit up.",
    note:"Drive with the → key, or the Next button. ← goes back. Esc leaves the deck." },
-
- { k:"cards", h:"The three parts",
-   lead:"Miss one and the sentence stops being analysis. That is the whole test.",
-   cards:[
-    {c:"idea", t:"The idea", d:"What the writing is <b>about</b>, underneath the plot. Not what happens, what it means.", ex:"the way fear works in the camp"},
-    {c:"ev",   t:"The evidence", d:"The author's <b>own words</b>, inside your sentence, short enough to fit the clause.", ex:"“My throat is as dry as the dirt”"},
-    {c:"eff",  t:"The effect", d:"What the writing does to <b>the reader</b>. Not what you felt, what it makes anyone understand.", ex:"makes the reader feel the fear before it is named"}
-   ] },
-
- { k:"pairs", h:"Part one: the idea",
-   lead:"An idea is arguable. If nobody could disagree with your sentence, you have written a summary.",
-   pairs:[
-    {bad:"This part is about Subhi getting caught by Beaver.", good:"This part is about how little control a child has in detention.",
-     why:"The first one retells. The second one could be argued with, which is what makes it an idea."},
-    {bad:"Subhi is scared.", good:"Fraillon writes fear as something the body does before the mind names it.",
-     why:"“Scared” is a feeling. The second is a claim about how the book is written."}
-   ] },
-
- { k:"pairs", h:"Part two: the evidence",
-   lead:"The quote goes INSIDE your sentence. If you can lift the quotation marks out and it still reads, you have embedded it.",
-   pairs:[
-    {bad:"Subhi is frightened. “My throat is as dry as the dirt”.", good:"Subhi's throat goes “as dry as the dirt” before Beaver has even touched him.",
-     why:"Same quotation. In the first it sits beside the point; in the second the sentence runs straight through it."},
-    {bad:"The author says “My throat is as dry as the dirt and I've never been handcuffed before and I've never been taken into the offices”.",
-     good:"His throat is “as dry as the dirt”.",
-     why:"Cut to the words you are actually going to talk about. A long quotation is usually a short one hiding."}
-   ] },
-
- { k:"pairs", h:"Part three: the effect",
-   lead:"Push past “it makes the reader feel sad”. Say what the writing makes a reader <b>understand</b>.",
-   pairs:[
-    {bad:"…which makes you feel sorry for him.", good:"…which makes the reader understand that the fear is physical before it is anything else.",
-     why:"The first reports your reaction. The second says what the choice achieves, and that is what the rubric is asking for."}
-   ] },
-
- { k:"wall", h:"All three, at two levels",
-   lead:"The same three parts, done simply and then done well. The colour is the point: watch how much of the sentence is doing work." },
-
- { k:"climb", h:"What changes as you climb",
-   lead:"The parts never change. What changes is how grown-up each one is. This is the ladder the builder walks you up." },
-
- { k:"demo", h:"Now the builder", steps:0,
-   lead:"This is what the class is about to use. Press → and watch a sentence get built one tile at a time." },
-
- { k:"go", h:"Over to them",
-   lead:"Send them to Part A first: they place five real responses against the rubric and build the wall. Part B is where this builder opens.",
-   bullets:[
-     "Part A is placing, not writing. It takes about ten minutes.",
-     "Part B gives them Level 5 for free, then they lift the same sentence up the rubric one level at a time.",
-     "Tiles retire as they climb. At Level 7 the word “shows” is taken off them, and the sentence has to be rebuilt without it.",
-     "Every sentence they keep prints on their report."
-   ] }
+ { k:"part", c:"idea", h:"The idea",
+   brief:"What the sentence is about, underneath the plot. It is arguable — the same moment could carry fear, or survival, and you would have to defend your pick." },
+ { k:"part", c:"verb", h:"The analytical verb",
+   brief:"The verb that carries the thinking. \u201CShows\u201D only reports that something happened; \u201Crevealed\u201D claims the writing uncovers it. At Level 7 the reporting verbs are taken away." },
+ { k:"part", c:"ev", h:"The embedded evidence",
+   brief:"The author's own words, inside the sentence. Lift the quotation marks out and the sentence still reads — that is the test of an embedded quote." },
+ { k:"part", c:"eff", h:"The effect on the reader",
+   brief:"What the writing makes a reader understand. Not a feeling: \u201Cthe fear is physical before it is anything else\u201D is a claim, and the claim is what gets marked." },
+ { k:"rails", h:"Now fix one, live",
+   lead:"The builder opens with a survival sentence one tile short of Level 7. The flagged tile comes out with a tap; its replacement drags straight from the bank into the gap. Check it, and the level is reached — that is the whole app, in three moves." }
  ]
 };
 
-/* The builder demonstration, as a list of moves. Each press of → plays one.
-   The tiles are the real ones from WK_BUILD, so what the room sees on the wall
-   is what they meet on their screens. */
-const TEACH_DEMO = [
- { say:"An empty canvas, and the banks of tiles underneath. Nothing is typed: everything is chosen.", act:null },
- { say:"Start with the subject — who or what the sentence is about.", act:{bank:"subj", at:0} },
- { say:"Then the verb. At Level 5 a flat verb is honest work, so “shows” is allowed here.", act:{bank:"verb", at:1} },
- { say:"The idea comes next. This is the part that has to be arguable.", act:{bank:"idea", at:2} },
- { say:"A joiner to carry the quotation in. This is the difference between a quote inside the sentence and one dumped beside it.", act:{bank:"lead", at:3} },
- { say:"Now the evidence, collected by tapping the passage. It lands inside the clause, not after a full stop.", act:{bank:"q", at:4} },
- { say:"One more joiner, then the effect on the reader. All three parts are present.", act:{bank:"con", at:5}, then:{bank:"eff", at:6} },
- { say:"Read it back. Idea, evidence, effect — a complete Level 5 sentence, and the whole climb is lifting this same one.", act:null, read:true },
- { say:"Wrong place? Don't delete it. Drag it — the tile moves in one motion and everything else shuffles to make room.", act:{move:[4,1]} },
- { say:"And back. This is the move to show them: pick a tile up, drop it where it belongs, in one go.", act:{move:[1,4]} },
- { say:"Tap a tile in the sentence to take it out. Tap one in the bank to add it to the end. Drag to put it exactly where you want.", act:null }
+/* The rails sentence, in the starter pair format wkStarter reads. Every entry
+   is a real tile from WK_BUILD's banks; "shows" is the deliberate flaw, retired
+   at Level 7, so the builder itself flags the tile to fix. */
+const TEACH_RAILS = [
+  ["subj","Eli's advice"], ["verb","shows"], ["idea","the issue of survival inside the fences"],
+  ["con","when he says"], ["q","Never let anyone see your scared"],
+  ["con","which shows"], ["eff","that the boys have learned survival rules no child should need"]
 ];
 
 /* ==================== SHARED GLOSSARY (generated) ==========================
@@ -2869,6 +2773,13 @@ function renderWkBuild(){
   const L=wkLevel();
   let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb</div>
   <h2>${esc(WK_BUILD.prompt)}</h2>`;
+  if(WK.rails){
+    h+=`<div class="railbar noprint"><b>Teacher demo.</b> This sentence is one tile short of Level 7 — the flagged tile is retired up here.
+      Tap it out, drag its replacement from the verb bank straight into the gap, then press Check.
+      Nothing in this demo is saved.
+      <button class="linkbtn" onclick="runTeach(${TEACH.slides.length-1})">back to the slides</button>
+      <button class="linkbtn" onclick="go('home')">leave the demo</button></div>`;
+  }
 
   /* ---- the same WAGOLL table, sliding as you climb ---- */
   const idx=wkLevelIdx();
@@ -2897,9 +2808,13 @@ function renderWkBuild(){
     h+=`</div>`;
   }
 
-  /* ---- focus ---- */
-  h+=`<p class="q">Your focus:</p><div class="idea-chips">`+
-    WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="wkSetFocus('${f.id}')">${esc(f.label)}</button>`).join("")+`</div>`;
+  /* ---- focus (locked on rails: the demo is one sentence, not a menu) ---- */
+  if(WK.rails){
+    h+=`<p class="q">Focus: <b>${esc(wkFocusLabel())}</b> — locked for the demo.</p>`;
+  } else {
+    h+=`<p class="q">Your focus:</p><div class="idea-chips">`+
+      WK_BUILD.focuses.map(f=>`<button class="fchoice ${WK.focus===f.id?"on":""}" onclick="wkSetFocus('${f.id}')">${esc(f.label)}</button>`).join("")+`</div>`;
+  }
 
   /* ---- passage harvest ---- */
   {
@@ -3311,14 +3226,14 @@ function wkVerdict(findings){
 function wkCheckTail(findings){
   const fb=$("fb"), L=wkLevel();
   const level=wkVerdict(findings);
-  if(!WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
+  /* Rails is the teacher demonstrating: nothing it does may reach the record. */
+  if(!WK.rails && !WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
 
   if(level==="ok"){
     WK.versions[WK.level]={t:wkText(), h:wkTextHtml()};
     WK.justIdx=wkLevelIdx();
     /* the highest rung they've written at — what the report quotes */
-    S.wkLevel=Math.max(S.wkLevel||0, WK.level);
-    save();
+    if(!WK.rails){ S.wkLevel=Math.max(S.wkLevel||0, WK.level); save(); }
     const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
     fb.innerHTML="<b>Level "+WK.level+" reached.</b> "+esc(L.why)+
@@ -3345,6 +3260,13 @@ function wkLift(){
     (next.retires?" <br><b>Watch out:</b> "+esc(next.retires):"");
 }
 function wkFinishClimb(){
+  if(WK.rails){
+    $("body").innerHTML=`<h2>Demo over</h2>
+    <div class="panel"><p style="margin:0">That was the whole climb, demonstrated. Nothing was saved to this device's record.</p></div>
+    <div class="btnrow"><button class="btn btn-primary" onclick="runTeach()">Back to the slides</button>
+    <button class="btn btn-ghost" onclick="go('home')">Back to the hub</button></div>`;
+    return;
+  }
   const finalT=(WK.versions[WK.level]&&WK.versions[WK.level].t)||wkText();
   if(!S.kept.includes(finalT)) S.kept.push(finalT);
   S.done.wk=true; save();
@@ -3576,21 +3498,8 @@ function morphPopClose(){ const pp=$("morphpop"); if(pp) pp.remove(); }
    teacher does at the front of the room can touch a student's saved work. */
 let TM=null;
 
-/* The demo's tiles, written out rather than looked up, so a change to the
-   bank's ordering cannot silently rewrite the demonstration. Every one of them
-   is a real tile from WK_BUILD's `fear` starter. */
-const TEACH_TILES = {
-  subj:{k:"subj", t:"Subhi's body"},
-  verb:{k:"verb", t:"shows"},
-  idea:{k:"idea", t:"fear in the camp"},
-  lead:{k:"con",  t:"when he says"},
-  q:   {k:"q",    t:"“My throat is as dry as the dirt”"},
-  con: {k:"con",  t:"which"},
-  eff: {k:"eff",  t:"makes you feel sorry for him"}
-};
-
-function runTeach(){
-  TM={i:0, demo:0};
+function runTeach(at){
+  TM={i: at||0};
   document.addEventListener("keydown", teachKeys);
   renderTeach();
 }
@@ -3605,129 +3514,75 @@ function teachKeys(e){
   else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); teachPrev(); }
   else if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
 }
-function teachSlide(){ return TEACH.slides[TM.i]; }
-function teachNext(){
-  const sl=teachSlide();
-  /* The demo slide holds the deck until its moves are played out. */
-  if(sl.k==="demo" && TM.demo < TEACH_DEMO.length-1){ TM.demo++; teachPlay(); return; }
-  if(TM.i < TEACH.slides.length-1){ TM.i++; TM.demo=0; renderTeach(); }
-}
-function teachPrev(){
-  const sl=teachSlide();
-  if(sl.k==="demo" && TM.demo>0){ TM.demo--; renderTeach(); return; }
-  if(TM.i>0){ TM.i--; TM.demo=0; renderTeach(); }
-}
+function teachNext(){ if(TM.i < TEACH.slides.length-1){ TM.i++; renderTeach(); } }
+function teachPrev(){ if(TM.i > 0){ TM.i--; renderTeach(); } }
 
-/* Rebuild the demo canvas from the moves played so far. Called on every render
-   so that stepping backwards, or landing on the slide again, always shows a
-   board that matches the step counter. */
-function teachDemoTiles(upTo){
-  const tiles=[];
-  for(let s=0;s<=upTo;s++){
-    const step=TEACH_DEMO[s]; if(!step) break;
-    [step.act, step.then].forEach(a=>{
-      if(!a) return;
-      if(a.bank) tiles.push(TEACH_TILES[a.bank]);
-      else if(a.move){ const [from,to]=a.move; const t=tiles.splice(from,1)[0]; if(t) tiles.splice(to,0,t); }
-    });
-  }
-  return tiles;
-}
-/* The sentence as the room should read it: tiles joined, punctuation tidied,
-   and a full stop on the end, the same way the builder's own preview does it. */
-function teachSentence(tiles){
-  const t=tiles.map(x=>x.t).join(" ").replace(/\s+([.,;:])/g,"$1").trim();
-  return /[.!?]$/.test(t) ? t : t+".";
-}
-function teachDemoHtml(){
-  const step=TEACH_DEMO[TM.demo];
-  const tiles=teachDemoTiles(TM.demo);
-  const banks=[["subj","Subjects"],["verb","Verbs"],["idea","Idea"],["q","Evidence"],["con","Joiners"],["eff","Purpose"]];
-  const used=tiles.map(t=>t.k);
-  return `<div class="tmdemo">
-    <div class="tmcanvas" id="tmCanvas">${
-      tiles.length ? tiles.map((t,i)=>`<span class="ctile ${wkKindClass(t.k)}" data-key="${t.k}${i}">${esc(t.t)}</span>`).join("")
-                   : `<span class="ph">The sentence gets built here.</span>`}</div>
-    ${step.read || tiles.length>=7 ? `<div class="tmread">${esc(teachSentence(tiles))}</div>` : ""}
-    <div class="tmbanks">${banks.map(([k,label])=>
-      `<div class="tmbank"><h4>${esc(label)}</h4>
-        <span class="tile ${wkKindClass(TEACH_TILES[k].k).replace("k-","k-")}${used.includes(k)?" used":""}">${esc(TEACH_TILES[k].t)}</span></div>`).join("")}</div>
-    <p class="tmsay">${esc(step.say)}</p>
-    <div class="tmdots">${TEACH_DEMO.map((_,i)=>`<i class="${i<=TM.demo?"on":""}"></i>`).join("")}</div>
-  </div>`;
-}
-
-/* Play one move with a FLIP animation: measure, reorder, invert, release. A
-   tile sliding to its new place is the whole point of this slide, so the move
-   has to be visible rather than a jump. */
-function teachPlay(){
-  const cv=$("tmCanvas");
-  const step=TEACH_DEMO[TM.demo];
-  if(!cv || !step.act || !step.act.move){ renderTeach(); return; }
-  const before=new Map([...cv.children].map(el=>[el.dataset.key, el.getBoundingClientRect()]));
-  renderTeach();
-  const cv2=$("tmCanvas"); if(!cv2) return;
-  [...cv2.children].forEach(el=>{
-    const b=before.get(el.dataset.key); if(!b) return;
-    const a=el.getBoundingClientRect();
-    const dx=b.left-a.left, dy=b.top-a.top;
-    if(!dx && !dy) return;
-    el.style.transition="none";
-    el.style.transform=`translate(${dx}px, ${dy}px)`;
-    requestAnimationFrame(()=>{
-      el.style.transition="transform .42s cubic-bezier(.2,.8,.2,1)";
-      el.style.transform="";
-    });
-  });
+/* The Year 7 wall sentence with every colour on, or with all but one class
+   unwrapped to plain ink, so each slide lights a single part. */
+function teachSentence(only){
+  const r=WK_WALL.resps.find(x=>x.id==="w7");
+  let h=r.h||esc(r.t);
+  if(only) h=h.replace(/<em class="hl-(\w+)">([^]*?)<\/em>/g,
+    (m,cls,text)=> cls===only ? m : text);
+  return h;
 }
 
 function renderTeach(){
-  const sl=teachSlide(), n=TEACH.slides.length;
+  const sl=TEACH.slides[TM.i], n=TEACH.slides.length;
   let inner="";
-  if(sl.k==="cards"){
-    inner=`<div class="tmcards">${sl.cards.map(c=>
-      `<div class="tmcard tm-${c.c}"><h3>${esc(c.t)}</h3><p>${c.d}</p><p class="tmex">${esc(c.ex)}</p></div>`).join("")}</div>`;
-  } else if(sl.k==="pairs"){
-    inner=`<div class="tmpairs">${sl.pairs.map(p=>
-      `<div class="tmpair">
-        <div class="tmside bad"><span>not yet</span>${esc(p.bad)}</div>
-        <div class="tmside good"><span>this</span>${esc(p.good)}</div>
-        <p class="tmwhy">${esc(p.why)}</p>
-      </div>`).join("")}</div>`;
-  } else if(sl.k==="wall"){
-    const pick=["w5","w7"].map(id=>WK_WALL.resps.find(r=>r.id===id)).filter(Boolean);
-    inner=wkColourKey()+`<div class="tmwall">${pick.map(r=>{
-      const lv=WK_WALL.levels[r.lvl];
-      return `<div class="tmlv"><h3>${esc(lv.lv)} — ${esc(lv.focus)}</h3>
-        <div class="tmresp">${r.h||esc(r.t)}</div>
-        <p class="tmwhy">${esc(r.why)}</p></div>`;}).join("")}</div>`;
-  } else if(sl.k==="climb"){
-    inner=`<div class="tmclimb">${WK_LEVELS.map(L=>
-      `<div class="tmrung"><span class="tmn">Level ${L.n}</span><b>${esc(L.focus)}</b>
-        <span class="tmvic">“${esc(L.vic)}”</span></div>`).join("")}</div>`;
-  } else if(sl.k==="demo"){
-    inner=teachDemoHtml();
-  } else if(sl.k==="go"){
-    inner=`<ul class="tmlist">${sl.bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>`;
-  } else if(sl.note){
-    inner=`<p class="tmnote">${esc(sl.note)}</p>`;
+  if(sl.k==="title"){
+    inner=`<div class="tmsent">${teachSentence(null)}</div>
+      ${wkColourKey()}
+      <p class="tmnote">${esc(sl.note)}</p>`;
+  } else if(sl.k==="part"){
+    inner=`<div class="tmsent">${teachSentence(sl.c)}</div>
+      <p class="tmbrief">${sl.brief}</p>`;
+  } else if(sl.k==="rails"){
+    inner="";
   }
-  const last = TM.i===n-1 && !(sl.k==="demo" && TM.demo<TEACH_DEMO.length-1);
+  const last = TM.i===n-1;
   $("body").innerHTML=`<div class="teach">
     <div class="tmbar noprint">
       <span class="tmtag">Teacher mode</span>
       <span class="tmcount">${TM.i+1} / ${n}</span>
       <button class="linkbtn" onclick="teachExit()">Leave the deck (Esc)</button>
     </div>
-    <h1 class="tmh">${esc(sl.h)}</h1>
+    <h1 class="tmh ${sl.k==="part"?"tmh-"+sl.c:""}">${esc(sl.h)}</h1>
     ${sl.lead?`<p class="tmlead">${sl.lead}</p>`:""}
     ${inner}
     <div class="tmnav noprint">
-      <button class="btn btn-ghost" onclick="teachPrev()" ${TM.i===0&&TM.demo===0?"disabled":""}>← Back</button>
-      ${last ? `<button class="btn btn-primary" onclick="teachExit()">Done — back to the hub</button>`
+      <button class="btn btn-ghost" onclick="teachPrev()" ${TM.i===0?"disabled":""}>← Back</button>
+      ${last ? `<button class="btn btn-primary" onclick="teachRails()">Open the builder demo →</button>`
              : `<button class="btn btn-primary" onclick="teachNext()">Next →</button>`}
     </div>
   </div>`;
+}
+
+/* ---------- TEACHER MODE · the builder on rails ----------
+   The real builder, preloaded: focus locked to Protection and survival, level
+   set to 7, and the TEACH_RAILS sentence on the canvas with its one flaw. The
+   rails flag makes every write to the student's record a no-op, so a teacher
+   can demonstrate on any signed-in device without leaving a mark on it. */
+function teachRails(){
+  document.removeEventListener("keydown", teachKeys);
+  TM=null;
+  WK={armed:null, placed:{}, firstTried:{}, focus:"protect", canvas:[], harvested:[],
+      level:7, versions:{}, tried:{}, wallStart:0, climbStart:2, rails:true};
+  const lists={open:WK_BUILD.opens, subj:WK_BUILD.subjects, verb:WK_BUILD.verbs,
+               idea:WK_BUILD.ideas, eff:WK_BUILD.effects, con:WK_BUILD.cons};
+  TEACH_RAILS.forEach(([k,t])=>{
+    if(k==="q"){
+      const i=WK_BUILD.segs.findIndex(sg=>sg.t.includes(t));
+      if(i>=0){ if(!WK.harvested.includes(i)) WK.harvested.push(i); WK.canvas.push({k:"q",i}); }
+    } else {
+      const i=lists[k].findIndex(x=>x.t===t);
+      if(i>=0) WK.canvas.push({k,i});
+    }
+  });
+  screen="wk";
+  $("homeBtn").style.display="inline";
+  document.body.classList.add("wide");
+  renderWkBuild();
 }
 
 /* ---------- REPORT ---------- */
