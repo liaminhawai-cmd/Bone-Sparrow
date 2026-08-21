@@ -146,25 +146,32 @@ catches it. The type scale is a formula with a floor and a ceiling, tuned so the
 longest sheet (Level 10) fits and the shortest (Foundation) is not swimming in
 white space.
 
-## Teacher mode: the slides
+## Teacher mode: the slides, then the builder on rails
 
 The reading hub home screen and Part A of the Analysis workshop both carry a
-**Teacher mode · slides** link. It opens a projector deck for the front of the
-room, driven by one key: **→** for next, **←** for back, **Esc** to leave.
+**Teacher mode · slides** link. One key drives it: **→** for next, **←** for
+back, **Esc** to leave.
 
-Nine slides. The three parts of an analytical sentence (idea, evidence,
-effect), one slide each on what separates a weak version from a strong one,
-the same three parts shown at two rubric levels, the ladder, and then a
-**live demonstration of the builder**: ten steps that put a sentence together
-one tile at a time, embed the quotation with a joiner, and then drag a tile to
-a different position and back, so the class sees the move before anyone tries
-it.
+Six slides, one sentence. The sentence is the Year 7 response from the WAGOLL
+wall, read out of the workshop's own data, so the deck cannot drift from the
+wall the class places. The first slide shows it with all four colours on; the
+next four light one part at a time — idea, analytical verb, embedded evidence,
+effect on the reader — with a sentence of explanation each. That is the whole
+deck.
 
-Two things about it are deliberate. Nothing in the deck is scored or saved, so
-you can drive it on a student's device without touching their work. And the
-wall text, the rubric wording and the demo's tiles all come from the same data
-the workshop uses, so the deck cannot drift away from the lesson it is
-introducing.
+The last slide opens the **builder on rails**: the real Part B, preloaded with
+a survival-focus sentence that is one tile short of Level 7. The flaw is
+"shows", which the builder itself flags as retired at that level, so the
+demonstration is the app's own feedback loop: press Check and it names the
+problem, tap the flagged tile out, drag "reveals" from the verb bank straight
+into the gap, Check again and Level 7 is reached. Three moves, and they are
+exactly the three moves students make. The focus picker is locked for the demo
+and a banner says so.
+
+Nothing in teacher mode is scored or saved. The rails flag turns every write to
+the student record into a no-op, so you can run the whole demonstration on a
+signed-in student's device — check, lift, even finish the climb — and their
+first attempts, kept sentences and progress are untouched.
 
 ## Dragging a tile into place
 
