@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Bone Sparrow — WAGOLL wall, cut and paste</title>
+<meta name="description" content="The five wall responses as cut-out cards, a board to paste them onto against the rubric, and a teacher key. Three A4 pages.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>✂</text></svg>">
+<style>
+/* ===========================================================================
+   THE WAGOLL WALL, ON PAPER WITH SCISSORS
+   The Analysis workshop's Part A as a cut-and-paste activity: the same five
+   responses, shuffled onto cards, and a board with the same five rubric rows
+   to paste them against. Three A4 portrait pages: the cards, the board, and a
+   teacher key that stays on the desk.
+
+   The responses come out of BoneSparrowReadingHub.html at load time, the same
+   way BoneSparrowWagollWall.html reads them, so this page cannot drift from
+   the wall the class builds on screen. It needs to be served over http, which
+   the Pages site does; opened as a bare file the fetch fails and the page
+   says so.
+
+   The colour is kept on the cards deliberately: it marks the parts of each
+   sentence doing analytical work, which is what a student weighs against the
+   rubric line. (It is NOT a density clue: measured by character coverage the
+   Level 5 card is the most coloured, because it is short. The clue is what
+   the coloured parts say, not how many there are.) Each highlight carries an
+   underline pattern as well, so it survives a greyscale photocopy.
+
+   One paper size per file (see the Batman sorting cards for why): everything
+   here is A4 portrait, and the paste boxes are measured against the cards.
+   =========================================================================== */
+:root{
+  --sheet-w:210mm; --sheet-h:297mm; --sheet-pad:11mm 10mm 9mm;
+  --paper:#fff; --bg:#efe9df; --ink:#1e211f; --muted:#645d54; --line:#d6cbba;
+  --deep:#1d3c34; --band:#f4efe5; --rule:#9c9382;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --feat-bg:#e7ddf6; --feat-tx:#4b2f7a;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);
+     font-family:Georgia,"Times New Roman",serif;line-height:1.4}
+
+.sheet{width:min(100%,var(--sheet-w));min-height:var(--sheet-h);margin:14px auto;background:var(--paper);
+       border:1px solid var(--line);padding:var(--sheet-pad);
+       display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(48,39,24,.1)}
+
+.head{border-bottom:1.8px solid var(--deep);padding-bottom:2mm;margin-bottom:4mm}
+.head h1{font-size:14pt;color:var(--deep);font-weight:700;line-height:1.1}
+.kicker{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        text-transform:uppercase;letter-spacing:.16em;font-size:7pt;font-weight:700;color:var(--muted)}
+.head p{font-size:8.6pt;color:var(--muted);margin-top:1.2mm;line-height:1.35;
+        font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+/* ---- the highlight classes the hub's responses arrive wearing ----
+   Background tint plus an underline pattern per criterion: two channels,
+   because these pages get photocopied. */
+.hl-feat,.hl-verb,.hl-ev,.hl-eff,.hl-idea{font-style:normal;border-radius:2px;padding:0 1px;
+  text-decoration-line:underline;text-underline-offset:2px;text-decoration-thickness:1.1px}
+.hl-idea{background:var(--idea-bg);color:var(--idea-tx);text-decoration-style:solid;text-decoration-color:var(--idea-tx)}
+.hl-feat{background:var(--feat-bg);color:var(--feat-tx);text-decoration-style:dashed;text-decoration-color:var(--feat-tx)}
+.hl-verb{background:var(--verb-bg);color:var(--verb-tx);text-decoration-style:dotted;text-decoration-color:var(--verb-tx)}
+.hl-ev{background:var(--ev-bg);color:var(--ev-tx);text-decoration-style:double;text-decoration-color:var(--ev-tx)}
+.hl-eff{background:var(--eff-bg);color:var(--eff-tx);text-decoration-style:wavy;text-decoration-color:var(--eff-tx)}
+
+/* ---- page 1: the cards ----
+   One column of full-width cards: the responses run to sixty-odd words, and a
+   card a student can read is worth more than a card that matches the Batman
+   pack's 62mm. The paste boxes on the board are measured against these. */
+.cards{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:4mm}
+.card{border:1.1px dashed var(--rule);border-radius:1.5px;background:#fff;
+      padding:3mm 3.5mm;display:flex;gap:3mm;align-items:flex-start}
+.card .n{flex:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+         font-size:11pt;font-weight:800;color:var(--deep);width:7mm;text-align:center;
+         border:1.4px solid var(--deep);border-radius:50%;line-height:6.4mm;height:7mm}
+.card .t{flex:1;font-size:10.5pt;line-height:1.5}
+
+/* ---- page 2: the board ---- */
+.rows{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:2.5mm}
+.row{border:1px solid var(--line);border-radius:2px}
+.rh{display:flex;flex-wrap:wrap;gap:1mm 4mm;align-items:baseline;background:var(--band);
+    padding:1.8mm 3mm;border-bottom:1px solid var(--line)}
+.rh .lv{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-size:10pt;font-weight:800;color:var(--deep);text-transform:uppercase;letter-spacing:.04em}
+.rh .fo{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-size:8pt;font-weight:700;color:var(--muted)}
+.rh .vic{flex-basis:100%;font-size:8.6pt;color:var(--ink);font-style:italic;line-height:1.3}
+.box{min-height:28mm;background:
+     repeating-linear-gradient(0deg, transparent, transparent 8mm, #efe9df 8mm, #efe9df 8.3mm)}
+
+/* ---- page 3: the key ---- */
+.keys{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:3mm}
+.krow{border:1px solid var(--line);border-radius:2px;padding:2.4mm 3mm}
+.krow .kh2{display:flex;gap:4mm;align-items:baseline;margin-bottom:1.4mm;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.krow .kh2 b{font-size:9.5pt;color:var(--deep);text-transform:uppercase;letter-spacing:.04em}
+.krow .kh2 .badge{font-size:9.5pt;font-weight:800;border:1.4px solid var(--deep);border-radius:50%;
+  width:6mm;height:6mm;line-height:5.3mm;text-align:center;color:var(--deep)}
+.krow .kt{font-size:8.8pt;line-height:1.42;margin-bottom:1.2mm}
+.krow .kw{font-size:8pt;color:var(--muted);line-height:1.35;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+.foot{margin-top:3mm;padding-top:2mm;border-top:1px solid var(--line);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-size:6.4pt;color:var(--muted);line-height:1.36}
+
+.err{max-width:640px;margin:40px auto;background:#fff;border:1px solid var(--line);
+     border-radius:10px;padding:20px 24px;font-family:system-ui,sans-serif;font-size:14px;line-height:1.5}
+
+@media screen and (max-width:760px){
+  .sheet{width:auto;min-height:0;padding:14px;margin:0;border:0}
+}
+@media print{
+  body{background:#fff}
+  .sheet{width:auto;min-height:277mm;margin:0;padding:0;border:0;box-shadow:none;break-after:page}
+  .sheet:last-of-type{break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card,.row,.krow{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main id="out"></main>
+
+<script>
+const HUB = "BoneSparrowReadingHub.html";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const out = document.getElementById("out");
+
+/* Same bounded slice as BoneSparrowWagollWall.html: pull WK_WALL out of the
+   hub and evaluate it, so this page holds no copy of the wall. A hub
+   restructure fails loudly here rather than printing stale cards. */
+function slice(src, startsWith, endsWith){
+  const a = src.indexOf(startsWith); if(a<0) return null;
+  const b = src.indexOf(endsWith, a); if(b<0) return null;
+  return src.slice(a, b + endsWith.length);
+}
+async function load(){
+  const res = await fetch(HUB, {cache:"no-cache"});
+  if(!res.ok) throw new Error("hub returned "+res.status);
+  const src = await res.text();
+  const wall = slice(src, "const WK_WALL = {", "\n ]};");
+  if(!wall) throw new Error("could not find WK_WALL in the hub");
+  return new Function(wall + "\nreturn WK_WALL;")();
+}
+
+/* A fixed scramble, not a random one: every printed class set matches the key,
+   and rebuilding the page cannot quietly reletter the cards. Letters rather
+   than numbers, so the card order carries no hint of the rubric order. */
+const ORDER = ["w7","w5","w9","w6","w8"];
+const LETTERS = ["A","B","C","D","E"];
+
+const foot = `Part A of the Analysis workshop (BoneSparrowReadingHub.html), on paper. The responses and rubric wording are read from the hub at load time. The Bone Sparrow, Zana Fraillon, Hachette Australia, 2016.`;
+
+function render(W){
+  const byId = id => W.resps.find(r=>r.id===id);
+  out.innerHTML = `
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · analytical writing · cut and paste</div>
+      <h1>Five answers to one question</h1>
+      <p>${esc(W.q)} Cut the five cards out. Each one belongs to a different level of the rubric. The colours mark the parts doing analytical work. Read what each coloured phrase does, not how many there are.</p>
+    </header>
+    <div class="cards">${ORDER.map((id,i)=>{
+      const r=byId(id);
+      return `<div class="card"><span class="n">${LETTERS[i]}</span><span class="t">${r.h||esc(r.t)}</span></div>`;}).join("")}
+    </div>
+    <p class="foot">${foot}</p>
+  </section>
+
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · analytical writing · cut and paste</div>
+      <h1>The wall</h1>
+      <p>Paste each card beside the rubric level it demonstrates. Read the rubric line first, then find the response that earns it, and be ready to say which phrase persuaded you.</p>
+    </header>
+    <div class="rows">${W.levels.map(lv=>`
+      <div class="row">
+        <div class="rh"><span class="lv">${esc(lv.lv)}</span><span class="fo">${esc(lv.focus)}</span>
+          <span class="vic">“${esc(lv.vic)}”</span></div>
+        <div class="box"></div>
+      </div>`).join("")}
+    </div>
+    <p class="foot">${foot}</p>
+  </section>
+
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · analytical writing · teacher key</div>
+      <h1>The wall, solved</h1>
+      <p>Card letters against levels, with the line to say when a pair goes up. This page stays on your desk.</p>
+    </header>
+    <div class="keys">${W.levels.map((lv,i)=>{
+      const r=W.resps.find(x=>x.lvl===i);
+      const letter=LETTERS[ORDER.indexOf(r.id)];
+      return `<div class="krow">
+        <div class="kh2"><span class="badge">${letter}</span><b>${esc(lv.lv)} — ${esc(lv.focus)}</b></div>
+        <div class="kt">${r.h||esc(r.t)}</div>
+        <div class="kw">${esc(r.why)}</div>
+      </div>`;}).join("")}
+    </div>
+    <p class="foot">${foot}</p>
+  </section>`;
+}
+
+load().then(render).catch(e=>{
+  out.innerHTML = `<div class="err"><b>Could not load the wall.</b> This page reads the responses out of
+  BoneSparrowReadingHub.html, so it has to be opened from the same website (or the same folder over http),
+  not as a bare file. ${esc(e.message)}</div>`;
+});
+</script>
+</body>
+</html>
