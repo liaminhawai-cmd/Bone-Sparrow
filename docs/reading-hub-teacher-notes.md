@@ -107,6 +107,9 @@ All content sits in bannered `const` blocks at the top of each file — the engi
 
 ## The analytical writing WAGOLL, on paper
 
+The sheets carry no credit line: the space belongs to the example, and the
+provenance lives in a comment in the file.
+
 `BoneSparrowWagollSheets.html` prints the ladder the Analysis workshop climbs,
 one **A3 portrait** sheet per rung, **Foundation to Level 10**. Open it and
 print from the browser: the page carries its own `@page` size, so the only
@@ -165,36 +168,24 @@ to be opened from the website (or any http serve of the folder), not
 double-clicked as a bare file; opened wrongly it says so instead of printing a
 blank.
 
-## Teacher mode: one climb, then four colours
+## Teacher mode: slides, one climb, four colours
 
 The Analysis workshop carries a **teacher mode** link in its breadcrumb, in
 both parts, there is a **▶ Teacher mode** button in the hub's top bar, and it
-has its own address: `BoneSparrowReadingHub.html#teach`.
+has its own address: `BoneSparrowReadingHub.html#teach`. → and ← move through
+the slides, Esc leaves.
 
-It opens straight into the builder, holding a Year 4 sentence:
-
-> Subhi **shows** **fear in the camp**. "My throat is as dry as the dirt" which
-> **makes you feel sorry for him**.
-
-The level is set to 7, so the three bold tiles are already flagged as retired
-and the demonstration is one pass across two rungs: trade the reporting verb
-for "reveals", grow the idea into "the issue of fear in detention", trade the
-feeling for what the reader understands, and put the quote inside the sentence
-with "when he says" instead of after a full stop. The checker catches "which"
-colliding with a clause on the way, which is the moment to show them "which
-shows". Reaching Level 7 turns the lift button into **The four colours →**.
-
-That last screen is the whole deck: four cards, four questions.
-
-| | |
-|---|---|
-| **Idea** | what |
-| **Purpose** | why |
-| **Evidence** | when |
-| **Verb** | how |
+Five slides on one sentence: the Year 7 response from the wall, read out of the
+workshop's own data so the deck cannot drift from it. The first shows it whole
+with the colour key; the next four light one part at a time, idea, analytical
+verb, evidence, effect on the reader, with a sentence each. Slide six shows the
+Year 4 sentence in the same colours and opens the **builder on rails**: the
+level is set to 7 so all three retired tiles are flagged at once, and one pass
+lifts it two rungs. Reaching Level 7 turns the lift button into **The four
+colours →**, the last screen: Idea what, Purpose why, Evidence when, Verb how.
 
 Nothing in teacher mode is scored or saved. The rails flag turns every write to
-the student record into a no-op, so the demonstration can be driven on a
+the student record into a no-op, so the whole demonstration can be driven on a
 signed-in student's device without leaving a mark on it.
 
 ## Dragging a tile into place
