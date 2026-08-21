@@ -143,7 +143,11 @@ p.lead{color:var(--muted);font-size:13.5px;margin:0 0 10px}
 @media (max-width:700px){.bins{grid-template-columns:1fr}}
 .bin{border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
 .bin h4{margin:0;padding:7px 10px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--line-soft)}
-.bin .binbody{padding:8px;display:flex;flex-direction:column;gap:6px;max-height:230px;overflow-y:auto}
+/* No inner scrollbar: a bank that scrolls inside a page that also scrolls is
+   two scroll surfaces under one thumb, and a tile dragged from a scrolled bank
+   used to land against a canvas that had moved. The banks are as tall as their
+   contents and the page does all the scrolling. */
+.bin .binbody{padding:8px;display:flex;flex-direction:column;gap:6px}
 .tile{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13.5px;text-align:left;
       cursor:grab;font-family:inherit;transition:transform .1s, border-color .12s;touch-action:none}
 .tile:hover{border-color:var(--ink)}
@@ -311,6 +315,18 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ctile{cursor:grab;touch-action:none}
 .bin.opens h4,.tile.k-open,.ctile.k-open{background:#e6e1d6;color:#5c503b}
 /* ---- workshop: flexible builder ---- */
+/* ---- the sticky sentence dock ----
+   position:sticky needs a scroll container that is not clipping it, so the
+   dock sits directly in the page flow rather than inside any overflow box.
+   The bottom fade stops tiles looking cut off where the banks slide under. */
+.dock{position:sticky;top:0;z-index:20;background:var(--paper);
+      padding-top:6px;margin:0 0 12px;
+      box-shadow:0 10px 14px -12px rgba(31,31,31,.45)}
+.dock .q{margin-bottom:6px}
+.dock .canvas{margin-bottom:8px}
+.dock .preview{margin-bottom:8px}
+@media (max-width:700px){ .dock .q{font-size:12.5px} }
+
 .canvas{border:2px dashed var(--line);border-radius:10px;min-height:56px;padding:10px;background:#fff;
         display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}
 .canvas .ph{color:var(--muted);font-size:13px}
@@ -333,31 +349,71 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
    large and the slide never scrolls if it can be helped. It borrows the
    workshop's tile and colour classes so what the room sees on the wall is what
    students meet on their screens. */
-.teach{max-width:1400px;margin:0 auto;padding:6px 0 20px;min-height:calc(100vh - 150px);
-  display:flex;flex-direction:column}
+/* The deck sizes to the window: a slide that scrolls is a slide the back row
+   cannot read. height, not min-height, so a full slide shrinks its own parts
+   instead of pushing the navigation off the bottom of the screen. */
+.teach{max-width:1400px;margin:0 auto;padding:6px 0 12px;
+  height:calc(100vh - 156px);display:flex;flex-direction:column}
+@media (max-width:820px){ .teach{height:auto} }
 .tmbar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
 .tmtag{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
   background:var(--ink);color:#fff;border-radius:99px;padding:3px 10px}
 .tmcount{font-size:12px;color:var(--muted)}
 .tmbar .linkbtn{margin-left:auto}
-.tmh{font-size:clamp(28px,4.6vw,52px);line-height:1.05;margin:0 0 12px}
+.tmh{font-size:clamp(22px,min(3.6vw,4.6vh),50px);line-height:1.05;margin:0 0 8px}
 .tmlead{font-size:clamp(15px,1.9vw,21px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:44em}
 .tmnav{display:flex;gap:10px;margin-top:auto;padding-top:18px}
 .tmnav .btn{font-size:16px;padding:11px 20px}
 
-.tmsent{font-family:Georgia,serif;font-size:clamp(24px,3.4vw,42px);line-height:1.55;background:#fff;
-  border:1px solid var(--line);border-radius:16px;padding:min(5vh,34px) min(4vw,38px);margin:0 0 18px;
-  display:flex;align-items:center;flex:1}
-.tmbrief{font-size:clamp(18px,2.4vw,28px);line-height:1.45;max-width:40em}
+/* Size against the SHORT side too. A 1280x720 laptop is wide but shallow, and
+   sizing on vw alone put these slides 122px below the fold. */
+.tmsent{font-family:Georgia,serif;font-size:clamp(18px,min(2.6vw,3.4vh),40px);line-height:1.5;background:#fff;
+  border:1px solid var(--line);border-radius:16px;padding:min(3vh,28px) min(4vw,38px);margin:0 0 14px;
+  display:flex;align-items:center;flex:1;min-height:0}
+.tmbrief{font-size:clamp(15px,min(1.8vw,2.4vh),26px);line-height:1.4;max-width:44em}
 .tmnote{font-size:15px;color:var(--muted);font-style:italic;margin-top:14px}
 .tmh-idea{color:var(--idea-tx)} .tmh-verb{color:var(--verb-tx)}
 .tmh-ev{color:var(--ev-tx)}     .tmh-eff{color:var(--eff-tx)}
-.tmfour{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;flex:1;align-content:center}
-@media (max-width:820px){.tmfour{grid-template-columns:repeat(2,1fr)}}
-.tmf{border-radius:16px;padding:min(9vh,60px) 16px;text-align:center;border:1px solid var(--line);
-  display:flex;flex-direction:column;justify-content:center}
-.tmf b{display:block;font-family:Georgia,serif;font-size:clamp(30px,4.2vw,54px);line-height:1.05}
-.tmf span{display:block;margin-top:8px;font-size:clamp(19px,2.6vw,32px);font-weight:700;opacity:.75}
+/* ---- the Frayer slide ----
+   Two columns, three rows: cards in the corners, the sentence spanning the
+   middle band. The sentence is the centre of the model, so it gets the
+   room. */
+.frayer{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;
+  grid-template-rows:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr);gap:12px}
+.frsent{grid-column:1 / -1;font-family:Georgia,serif;
+  font-size:clamp(17px,1.85vw,26px);line-height:1.45;background:#fff;
+  border:2px solid var(--line);border-radius:18px;min-height:0;
+  padding:min(2.4vh,20px) min(3vw,30px);display:flex;align-items:center}
+.frsent em{transition:opacity .18s, box-shadow .18s}
+/* when a card is lit, everything but its colour steps back */
+.frayer.lit .frsent em{opacity:.22}
+.frayer.lit-idea .frsent .hl-idea,
+.frayer.lit-eff  .frsent .hl-eff,
+.frayer.lit-ev   .frsent .hl-ev,
+.frayer.lit-verb .frsent .hl-verb{opacity:1;box-shadow:0 0 0 3px currentColor}
+.frayer.lit .tmf{opacity:.4}
+.frayer.lit-idea .tmf-idea,.frayer.lit-eff .tmf-eff,
+.frayer.lit-ev .tmf-ev,.frayer.lit-verb .tmf-verb{opacity:1}
+.tmf{transition:opacity .18s, transform .18s;cursor:pointer}
+.tmf:hover{transform:translateY(-2px)}
+/* the corner cards point at the sentence: a small arrow on the inner edge */
+.pos-tl,.pos-tr,.pos-bl,.pos-br{position:relative}
+.pos-tl:after,.pos-tr:after,.pos-bl:after,.pos-br:after{
+  content:"";position:absolute;left:50%;transform:translateX(-50%);
+  border:10px solid transparent}
+.pos-tl:after,.pos-tr:after{bottom:-19px;border-top-color:currentColor}
+.pos-bl:after,.pos-br:after{top:-19px;border-bottom-color:currentColor}
+@media (max-width:820px){
+  .frayer{grid-template-columns:1fr;grid-template-rows:none}
+  .frsent{grid-column:1}
+  .pos-tl:after,.pos-tr:after,.pos-bl:after,.pos-br:after{display:none}
+}
+/* The cards used to have a slide to themselves. On the Frayer they share it
+   with the sentence, so they size against the room that is left. */
+.tmf{border-radius:16px;padding:min(2.6vh,20px) 16px;text-align:center;border:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:center;min-height:0}
+.tmf b{display:block;font-family:Georgia,serif;font-size:clamp(22px,2.7vw,38px);line-height:1.05}
+.tmf span{display:block;margin-top:4px;font-size:clamp(15px,1.7vw,23px);font-weight:700;opacity:.75}
 .tmf-idea{background:var(--idea-bg);color:var(--idea-tx)}
 .tmf-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .tmf-ev{background:var(--ev-bg);color:var(--ev-tx)}
@@ -1968,10 +2024,13 @@ const TEACH = {
 
 /* The four questions, which is all a student has to hold while they write. */
 const TEACH_COLOURS = [
-  { c:"idea", t:"Idea",     q:"what" },
-  { c:"eff",  t:"Purpose",  q:"why"  },
-  { c:"ev",   t:"Evidence", q:"when" },
-  { c:"verb", t:"Verb",     q:"how"  }
+  /* pos places the card in the Frayer grid, and hl is the highlight class the
+     matching part of the sentence already wears, so the card and the phrase
+     light up together on hover or tap. */
+  { c:"idea", t:"Idea",     q:"what", pos:"tl", hl:"hl-idea" },
+  { c:"eff",  t:"Purpose",  q:"why",  pos:"tr", hl:"hl-eff"  },
+  { c:"ev",   t:"Evidence", q:"when", pos:"bl", hl:"hl-ev"   },
+  { c:"verb", t:"Verb",     q:"how",  pos:"br", hl:"hl-verb" }
 ];
 
 /* A Year 4 sentence: a person for a subject, a reporting verb, a feeling for a
@@ -2896,8 +2955,14 @@ function renderWkBuild(){
   }
 
   /* ---- canvas ---- */
-  h+=`<p class="q">Your sentence — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
-  <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>`;
+  /* The canvas and the preview ride in a sticky dock. Building a sentence means
+     looking at the banks and the sentence at the same time, and on a laptop the
+     banks push the sentence off the top of the screen exactly when a student
+     needs to see what they are adding to. */
+  h+=`<div class="dock">
+    <p class="q">Your sentence — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
+    <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
+  </div>`;
 
   /* ---- banks, filtered to this level ---- */
   h+=`<div class="bins5">`;
@@ -3618,6 +3683,12 @@ function renderTeach(){
 }
 
 
+/* Dim every highlight in the Frayer sentence except the one named. Passing ""
+   clears it. Class on the container, so one toggle repaints the whole thing. */
+function teachLight(hl){
+  const f=$("frayer"); if(!f) return;
+  f.className = "frayer" + (hl ? " lit lit-"+hl.replace("hl-","") : "");
+}
 function teachExit(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
@@ -3638,11 +3709,23 @@ function teachColours(){
   $("homeBtn").style.display="none";
   const tb=$("teachBtn"); if(tb) tb.style.display="none";
   screen="teach";
+  /* Frayer-shaped: the Year 7 sentence in the middle, one card per corner,
+     each card the colour of the part of the sentence it names. Hovering or
+     tapping a card dims everything in the sentence except its own phrase, so
+     the link is shown rather than described. */
+  const card = c => `<div class="tmf tmf-${c.c} pos-${c.pos}"
+      onmouseenter="teachLight('${c.hl}')" onmouseleave="teachLight('')"
+      onclick="teachLight('${c.hl}')">
+      <b>${esc(c.t)}</b><span>${esc(c.q)}</span></div>`;
+  const at = p => TEACH_COLOURS.filter(c=>c.pos===p).map(card).join("");
   $("body").innerHTML=`<div class="teach">
     <div class="tmbar noprint"><span class="tmtag">Teacher mode</span>
       <button class="linkbtn" onclick="teachExit()">Leave (Esc)</button></div>
-    <div class="tmfour">${TEACH_COLOURS.map(c=>
-      `<div class="tmf tmf-${c.c}"><b>${esc(c.t)}</b><span>${esc(c.q)}</span></div>`).join("")}</div>
+    <div class="frayer" id="frayer">
+      ${at("tl")}${at("tr")}
+      <div class="frsent"><span>${teachSentence(null)}</span></div>
+      ${at("bl")}${at("br")}
+    </div>
     <div class="tmnav noprint">
       <button class="btn btn-ghost" onclick="teachRails()">← back to the demo</button>
       <button class="btn btn-ghost" onclick="runTeach(0)">the slides</button>
