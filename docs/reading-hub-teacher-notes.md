@@ -168,24 +168,42 @@ to be opened from the website (or any http serve of the folder), not
 double-clicked as a bare file; opened wrongly it says so instead of printing a
 blank.
 
-## Teacher mode: slides, one climb, four colours
+## Teacher mode: five slides, one climb, and the Frayer
 
 The Analysis workshop carries a **teacher mode** link in its breadcrumb, in
 both parts, there is a **▶ Teacher mode** button in the hub's top bar, and it
-has its own address: `BoneSparrowReadingHub.html#teach`. → and ← move through
-the slides, Esc leaves.
+has its own address: `BoneSparrowReadingHub.html#teach`. → and ← move, Esc
+leaves.
 
-Five slides on one sentence: the Year 7 response from the wall, read out of the
-workshop's own data so the deck cannot drift from it. The first shows it whole
-with the colour key; the next four light one part at a time, idea, analytical
-verb, evidence, effect on the reader, with a sentence each. Slide six shows the
-Year 4 sentence in the same colours and opens the **builder on rails**: the
-level is set to 7 so all three retired tiles are flagged at once, and one pass
-lifts it two rungs. Reaching Level 7 turns the lift button into **The four
-colours →**, the last screen: Idea what, Purpose why, Evidence when, Verb how.
+Five slides on one sentence, the Year 7 response from the wall, read out of the
+workshop's own data so the deck cannot drift from it. The first shows it whole;
+the next four light one part at a time. Then the builder opens holding a Year 4
+sentence, level set to 7, three tiles already flagged, and one pass lifts it two
+rungs. Reaching Level 7 turns the lift button into **The four colours →**.
+
+That last screen is a **Frayer model**: the sentence in the middle, one card in
+each corner, each card the colour of the part it names.
+
+| | |
+|---|---|
+| **Idea** | what |
+| **Purpose** | why |
+| **Evidence** | when |
+| **Verb** | how |
+
+Hover or tap a card and everything in the sentence except its own phrase steps
+back to 22% opacity, with the live phrase ringed in its colour. The link
+between the card and the writing is shown rather than described, which is the
+only reason the card and the phrase are the same colour in the first place.
+
+Every slide is sized to the window rather than to a fixed minimum, and the type
+scales against the **short** side of the screen as well as the long one. A
+1280x720 laptop is wide but shallow, and sizing on width alone put the middle
+slides 122px below the fold. Checked at 1440x820, 1366x768 and 1280x720: no
+slide scrolls at any of them.
 
 Nothing in teacher mode is scored or saved. The rails flag turns every write to
-the student record into a no-op, so the whole demonstration can be driven on a
+the student record into a no-op, so the demonstration can be driven on a
 signed-in student's device without leaving a mark on it.
 
 ## Dragging a tile into place
@@ -320,3 +338,18 @@ now one option among several rather than the only door.
 
 If you add tiles at Level 9, check the count per focus rather than the total.
 The total looked healthy the whole time.
+
+## The sentence stays on screen while you build
+
+The canvas and its preview ride in a sticky dock at the top of the builder.
+Building a sentence means looking at the banks and the sentence at once, and on
+a laptop the banks used to push the sentence off the top of the screen exactly
+when a student needed to see what they were adding to. Scrolling 900px down the
+tile banks now leaves the sentence 30px from the top of the window instead of
+857px above it.
+
+The banks also lost their own inner scrollbars. A bank that scrolls inside a
+page that also scrolls is two scroll surfaces under one thumb, and a tile
+dragged out of a scrolled bank used to land against a canvas that had moved
+underneath it. The banks are now as tall as their contents and the page does
+all the scrolling.
