@@ -3588,9 +3588,9 @@ function renderTeach(){
   if(sl.k==="title") sl.h=WK_WALL.q;
   let inner="";
   if(sl.k==="title"){
-    inner=`<div class="tmsent">${teachSentence(null)}</div>${wkColourKey()}`;
+    inner=`<div class="tmsent"><span>${teachSentence(null)}</span></div>${wkColourKey()}`;
   } else if(sl.k==="part"){
-    inner=`<div class="tmsent">${teachSentence(sl.c)}</div>
+    inner=`<div class="tmsent"><span>${teachSentence(sl.c)}</span></div>
       <p class="tmbrief">${sl.brief}</p>`;
   } else if(sl.k==="rails"){
     /* the sentence the builder is holding, in the same colours, so the room
