@@ -29,6 +29,12 @@
 
    One paper size per file (see the Batman sorting cards for why): everything
    here is A4 portrait, and the paste boxes are measured against the cards.
+
+   PAPER. Two card sets to a sheet, halved along the middle rule, because a
+   class of 25 needs 25 sets and the responses do not need a page each to be
+   readable. That takes a class set from 50 sheets to 38. The board keeps a
+   page to itself: cutting a shared sheet in half would cut through somebody's
+   paste boxes.
    =========================================================================== */
 :root{
   --sheet-w:210mm; --sheet-h:297mm; --sheet-pad:11mm 10mm 9mm;
@@ -67,20 +73,29 @@ body{background:var(--bg);color:var(--ink);
 .hl-ev{background:var(--ev-bg);color:var(--ev-tx);text-decoration-style:double;text-decoration-color:var(--ev-tx)}
 .hl-eff{background:var(--eff-bg);color:var(--eff-tx);text-decoration-style:wavy;text-decoration-color:var(--eff-tx)}
 
-/* ---- page 1: the cards ----
-   One column of full-width cards: the responses run to sixty-odd words, and a
-   card a student can read is worth more than a card that matches the Batman
-   pack's 62mm. The paste boxes on the board are measured against these. */
-.cards{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:4mm}
+/* ---- page 1: the cards, two sets to a sheet ----
+   Full-width cards rather than the Batman pack's 62mm columns: these responses
+   run to sixty-odd words and a card a student can read is worth more than a
+   card that matches another topic's grid. Two sets fit because the cards are
+   set tight and the sheet is halved along the middle rule. */
+.sets{flex:1;display:flex;flex-direction:column;justify-content:flex-start}
+.setnote{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:6.6pt;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  font-weight:700;margin-bottom:1.4mm}
+.cards{display:flex;flex-direction:column;gap:2.6mm}
+.cutline{display:flex;align-items:center;gap:2mm;margin:5mm 0;color:var(--muted)}
+.cutline:before,.cutline:after{content:"";flex:1;border-top:1.1px dashed var(--rule)}
+.cutline span{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:6.6pt;letter-spacing:.08em;text-transform:uppercase;font-weight:700;white-space:nowrap}
 .card{border:1.1px dashed var(--rule);border-radius:1.5px;background:#fff;
-      padding:3mm 3.5mm;display:flex;gap:3mm;align-items:flex-start}
+      padding:2.9mm 3.4mm;display:flex;gap:3mm;align-items:flex-start}
 .card .n{flex:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-         font-size:11pt;font-weight:800;color:var(--deep);width:7mm;text-align:center;
-         border:1.4px solid var(--deep);border-radius:50%;line-height:6.4mm;height:7mm}
-.card .t{flex:1;font-size:10.5pt;line-height:1.5}
+         font-size:10pt;font-weight:800;color:var(--deep);width:6.4mm;text-align:center;
+         border:1.3px solid var(--deep);border-radius:50%;line-height:5.9mm;height:6.4mm}
+.card .t{flex:1;font-size:10pt;line-height:1.46}
 
 /* ---- page 2: the board ---- */
-.rows{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;gap:2.5mm}
+.rows{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:2.5mm}
 .row{border:1px solid var(--line);border-radius:2px}
 .rh{display:flex;flex-wrap:wrap;gap:1mm 4mm;align-items:baseline;background:var(--band);
     padding:1.8mm 3mm;border-bottom:1px solid var(--line)}
@@ -89,7 +104,7 @@ body{background:var(--bg);color:var(--ink);
 .rh .fo{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
         font-size:8pt;font-weight:700;color:var(--muted)}
 .rh .vic{flex-basis:100%;font-size:8.6pt;color:var(--ink);font-style:italic;line-height:1.3}
-.box{min-height:28mm;background:
+.box{min-height:27mm;background:
      repeating-linear-gradient(0deg, transparent, transparent 8mm, #efe9df 8mm, #efe9df 8.3mm)}
 
 /* ---- page 3: the key ---- */
@@ -163,11 +178,16 @@ function render(W){
     <header class="head">
       <div class="kicker">The Bone Sparrow · analytical writing · cut and paste</div>
       <h1>Five answers to one question</h1>
-      <p>${esc(W.q)} Cut the five cards out. Each one belongs to a different level of the rubric. The colours mark the parts doing analytical work. Read what each coloured phrase does, not how many there are.</p>
+      <p>${esc(W.q)} Halve the sheet, then cut the five cards out. Each one belongs to a different level of the rubric. The colours mark the parts doing analytical work. Read what each coloured phrase does, not how many there are.</p>
     </header>
-    <div class="cards">${ORDER.map((id,i)=>{
-      const r=byId(id);
-      return `<div class="card"><span class="n">${LETTERS[i]}</span><span class="t">${r.h||esc(r.t)}</span></div>`;}).join("")}
+    <div class="sets">${[1,2].map(set=>`
+      <div>
+        <div class="setnote">Set ${set} of 2 on this sheet</div>
+        <div class="cards">${ORDER.map((id,i)=>{
+          const r=byId(id);
+          return `<div class="card"><span class="n">${LETTERS[i]}</span><span class="t">${r.h||esc(r.t)}</span></div>`;}).join("")}
+        </div>
+      </div>${set===1?`<div class="cutline"><span>cut along here — one set for each student</span></div>`:""}`).join("")}
     </div>
     <p class="foot">${foot}</p>
   </section>

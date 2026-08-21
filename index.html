@@ -80,6 +80,15 @@ a.card .now{display:inline-block;font-size:10.5px;font-weight:800;text-transform
 .whoami .sep{color:var(--line)}
 .note{background:var(--okbg);border:1px solid var(--correct);border-radius:8px;padding:10px 13px;
       font-size:13px;color:var(--correct);margin:18px 0 0;line-height:1.55}
+.dir{margin:14px 0 0;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 14px}
+.dir summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink)}
+.dirnote{font-size:12.5px;color:var(--muted);margin:8px 0 12px;line-height:1.5}
+.dirgrp{margin-bottom:12px}
+.dirgrp h4{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 5px}
+.dirrow{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:3px 0;
+  border-bottom:1px dotted var(--line-soft,#e8e0cd)}
+.dirrow a{font-size:13.5px;font-weight:600}
+.dirrow span{font-size:12px;color:var(--muted)}
 
 /* ---- persistent top-right link, present on every step ---- */
 .topmini{display:flex;justify-content:flex-end;margin:0 0 14px;min-height:20px}
@@ -250,6 +259,35 @@ function renderStep2(){
   };
 }
 
+/* Every address in the suite, grouped. Students only ever need the two hubs;
+   the rest is here so a teacher can link one activity, one print master or the
+   projector deck on its own. The hub screens are hash routes it understands. */
+const DIRECTORY = [
+ { g:"For students", items:[
+   {u:"BoneSparrowVocabHub.html", t:"Vocab Hub", d:"words, chapter by chapter"},
+   {u:"BoneSparrowReadingHub.html", t:"Reading & Evidence Hub", d:"everything below, in one place"},
+   {u:"GrammarHuboffline.html", t:"Grammar Hub", d:"sentence structure, when a hub sends you here"} ]},
+ { g:"Straight to one activity", items:[
+   {u:"BoneSparrowReadingHub.html#qr1", t:"Quickread 1 — the Night Sea", d:"chapter 1"},
+   {u:"BoneSparrowReadingHub.html#qr2", t:"Quickread 2 — caught by Beaver", d:"chapter 5"},
+   {u:"BoneSparrowReadingHub.html#qr3", t:"Quickread 3 — lucky", d:"chapter 6"},
+   {u:"BoneSparrowReadingHub.html#qr4", t:"Quickread 4 — what Alpha does to a person", d:"chapter 8"},
+   {u:"BoneSparrowReadingHub.html#qr5", t:"Quickread 5 — the bone sparrow", d:"chapter 10"},
+   {u:"BoneSparrowReadingHub.html#qr6", t:"Quickread 6 — a story from just Outside", d:"chapter 14"},
+   {u:"BoneSparrowReadingHub.html#qr7", t:"Quickread 7 — Aussie Boy", d:"chapter 17"},
+   {u:"BoneSparrowReadingHub.html#qr8", t:"Quickread 8 — Jimmie wants to know", d:"chapter 20"},
+   {u:"BoneSparrowReadingHub.html#fig", t:"Figurative → literal", d:"lesson 09"},
+   {u:"BoneSparrowReadingHub.html#voice", t:"Voice fingerprint", d:"before the voice memo"},
+   {u:"BoneSparrowReadingHub.html#ev", t:"Evidence builder", d:"find it, explain it, embed it"},
+   {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]},
+ { g:"For the front of the room", items:[
+   {u:"BoneSparrowReadingHub.html#teach", t:"Teacher mode", d:"the slides, then the builder demo on rails"},
+   {u:"BoneSparrowWagollWall.html", t:"The full WAGOLL wall", d:"every level's model response, on one page"} ]},
+ { g:"To print", items:[
+   {u:"BoneSparrowWagollSheets.html", t:"Analytical writing anchor sheets", d:"A3 portrait, Foundation to Level 10"},
+   {u:"BoneSparrowWallCards.html", t:"The wall as cut and paste", d:"A4, two card sets a sheet, board and key"} ]}
+];
+
 /* ---------------- STEP 3 — your tasks ---------------- */
 function renderStep3(){
   const set = currentSet();
@@ -283,7 +321,12 @@ function renderStep3(){
   </a>
 
   <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right, but the report shows the honest first go — that's the point of it.</div>
-  <div class="note">For teachers: <a href="BoneSparrowWagollSheets.html">analytical writing anchor sheets</a> — one A3 sheet per level, Foundation to Level 10, print from the browser at A3 portrait · <a href="BoneSparrowWallCards.html">the wall as cut-and-paste</a> — cards, board and key on three A4 pages. The on-screen <a href="BoneSparrowWagollWall.html">full WAGOLL wall</a> is the same ladder to read from, at its own address.</div>`;
+
+  <details class="dir"><summary>Every link in this suite, separately</summary>
+    <p class="dirnote">Each of these opens on its own, so you can post one straight into Classroom without sending students through the front door.</p>
+    ${DIRECTORY.map(g=>`<div class="dirgrp"><h4>${esc(g.g)}</h4>${g.items.map(it=>
+      `<div class="dirrow"><a href="${it.u}">${esc(it.t)}</a><span>${esc(it.d)}</span></div>`).join("")}</div>`).join("")}
+  </details>`;
   $("editMe").onclick = ()=>{ step=1; render(); };
 }
 
