@@ -257,3 +257,33 @@ of the time, so length buys a student nothing there.
 **Adding an item?** At least one distractor has to be as long as the correct
 answer or longer. There is a note above `REDUNDANCY` in the hub with the rule
 and how to re-run the count.
+
+## Every resource has its own address
+
+The front door carries a **"Every link in this suite, separately"** panel listing
+all of it, so you can post one link into Classroom instead of sending a class
+through the front door to find one activity.
+
+Each screen inside the reading hub is a hash route:
+`BoneSparrowReadingHub.html#teach` opens teacher mode, `#wk` the analysis
+workshop, `#ev` the evidence builder, `#fig`, `#voice`, and `#qr1` to `#qr8` the
+quickreads. A link followed before signing in remembers where it was going and
+lands there once the student is through the gate. The chapter gate still
+applies: a link to a quickread past a student's reading position sends them home
+rather than spoiling it.
+
+The print masters and the wall are their own files, so they were already
+linkable: `BoneSparrowWagollSheets.html`, `BoneSparrowWallCards.html`,
+`BoneSparrowWagollWall.html`.
+
+**Teacher mode is now a button**, dark and labelled, in the hub's top bar on
+every screen except the deck itself. It used to be a line of small red text in
+the workshop breadcrumb, which nobody found.
+
+**The rubric table uses the width it has.** Five columns above 1500px, four
+above 1180, three below that, and the paging arrows and the "faded columns"
+note only appear when the table is actually paging. On a classroom projector
+the whole rubric, Level 5 to 9, is on screen at once.
+
+**The cut-and-paste cards print two sets to a sheet**, halved along a marked
+rule. A class of 25 needs 25 card sets and 25 boards: 38 sheets rather than 50.
