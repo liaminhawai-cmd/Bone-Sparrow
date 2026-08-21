@@ -168,20 +168,22 @@ white space.
 
 `BoneSparrowClimbCards.html` is Part B on paper — the sentence builder, with
 scissors. One pack per theme (fear in the body, power and control, protection
-and survival), one A4 sheet each, plus a single key sheet for all three — four
-sheets for the whole activity, and a student only needs their own theme's.
+and survival). **Two identical sets to a sheet**, halved along the middle rule,
+so one sheet serves two students — four A4 sheets in total, one per theme plus
+the key.
 
 1. **Two done.** The Level 5 and Level 6 sentences arrive written and
    colour-coded, because the paper task should start where the difficulty
-   starts. Under them, the note says what the one change from 5 to 6 was: the
-   quote moved inside the sentence.
+   starts. Level 6's header says the one change: the quote moved inside.
 2. **Two to build.** Under each of Level 7 and Level 8 — its rubric line and
-   the task in a sentence — sits that sentence cut into strips, scrambled, in
-   two columns, coloured on the same four-colour key as the app. Every strip
-   belongs in the sentence; none are spare and none are wrong, so the task is
-   ordering, not elimination. Seven strips for Level 7, ten for Level 8.
-   There are no ruled paste boxes: the strips get joined on the desk and stuck
-   into an exercise book, which halves the pack.
+   the task in a sentence — sits that sentence cut into parts, scrambled,
+   coloured on the same four-colour key as the app. Every part belongs in the
+   sentence; none are spare and none are wrong, so the task is ordering, not
+   elimination. Seven parts for Level 7, ten for Level 8. They are packed as
+   cells at their own width rather than bars across the page: "reveals" does
+   not need a line of its own, and the space that saves is what fits the second
+   set on the sheet. There are no ruled paste boxes either — the parts get
+   joined on the desk and stuck into an exercise book.
 3. **The key.** All six target sentences on one page for your desk.
 
 There was a Part A pack too — the five wall responses as cards to sort against
