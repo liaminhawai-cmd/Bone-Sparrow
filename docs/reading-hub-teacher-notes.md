@@ -249,12 +249,26 @@ the student record into a no-op, so the demonstration can be driven on a
 signed-in student's device without leaving a mark on it.
 
 **On rails, the builder is stripped for the projector.** It is the same page
-the students use, not a mock-up, but the tile banks, the rubric table and the
-sentence tiles all shrink, and the parts that only matter when you are working
-alone — the passage to harvest quotations from, the running note of what
-unlocked and retired, the focus reminder — are hidden. The whole climb then
-fits on a 1366×768 projector without scrolling, with the Check button on
-screen, so nothing has to be hunted for mid-demonstration.
+the students use, not a mock-up, but it is set for a room rather than a lap.
+
+*The wall is two columns and one row.* The demo lifts a Year 4 sentence to
+Year 7 in one pass, so the wall shows those two levels and nothing between
+them, and only the **Example** row: the skill focus, the rubric wording and the
+what-makes-it row are three lines of small print nobody reads from row four,
+and you are saying all of it out loud anyway. The starting sentence is on the
+wall from the moment the demo opens, under Level 5, so when Level 7 fills in on
+the check the class sees the difference rather than a single sentence.
+
+*Everything is about half again as big.* Each size on rails is the student
+page's size times `--rk`, so the demo scales as one thing: one number for a
+bigger room, and nothing loses its proportions. The passage to harvest from,
+the unlock/retire note and the focus reminder are hidden, and the tile banks
+scroll — a bank is a list you pick from, not something you read through.
+
+*The page scrolls, and that costs nothing,* because the sentence, the feedback
+and the **Check** button ride in a sticky dock. The one thing a teacher must
+never hunt for mid-demonstration is the button they press, and it stays on
+screen at every viewport down to a 1366×600 browser window.
 
 ## Dragging a tile into place
 
