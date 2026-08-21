@@ -2434,17 +2434,63 @@ function sameLessonDistractors(word, n){
 function morphMap(word){
   return word.tiles ? word.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" + ")+" → <b>"+esc(word.w)+"</b>" : (word.note||"");
 }
-function genTypesFor(word){ return word.tiles ? ["meaningmatch","wordsum","morphmeaning"] : ["meaningmatch"]; }
+function genTypesFor(word){
+  if(!word.tiles) return ["meaningmatch"];
+  /* Only ask the word sum when the book holds other words built from the same
+     pieces. Without them there is nothing to confuse it with and the item is a
+     giveaway, so that word gets the other two instead. */
+  return wordsumSharers(word).length>=2 ? ["meaningmatch","wordsum","morphmeaning"] : ["meaningmatch","morphmeaning"];
+}
+
+/* A word sum shows the parts, so distractors drawn at random from the lesson can
+   be ruled out by skimming for the chunk on screen. These share morphemes with
+   the answer instead: same root where the book has one, otherwise the same
+   affix or the same ending, so the parts have to actually be read. */
+function morphKey(piece){ return piece.replace(/[()\u2010-\u2015-]/g,"").toLowerCase(); }
+function wordsumSharers(word){
+  const mine = (word.tiles||[]).map(t=>morphKey(t[0]));
+  const roots = (word.tiles||[]).filter(t=>classifyMorph(t[0])==="root").map(t=>morphKey(t[0]));
+  const tail = word.w.toLowerCase().slice(-4);
+  return ALL_WORDS.filter(x=>x.w!==word.w && x.tiles && x.tiles.length).map(x=>{
+    const theirs = x.tiles.map(t=>morphKey(t[0]));
+    let sc = 0;
+    theirs.forEach(m=>{ if(roots.indexOf(m)>=0) sc+=5; else if(mine.indexOf(m)>=0) sc+=3; });
+    if(x.w.toLowerCase().slice(-4)===tail) sc+=2;      /* looks the same at the end */
+    return {w:x.w, sc, pos:x.pos};
+  }).filter(x=>x.sc>0);
+}
+function wordsumDistractors(word, n){
+  const scored = shuffle(wordsumSharers(word));        /* shuffled first: ties stay random */
+  scored.forEach(x=>{ if(x.pos===word.pos) x.sc+=1; });
+  scored.sort((a,b)=>b.sc-a.sc);
+  const out=[]; scored.forEach(x=>{ if(out.indexOf(x.w)<0 && out.length<n) out.push(x.w); });
+  if(out.length<n) sameLessonDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  return out;
+}
+
+/* Same trap in the other direction: a root asked with three suffix meanings under
+   it answers itself. Offer meanings of the same kind of part, and use the word's
+   own authored near-misses first where there are any. */
+function morphGlossDistractors(piece, gloss, word, n){
+  const kind = classifyMorph(piece);
+  const near = (word.decoys||[]).filter(d=>classifyMorph(d[0])===kind).map(d=>d[1]);
+  const same = MORPHS.filter(m=>m.type===kind).map(m=>m.gloss);
+  const out=[];
+  shuffle(near).concat(shuffle(same)).concat(shuffle(ALL_GLOSSES.slice())).forEach(g=>{
+    if(g!==gloss && out.indexOf(g)<0 && out.length<n) out.push(g);
+  });
+  return out;
+}
 function genTask(gtype, word){
   if(gtype==="wordsum" && word.tiles){
     const eq=word.tiles.map(t=>`<b>${esc(t[0])}</b>`).join(" + ");
     return { type:"wordsum", q:`Which word do these parts build?<br><span class="eqn">${eq}</span>`,
-      a:word.w, opts:[word.w].concat(sameLessonDistractors(word,3)), explain:morphMap(word) };
+      a:word.w, opts:[word.w].concat(wordsumDistractors(word,3)), explain:morphMap(word) };
   }
   if(gtype==="morphmeaning" && word.tiles){
     const roots=word.tiles.filter(t=>classifyMorph(t[0])==="root");
     const t=pick(roots.length?roots:word.tiles);
-    const wrong=shuffle(ALL_GLOSSES.filter(g=>g!==t[1])).slice(0,3);
+    const wrong=morphGlossDistractors(t[0], t[1], word, 3);
     return { type:"morphmeaning", q:`In <b>${esc(word.w)}</b>, what does the part <b>${esc(t[0])}</b> mean?`,
       a:t[1], opts:[t[1]].concat(wrong), explain:`<b>${esc(t[0])}</b> = ${esc(t[1])}. &nbsp; ${morphMap(word)}` };
   }
