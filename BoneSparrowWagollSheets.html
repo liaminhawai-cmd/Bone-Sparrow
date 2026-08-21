@@ -189,6 +189,18 @@ const CRITERIA = [
 /* Rungs below the continuum's Level 5, in the Victorian Curriculum's own
    two-year bands. Criteria arrive one at a time on the way up: a sheet that
    names three of the five is the ladder working, not a hole to fill. */
+/* The colour is constant, the NAME grows up. A Foundation student copies two
+   words out of the book; they are not embedding evidence, and calling it that
+   on their sheet is the wrong word over the right colour. The school's own
+   continuum agrees: "embed quotes into sentences" is Level 8, so the label
+   only becomes "Embedded evidence" where the rubric says it does. */
+const NAME_AT = {
+  ev:{ "Foundation to Level 2":"Words from the book", "Levels 3 and 4":"Words from the book",
+       "Level 5":"Words from the book", "Level 6":"Evidence", "Level 7":"Evidence" },
+  eff:{ "Foundation to Level 2":"How it makes you feel", "Levels 3 and 4":"How it makes you feel" }
+};
+const nameFor = (c,lv) => (NAME_AT[c.key] && NAME_AT[c.key][lv]) || c.name;
+
 const EARLY_LEVELS = ["Foundation to Level 2", "Levels 3 and 4"];
 const LEVELS = ["Level 5","Level 6","Level 7","Level 8","Level 9","Level 10"];
 
@@ -196,7 +208,7 @@ const FOCUS = {
  "Foundation to Level 2":"Say what happens, and point at the words",
  "Levels 3 and 4":"Say what happens, and how it makes you feel",
  "Level 5":"Identify · say what happens",
- "Level 6":"Describe with detail · evidence inside the sentence",
+ "Level 6":"Describe with detail · the quote goes inside the sentence",
  "Level 7":"Explain the effect · the idea becomes an issue",
  "Level 8":"Analyse the choice · two perspectives at once",
  "Level 9":"Question the representation · what the writing withholds",
@@ -238,17 +250,17 @@ const EXAMPLES = {
 
 const EXPLANATIONS = {
  "Foundation to Level 2": {
-  idea:"Names one thing that happens in the story, in your own words.",
-  ev:"Two or three of the book's own words, inside quotation marks." },
+  idea:"One thing that happens in the story, said in your own words.",
+  ev:"Two or three words copied straight out of the book, with quote marks around them." },
  "Levels 3 and 4": {
-  idea:"The idea is a whole sentence, and it says what Subhi does rather than what the camp looks like.",
-  ev:"A full line quoted accurately, in a sentence of its own beside the point.",
-  eff:"Says what the writing does to the reader." },
+  idea:"A whole sentence now, and it says what Subhi does rather than what the camp looks like.",
+  ev:"A whole line copied from the book, in a sentence of its own next to your point.",
+  eff:"What the writing does to you as you read it." },
  "Level 5": {
   idea:"A plain idea about the character, one step past retelling the plot.",
   feat:"The feature is named, with the right term for it.",
   verb:"\u201CShows\u201D only reports. It is the first word to trade up.",
-  ev:"The quotation is accurate, but it sits in its own sentence next to the point.",
+  ev:"The quote is copied correctly, but it still sits in its own sentence next to the point.",
   eff:"A general feeling rather than a particular effect." },
  "Level 6": {
   idea:"The idea has a purpose inside it: not that Subhi imagines, but what the imagining does for him.",
@@ -359,7 +371,7 @@ const used = lv => CRITERIA.filter(c => EXPLANATIONS[lv][c.key]);
 const plain = lv => EXAMPLES[lv].replace(/\{(\w+)\|([^}]*)\}/g,"$2");
 const clamp = (lo,v,hi) => Math.min(hi, Math.max(lo, v));
 function scale(lv){
-  const target = EARLY_LEVELS.includes(lv) ? 800 : 500;
+  const target = EARLY_LEVELS.includes(lv) ? 700 : 500;
   const k  = clamp(0.92, Math.sqrt(target / plain(lv).length), 3.0);
   const k2 = clamp(0.96, Math.pow(k, 0.4), 1.3);
   return `--k:${k.toFixed(3)};--k2:${k2.toFixed(3)}`;
@@ -377,7 +389,7 @@ document.getElementById("out").innerHTML = LADDER.map(lv=>{
     </header>
 
     <div class="key">${CRITERIA.filter(c=>on.includes(c.key)).map(c=>
-      `<span class="k k-${c.key}"><i>${c.glyph}</i>${esc(c.name)}</span>`).join("")}</div>
+      `<span class="k k-${c.key}"><i>${c.glyph}</i>${esc(nameFor(c,lv))}</span>`).join("")}</div>
 
     <p class="example">${mark(EXAMPLES[lv])}</p>
 
@@ -387,7 +399,7 @@ document.getElementById("out").innerHTML = LADDER.map(lv=>{
     <div class="cont">${CRITERIA.map(c=>{
         const d = CONTINUUM[c.key] && CONTINUUM[c.key][lv];
         return `<div class="cr cr-${c.key}${d?"":" gap"}">
-          <div class="cn"><span>${c.glyph}</span><span>${esc(c.name)}</span></div>
+          <div class="cn"><span>${c.glyph}</span><span>${esc(nameFor(c,lv))}</span></div>
           <div class="cd">${d?esc(d):""}</div></div>`;}).join("")}</div>
 
     <p class="foot">${WALL.foot}</p>
