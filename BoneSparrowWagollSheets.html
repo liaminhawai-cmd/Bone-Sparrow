@@ -13,11 +13,16 @@
    is in the DATA block at the bottom of this file; the renderer under it holds
    no wall text of its own.
 
-   Built to sit beside the Analysis workshop in BoneSparrowReadingHub.html, and
-   it uses that workshop's colour language exactly: blue = the idea, purple =
-   the language feature, orange = the analytical verb, yellow = embedded
-   evidence, green = the effect on the reader. A student who has built the wall
-   on screen reads these sheets without being taught a second system.
+   Three things on a sheet, and nothing else: the worked example, what each
+   colour is doing in it, and the rubric row for that level. The teacher
+   explains the resource; the sheet does not explain itself, so there is no
+   task statement, no passage reprint and no note about what the sheet is for.
+   That is what leaves the example and the explanation large enough to read
+   from a desk, which is the whole point of an anchor chart.
+
+   Colours are the Analysis workshop's, exactly: blue = the idea, purple = the
+   language feature, orange = the analytical verb, yellow = embedded evidence,
+   green = the effect on the reader.
 
    Two channels for every signal, because these get photocopied: each criterion
    carries a colour AND an underline pattern, plus a glyph in the key and in
@@ -66,58 +71,41 @@ body{background:var(--bg);color:var(--ink);line-height:1.5;
        border:1px solid var(--line);box-shadow:var(--shadow);padding:var(--sheet-pad);
        display:flex;flex-direction:column}
 
-.head{border-bottom:3px solid var(--deep);padding-bottom:calc(6mm * var(--paper-k));margin-bottom:calc(5mm * var(--paper-k))}
-.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:calc(9pt * var(--paper-k));font-weight:800;color:var(--muted)}
-.lvline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:calc(2mm * var(--paper-k)) 0 calc(3mm * var(--paper-k))}
-h1{font-size:calc(42pt * var(--paper-k));line-height:.98;color:var(--deep);letter-spacing:-.02em}
-.badge{background:var(--gold);color:#fff;font-size:calc(10pt * var(--paper-k));font-weight:800;letter-spacing:.1em;
-       text-transform:uppercase;padding:3px 11px;border-radius:999px}
-.eal{border:1px solid var(--line);color:var(--muted);font-size:calc(9.5pt * var(--paper-k));font-weight:700;
-     letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
-.focus{font-size:calc(13pt * var(--paper-k));color:var(--deep);font-weight:700}
-.intro{font-size:calc(11pt * var(--paper-k));line-height:1.4}
+.head{border-bottom:3px solid var(--deep);padding-bottom:calc(5mm * var(--paper-k));margin-bottom:calc(6mm * var(--paper-k))}
+.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:calc(11pt * var(--paper-k));font-weight:800;color:var(--muted)}
+.lvline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:calc(2mm * var(--paper-k)) 0 calc(2mm * var(--paper-k))}
+h1{font-size:calc(56pt * var(--paper-k));line-height:.95;color:var(--deep);letter-spacing:-.02em}
+.badge{background:var(--gold);color:#fff;font-size:calc(11pt * var(--paper-k));font-weight:800;letter-spacing:.1em;
+       text-transform:uppercase;padding:4px 12px;border-radius:999px}
+.eal{border:1px solid var(--line);color:var(--muted);font-size:calc(10.5pt * var(--paper-k));font-weight:700;
+     letter-spacing:.06em;text-transform:uppercase;padding:4px 11px;border-radius:999px}
+.focus{font-size:calc(17pt * var(--paper-k));color:var(--deep);font-weight:700;line-height:1.25}
 
-.bg{background:var(--band);border:1px solid var(--line);border-left:5px solid var(--gold);
-    border-radius:7px;padding:calc(3.5mm * var(--paper-k)) calc(5mm * var(--paper-k));
-    margin-bottom:calc(4.5mm * var(--paper-k));font-size:calc(12pt * var(--paper-k));line-height:1.4}
-.bg span{display:block;font-weight:800;color:var(--gold);letter-spacing:.05em;
-    text-transform:uppercase;font-size:calc(9pt * var(--paper-k));margin-bottom:calc(1.5mm * var(--paper-k))}
+/* the key is a legend, not a lesson: one line, no descriptions */
+.key{display:flex;flex-wrap:wrap;gap:calc(3mm * var(--paper-k)) calc(6mm * var(--paper-k));
+     margin-bottom:calc(6mm * var(--paper-k))}
+.k{font-size:calc(12pt * var(--paper-k));font-weight:800;letter-spacing:.02em;display:flex;align-items:baseline;gap:5px}
+.k i{font-style:normal;font-size:.95em}
 
-.key{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:calc(5mm * var(--paper-k))}
-.key .k{flex:1 1 0;min-width:calc(96px * var(--paper-k));border:1px solid var(--line);border-left:5px solid;
-        border-radius:7px;padding:5px 8px;background:var(--band)}
-.k .kh{font-weight:800;font-size:calc(10pt * var(--paper-k));display:flex;gap:5px;align-items:baseline;line-height:1.2}
-.k .kd{font-size:calc(8.5pt * var(--paper-k));color:var(--muted);line-height:1.3;margin-top:2px}
-.k.off{opacity:.42}
-.k.off .kd::after{content:" — not on this sheet yet"}
+.example{font-family:Georgia,"Times New Roman",serif;font-size:calc(26pt * var(--paper-k) * var(--k,1));
+         line-height:1.5;margin-bottom:calc(8mm * var(--paper-k))}
 
-.sec{margin-bottom:calc(4mm * var(--paper-k))}
-.sec>h2{font-size:calc(10.5pt * var(--paper-k));font-weight:800;letter-spacing:.11em;text-transform:uppercase;
-        color:var(--deep);border-bottom:1.5px solid var(--line);padding-bottom:calc(2mm * var(--paper-k));margin-bottom:calc(3.5mm * var(--paper-k))}
+.proves{display:grid;gap:calc(4mm * var(--paper-k));margin-bottom:calc(8mm * var(--paper-k))}
+.pv{display:flex;gap:calc(3mm * var(--paper-k));font-size:calc(16pt * var(--paper-k) * var(--k2,1));line-height:1.35}
+.pv .g{flex:none;font-size:.9em;line-height:1.5}
 
-.example{font-family:Georgia,"Times New Roman",serif;font-size:calc(17.5pt * var(--paper-k) * var(--k,1));line-height:1.55}
-.proves{display:grid;gap:calc(2.6mm * var(--paper-k))}
-.pv{display:flex;gap:8px;font-size:calc(12.5pt * var(--paper-k) * var(--k2,1));line-height:1.4}
-.pv .g{flex:none;font-size:.85em;line-height:1.6}
-
-.cont{display:grid;gap:3px}
-.cr{display:grid;grid-template-columns:calc(62mm * var(--paper-k)) 1fr;border:1px solid var(--line);border-radius:7px;overflow:hidden}
-.cr .cn{padding:calc(3mm * var(--paper-k));font-weight:800;font-size:calc(10pt * var(--paper-k));letter-spacing:.03em;
-        text-transform:uppercase;line-height:1.25;display:flex;align-items:center;gap:6px}
-.cr .cn i{font-style:normal;font-weight:600;text-transform:none;letter-spacing:0;opacity:.75;font-size:.86em}
-.cr .cd{padding:calc(3mm * var(--paper-k));font-size:calc(12.5pt * var(--paper-k) * var(--k2,1));line-height:1.4}
+.cont{display:grid;gap:calc(1.6mm * var(--paper-k))}
+.cr{display:grid;grid-template-columns:calc(58mm * var(--paper-k)) 1fr;border:1px solid var(--line);
+    border-radius:8px;overflow:hidden}
+.cr .cn{padding:calc(3.4mm * var(--paper-k)) calc(4mm * var(--paper-k));font-weight:800;
+        font-size:calc(11.5pt * var(--paper-k));letter-spacing:.03em;text-transform:uppercase;line-height:1.2;
+        display:flex;align-items:center;gap:7px}
+.cr .cd{padding:calc(3.4mm * var(--paper-k)) calc(4mm * var(--paper-k));
+        font-size:calc(15pt * var(--paper-k) * var(--k2,1));line-height:1.35}
 .cr.gap .cd{color:var(--muted);font-style:italic}
-.cat{margin-top:calc(3mm * var(--paper-k));border:1px solid var(--line);border-left:5px solid var(--deep);
-     border-radius:7px;padding:calc(3.4mm * var(--paper-k)) calc(5mm * var(--paper-k));background:var(--band);
-     font-size:calc(12pt * var(--paper-k));line-height:1.4}
-.cat span{display:block;font-weight:800;color:var(--deep);letter-spacing:.05em;text-transform:uppercase;
-     font-size:calc(9pt * var(--paper-k));margin-bottom:calc(1.5mm * var(--paper-k))}
-.cat.none{color:var(--muted);font-style:italic}
-.cat.none span{font-style:normal}
 
-.foot{margin-top:auto;padding-top:calc(4.5mm * var(--paper-k));border-top:1px solid var(--line);
-      font-size:calc(8pt * var(--paper-k));color:var(--muted);line-height:1.45}
-.foot b{color:var(--ink)}
+.foot{margin-top:auto;padding-top:calc(3mm * var(--paper-k));border-top:1px solid var(--line);
+      font-size:calc(9pt * var(--paper-k));color:var(--muted);line-height:1.4}
 
 /* ---------- two channels: colour AND line pattern ---------- */
 .m{font-weight:600;text-decoration-line:underline;text-underline-offset:3px;text-decoration-thickness:1.6px}
@@ -127,11 +115,8 @@ h1{font-size:calc(42pt * var(--paper-k));line-height:.98;color:var(--deep);lette
 .m-ev{color:var(--ev);text-decoration-color:var(--ev);text-decoration-style:double}
 .m-eff{color:var(--eff);text-decoration-color:var(--eff);text-decoration-style:wavy;text-decoration-thickness:1.2px}
 
-.k-idea{border-left-color:var(--idea)} .k-idea .kh{color:var(--idea)}
-.k-feat{border-left-color:var(--feat)} .k-feat .kh{color:var(--feat)}
-.k-verb{border-left-color:var(--verb)} .k-verb .kh{color:var(--verb)}
-.k-ev{border-left-color:var(--ev)}     .k-ev .kh{color:var(--ev)}
-.k-eff{border-left-color:var(--eff)}   .k-eff .kh{color:var(--eff)}
+.k-idea{color:var(--idea)} .k-feat{color:var(--feat)} .k-verb{color:var(--verb)}
+.k-ev{color:var(--ev)}     .k-eff{color:var(--eff)}
 .pv-idea .g,.pv-idea b{color:var(--idea)} .pv-feat .g,.pv-feat b{color:var(--feat)}
 .pv-verb .g,.pv-verb b{color:var(--verb)} .pv-ev .g,.pv-ev b{color:var(--ev)}
 .pv-eff .g,.pv-eff b{color:var(--eff)}
@@ -147,7 +132,7 @@ h1{font-size:calc(42pt * var(--paper-k));line-height:.98;color:var(--deep);lette
 @media screen and (max-width:860px){
   .sheet{width:auto;min-height:0;padding:16px}
   h1{font-size:30pt}
-  .example{font-size:13pt}
+  .example{font-size:15pt}
   .cr{grid-template-columns:1fr}
 }
 @media print{
@@ -189,9 +174,7 @@ h1{font-size:calc(42pt * var(--paper-k));line-height:.98;color:var(--deep);lette
 const WALL = {
   title: "The Bone Sparrow · analytical writing",
   expected: "Level 7",
-  question: "How does Fraillon use the Night Sea to show what detention does to Subhi?",
-  passage: "Sometimes, at night, the dirt outside turns into a beautiful ocean. As red as the sun and as deep as the sky. I lie on my bed, Queeny's feet pushing against my cheek, and listen to the waves lapping at the tent. Queeny says I'm stupid, saying that kind of stuff. But it's true. She just doesn't see it, is all. Our maá says there are some people in this world who can see all the hidden bits and pieces of the universe blown in on the north wind and scattered about in the shadows. Queeny, she never tries to look in the shadows. She doesn't even squint. Maá sees though. She can hear the ocean outside too.",
-  foot: "<b>Text:</b> Zana Fraillon, <i>The Bone Sparrow</i>, Hachette Australia, 2016, extract from pp. 1-2, reproduced for enrolled students under the school's Statutory Text and Artistic Works Licence (Copyright Agency). <b>Continuum:</b> quoted verbatim from the school's Learning Continuum master sheet, English tab, strands named in each row. <b>CAT rubric:</b> the Victorian Curriculum levels the CAT marks against, as used in the Analysis workshop. <b>EAL bands:</b> the EAL analytical writing WAGOLL (C2 Describe, C3 Explain, C4 Analyse, VCE 1 Interpret)."
+  foot: "Worked examples respond to the opening of chapter 1, the Night Sea. Zana Fraillon, <i>The Bone Sparrow</i>, Hachette Australia, 2016, pp. 1-2. Continuum wording quoted from the school's Learning Continuum master sheet, English tab."
 };
 
 /* The five, in the order they appear in a sentence and in the workshop's key. */
@@ -226,16 +209,6 @@ const FOCUS = {
 const EAL = { "Level 5":"C2 — Describe", "Level 6":"C2/C3 — Describe in detail", "Level 7":"C3 — Explain",
               "Level 8":"C4 — Analyse", "Level 9":"C4+ — Interpret", "Level 10":"VCE 1 — Interpret" };
 
-const BACKGROUND = {
- "Foundation to Level 2":"how to write a sentence about something that happened in a story, and how to copy words from the book to show where they found it.",
- "Levels 3 and 4":"how to write more than one sentence about a story, how to use quotation marks, and how to say what a part of a book made them feel.",
- "Level 5":"the words simile and metaphor, and how to put a quotation in a sentence beside their own writing.",
- "Level 6":"how to join a quotation into their own sentence with a lead-in, and how to write about what the writing does rather than only what happens.",
- "Level 7":"analytical verbs (reveals, conveys, emphasises) and the difference between a feeling and an issue.",
- "Level 8":"how to open a sentence on the writer's choice, and how to hold two views of one thing in a single sentence.",
- "Level 9":"how a point of view shapes what a reader is allowed to know, and how to write about what a text leaves out.",
- "Level 10":"how texts carry the values of the world that produced them, and how to weigh one account of an event against another."
-};
 
 const EXAMPLES = {
  "Foundation to Level 2":
@@ -265,49 +238,50 @@ const EXAMPLES = {
 
 const EXPLANATIONS = {
  "Foundation to Level 2": {
-  idea:"Names one thing that happens, in the student's own words. That is the whole job at this rung.",
-  ev:"Two or three of the book's own words, inside quotation marks, so a reader can find the place." },
+  idea:"Names one thing that happens in the story, in your own words.",
+  ev:"Two or three of the book's own words, inside quotation marks." },
  "Levels 3 and 4": {
-  idea:"The idea is now a whole sentence, and it says what Subhi does rather than what the camp looks like.",
-  ev:"A full line quoted accurately, still sitting in its own sentence beside the student's writing.",
-  eff:"The reader's response is named. It is personal (\"makes me feel\"), which is right at this rung." },
+  idea:"The idea is a whole sentence, and it says what Subhi does rather than what the camp looks like.",
+  ev:"A full line quoted accurately, in a sentence of its own beside the point.",
+  eff:"Says what the writing does to the reader." },
  "Level 5": {
   idea:"A plain idea about the character, one step past retelling the plot.",
-  feat:"The feature is named with the correct term. Naming it is the whole of the job at Level 5.",
-  verb:"\"Shows\" is a reporting verb. It is honest work here, and it is the first thing to be traded up.",
-  ev:"The quotation is accurate but stands in its own sentence, next to the point rather than inside it.",
-  eff:"A general feeling. True, and unspecific, which is exactly what Level 5 sounds like." },
+  feat:"The feature is named, with the right term for it.",
+  verb:"\u201CShows\u201D only reports. It is the first word to trade up.",
+  ev:"The quotation is accurate, but it sits in its own sentence next to the point.",
+  eff:"A general feeling rather than a particular effect." },
  "Level 6": {
-  idea:"The idea has grown a purpose: not that Subhi imagines, but what the imagining does for him.",
-  feat:"Two features named, and named in the order they appear in the text.",
-  verb:"\"Describes\" still reports, but it now governs a whole clause instead of a single noun.",
-  ev:"Both quotations are woven in with lead-ins, so the sentence would still read if the marks were removed.",
-  eff:"The effect is specific: not sympathy in general, but seeing the camp the way Subhi sees it." },
+  idea:"The idea has a purpose inside it: not that Subhi imagines, but what the imagining does for him.",
+  feat:"Two features, named in the order they appear in the passage.",
+  verb:"\u201CDescribes\u201D still reports, but it now governs a whole clause.",
+  ev:"Both quotations are woven in with lead-ins. Take the quotation marks away and the sentence still reads.",
+  eff:"The effect is specific: seeing the camp the way Subhi sees it." },
  "Level 7": {
-  idea:"A feeling has become an issue: what detention does to a child's mind, which is arguable.",
-  feat:"The feature is now a pattern across the passage, \"night imagery\", rather than one device.",
-  verb:"\"Revealed\" is analytical: it claims the writing uncovers something rather than states it.",
-  ev:"Two quotations, one for each side of the contrast, each short enough to sit inside the clause.",
-  eff:"The purpose says what the reader now understands, not what the reader feels." },
+  idea:"A feeling has become an issue: what detention does to a child's mind.",
+  feat:"The feature is a pattern running through the passage, not a single device.",
+  verb:"\u201CRevealed\u201D claims the writing uncovers something rather than states it.",
+  ev:"One quotation for each side of the contrast, each short enough to sit inside the clause.",
+  eff:"Says what the reader understands, not what the reader feels." },
  "Level 8": {
-  idea:"The idea holds two perspectives at once, which is what the Level 8 rubric row asks for.",
-  feat:"The feature is the choice itself: writing an imagined thing as fact.",
-  verb:"Two analytical verbs, \"sets against\" and \"positions\", and the second names what is done to the reader.",
-  ev:"Evidence for both perspectives, quoted from opposite sides of the same paragraph.",
-  eff:"The effect is what the reader is positioned to accept, which is a claim about the writing's power." },
+  idea:"The idea holds two perspectives at once: Subhi's seeing, and Queeny's refusal to see.",
+  feat:"The feature is the choice itself, writing an imagined thing as plain fact.",
+  verb:"Two analytical verbs, and the second names what is done to the reader.",
+  ev:"Evidence for both perspectives, from opposite sides of the same paragraph.",
+  eff:"The effect is what the reader is positioned to accept." },
  "Level 9": {
-  idea:"The idea is now the representation itself: how the Night Sea reaches us, not what it is.",
-  feat:"The feature is a structural absence, an unbroken point of view, which is harder to see than a metaphor.",
-  verb:"\"Corrects\" is used in the negative. The analysis is about what the novel declines to do.",
-  ev:"One quotation, chosen because it shows a second character inside Subhi's version of the world.",
-  eff:"The purpose questions what the writing withholds, and leaves the judgement open rather than closing it." },
+  idea:"The idea is the representation itself: how the Night Sea reaches us.",
+  feat:"The feature is an absence, a point of view that never breaks.",
+  verb:"\u201CCorrects\u201D is used in the negative. The analysis is about what the novel declines to do.",
+  ev:"One quotation, chosen because it puts a second character inside Subhi's version of the world.",
+  eff:"The purpose questions what the writing withholds, and leaves the judgement open." },
  "Level 10": {
-  idea:"The idea reads the passage as an argument the whole novel is making, about whose account is believed.",
-  feat:"Three choices named together as one system: person, tense, and point of view.",
-  verb:"\"Grants\" carries an argument inside the verb: the narration is treated as something given, and therefore as something that could be withheld.",
-  ev:"An ID and an image quoted against each other, so the evidence itself performs the contrast. The ID is drawn from later in the novel: at this rung a response is allowed to range across the whole text, and it still has to be quoted exactly.",
-  eff:"The effect is placed outside the book: the reader is left weighing two accounts of one life." }
+  idea:"The idea reads the passage as an argument the whole novel is making.",
+  feat:"Three choices named as one system: person, tense, and point of view.",
+  verb:"\u201CGrants\u201D carries an argument inside the verb: what is given could have been withheld.",
+  ev:"An ID and an image quoted against each other, so the evidence performs the contrast.",
+  eff:"The effect is placed outside the book: two accounts of one life, weighed against each other." }
 };
+
 
 /* Quoted verbatim from the school's Learning Continuum master sheet, English
    tab. Strand names are the sheet's own. Do not paraphrase or tighten these:
@@ -321,7 +295,7 @@ const STRAND = { idea:"Reading and Viewing · Interpreting texts",
                  verb:"Writing · Voice and register",
                  ev:"Writing · Use of evidence",
                  eff:"Reading and Viewing · Evaluating texts" };
-const GAP_TEXT = "Not on the school's continuum until Level 6.";
+const GAP_TEXT = "Not on the continuum until Level 6.";
 
 const CONTINUUM = {
  idea:{
@@ -360,18 +334,6 @@ const CONTINUUM = {
   "Level 10":"I can analyse how specific texts express certain values and beliefs" }
 };
 
-/* The CAT rubric's own wording, the same five rows the Analysis workshop uses.
-   It runs 5 to 9 and no further in either direction, which the sheets say
-   rather than filling in. */
-const CAT = {
- "Level 5":"I can identify parts of the story that relate to key ideas",
- "Level 6":"I can describe characters and events that relate to key ideas",
- "Level 7":"I can describe the ideas and issues that are illustrated through characters and events",
- "Level 8":"I can explain the way different perspectives on ideas are represented through characters and events",
- "Level 9":"I can analyse the way different people and perspectives are represented in the story"
-};
-const CAT_BELOW = "The CAT rubric starts at Level 5. This rung is a way in to it, not a row on it.";
-const CAT_ABOVE = "Above the CAT rubric's top row. Level 9 is the highest level the CAT marks.";
 
 /* ============================================================================
    RENDERER — knows nothing about the novel.
@@ -383,47 +345,26 @@ const LADDER = EARLY_LEVELS.concat(LEVELS);
 const onContinuum = lv => CRITERIA.some(c => CONTINUUM[c.key] && CONTINUUM[c.key][lv]);
 const used = lv => CRITERIA.filter(c => EXPLANATIONS[lv][c.key]);
 
-/* Each rung carries a different amount of prose, so the type scale is set from
-   the character count of the two runs it stretches: the worked example and the
-   background panel. A rung with no continuum section has a whole block of page
-   to spend, so it gets a larger target.
+/* Type scale. Each rung carries a different amount of prose and every sheet
+   has to fill its page, so the scale is set from the character count of the
+   worked example, which is the only run that varies much now.
 
-   The FLOOR is what protects the sheets that carry the most: these are wall
-   charts, and an example under about 15pt on A3 stops being readable from a
-   desk. The CEILING is what protects the Foundation sheet, whose example is a
-   third the length of Level 10's.
-
-   A measured autofit pass was tried here and removed. Type size changes where
-   a line wraps, so each step moved the sheet by a whole line and the loop
-   overshot: the Level 7 example came out at 12pt on A3 with a hand's width of
-   white above the footer. The formula plus a floor high enough to keep the
-   example readable is the better trade, and the page count is the test. */
-const plain = lv => EXAMPLES[lv].replace(/\{(\w+)\|([^}]*)\}/g,"$2") + " " + BACKGROUND[lv];
+   The FLOOR is what matters: these are wall charts, read from a desk, and the
+   example is the thing being read. The ceiling protects the Foundation sheet,
+   whose example is a third the length of Level 10's. Whether it worked is a
+   page count: eight sheets in, eight pages out, and a look at the render for
+   the sheet that came out short. */
+const plain = lv => EXAMPLES[lv].replace(/\{(\w+)\|([^}]*)\}/g,"$2");
 const clamp = (lo,v,hi) => Math.min(hi, Math.max(lo, v));
 function scale(lv){
-  const target = onContinuum(lv) ? 430 : 900;
-  const k  = clamp(0.90, Math.sqrt(target / plain(lv).length), 2.8);
-  return kStyle(k);
-}
-const kStyle = k => `--k:${k.toFixed(3)};--k2:${clamp(0.94, Math.pow(k,0.45), 1.35).toFixed(3)}`;
-
-/* The rungs below the continuum have a whole block of page that the continuum
-   section spends on the others, and there is only so much a Foundation example
-   can be scaled up before it stops looking like writing. Rather than pad, they
-   print what the NEXT rung adds, generated from that rung's own explanations
-   so it cannot drift from the sheet it describes. */
-function nextUp(lv){
-  const i = LADDER.indexOf(lv);
-  if(onContinuum(lv) || i < 0 || i+1 >= LADDER.length) return null;
-  const next = LADDER[i+1], have = used(lv).map(c=>c.key);
-  const added = used(next).filter(c => !have.includes(c.key));
-  return added.length ? {lv:next, added} : null;
+  const target = onContinuum(lv) ? 500 : 1150;
+  const k  = clamp(0.92, Math.sqrt(target / plain(lv).length), 3.0);
+  const k2 = clamp(0.96, Math.pow(k, 0.4), 1.3);
+  return `--k:${k.toFixed(3)};--k2:${k2.toFixed(3)}`;
 }
 
 document.getElementById("out").innerHTML = LADDER.map(lv=>{
   const on = used(lv).map(c=>c.key);
-  const catLine = CAT[lv] ? `<div class="cat"><span>Marked against, on the CAT rubric</span>“${esc(CAT[lv])}”</div>`
-    : `<div class="cat none"><span>Marked against, on the CAT rubric</span>${esc(onContinuum(lv) ? CAT_ABOVE : CAT_BELOW)}</div>`;
   return `<section class="sheet" style="${scale(lv)}">
     <header class="head">
       <div class="kicker">${esc(WALL.title)}</div>
@@ -431,47 +372,25 @@ document.getElementById("out").innerHTML = LADDER.map(lv=>{
         ${lv===WALL.expected?'<span class="badge">Expected at Year 7</span>':''}
         ${EAL[lv]?`<span class="eal">EAL ${esc(EAL[lv])}</span>`:''}</div>
       <p class="focus">${esc(FOCUS[lv])}</p>
-      <p class="intro"><b>The question:</b> ${esc(WALL.question)}<br>
-        <b>The passage:</b> ${esc(WALL.passage)}</p>
     </header>
 
-    <div class="bg"><span>${/^(Foundation|Levels)/.test(lv)?`Students at ${esc(lv)} already know`:`A ${esc(lv)} student already knows`}</span>${esc(BACKGROUND[lv])}</div>
+    <div class="key">${CRITERIA.filter(c=>on.includes(c.key)).map(c=>
+      `<span class="k k-${c.key}"><i>${c.glyph}</i>${esc(c.name)}</span>`).join("")}</div>
 
-    <div class="key">${CRITERIA.map(c=>
-      `<div class="k k-${c.key}${on.includes(c.key)?"":" off"}"><div class="kh"><span>${c.glyph}</span><span>${esc(c.name)}</span></div><div class="kd">${esc(c.blurb)}</div></div>`).join("")}</div>
+    <p class="example">${mark(EXAMPLES[lv])}</p>
 
-    <section class="sec">
-      <h2>Worked example</h2>
-      <p class="example">${mark(EXAMPLES[lv])}</p>
-    </section>
+    <div class="proves">${used(lv).map(c=>
+      `<div class="pv pv-${c.key}"><span class="g">${c.glyph}</span><span>${esc(EXPLANATIONS[lv][c.key])}</span></div>`).join("")}</div>
 
-    <section class="sec">
-      <h2>What each marked phrase does</h2>
-      <div class="proves">${used(lv).map(c=>
-        `<div class="pv pv-${c.key}"><span class="g">${c.glyph}</span><span><b>${esc(c.name)}:</b> ${esc(EXPLANATIONS[lv][c.key])}</span></div>`).join("")}</div>
-    </section>
-
-    ${nextUp(lv) ? `<section class="sec">
-      <h2>What arrives at the next rung</h2>
-      <p class="intro" style="margin-bottom:calc(3mm * var(--paper-k))"><b>${esc(nextUp(lv).lv)}:</b> ${esc(FOCUS[nextUp(lv).lv])}</p>
-      <div class="proves">${nextUp(lv).added.map(c=>
-        `<div class="pv pv-${c.key}"><span class="g">${c.glyph}</span><span><b>${esc(c.name)}</b> joins the sentence: ${esc(c.blurb)}.</span></div>`).join("")}</div>
-    </section>` : ""}
-
-    ${onContinuum(lv) ? `<section class="sec">
-      <h2>Learning continuum at ${esc(lv)}</h2>
-      <div class="cont">${CRITERIA.map(c=>{
+    ${onContinuum(lv) ? `<div class="cont">${CRITERIA.map(c=>{
         const d = CONTINUUM[c.key][lv];
         return `<div class="cr cr-${c.key}${d?"":" gap"}">
-          <div class="cn"><span>${c.glyph}</span><span>${esc(c.name)}<br><i>${esc(STRAND[c.key])}</i></span></div>
-          <div class="cd">${d?`“${esc(d)}”`:esc(GAP_TEXT)}</div></div>`;}).join("")}</div>
-      ${catLine}
-    </section>` : `<section class="sec"><h2>Where this sits</h2>${catLine}</section>`}
+          <div class="cn"><span>${c.glyph}</span><span>${esc(c.name)}</span></div>
+          <div class="cd">${d?esc(d):esc(GAP_TEXT)}</div></div>`;}).join("")}</div>` : ""}
 
     <p class="foot">${WALL.foot}</p>
   </section>`;
 }).join("");
-
 </script>
 </body>
 </html>

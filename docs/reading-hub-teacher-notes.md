@@ -107,53 +107,44 @@ All content sits in bannered `const` blocks at the top of each file — the engi
 
 ## The analytical writing WAGOLL, on paper
 
-`BoneSparrowWagollSheets.html` prints the same ladder the Analysis workshop
-climbs, one **A3 portrait** sheet per rung, **Foundation to Level 10**. Open it
-and print from the browser; the page carries its own `@page` size, so the only
-thing to check in the print dialogue is that scaling is at 100% and background
-graphics are on.
+`BoneSparrowWagollSheets.html` prints the ladder the Analysis workshop climbs,
+one **A3 portrait** sheet per rung, **Foundation to Level 10**. Open it and
+print from the browser: the page carries its own `@page` size, so the only
+things to check in the print dialogue are 100% scaling and background graphics
+on.
 
-It is built the way the History family's Batman level sheets are built, and for
-the same reason: a student who is not yet at the expected level needs to see
-what the rung below them looks like, written out, rather than a rubric line
-telling them they are not there yet.
-
-Each sheet carries the question, the passage, what a student at that rung
-already knows, the worked example with every phrase marked, what each marked
-phrase does, and the continuum wording for that level.
+**Three things on a sheet, and nothing else.** The worked example, what each
+colour is doing in it, and the rubric row for that level. There is no task
+statement, no reprint of the passage and no paragraph explaining what the sheet
+is for, because you explain that to the class. Cutting it is what leaves the
+example at 26pt and up on A3 and the explanation at 16pt, which is the size an
+anchor chart has to be to work from a desk.
 
 - **Eight rungs.** Foundation to Level 2 and Levels 3 and 4 are the Victorian
-  Curriculum's own two-year bands, then Levels 5 to 10 one at a time. Level 7
-  carries the "expected at Year 7" badge.
-- **Five criteria, and they arrive one at a time.** The idea, the language
-  feature, the analytical verb, the embedded evidence, the effect on the reader,
-  in the workshop's colours exactly: blue, purple, orange, yellow, green. The
-  Foundation sheet names two of the five and says so in the key. That is the
-  ladder working, not a sheet with holes in it, and the lower sheets print what
-  the next rung adds rather than padding the space.
+  Curriculum's own two-year bands, then Levels 5 to 10 singly. Level 7 carries
+  the "expected at Year 7" badge, and the EAL band (C2 to VCE 1) sits beside it.
+- **Five colours, arriving one at a time.** Blue idea, purple language feature,
+  orange analytical verb, yellow embedded evidence, green effect on the reader,
+  exactly as the workshop uses them. The Foundation sheet names two of the five
+  in its key, because two is what that rung is doing.
+- **The rubric underneath**, one coloured row per criterion, wording quoted from
+  the school's Learning Continuum master sheet, English tab. `Use of evidence`
+  is blank at Level 5 on that sheet, so the Level 5 row says "Not on the
+  continuum until Level 6" rather than inventing a descriptor. The two rungs
+  below Level 5 have no continuum, so they carry no rubric block.
 - **A different passage from the workshop's.** The workshop models chapter 5,
-  Beaver; the sheets model chapter 1, the Night Sea. A student who has done both
-  has climbed the ladder twice on two pieces of writing.
-- **The continuum is quoted, not paraphrased.** Wording comes from the school's
-  Learning Continuum master sheet, English tab, and each row names the strand it
-  came from. `Use of evidence` is blank at Level 5 on that sheet, so the Level 5
-  card says "Not on the school's continuum until Level 6" rather than inventing a
-  descriptor. The CAT rubric band underneath runs Levels 5 to 9 only, and the
-  rungs outside that range say so.
-- **EAL bands** (C2, C3, C4, VCE 1) come from the EAL analytical writing WAGOLL
-  and sit in the header. The rungs below Level 5 carry no band, because that
-  sheet does not describe one.
+  Beaver; the sheets model chapter 1, the Night Sea. A student who does both
+  climbs the ladder twice, on two pieces of writing.
 - **Two channels for every signal**: each criterion has a colour and an underline
   pattern, so the sheets survive a greyscale photocopy.
 
 **If you edit it**, everything printable is in the DATA block at the top of the
-script; the renderer under it holds no wall text. After any edit, print to PDF
-and **count the pages: eight in, eight out**. A sheet that grows by two lines
-silently becomes two pages, and the page count is the only test that catches it.
-The type scale is a formula with a floor and a ceiling, tuned so the longest
-sheet (Level 10) fits and the shortest (Foundation) is not swimming in white
-space; a measured autofit was tried and removed, because type size changes where
-lines wrap and the loop overshot by a whole line each pass.
+script and the renderer under it holds no wall text. After any edit, print to
+PDF and **count the pages: eight in, eight out**. A sheet that grows by two
+lines silently becomes two pages, and the page count is the only test that
+catches it. The type scale is a formula with a floor and a ceiling, tuned so the
+longest sheet (Level 10) fits and the shortest (Foundation) is not swimming in
+white space.
 
 ## Teacher mode: the slides
 
