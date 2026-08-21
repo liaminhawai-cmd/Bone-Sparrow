@@ -200,7 +200,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .ckey .sw.ev,.sw.ev{background:#f2d34a;border:1px solid var(--ev-tx)}
 .ckey .sw.eff,.sw.eff{background:#a4d4ae;border:1px solid var(--eff-tx)}
 /* ---- workshop: the WAGOLL table (EAL sheet shape) ---- */
-.wag2{display:grid;grid-template-columns:74px 52px repeat(3,1fr) 52px 34px;gap:0;margin:0 0 6px;
+.wag2{display:grid;grid-template-columns:74px 52px repeat(3,1fr) 52px 34px;gap:0;margin:0 0 10px;
   border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line-soft)}
 .wag2 .wcell{background:#fff;padding:9px 11px;font-size:12.5px;line-height:1.5;
   border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
@@ -367,6 +367,12 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .switch.on .track{background:var(--correct)}
 .switch.on .track:after{left:20px}
 .gatednote{font-size:12px;color:var(--muted);font-style:italic}
+/* The teacher button lives in the top bar, on every screen, because it was a
+   line of small red text in a breadcrumb before and nobody could find it. */
+.teachbtn{font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:99px;
+  padding:4px 12px;letter-spacing:.02em}
+.teachbtn:hover{background:#000}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 @media print{
@@ -453,6 +459,7 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
     <span class="where" id="whereLbl">Year 7 English · The Bone Sparrow · Units 5–6</span>
     <span style="display:flex;gap:16px;align-items:center;margin-left:auto">
       <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← all activities</button>
+      <button class="teachbtn" id="teachBtn" onclick="go('teach')" title="Slides for the front of the room, then the builder demo">▶ Teacher mode</button>
       <button class="linkbtn menulink" onclick="go('rpt')">My report</button>
       <a class="linkbtn menulink" href="index.html">⌂ Main menu</a>
     </span>
@@ -2014,6 +2021,7 @@ function go(s, arg){
   if(!idOk() && s!=="id") s="id";
   screen=s;
   $("homeBtn").style.display = (s==="home"||s==="id"||s==="teach") ? "none" : "inline";
+  const tb=$("teachBtn"); if(tb) tb.style.display = (s==="teach"||s==="id") ? "none" : "inline";
   window.scrollTo({top:0,behavior:"smooth"});
   if(s==="id") renderIdentity();
   else if(s==="home") renderHome();
@@ -2064,6 +2072,7 @@ function renderIdentity(){
   </div>
   <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div></div>`;
 }
+let PENDING_HASH=null;
 function idSubmit(){
   const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
   $("ef").textContent = f? "" : "First name needed.";
@@ -2071,6 +2080,8 @@ function idSubmit(){
   $("es").textContent = (sid.length>=4&&sid.length<=8)? "" : "That doesn’t look right — check your student ID and try again.";
   if(!f||!l||sid.length<4||sid.length>8) return;
   S.fname=f; S.lname=l; S.sid=sid; if(!S.startedAt) S.startedAt=Date.now(); save(); writeProfile();
+  const t=PENDING_HASH; PENDING_HASH=null;
+  if(t){ go(t.s, t.arg); return; }
   go("home");
 }
 
@@ -2093,7 +2104,6 @@ function renderHome(){
     <button class="switch ${S.eal?"on":""}" onclick="S.eal=!S.eal;save();writeProfile();renderHome()" aria-pressed="${S.eal}">
       <span class="track"></span>EAL support ${S.eal?"on":"off"}</button>
     <span class="gatednote">Questions about pages you haven't reached stay hidden — no spoilers.</span>
-    <button class="linkbtn" onclick="go('teach')" title="Slides for the front of the room">Teacher mode · slides</button>
   </div>`;
   MODULES.forEach(m=>{
     const done=!!S.done[m.id];
@@ -2117,6 +2127,16 @@ function renderHome(){
   <button class="linkbtn" onclick="resetAll()">reset everything</button></div>`;
   $("body").innerHTML=h;
 }
+/* The column count is read at render time, so a window resize (or a projector
+   being plugged in) has to redraw the table. Debounced, and only while the
+   workshop is on screen. */
+let wagResize=null;
+window.addEventListener("resize", ()=>{
+  if(screen!=="wk" || !WK) return;
+  clearTimeout(wagResize);
+  wagResize=setTimeout(()=>{ if(screen==="wk"&&WK) (WK.focus||WK.canvas.length?renderWkBuild:renderWall)(); }, 180);
+});
+
 /* the step buttons call go(kind, id); map kinds that share a runner */
 const _go=go;
 go=function(s,arg){
@@ -2561,7 +2581,14 @@ function wkColourKey(){
     <span><i class="sw eff"></i>purpose — effect on the reader</span>
   </div>`;
 }
-const WAGOLL_COLS = 3;
+/* How many rubric columns fit. Three was a fixed number written for a laptop,
+   and on a 1920px screen it left the table paging through five levels in a
+   third of the room it had. The table is the lesson: show the whole rubric
+   when the glass allows it, and page only when it does not. */
+function wagollCols(){
+  const w = window.innerWidth || 1200;
+  return w>=1500 ? 5 : w>=1180 ? 4 : 3;
+}
 /* One table shape for both parts, mirroring the EAL WAGOLL sheet:
    rows are Level / Skill focus / Example / What makes it, columns are
    rubric levels, three at a time. In Part A the Example row is filled by
@@ -2569,36 +2596,40 @@ const WAGOLL_COLS = 3;
    sentence at each level. */
 function wagollTable(o){
   const levels=o.levels, total=levels.length;
-  const maxStart=Math.max(0,total-WAGOLL_COLS);
+  const COLS=Math.min(wagollCols(), total);
+  const maxStart=Math.max(0,total-COLS);
   const start=Math.max(0,Math.min(o.start,maxStart));
   const vis=[];
-  for(let i=start;i<Math.min(start+WAGOLL_COLS,total);i++) vis.push(i);
+  for(let i=start;i<Math.min(start+COLS,total);i++) vis.push(i);
   /* the levels immediately off each edge — rendered half-visible so it's
      obvious the rubric continues, and clickable to scroll there */
   const pL = start>0 ? start-1 : -1;
-  const pR = (start+WAGOLL_COLS)<total ? start+WAGOLL_COLS : -1;
+  const pR = (start+COLS)<total ? start+COLS : -1;
   const peek=(idx, side, inner)=>
     idx<0 ? `<div class="wcell peek empty"></div>`
           : `<div class="wcell peek ${side}" onclick="${o.pageFn}(${side==="l"?start-1:start+1})"
                role="button" tabindex="0" title="Level ${levels[idx].n} — click to scroll">${inner}</div>`;
 
-  let h=`<div class="wag2${pL<0?" nol":""}${pR<0?" nor":""}">`;
+  const whole = vis.length===total;
+  let h=`<div class="wag2${pL<0?" nol":""}${pR<0?" nor":""}${whole?" whole":""}"
+    style="grid-template-columns:74px ${whole?"":"52px "}repeat(${COLS},1fr)${whole?"":" 52px 34px"}">`;
   /* header row */
-  h+=`<div class="wcell rowlab"><button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button></div>`;
-  h+=peek(pL,"l", pL<0?"":`<div class="lvname">${esc(levels[pL].lv||("Level "+levels[pL].n))}</div>`);
+  h+=`<div class="wcell rowlab">${whole?"":`<button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button>`}</div>`;
+  /* the trailing pager column only exists while the table pages */
+  if(!whole) h+=peek(pL,"l", pL<0?"":`<div class="lvname">${esc(levels[pL].lv||("Level "+levels[pL].n))}</div>`);
   vis.forEach(i=>{ const L=levels[i];
     h+=`<div class="wcell head ${o.activeIdx===i?"active":""} ${o.doneIdx&&o.doneIdx(i)?"done":""}">
       <div class="lvname">${esc(L.lv||("Level "+L.n))} ${o.doneIdx&&o.doneIdx(i)?"✓":""}</div>
       ${S.eal&&L.eal?`<div class="lveal">${esc(L.eal)}</div>`:""}</div>`; });
-  h+=peek(pR,"r", pR<0?"":`<div class="lvname">${esc(levels[pR].lv||("Level "+levels[pR].n))}</div>`);
-  h+=`<div class="wcell rowlab endpage"><button class="pager" ${start>=maxStart?"disabled":""} onclick="${o.pageFn}(${start+1})" aria-label="later levels">›</button></div>`;
+  if(!whole) h+=peek(pR,"r", pR<0?"":`<div class="lvname">${esc(levels[pR].lv||("Level "+levels[pR].n))}</div>`);
+  if(!whole) h+=`<div class="wcell rowlab endpage"><button class="pager" ${start>=maxStart?"disabled":""} onclick="${o.pageFn}(${start+1})" aria-label="later levels">›</button></div>`;
 
   const row=(label, cellFn, peekFn)=>{
     h+=`<div class="wcell rowlab">${label}</div>`;
-    h+=peek(pL,"l", pL<0?"":peekFn(pL));
+    if(!whole) h+=peek(pL,"l", pL<0?"":peekFn(pL));
     vis.forEach(i=>{ h+=cellFn(i); });
-    h+=peek(pR,"r", pR<0?"":peekFn(pR));
-    h+=`<div class="wcell rowlab"></div>`;
+    if(!whole) h+=peek(pR,"r", pR<0?"":peekFn(pR));
+    if(!whole) h+=`<div class="wcell rowlab"></div>`;
   };
   row("Skill focus",
       i=>`<div class="wcell focus ${o.activeIdx===i?"active":""}">${esc(levels[i].focus||"")}</div>`,
@@ -2612,14 +2643,15 @@ function wagollTable(o){
         return `<div class="wcell exp ${o.activeIdx===i?"active":""}${fresh}">`+
           (got?(levels[i].exp||""):`<span class="explock">fills in once you get this one</span>`)+`</div>`; },
       i=>"");
-  h+=`</div><div class="wagnote">Levels ${levels[vis[0]].n}–${levels[vis[vis.length-1]].n} of ${levels[0].n}–${levels[total-1].n} — the faded columns are the rest of the rubric. Click one, or use ‹ ›, to scroll along it.</div>`;
+  h+=`</div>` + (whole ? "" :
+    `<div class="wagnote">Levels ${levels[vis[0]].n}–${levels[vis[vis.length-1]].n} of ${levels[0].n}–${levels[total-1].n} — the faded columns are the rest of the rubric. Click one, or use ‹ ›, to scroll along it.</div>`);
   return h;
 }
 function wallPage(n){ WK.wallStart=n; renderWall(); }
 function renderWall(){
   if(WK.wallStart===undefined) WK.wallStart=0;
   let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall
-    <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode · teach it first</button></div>
+</div>
   <h2>${esc(WK_WALL.q)}</h2>
   <p class="lead">${esc(WK_WALL.note)} The <b>Example</b> row is the one you fill in.</p>
   ${wkColourKey()}`;
@@ -2659,7 +2691,7 @@ function wallDrop(i){
   if(correct){
     WK.placed[r.id]=i; WK.armed=null;
     if(i<WK.wallStart) WK.wallStart=i;
-    else if(i>WK.wallStart+WAGOLL_COLS-1) WK.wallStart=i-WAGOLL_COLS+1;
+    else if(i>WK.wallStart+wagollCols()-1) WK.wallStart=i-wagollCols()+1;
     renderWall();
     const fb=$("fb"); fb.className="feedback ok";
     fb.innerHTML="<b>Placed.</b> "+esc(r.why);
@@ -2785,7 +2817,7 @@ function renderWkBuild(){
   const idx=wkLevelIdx();
   if(WK.climbStart===undefined) WK.climbStart=0;
   if(idx<WK.climbStart) WK.climbStart=idx;
-  else if(idx>WK.climbStart+WAGOLL_COLS-1) WK.climbStart=idx-WAGOLL_COLS+1;
+  else if(idx>WK.climbStart+wagollCols()-1) WK.climbStart=idx-wagollCols()+1;
   h+=wkColourKey();
   h+=wagollTable({
     levels:WK_LEVELS, start:WK.climbStart, pageFn:"wkPage", activeIdx:idx, justIdx:WK.justIdx,
@@ -3635,6 +3667,21 @@ function renderReport(){
   </div>`;
 }
 
+/* ---------- deep links ----------
+   Every screen in this hub has an address, so a teacher can post a link
+   straight to one activity instead of "open the hub and scroll": #teach for
+   the projector deck, #wk for the workshop, #qr5 for a quickread, and so on.
+   Unknown or not-yet-reached targets fall through to the home screen rather
+   than erroring, and the chapter gate still applies once inside. */
+function hashTarget(){
+  const h=(location.hash||"").replace(/^#/,"");
+  if(!h) return null;
+  if(h==="teach") return {s:"teach"};
+  const m=MODULES.find(x=>x.id===h);
+  if(m) return {s:m.kind, arg:m.id};
+  if(["fig","voice","ev","wk","home"].includes(h)) return {s:h};
+  return null;
+}
 (function boot(){
   if(location.hash==="#report"){ location.replace("index.html#report"); return; }
   if(location.hash==="#resume"){
@@ -3646,6 +3693,10 @@ function renderReport(){
       if(m && m.screen){ go(m.screen, m.arg||undefined); return; }
     }catch(e){}
   }
+  const t=hashTarget();
+  if(t && idOk()){ go(t.s, t.arg); return; }
+  /* not signed in yet: remember where they were headed and go there after */
+  if(t) PENDING_HASH=t;
   go("home");
 })();
 </script>
