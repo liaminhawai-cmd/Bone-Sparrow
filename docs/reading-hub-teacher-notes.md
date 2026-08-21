@@ -91,6 +91,21 @@ hub carries.
 
 The Water-in-the-World engine, re-keyed. First set is **"Before you read · the words of the unit"** — the old pre-reading vocabulary (refugee, asylum seeker, persecution, incarceration, bureaucracy, trauma, dispossessed, immigration), always open, built on the look-alike discrimination that trainer was good at (persecution/prosecution, incarceration/incineration/incarnation, immigration/emigration). Then 9 chapter sets (1–2, 3–4, 5, 6–7, 8–10, 11–14, 15–17, 18–20, 21–end), 6 words each — meaning, morpheme tiles or word-origin question, etymology note, 2 story-anchored apply tasks per word. Domains: **the camp / story & memory / feelings & the body / the outside world**. Base-camp and stretch tiers are authored for the first three sets (same morphemes in smaller/bigger words); later sets can have tiers added in the data spine any time. Key-word translations in the five languages of our EAL cohort (Mandarin, Cantonese, Vietnamese, Arabic, Farsi) appear on study cards and build reveals only — practice stays in English. Spaced review warms up each new set with previously **met** words, weighted toward past misses.
 
+**Meaning is the question; morphology supports it.** Step 3's generated items now
+run about three-quarters meaning-to-word and one quarter morphology, because
+working out what a word means is the point and the parts are there to help get
+there. Two things used to give those items away. Half the definitions were
+written to sit next to their word and so used it — "Blind Anka learns to
+*navigate* by clicking her tongue" — which handed the answer over; the word is
+now blanked out of its own definition, and the example sentence still does its
+work. And the wrong answers were three unrelated words from the same lesson, so
+the choice could be made on the shape of the word without reading anything.
+Distractors are now words that look like the answer: built from the same parts
+where the book has them, otherwise starting or ending the same way, and only
+ever words the class has already met. *Generation* is now chosen against
+*Annotation*, *Determination* and *Imagination*; in the water hub *Condensation*
+sits against *Precipitation* and *Transpiration*.
+
 **No etymology gates.** Words that can't be cut into morphemes (asylum seeker, trauma, compound, doona, Rohingya…) are checked with a **plain meaning-match** — "What does *trauma* mean?" — not a recall question about Greek or Old English. The etymology is still there, but as the *explanation after the answer*, where it's a reward rather than a barrier. Base-camp and stretch build tasks now also show the target word's meaning as the clue before you build (previously it showed only "?", so students tapped tiles blind).
 
 **The word list.** Every encounter with a word — building it from morphemes, using it in an apply task, meeting it again in a review — updates one running record that outlives the lesson (`wstat`). Two correct encounters in a row marks a word **mastered**; a single miss breaks the streak and un-masters it. Unmastered words are then weighted heavily back into every later review, so nothing quietly drops out of circulation. Students see the list three ways: a summary on the hub home ("28 words · 19 mastered · 6 to fix · 3 not drilled yet"), a per-word chip on the Word list screen (mastered / needs work (missed ×2) / not met yet) with a per-set tally in each heading, and a **Drill my unmastered words** button that goes straight at the outstanding ones. The report prints the same summary and names the words still in circulation.
