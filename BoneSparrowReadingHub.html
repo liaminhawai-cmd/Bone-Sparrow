@@ -350,6 +350,15 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .tmnote{font-size:15px;color:var(--muted);font-style:italic;margin-top:14px}
 .tmh-idea{color:var(--idea-tx)} .tmh-verb{color:var(--verb-tx)}
 .tmh-ev{color:var(--ev-tx)}     .tmh-eff{color:var(--eff-tx)}
+.tmfour{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:10px 0 6px}
+@media (max-width:820px){.tmfour{grid-template-columns:repeat(2,1fr)}}
+.tmf{border-radius:14px;padding:min(7vh,44px) 16px;text-align:center;border:1px solid var(--line)}
+.tmf b{display:block;font-family:Georgia,serif;font-size:clamp(26px,3.4vw,42px);line-height:1.05}
+.tmf span{display:block;margin-top:6px;font-size:clamp(17px,2.1vw,26px);font-weight:700;opacity:.75}
+.tmf-idea{background:var(--idea-bg);color:var(--idea-tx)}
+.tmf-eff{background:var(--eff-bg);color:var(--eff-tx)}
+.tmf-ev{background:var(--ev-bg);color:var(--ev-tx)}
+.tmf-verb{background:var(--verb-bg);color:var(--verb-tx)}
 .railbar{background:var(--bg);border:1px dashed var(--ink);border-radius:10px;padding:11px 14px;
   margin:0 0 14px;font-size:14px;line-height:1.55}
 .railbar .linkbtn{margin-left:10px}
@@ -1833,7 +1842,11 @@ const WK_BUILD = {
   { t:"the narrow point of view", themes:["power","fear"], lv:[9,9] },
   { t:"the way a guard is represented", themes:["power"], lv:[9,9] },
   { t:"the way a child's fear is represented", themes:["fear"], lv:[9,9] },
-  { t:"the way survival is shown as a child's job", themes:["protect"], lv:[9,9] }
+  { t:"the way survival is shown as a child's job", themes:["protect"], lv:[9,9] },
+  { t:"the way the reader is kept inside one frightened body", themes:["fear","power"], lv:[9,9] },
+  { t:"the way authority is represented through its effects alone", themes:["power"], lv:[9,9] },
+  { t:"the way a child is made responsible for his own safety", themes:["protect"], lv:[9,9] },
+  { t:"the way the rules for staying safe are handed down between children", themes:["protect"], lv:[9,9] }
  ],
  /* ---- effect-on-reader clauses: unlock at L7 ---- */
  effects:[
@@ -1871,7 +1884,19 @@ const WK_BUILD = {
   { t:"any way to stand outside a child's fear and judge it calmly", shape:"np", needs:"deny", q:"interp", themes:["fear"], lv:[9,9] },
   { t:"how completely a system can erase people at both ends of it", shape:"wh", q:"interp", themes:["power"], lv:[9,9] },
   { t:"whether courage is even the right thing to ask of a child here", shape:"wh", needs:"question", q:"interp", themes:["protect"], lv:[9,9] },
-  { t:"that we are never given the guard's reasons, only his effect", shape:"cl", q:"interp", themes:["power"], lv:[9,9] }
+  { t:"that we are never given the guard's reasons, only his effect", shape:"cl", q:"interp", themes:["power"], lv:[9,9] },
+  /* Level 9 used to have one interpretive ending per focus, and two of the
+     three carried a `needs`, so a student on Protection had exactly one legal
+     sentence in the whole bank: one idea, one ending, one verb that could
+     licence it. That is a combination lock, not a writing task. These are
+     wh-endings with no `needs`, which sit correctly after any positioning
+     verb, so every focus now has three or more ways to be right. */
+  { t:"how little distance the reader is left from a child's fear", shape:"wh", q:"interp", themes:["fear"], lv:[9,9] },
+  { t:"how completely a frightened body can fill a story, until nothing else is visible", shape:"wh", q:"interp", themes:["fear"], lv:[9,9] },
+  { t:"how a guard can be built entirely out of his effect on a child", shape:"wh", q:"interp", themes:["power"], lv:[9,9] },
+  { t:"how survival becomes a child's own job long before any adult arrives", shape:"wh", q:"interp", themes:["protect"], lv:[9,9] },
+  { t:"how a rule meant to protect a child can be one more thing he fails at", shape:"wh", q:"interp", themes:["protect"], lv:[9,9] },
+  { t:"how much of this place we are only ever shown from inside it", shape:"wh", q:"interp", themes:["fear","power","protect"], lv:[9,9] }
  ],
  /* ---- the Level 5 sentence, done for the student — one per focus.
         Picking a focus lays it on the canvas; the student's own climb
@@ -1919,29 +1944,27 @@ const WK_BUILD = {
    The sentence is read out of WK_WALL at render time, so the deck cannot
    drift from the wall the students place. Nothing here is scored or saved.
    =========================================================================== */
-const TEACH = {
- slides:[
- { k:"title", h:"" },
- { k:"part", c:"idea", h:"The idea",
-   brief:"What the sentence is about, underneath the plot. It is arguable: the same moment could carry fear, or survival, and you would have to defend your pick." },
- { k:"part", c:"verb", h:"The analytical verb",
-   brief:"\u201CShows\u201D reports that something happened. \u201CRevealed\u201D claims the writing uncovers it. At Level 7 the reporting verbs are taken away." },
- { k:"part", c:"ev", h:"The evidence",
-   brief:"The author's own words, inside the sentence. Lift the quote marks out and it still reads." },
- { k:"part", c:"eff", h:"The effect on the reader",
-   brief:"What the writing makes a reader understand. Not a feeling: \u201Cthe fear is physical before it is anything else\u201D is a claim, and the claim is what gets marked." },
- { k:"rails", h:"Lift this one to Level 7" }
- ]
-};
+/* Teacher mode is two things: the builder holding a Year 4 sentence, lifted in
+   one pass to Year 7, and then one slide of four colours. Nothing else. Those
+   four questions are the whole of what a student keeps in their head while
+   they write, so they are the only thing that goes on the wall afterwards. */
+const TEACH_COLOURS = [
+  { c:"idea", t:"Idea",     q:"what" },
+  { c:"eff",  t:"Purpose",  q:"why"  },
+  { c:"ev",   t:"Evidence", q:"when" },
+  { c:"verb", t:"Verb",     q:"how"  }
+];
 
-/* The demo starts on the Level 5 sentence students are handed for free, with
-   the level set to 7. Three of its tiles retire on the way up and the builder
-   flags all three, so the demonstration is one climb rather than one swap:
-   trade the reporting verb, grow the idea into an issue, trade the feeling for
-   what the reader understands, and put the quote inside the sentence instead
-   of after a full stop. */
+/* A Year 4 sentence: a person for a subject, a reporting verb, a feeling for a
+   purpose, and the quote dumped after a full stop. The level is set to 7, so
+   the builder flags the three tiles that have retired on the way up and the
+   demonstration is one pass across two whole rungs. */
 const TEACH_RAILS_FOCUS = "fear";
 const TEACH_RAILS_LEVEL = 7;
+const TEACH_RAILS = [
+  ["subj","Subhi"], ["verb","shows"], ["idea","fear in the camp"], ["con","."],
+  ["q","My throat is as dry as the dirt"], ["con","which"], ["eff","makes you feel sorry for him"]
+];
 
 
 /* ==================== SHARED GLOSSARY (generated) ==========================
@@ -2806,7 +2829,7 @@ function renderWkBuild(){
   <h2>${esc(WK_BUILD.prompt)}</h2>`;
   if(WK.rails){
     h+=`<div class="railbar noprint"><b>Teacher demo</b> · nothing here is saved
-      <button class="linkbtn" onclick="runTeach(${TEACH.slides.length-1})">back to the slides</button>
+      <button class="linkbtn" onclick="teachColours()">the four colours</button>
       <button class="linkbtn" onclick="go('home')">leave the demo</button></div>`;
   }
 
@@ -3269,8 +3292,9 @@ function wkCheckTail(findings){
       (next?" Now keep this sentence and rejig it — you don't start again, you lift what you've already got.":" That's the top of the ladder.");
     const btn=document.createElement("button");
     btn.id="liftBtn"; btn.className="btn btn-primary";
-    btn.textContent = next ? "Lift it to Level "+next.n+" →" : "Finish the climb →";
-    btn.onclick = next ? wkLift : wkFinishClimb;
+    /* the demo stops where it was aimed: Year 7, then the four colours */
+    btn.textContent = WK.rails ? "The four colours →" : next ? "Lift it to Level "+next.n+" →" : "Finish the climb →";
+    btn.onclick = WK.rails ? teachColours : next ? wkLift : wkFinishClimb;
     $("wkrow").insertBefore(btn, $("wkrow").firstChild);
   } else {
     fb.className="feedback "+(level==="err"?"bad":"warn");
@@ -3289,13 +3313,7 @@ function wkLift(){
     (next.retires?" <br><b>Watch out:</b> "+esc(next.retires):"");
 }
 function wkFinishClimb(){
-  if(WK.rails){
-    $("body").innerHTML=`<h2>Demo over</h2>
-    <div class="panel"><p style="margin:0">That was the whole climb, demonstrated. Nothing was saved to this device's record.</p></div>
-    <div class="btnrow"><button class="btn btn-primary" onclick="runTeach()">Back to the slides</button>
-    <button class="btn btn-ghost" onclick="go('home')">Back to the hub</button></div>`;
-    return;
-  }
+  if(WK.rails){ teachColours(); return; }
   const finalT=(WK.versions[WK.level]&&WK.versions[WK.level].t)||wkText();
   if(!S.kept.includes(finalT)) S.kept.push(finalT);
   S.done.wk=true; save();
@@ -3527,11 +3545,7 @@ function morphPopClose(){ const pp=$("morphpop"); if(pp) pp.remove(); }
    teacher does at the front of the room can touch a student's saved work. */
 let TM=null;
 
-function runTeach(at){
-  TM={i: at||0};
-  document.addEventListener("keydown", teachKeys);
-  renderTeach();
-}
+function runTeach(){ teachRails(); }
 function teachExit(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
@@ -3539,49 +3553,25 @@ function teachExit(){
 }
 function teachKeys(e){
   if(!TM) return;
-  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); teachNext(); }
-  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); teachPrev(); }
-  else if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
-}
-function teachNext(){ if(TM.i < TEACH.slides.length-1){ TM.i++; renderTeach(); } }
-function teachPrev(){ if(TM.i > 0){ TM.i--; renderTeach(); } }
-
-/* The Year 7 wall sentence with every colour on, or with all but one class
-   unwrapped to plain ink, so each slide lights a single part. */
-function teachSentence(only){
-  const r=WK_WALL.resps.find(x=>x.id==="w7");
-  let h=r.h||esc(r.t);
-  if(only) h=h.replace(/<em class="hl-(\w+)">([^]*?)<\/em>/g,
-    (m,cls,text)=> cls===only ? m : text);
-  return h;
+  if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
 }
 
-function renderTeach(){
-  const sl=TEACH.slides[TM.i], n=TEACH.slides.length;
-  if(sl.k==="title") sl.h=WK_WALL.q;
-  let inner="";
-  if(sl.k==="title"){
-    inner=`<div class="tmsent">${teachSentence(null)}</div>${wkColourKey()}`;
-  } else if(sl.k==="part"){
-    inner=`<div class="tmsent">${teachSentence(sl.c)}</div>
-      <p class="tmbrief">${sl.brief}</p>`;
-  } else if(sl.k==="rails"){
-    inner="";
-  }
-  const last = TM.i===n-1;
+/* The one slide: four colours, four questions, nothing else on it. */
+function teachColours(){
+  TM={};
+  document.addEventListener("keydown", teachKeys);
+  document.body.classList.remove("wide");
+  $("homeBtn").style.display="none";
+  const tb=$("teachBtn"); if(tb) tb.style.display="none";
+  screen="teach";
   $("body").innerHTML=`<div class="teach">
-    <div class="tmbar noprint">
-      <span class="tmtag">Teacher mode</span>
-      <span class="tmcount">${TM.i+1} / ${n}</span>
-      <button class="linkbtn" onclick="teachExit()">Leave the deck (Esc)</button>
-    </div>
-    ${sl.h?`<h1 class="tmh ${sl.k==="part"?"tmh-"+sl.c:""}">${esc(sl.h)}</h1>`:""}
-    ${sl.lead?`<p class="tmlead">${sl.lead}</p>`:""}
-    ${inner}
+    <div class="tmbar noprint"><span class="tmtag">Teacher mode</span>
+      <button class="linkbtn" onclick="teachExit()">Leave (Esc)</button></div>
+    <div class="tmfour">${TEACH_COLOURS.map(c=>
+      `<div class="tmf tmf-${c.c}"><b>${esc(c.t)}</b><span>${esc(c.q)}</span></div>`).join("")}</div>
     <div class="tmnav noprint">
-      <button class="btn btn-ghost" onclick="teachPrev()" ${TM.i===0?"disabled":""}>← Back</button>
-      ${last ? `<button class="btn btn-primary" onclick="teachRails()">Open the builder demo →</button>`
-             : `<button class="btn btn-primary" onclick="teachNext()">Next →</button>`}
+      <button class="btn btn-ghost" onclick="teachRails()">← back to the demo</button>
+      <button class="btn btn-primary" onclick="teachExit()">Done</button>
     </div>
   </div>`;
 }
@@ -3596,8 +3586,17 @@ function teachRails(){
   TM=null;
   WK={armed:null, placed:{}, firstTried:{}, focus:TEACH_RAILS_FOCUS, canvas:[], harvested:[],
       level:TEACH_RAILS_LEVEL, versions:{}, tried:{}, wallStart:0, climbStart:0, rails:true};
-  const st=wkStarter(TEACH_RAILS_FOCUS);
-  WK.canvas=st.canvas; WK.harvested=st.harvested;
+  const lists={open:WK_BUILD.opens, subj:WK_BUILD.subjects, verb:WK_BUILD.verbs,
+               idea:WK_BUILD.ideas, eff:WK_BUILD.effects, con:WK_BUILD.cons};
+  TEACH_RAILS.forEach(([k,t])=>{
+    if(k==="q"){
+      const qi=WK_BUILD.segs.findIndex(sg=>sg.t.includes(t));
+      if(qi>=0){ if(!WK.harvested.includes(qi)) WK.harvested.push(qi); WK.canvas.push({k:"q",i:qi}); }
+    } else {
+      const ti=lists[k].findIndex(x=>x.t===t);
+      if(ti>=0) WK.canvas.push({k,i:ti});
+    }
+  });
   screen="wk";
   $("homeBtn").style.display="inline";
   document.body.classList.add("wide");
