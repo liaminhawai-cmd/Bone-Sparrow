@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Bone Sparrow — the climb, cut and join</title>
+<meta name="description" content="Part B of the Analysis workshop on paper. Levels 5 and 6 come done; students cut the sentence parts and join Level 7 and Level 8. One pack per theme.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>✂</text></svg>">
+<style>
+/* ===========================================================================
+   THE CLIMB, ON PAPER WITH SCISSORS
+   The Analysis workshop's Part B — the sentence builder — as a cut-and-join
+   activity. Levels 5 and 6 arrive written, so the paper task starts where the
+   difficulty starts: lifting a sentence to Level 7 and then to Level 8. One
+   pack per theme (fear, power, protection), two A4 sheets each, plus a single
+   key sheet for all three.
+
+   The parts on the cutting sheet are the builder's own tiles, resolved out of
+   BoneSparrowReadingHub.html at load time. A student who joins them on the
+   desk has built exactly the sentence the app would accept, and a tile that
+   is renamed in the hub fails loudly here instead of printing a part that no
+   longer exists.
+
+   Colour follows the app: the idea is blue, the verb orange, the evidence
+   yellow, the effect green, and the joiners are left grey because they are
+   grammar, not one of the four things being marked. Every tint carries an
+   underline pattern too, so the pack survives a greyscale photocopy.
+
+   PAPER. Seven A4 portrait sheets for the whole class activity: two per theme
+   plus the key. The parts sheet holds one set, because fifteen strips a
+   student can actually pick up beats thirty they cannot.
+   =========================================================================== */
+:root{
+  --sheet-w:210mm; --sheet-h:297mm; --sheet-pad:11mm 10mm 9mm;
+  --paper:#fff; --bg:#efe9df; --ink:#1e211f; --muted:#645d54; --line:#d6cbba;
+  --deep:#1d3c34; --band:#f4efe5; --rule:#9c9382;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --feat-bg:#e7ddf6; --feat-tx:#4b2f7a;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+  --con-bg:#eeebe3;  --con-tx:#574d3a;
+}
+@page{size:A4 portrait;margin:10mm}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);
+     font-family:Georgia,"Times New Roman",serif;line-height:1.4}
+
+.sheet{width:min(100%,var(--sheet-w));min-height:var(--sheet-h);margin:14px auto;background:var(--paper);
+       border:1px solid var(--line);padding:var(--sheet-pad);
+       display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(48,39,24,.1)}
+
+.head{border-bottom:1.8px solid var(--deep);padding-bottom:2mm;margin-bottom:3.6mm}
+.head h1{font-size:14pt;color:var(--deep);font-weight:700;line-height:1.1}
+.kicker{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        text-transform:uppercase;letter-spacing:.16em;font-size:7pt;font-weight:700;color:var(--muted)}
+.head p{font-size:8.6pt;color:var(--muted);margin-top:1.2mm;line-height:1.35;
+        font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+/* ---- the four colours, used on the worked sentences and on the strips ---- */
+.c-idea,.c-verb,.c-q,.c-eff,.c-subj,.c-con{border-radius:2px;padding:0 1px;font-style:normal;
+  text-decoration-line:underline;text-underline-offset:2px;text-decoration-thickness:1.1px}
+.c-idea{background:var(--idea-bg);color:var(--idea-tx);text-decoration-style:solid;text-decoration-color:var(--idea-tx)}
+.c-subj{background:var(--feat-bg);color:var(--feat-tx);text-decoration-style:dashed;text-decoration-color:var(--feat-tx)}
+.c-verb{background:var(--verb-bg);color:var(--verb-tx);text-decoration-style:dotted;text-decoration-color:var(--verb-tx)}
+.c-q{background:var(--ev-bg);color:var(--ev-tx);text-decoration-style:double;text-decoration-color:var(--ev-tx)}
+.c-eff{background:var(--eff-bg);color:var(--eff-tx);text-decoration-style:wavy;text-decoration-color:var(--eff-tx)}
+.c-con,.c-open{background:var(--con-bg);color:var(--con-tx);text-decoration:none}
+
+.key{display:flex;flex-wrap:wrap;gap:1.5mm 4mm;font-size:7.6pt;margin-bottom:3mm;
+     font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.key b{font-weight:700}
+
+/* ---- worked levels ---- */
+.done{border:1px solid var(--line);border-radius:2px;margin-bottom:3mm}
+.done .dh{display:flex;flex-wrap:wrap;gap:1mm 4mm;align-items:baseline;background:var(--band);
+  padding:1.6mm 3mm;border-bottom:1px solid var(--line);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.done .dh .lv{font-size:9.5pt;font-weight:800;color:var(--deep);text-transform:uppercase;letter-spacing:.04em}
+.done .dh .tag{font-size:7.4pt;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.done .ds{padding:2.4mm 3mm;font-size:10.5pt;line-height:1.5}
+.done .dn{padding:0 3mm 2mm;font-size:8pt;color:var(--muted);line-height:1.35;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+/* ---- the boards to join onto ---- */
+.boards{flex:1;display:flex;flex-direction:column;gap:3mm}
+.board{flex:1;border:1.4px solid var(--deep);border-radius:2px;display:flex;flex-direction:column}
+.board .bh{background:var(--deep);color:#f6f1e6;padding:1.6mm 3mm;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.board .bh .lv{font-size:9.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.board .bh .vic{display:block;font-size:8pt;font-style:italic;opacity:.9;margin-top:.6mm;line-height:1.3}
+.board .task{padding:1.6mm 3mm 0;font-size:8pt;color:var(--muted);line-height:1.35;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.board .lay{flex:1;margin:1.6mm 3mm 3mm;border:1px dashed var(--rule);border-radius:2px;
+  background:repeating-linear-gradient(0deg,transparent,transparent 9mm,#efe9df 9mm,#efe9df 9.3mm)}
+
+/* ---- the strips to cut ---- */
+.striphead{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:7.4pt;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  font-weight:700;margin:0 0 1.6mm}
+.cutbody{flex:1;display:flex;flex-direction:column}
+.strips{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:1.6mm;margin-bottom:2mm}
+.strip{border:1.1px dashed var(--rule);border-radius:1.5px;padding:2.6mm;
+  font-size:10.5pt;line-height:1.35;background:#fff;display:flex;align-items:center}
+.strip .in{border-radius:2px;padding:0 1.5px}
+.cutline{display:flex;align-items:center;gap:2mm;margin:1mm 0 3.4mm;color:var(--muted)}
+.cutline:before,.cutline:after{content:"";flex:1;border-top:1.1px dashed var(--rule)}
+.cutline span{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:6.6pt;letter-spacing:.08em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+
+/* ---- the key ---- */
+.keys{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:2.6mm}
+.krow{border:1px solid var(--line);border-radius:2px;padding:2.6mm 3mm}
+.krow .kh{display:flex;gap:3mm;align-items:baseline;margin-bottom:1.2mm;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.krow .kh b{font-size:9pt;color:var(--deep);text-transform:uppercase;letter-spacing:.04em}
+.krow .kh span{font-size:7.6pt;color:var(--muted);font-weight:700}
+.krow .kt{font-size:10.2pt;line-height:1.5}
+
+.foot{margin-top:3mm;padding-top:2mm;border-top:1px solid var(--line);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-size:6.4pt;color:var(--muted);line-height:1.36}
+
+.err{max-width:640px;margin:40px auto;background:#fff;border:1px solid var(--line);
+     border-radius:10px;padding:20px 24px;font-family:system-ui,sans-serif;font-size:14px;line-height:1.5}
+.err ul{margin:10px 0 0 18px}
+
+@media screen and (max-width:760px){
+  .sheet{width:auto;min-height:0;padding:14px;margin:0;border:0}
+}
+@media print{
+  body{background:#fff}
+  .sheet{width:auto;min-height:277mm;margin:0;padding:0;border:0;box-shadow:none;break-after:page}
+  .sheet:last-of-type{break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .strip,.board,.done,.krow{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main id="out"></main>
+
+<script>
+const HUB = "BoneSparrowReadingHub.html";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const out = document.getElementById("out");
+
+function slice(src, startsWith, endsWith){
+  const a = src.indexOf(startsWith); if(a<0) return null;
+  const b = src.indexOf(endsWith, a); if(b<0) return null;
+  return src.slice(a, b + endsWith.length);
+}
+async function load(){
+  const res = await fetch(HUB, {cache:"no-cache"});
+  if(!res.ok) throw new Error("hub returned "+res.status);
+  const src = await res.text();
+  const build = slice(src, "const WK_BUILD = {", "\n};");
+  if(!build) throw new Error("could not find WK_BUILD in the hub");
+  const levels = slice(src, "const WK_LEVELS = [", "\n];");
+  if(!levels) throw new Error("could not find WK_LEVELS in the hub");
+  return { B:new Function(build+"\nreturn WK_BUILD;")(), L:new Function(levels+"\nreturn WK_LEVELS;")() };
+}
+
+/* ---------------------------------------------------------------------------
+   THE RECIPES. Each is a list of [kind, tile text] pairs, resolved against the
+   hub's own banks — the same shape, and the same resolution, as the Level 5
+   freebie the app lays on the canvas. Nothing here is a sentence typed out by
+   hand: if a tile is renamed in the hub, resolve() reports it and the page
+   refuses to print rather than handing out a part that no longer exists.
+   --------------------------------------------------------------------------- */
+const CLIMB = {
+  fear: { label:"Fear in the body", cut:"the moment fear reaches Subhi's body",
+    6:[ ["subj","Subhi's body"], ["verb","conveys"], ["idea","fear in the camp"],
+        ["con","when he says"], ["q","My throat is as dry as the dirt"],
+        ["con","which"], ["eff","makes you feel the danger with him"] ],
+    7:[ ["subj","Subhi's body"], ["verb","reveals"], ["idea","the issue of fear in detention"],
+        ["con","when he says"], ["q","My throat is as dry as the dirt"],
+        ["con","which shows"], ["eff","that the terror is physical before it is anything else"] ],
+    8:[ ["open","By writing the scene through Subhi's senses,"], ["subj","Fraillon"],
+        ["verb","exposes"], ["idea","two perspectives on fear — the rule and the body"],
+        ["con","in the line"], ["q","Never let anyone see your scared"], ["con",","],
+        ["con","where Fraillon writes"], ["q","My throat is as dry as the dirt"],
+        ["con","which makes the reader see"], ["eff","how completely fear takes over a child's body"] ] },
+
+  power: { label:"Power and control", cut:"the four words Beaver does not need to repeat",
+    6:[ ["subj","Beaver's voice"], ["verb","conveys"], ["idea","the power of the guards"],
+        ["con","when he says"], ["q","I asked you a question"],
+        ["con","which"], ["eff","makes it feel unfair"] ],
+    7:[ ["subj","the clipped dialogue"], ["verb","reveals"], ["idea","the issue of power in detention"],
+        ["con","in the line"], ["q","I asked you a question"],
+        ["con","which shows"], ["eff","that Beaver holds all the power, and both of them know it"] ],
+    8:[ ["open","When Beaver catches him with the package,"], ["subj","Fraillon"],
+        ["verb","exposes"], ["idea","two perspectives on power in detention"],
+        ["con","in the line"], ["q","I asked you a question"], ["con",","],
+        ["con","where Fraillon writes"], ["q","I can't talk. I can't say a single thing."],
+        ["con","which makes the reader see"], ["eff","how little control a child has here"] ] },
+
+  protect: { label:"Protection and survival", cut:"the rule Eli hands down",
+    6:[ ["subj","Eli's advice"], ["verb","captures"], ["idea","looking after each other"],
+        ["con","when he says"], ["q","Never let anyone see your scared"],
+        ["con","which"], ["eff","makes you want the boys to be safe"] ],
+    7:[ ["subj","Eli's advice"], ["verb","reveals"], ["idea","the issue of survival inside the fences"],
+        ["con","in the line"], ["q","Never let anyone see your scared"],
+        ["con","which shows"], ["eff","that the boys have learned survival rules no child should need"] ],
+    8:[ ["open","As the threat builds,"], ["subj","Fraillon"],
+        ["verb","exposes"], ["idea","two perspectives on what courage costs"],
+        ["con","in the line"], ["q","Never let anyone see your scared"], ["con",","],
+        ["con","where Fraillon writes"], ["q","trying isn't doing"],
+        ["con","which makes the reader see"], ["eff","that Eli's advice is armour, and it isn't enough"] ] }
+};
+
+/* A fixed scramble per length, not a random one, so every printed set matches
+   the key and rebuilding the page cannot quietly reorder somebody's strips. */
+const SCRAMBLE = {7:[5,0,6,2,4,1,3], 10:[7,2,9,0,5,3,8,1,6,4]};
+
+/* A comma is not a strip anybody can cut out or pick up, so it rides on the
+   part in front of it. The sentence keeps all its parts; the scissors get one
+   fewer thing to lose under a desk. */
+function stripParts(parts){
+  const out=[];
+  parts.forEach(p=>{
+    if(/^[,.]$/.test(p.t) && out.length){ out[out.length-1]={...out[out.length-1], t:out[out.length-1].t+p.t}; return; }
+    out.push({...p});
+  });
+  return out;
+}
+
+const CLASSOF = {open:"c-open", subj:"c-subj", verb:"c-verb", idea:"c-idea", q:"c-q", eff:"c-eff", con:"c-con"};
+const PARTNAME = {open:"lead-in", subj:"subject", verb:"verb", idea:"idea", q:"evidence", eff:"effect on the reader", con:"joiner"};
+
+const problems = [];
+function resolve(B, recipe, where){
+  const lists = {open:B.opens, subj:B.subjects, verb:B.verbs, idea:B.ideas, eff:B.effects, con:B.cons};
+  return recipe.map(([k,t])=>{
+    if(k==="q"){
+      const sg = B.segs.find(s=>s.t.includes(t));
+      if(!sg){ problems.push(where+": no quotation in the passage contains “"+t+"”"); return null; }
+      return {k, t:"‘"+t+"’"};
+    }
+    const hit = lists[k].find(x=>x.t===t);
+    if(!hit){ problems.push(where+": the "+PARTNAME[k]+" “"+t+"” is not in the hub's bank any more"); return null; }
+    return {k, t:hit.t};
+  }).filter(Boolean);
+}
+/* Punctuation and the joiners close up against their neighbours; everything
+   else gets a space, so the joined sentence reads as a sentence. */
+function sentence(parts){
+  return parts.map((p,i)=>{
+    const punct = /^[,.]$/.test(p.t);                 /* not a joiner to look at — just a mark */
+    const sp = (i===0 || punct) ? "" : " ";
+    return sp+`<span class="${punct?"":CLASSOF[p.k]}">${esc(p.t)}</span>`;
+  }).join("");
+}
+
+function render({B,L}){
+  const lvl = n => L.find(x=>x.n===n);
+  Object.keys(CLIMB).forEach(f=>{ [6,7,8].forEach(n=>{ CLIMB[f]["r"+n]=resolve(B, CLIMB[f][n], CLIMB[f].label+" · Level "+n); }); });
+  /* Level 5 is the app's own freebie for this focus, taken as it stands. */
+  Object.keys(CLIMB).forEach(f=>{ CLIMB[f].r5 = resolve(B, B.starters[f], CLIMB[f].label+" · Level 5"); });
+
+  if(problems.length){
+    out.innerHTML = `<div class="err"><b>The pack is out of step with the hub.</b> These parts no longer
+      resolve, so the page will not print a set a student cannot build in the app:
+      <ul>${problems.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+
+  const colourKey = `<div class="key">
+    <span><b class="c-idea">the idea</b> what it is about</span>
+    <span><b class="c-verb">the verb</b> what the writing does</span>
+    <span><b class="c-q">the evidence</b> her words</span>
+    <span><b class="c-eff">the effect</b> what we understand</span>
+    <span><b class="c-subj">the subject</b> what the sentence is about</span>
+    <span><b class="c-con">joiners</b> hold it together</span>
+  </div>`;
+  const foot = `Part B of the Analysis workshop (BoneSparrowReadingHub.html), on paper. Every part is a tile from the app's own bank, read from the hub at load time. ${esc(B.prompt)} ${esc(B.where)}. The Bone Sparrow, Zana Fraillon, Hachette Australia, 2016.`;
+
+  const packs = Object.keys(CLIMB).map(f=>{
+    const C = CLIMB[f];
+    const board = n => `
+      <div class="board">
+        <div class="bh"><span class="lv">Level ${n} — ${esc(lvl(n).focus)}</span>
+          <span class="vic">“${esc(lvl(n).vic)}”</span></div>
+        <div class="task">${esc(lvl(n).goal)}</div>
+        <div class="lay"></div>
+      </div>`;
+    const stripsFor = n => {
+      const parts = stripParts(C["r"+n]);
+      const order = SCRAMBLE[parts.length] || parts.map((_,i)=>i);
+      return `<div class="strips">${order.map(i=>{
+        const p = parts[i];
+        return `<div class="strip"><span class="in ${CLASSOF[p.k]}">${esc(p.t)}</span></div>`;
+      }).join("")}</div>`;
+    };
+    return `
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · the climb · ${esc(C.label)}</div>
+      <h1>Two done, two to build</h1>
+      <p>${esc(B.prompt)} ${esc(B.where)} — ${esc(C.cut)}. Levels 5 and 6 are the same sentence, lifted once. Cut the parts from the next sheet and join Level 7, then Level 8.</p>
+    </header>
+    ${colourKey}
+    <div class="done">
+      <div class="dh"><span class="lv">Level 5</span><span class="tag">done for you</span></div>
+      <div class="ds">${sentence(C.r5)}</div>
+      <div class="dn">All three parts are here — an idea, a quote and a reason it matters — each as simply as it can be done.</div>
+    </div>
+    <div class="done">
+      <div class="dh"><span class="lv">Level 6</span><span class="tag">done for you</span></div>
+      <div class="ds">${sentence(C.r6)}</div>
+      <div class="dn">Same sentence, one change: the quote is inside it now, held by a joiner, instead of sitting beside it after a full stop.</div>
+    </div>
+    <div class="boards">${board(7)}${board(8)}</div>
+    <p class="foot">${foot}</p>
+  </section>
+
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · the climb · ${esc(C.label)}</div>
+      <h1>The parts</h1>
+      <p>Cut along the dashes. Every part belongs in the sentence — none are spare, and none are wrong. Put them in an order that reads aloud without stumbling, then paste.</p>
+    </header>
+    <div class="cutbody">
+      <div class="striphead">Level 7 — ${esc(lvl(7).focus)} · ${stripParts(C.r7).length} parts</div>
+      ${stripsFor(7)}
+      <div class="cutline"><span>Level 8 parts below</span></div>
+      <div class="striphead">Level 8 — ${esc(lvl(8).focus)} · ${stripParts(C.r8).length} parts</div>
+      ${stripsFor(8)}
+    </div>
+    <p class="foot">${foot}</p>
+  </section>`;
+  }).join("");
+
+  const key = `
+  <section class="sheet">
+    <header class="head">
+      <div class="kicker">The Bone Sparrow · the climb · teacher key</div>
+      <h1>The six sentences</h1>
+      <p>What each theme's parts join into. This page stays on your desk. Any order that reads aloud cleanly and keeps every part is right — these are the versions the app builds.</p>
+    </header>
+    <div class="keys">${Object.keys(CLIMB).map(f=>[7,8].map(n=>`
+      <div class="krow">
+        <div class="kh"><b>${esc(CLIMB[f].label)}</b><span>Level ${n} — ${esc(lvl(n).focus)}</span></div>
+        <div class="kt">${sentence(CLIMB[f]["r"+n])}</div>
+      </div>`).join("")).join("")}
+    </div>
+    <p class="foot">${foot}</p>
+  </section>`;
+
+  out.innerHTML = packs + key;
+}
+
+load().then(render).catch(e=>{
+  out.innerHTML = `<div class="err"><b>Could not load the climb.</b> This page reads the sentence parts out of
+  BoneSparrowReadingHub.html, so it has to be opened from the same website (or the same folder over http),
+  not as a bare file. ${esc(e.message)}</div>`;
+});
+</script>
+</body>
+</html>
