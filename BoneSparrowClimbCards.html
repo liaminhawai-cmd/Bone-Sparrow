@@ -26,14 +26,17 @@
    grammar, not one of the four things being marked. Every tint carries an
    underline pattern too, so the pack survives a greyscale photocopy.
 
-   PAPER. Two identical sets to a sheet, halved along the middle rule, so one
-   sheet serves two students. Four A4 portrait sheets cover a whole class of
-   pairs: one per theme plus the key. There are no ruled paste boxes — the
-   strips get joined on the desk and stuck into an exercise book, which is
-   where the sentence wants to live anyway, and a page of blank rules is the
-   most expensive thing a photocopier prints. The parts are packed as tight
-   cells rather than full-width bars: "reveals" does not need a line of its
-   own, and the space that saves is what fits the second set on the sheet.
+   PAPER. Everything on a theme sheet is a card, and four complete sets fit on
+   one A4: the teacher cuts three vertical lines and hands a column to each
+   student, who cuts their own column into cards. Two copies of each of the
+   three theme sheets covers twenty-four students in six A4 pages, plus one
+   key sheet for the desk.
+
+   There is no page furniture — no running head, no colour legend, no footer.
+   A card sheet gets cut up, so anything printed on it that is not a card is
+   either thrown away or cut through. The four colours are taught on the wall
+   and in the app; they do not need explaining again on a page that is about
+   to become confetti.
    =========================================================================== */
 :root{
   --sheet-w:210mm; --sheet-h:297mm; --sheet-pad:11mm 10mm 9mm;
@@ -87,31 +90,25 @@ body{background:var(--bg);color:var(--ink);
 .done .dn{padding:0 2.4mm 1.2mm;font-size:7pt;color:var(--muted);line-height:1.32;
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 
-/* ---- the band that opens each level's pile of strips ---- */
-.lvband{background:var(--deep);color:#f6f1e6;padding:1mm 2.4mm;border-radius:2px 2px 0 0;
+/* ---- the theme sheets: four columns of cards, nothing else ---- */
+.cardsheet{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:7mm 5mm}
+.col{display:flex;flex-direction:column;gap:1.2mm;padding:0 1.8mm;
+     border-right:1px dashed var(--rule)}
+.col:last-child{border-right:0}
+.card{border:1px dashed var(--rule);border-radius:1.5px;background:#fff;
+      padding:1.1mm 1.5mm;font-size:8pt;line-height:1.3}
+.card.donecard{border-style:solid;border-color:var(--line);background:var(--paper)}
+.card.donecard b, .card.lvcard b{display:block;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:7.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--deep);margin-bottom:.5mm}
+.card.lvcard{border:1.3px solid var(--deep);background:var(--band)}
+.card.lvcard i{display:block;font-size:6.8pt;line-height:1.25;margin-bottom:.6mm}
+.card.lvcard span{display:block;font-size:6.9pt;line-height:1.28;color:var(--muted);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.lvband .lv{font-size:8.2pt;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
-.lvband .ct{font-size:7.4pt;font-weight:700;opacity:.85;margin-left:2.5mm}
-.lvband .vic{display:block;font-size:6.8pt;font-style:italic;opacity:.9;margin-top:.5mm;line-height:1.3}
-.lvtask{font-size:7pt;color:var(--muted);line-height:1.3;margin:.9mm 0 1.2mm;
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.card.lvcard em{display:block;font-style:normal;font-size:6.8pt;font-weight:700;color:var(--muted);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  text-transform:uppercase;letter-spacing:.06em;margin-top:.6mm}
 
-/* ---- the strips to cut ---- */
-.striphead{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  font-size:7.4pt;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-  font-weight:700;margin:0 0 1.6mm}
 
-/* Cells packed to their own width, not bars across the page. A short part sits
-   beside its neighbours instead of holding a line open, which is most of what
-   buys the second set on the sheet. Still a bordered box to cut around. */
-.strips{display:flex;flex-wrap:wrap;align-content:flex-start;gap:1.1mm;margin-bottom:1.8mm}
-.strip{border:1.1px dashed var(--rule);border-radius:1.5px;padding:1.1mm 1.8mm;
-  font-size:9pt;line-height:1.25;background:#fff;max-width:100%}
-.strip .in{border-radius:2px;padding:0 1.5px}
-.cutline{display:flex;align-items:center;gap:2mm;margin:2.4mm 0;color:var(--muted)}
-.cutline:before,.cutline:after{content:"";flex:1;border-top:1.1px dashed var(--rule)}
-.cutline span{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  font-size:6.6pt;letter-spacing:.08em;text-transform:uppercase;font-weight:700;white-space:nowrap}
 
 /* ---- the key ---- */
 .keys{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:2.6mm}
@@ -122,10 +119,6 @@ body{background:var(--bg);color:var(--ink);
 .krow .kh span{font-size:7.6pt;color:var(--muted);font-weight:700}
 .krow .kt{font-size:10.2pt;line-height:1.5}
 
-.sets{flex:1;display:flex;flex-direction:column;justify-content:flex-start}
-.setnote{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  font-size:6.4pt;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-  font-weight:700;margin-bottom:1mm}
 .foot{margin-top:2mm;padding-top:2mm;border-top:1px solid var(--line);
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       font-size:6.4pt;color:var(--muted);line-height:1.36}
@@ -142,7 +135,7 @@ body{background:var(--bg);color:var(--ink);
   .sheet{width:auto;min-height:277mm;margin:0;padding:0;border:0;box-shadow:none;break-after:page}
   .sheet:last-of-type{break-after:auto}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .strip,.board,.done,.krow{break-inside:avoid}
+  .strip,.board,.done,.krow,.card,.col{break-inside:avoid}
 }
 </style>
 </head>
@@ -274,58 +267,36 @@ function render({B,L}){
     return;
   }
 
-  const colourKey = `<div class="key">
-    <span><b class="c-idea">the idea</b> what it is about</span>
-    <span><b class="c-verb">the verb</b> what the writing does</span>
-    <span><b class="c-q">the evidence</b> her words</span>
-    <span><b class="c-eff">the effect</b> what we understand</span>
-    <span><b class="c-subj">the subject</b></span>
-    <span><b class="c-con">joiners</b></span>
-  </div>`;
   const foot = `Part B of the Analysis workshop (BoneSparrowReadingHub.html), on paper. Every part is a tile from the app's own bank, read from the hub at load time. ${esc(B.prompt)} ${esc(B.where)}. The Bone Sparrow, Zana Fraillon, Hachette Australia, 2016.`;
 
+  /* One sheet per theme, four complete sets on it, and nothing on the page that
+     is not a card. The teacher cuts three vertical lines and hands a column to
+     each student; the student cuts their own column into cards. The level
+     cards are what tell the two piles apart, which is why the parts under each
+     one are scrambled — read straight down an uncut column and you would have
+     the sentence. */
   const packs = Object.keys(CLIMB).map(f=>{
     const C = CLIMB[f];
-    const pile = n => `
-      <div class="lvband"><span class="lv">Level ${n} — ${esc(lvl(n).focus)}</span>
-        <span class="ct">${stripParts(C["r"+n]).length} parts</span>
-        <span class="vic">“${esc(lvl(n).vic)}”</span></div>
-      <div class="lvtask">${esc(lvl(n).goal)}</div>
-      ${stripsFor(n)}`;
-    const stripsFor = n => {
+    const cards = n => {
       const parts = stripParts(C["r"+n]);
       const order = SCRAMBLE[parts.length] || parts.map((_,i)=>i);
-      return `<div class="strips">${order.map(i=>{
-        const p = parts[i];
-        return `<div class="strip"><span class="in ${CLASSOF[p.k]}">${esc(p.t)}</span></div>`;
-      }).join("")}</div>`;
+      return `<div class="card lvcard"><b>Level ${n} — ${esc(lvl(n).focus)}</b>
+          <i>“${esc(lvl(n).vic)}”</i>
+          <span>${esc(lvl(n).goal)}</span>
+          <em>${parts.length} cards below</em></div>` +
+        order.map(i=>{
+          const p = parts[i];
+          return `<div class="card"><span class="${CLASSOF[p.k]}">${esc(p.t)}</span></div>`;
+        }).join("");
     };
-    const set = n => `
-      <header class="head">
-        <div class="kicker">The climb · ${esc(C.label)} · ${esc(B.where)}</div>
-        <h1>Two done, two to build</h1>
-        <p>Levels 5 and 6 are the same sentence, lifted once. Cut the parts and join Level 7, then Level 8, into your book.</p>
-      </header>
-      ${colourKey}
-      <div class="done">
-        <div class="dh"><span class="lv">Level 5</span><span class="tag">done for you</span></div>
-        <div class="ds">${sentence(C.r5)}</div>
-      </div>
-      <div class="done">
-        <div class="dh"><span class="lv">Level 6</span><span class="tag">done for you — the quote moved inside</span></div>
-        <div class="ds">${sentence(C.r6)}</div>
-      </div>
-      ${pile(7)}
-      ${pile(8)}`;
-    return `
-  <section class="sheet">
-    <div class="sets">
-      <div><div class="setnote">Set 1 of 2 on this sheet</div>${set(1)}</div>
-      <div class="cutline"><span>cut along here — one set each</span></div>
-      <div><div class="setnote">Set 2 of 2 on this sheet</div>${set(2)}</div>
-    </div>
-    <p class="foot">${foot}</p>
-  </section>`;
+    const col = `
+      <div class="col">
+        <div class="card donecard"><b>Level 5</b>${sentence(C.r5)}</div>
+        <div class="card donecard"><b>Level 6</b>${sentence(C.r6)}</div>
+        ${cards(7)}
+        ${cards(8)}
+      </div>`;
+    return `<section class="sheet cardsheet">${col+col+col+col}</section>`;
   }).join("");
 
   const key = `
