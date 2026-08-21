@@ -333,28 +333,31 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
    large and the slide never scrolls if it can be helped. It borrows the
    workshop's tile and colour classes so what the room sees on the wall is what
    students meet on their screens. */
-.teach{max-width:1100px;margin:0 auto;padding:6px 0 30px}
+.teach{max-width:1400px;margin:0 auto;padding:6px 0 20px;min-height:calc(100vh - 150px);
+  display:flex;flex-direction:column}
 .tmbar{display:flex;align-items:center;gap:12px;margin:0 0 14px}
 .tmtag{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
   background:var(--ink);color:#fff;border-radius:99px;padding:3px 10px}
 .tmcount{font-size:12px;color:var(--muted)}
 .tmbar .linkbtn{margin-left:auto}
-.tmh{font-size:clamp(26px,4.2vw,44px);line-height:1.06;margin:0 0 10px}
+.tmh{font-size:clamp(28px,4.6vw,52px);line-height:1.05;margin:0 0 12px}
 .tmlead{font-size:clamp(15px,1.9vw,21px);line-height:1.45;color:var(--ink);margin:0 0 20px;max-width:44em}
-.tmnav{display:flex;gap:10px;margin-top:26px}
+.tmnav{display:flex;gap:10px;margin-top:auto;padding-top:18px}
 .tmnav .btn{font-size:16px;padding:11px 20px}
 
-.tmsent{font-family:Georgia,serif;font-size:clamp(21px,2.9vw,33px);line-height:1.6;background:#fff;
-  border:1px solid var(--line);border-radius:14px;padding:24px 28px;margin:0 0 18px}
-.tmbrief{font-size:clamp(17px,2.1vw,23px);line-height:1.5;max-width:38em}
+.tmsent{font-family:Georgia,serif;font-size:clamp(24px,3.4vw,42px);line-height:1.55;background:#fff;
+  border:1px solid var(--line);border-radius:16px;padding:min(5vh,34px) min(4vw,38px);margin:0 0 18px;
+  display:flex;align-items:center;flex:1}
+.tmbrief{font-size:clamp(18px,2.4vw,28px);line-height:1.45;max-width:40em}
 .tmnote{font-size:15px;color:var(--muted);font-style:italic;margin-top:14px}
 .tmh-idea{color:var(--idea-tx)} .tmh-verb{color:var(--verb-tx)}
 .tmh-ev{color:var(--ev-tx)}     .tmh-eff{color:var(--eff-tx)}
-.tmfour{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:10px 0 6px}
+.tmfour{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:0;flex:1;align-content:center}
 @media (max-width:820px){.tmfour{grid-template-columns:repeat(2,1fr)}}
-.tmf{border-radius:14px;padding:min(7vh,44px) 16px;text-align:center;border:1px solid var(--line)}
-.tmf b{display:block;font-family:Georgia,serif;font-size:clamp(26px,3.4vw,42px);line-height:1.05}
-.tmf span{display:block;margin-top:6px;font-size:clamp(17px,2.1vw,26px);font-weight:700;opacity:.75}
+.tmf{border-radius:16px;padding:min(9vh,60px) 16px;text-align:center;border:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:center}
+.tmf b{display:block;font-family:Georgia,serif;font-size:clamp(30px,4.2vw,54px);line-height:1.05}
+.tmf span{display:block;margin-top:8px;font-size:clamp(19px,2.6vw,32px);font-weight:700;opacity:.75}
 .tmf-idea{background:var(--idea-bg);color:var(--idea-tx)}
 .tmf-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .tmf-ev{background:var(--ev-bg);color:var(--ev-tx)}
@@ -1944,10 +1947,26 @@ const WK_BUILD = {
    The sentence is read out of WK_WALL at render time, so the deck cannot
    drift from the wall the students place. Nothing here is scored or saved.
    =========================================================================== */
-/* Teacher mode is two things: the builder holding a Year 4 sentence, lifted in
-   one pass to Year 7, and then one slide of four colours. Nothing else. Those
-   four questions are the whole of what a student keeps in their head while
-   they write, so they are the only thing that goes on the wall afterwards. */
+/* Teacher mode runs in three moves: five slides that light one part of a real
+   Year 7 sentence at a time, the builder lifting a Year 4 sentence to Year 7 in
+   one pass, and a last slide of four colours to leave on the wall. */
+const TEACH = {
+ slides:[
+ { k:"title", h:"" },
+ { k:"part", c:"idea", h:"The idea",
+   brief:"What the sentence is about, underneath the plot. It is arguable: the same moment could carry fear, or survival, and you would have to defend your pick." },
+ { k:"part", c:"verb", h:"The analytical verb",
+   brief:"\u201CShows\u201D reports that something happened. \u201CRevealed\u201D claims the writing uncovers it. At Level 7 the reporting verbs are taken away." },
+ { k:"part", c:"ev", h:"The evidence",
+   brief:"The author's own words, inside the sentence. Lift the quote marks out and it still reads." },
+ { k:"part", c:"eff", h:"The effect on the reader",
+   brief:"What the writing makes a reader understand. Not a feeling: \u201Cthe fear is physical before it is anything else\u201D is a claim, and the claim is what gets marked." },
+ { k:"rails", h:"Now lift a Year 4 sentence to Year 7" }
+ ]
+};
+
+
+/* The four questions, which is all a student has to hold while they write. */
 const TEACH_COLOURS = [
   { c:"idea", t:"Idea",     q:"what" },
   { c:"eff",  t:"Purpose",  q:"why"  },
@@ -2829,6 +2848,7 @@ function renderWkBuild(){
   <h2>${esc(WK_BUILD.prompt)}</h2>`;
   if(WK.rails){
     h+=`<div class="railbar noprint"><b>Teacher demo</b> · nothing here is saved
+      <button class="linkbtn" onclick="runTeach(0)">back to the slides</button>
       <button class="linkbtn" onclick="teachColours()">the four colours</button>
       <button class="linkbtn" onclick="go('home')">leave the demo</button></div>`;
   }
@@ -3545,7 +3565,59 @@ function morphPopClose(){ const pp=$("morphpop"); if(pp) pp.remove(); }
    teacher does at the front of the room can touch a student's saved work. */
 let TM=null;
 
-function runTeach(){ teachRails(); }
+function runTeach(at){
+  TM={i: at||0};
+  document.addEventListener("keydown", teachKeys);
+  renderTeach();
+}
+function teachNext(){ if(TM.i < TEACH.slides.length-1){ TM.i++; renderTeach(); } }
+function teachPrev(){ if(TM.i > 0){ TM.i--; renderTeach(); } }
+
+/* The Year 7 wall sentence with every colour on, or with all but one class
+   unwrapped to plain ink, so each slide lights a single part. */
+function teachSentence(only){
+  const r=WK_WALL.resps.find(x=>x.id==="w7");
+  let h=r.h||esc(r.t);
+  if(only) h=h.replace(/<em class="hl-(\w+)">([^]*?)<\/em>/g,
+    (m,cls,text)=> cls===only ? m : text);
+  return h;
+}
+
+function renderTeach(){
+  const sl=TEACH.slides[TM.i], n=TEACH.slides.length;
+  if(sl.k==="title") sl.h=WK_WALL.q;
+  let inner="";
+  if(sl.k==="title"){
+    inner=`<div class="tmsent">${teachSentence(null)}</div>${wkColourKey()}`;
+  } else if(sl.k==="part"){
+    inner=`<div class="tmsent">${teachSentence(sl.c)}</div>
+      <p class="tmbrief">${sl.brief}</p>`;
+  } else if(sl.k==="rails"){
+    /* the sentence the builder is holding, in the same colours, so the room
+       reads it before anyone touches a tile */
+    inner=`<div class="tmsent"><span>Subhi <em class="hl-verb">shows</em> <em class="hl-idea">fear in the camp</em>.
+      <em class="hl-ev">\u201CMy throat is as dry as the dirt\u201D</em> which
+      <em class="hl-eff">makes you feel sorry for him</em>.</span></div>`;
+  }
+  const last = TM.i===n-1;
+  $("body").innerHTML=`<div class="teach">
+    <div class="tmbar noprint">
+      <span class="tmtag">Teacher mode</span>
+      <span class="tmcount">${TM.i+1} / ${n}</span>
+      <button class="linkbtn" onclick="teachExit()">Leave the deck (Esc)</button>
+    </div>
+    ${sl.h?`<h1 class="tmh ${sl.k==="part"?"tmh-"+sl.c:""}">${esc(sl.h)}</h1>`:""}
+    ${sl.lead?`<p class="tmlead">${sl.lead}</p>`:""}
+    ${inner}
+    <div class="tmnav noprint">
+      <button class="btn btn-ghost" onclick="teachPrev()" ${TM.i===0?"disabled":""}>← Back</button>
+      ${last ? `<button class="btn btn-primary" onclick="teachRails()">Open the builder demo →</button>`
+             : `<button class="btn btn-primary" onclick="teachNext()">Next →</button>`}
+    </div>
+  </div>`;
+}
+
+
 function teachExit(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
@@ -3553,7 +3625,9 @@ function teachExit(){
 }
 function teachKeys(e){
   if(!TM) return;
-  if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
+  if(e.key==="ArrowRight"||e.key===" "||e.key==="PageDown"){ e.preventDefault(); if(TM.i!==undefined) teachNext(); }
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); if(TM.i!==undefined) teachPrev(); }
+  else if(e.key==="Escape"){ e.preventDefault(); teachExit(); }
 }
 
 /* The one slide: four colours, four questions, nothing else on it. */
@@ -3571,6 +3645,7 @@ function teachColours(){
       `<div class="tmf tmf-${c.c}"><b>${esc(c.t)}</b><span>${esc(c.q)}</span></div>`).join("")}</div>
     <div class="tmnav noprint">
       <button class="btn btn-ghost" onclick="teachRails()">← back to the demo</button>
+      <button class="btn btn-ghost" onclick="runTeach(0)">the slides</button>
       <button class="btn btn-primary" onclick="teachExit()">Done</button>
     </div>
   </div>`;

@@ -94,7 +94,7 @@ h1{font-size:calc(56pt * var(--paper-k));line-height:.95;color:var(--deep);lette
 .pv{display:flex;gap:calc(3mm * var(--paper-k));font-size:calc(16pt * var(--paper-k) * var(--k2,1));line-height:1.35}
 .pv .g{flex:none;font-size:.9em;line-height:1.5}
 
-.cont{display:grid;gap:calc(1.6mm * var(--paper-k))}
+.cont{display:grid;gap:calc(1.6mm * var(--paper-k));margin-top:auto}
 .cr{display:grid;grid-template-columns:calc(58mm * var(--paper-k)) 1fr;border:1px solid var(--line);
     border-radius:8px;overflow:hidden}
 .cr .cn{padding:calc(3.4mm * var(--paper-k)) calc(4mm * var(--paper-k));font-weight:800;
@@ -104,8 +104,6 @@ h1{font-size:calc(56pt * var(--paper-k));line-height:.95;color:var(--deep);lette
         font-size:calc(15pt * var(--paper-k) * var(--k2,1));line-height:1.35}
 .cr.gap .cd{color:var(--muted);font-style:italic}
 
-.foot{margin-top:auto;padding-top:calc(3mm * var(--paper-k));border-top:1px solid var(--line);
-      font-size:calc(9pt * var(--paper-k));color:var(--muted);line-height:1.4}
 
 /* ---------- two channels: colour AND line pattern ---------- */
 .m{font-weight:600;text-decoration-line:underline;text-underline-offset:3px;text-decoration-thickness:1.6px}
@@ -174,7 +172,11 @@ h1{font-size:calc(56pt * var(--paper-k));line-height:.95;color:var(--deep);lette
 const WALL = {
   title: "The Bone Sparrow · analytical writing",
   expected: "Level 7",
-  foot: "Worked examples respond to the opening of chapter 1, the Night Sea. Zana Fraillon, <i>The Bone Sparrow</i>, Hachette Australia, 2016, pp. 1-2. Continuum wording quoted from the school's Learning Continuum master sheet, English tab."
+  /* No footer on the printed sheets. Provenance, for this file rather than
+     the wall: the worked examples respond to the opening of chapter 1, the
+     Night Sea (Zana Fraillon, The Bone Sparrow, Hachette Australia, 2016,
+     pp. 1-2), and CONTINUUM below quotes the school's Learning Continuum
+     master sheet, English tab, verbatim. */
 };
 
 /* The five, in the order they appear in a sentence and in the workshop's key. */
@@ -371,7 +373,7 @@ const used = lv => CRITERIA.filter(c => EXPLANATIONS[lv][c.key]);
 const plain = lv => EXAMPLES[lv].replace(/\{(\w+)\|([^}]*)\}/g,"$2");
 const clamp = (lo,v,hi) => Math.min(hi, Math.max(lo, v));
 function scale(lv){
-  const target = EARLY_LEVELS.includes(lv) ? 700 : 500;
+  const target = EARLY_LEVELS.includes(lv) ? 760 : 560;
   const k  = clamp(0.92, Math.sqrt(target / plain(lv).length), 3.0);
   const k2 = clamp(0.96, Math.pow(k, 0.4), 1.3);
   return `--k:${k.toFixed(3)};--k2:${k2.toFixed(3)}`;
@@ -402,7 +404,6 @@ document.getElementById("out").innerHTML = LADDER.map(lv=>{
           <div class="cn"><span>${c.glyph}</span><span>${esc(nameFor(c,lv))}</span></div>
           <div class="cd">${d?esc(d):""}</div></div>`;}).join("")}</div>
 
-    <p class="foot">${WALL.foot}</p>
   </section>`;
 }).join("");
 </script>
