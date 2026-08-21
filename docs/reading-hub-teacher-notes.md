@@ -167,30 +167,31 @@ blank.
 
 ## Teacher mode: the slides, then the builder on rails
 
-The reading hub home screen and Part A of the Analysis workshop both carry a
-**Teacher mode · slides** link. One key drives it: **→** for next, **←** for
-back, **Esc** to leave.
+The Analysis workshop carries a **teacher mode** link in its breadcrumb, in
+both Part A and Part B, and there is a **▶ Teacher mode** button in the hub's
+top bar. It also has its own address: `BoneSparrowReadingHub.html#teach`.
 
-Six slides, one sentence. The sentence is the Year 7 response from the WAGOLL
-wall, read out of the workshop's own data, so the deck cannot drift from the
-wall the class places. The first slide shows it with all four colours on; the
-next four light one part at a time — idea, analytical verb, embedded evidence,
-effect on the reader — with a sentence of explanation each. That is the whole
-deck.
+Six slides, one sentence: the Year 7 response from the wall, read out of the
+workshop's own data so the deck cannot drift from it. The first slide shows it
+whole with the colour key; the next four light one part at a time, idea,
+analytical verb, evidence, effect on the reader, with a sentence each. There is
+no slide explaining what the deck is or which key to press. → and ← move, Esc
+leaves.
 
-The last slide opens the **builder on rails**: the real Part B, preloaded with
-a survival-focus sentence that is one tile short of Level 7. The flaw is
-"shows", which the builder itself flags as retired at that level, so the
-demonstration is the app's own feedback loop: press Check and it names the
-problem, tap the flagged tile out, drag "reveals" from the verb bank straight
-into the gap, Check again and Level 7 is reached. Three moves, and they are
-exactly the three moves students make. The focus picker is locked for the demo
-and a banner says so.
+The last slide opens the **builder on rails**: the real Part B, holding the
+Level 5 sentence students are handed for free, with the level set to 7. Three
+of its tiles have retired on the way up and the builder flags all three, so the
+demonstration is a climb rather than a swap. Trade the reporting verb for
+"reveals", grow "fear in the camp" into "the issue of fear in detention", trade
+"makes you feel sorry for him" for what the reader understands, and put the
+quote inside the sentence with "when he says" instead of after a full stop. The
+checker will also catch "which" colliding with a clause, which is the moment to
+show them "which shows". It lands on Level 7.
 
 Nothing in teacher mode is scored or saved. The rails flag turns every write to
-the student record into a no-op, so you can run the whole demonstration on a
-signed-in student's device — check, lift, even finish the climb — and their
-first attempts, kept sentences and progress are untouched.
+the student record into a no-op, so the whole demonstration can be driven on a
+signed-in student's device and their first attempts, kept sentences and
+progress are untouched.
 
 ## Dragging a tile into place
 
@@ -287,3 +288,17 @@ the whole rubric, Level 5 to 9, is on screen at once.
 
 **The cut-and-paste cards print two sets to a sheet**, halved along a marked
 rule. A class of 25 needs 25 card sets and 25 boards: 38 sheets rather than 50.
+
+## The label grows with the rung
+
+A Foundation student copies two words out of the book. They are not embedding
+evidence, and printing "Embedded evidence" over that colour on their sheet is
+the wrong word in the right place. The school's continuum agrees: "embed quotes
+into sentences" is Level 8.
+
+So the colour is constant and the name climbs. `NAME_AT` in the anchor sheets
+carries the exceptions: the yellow row reads **Words from the book** at
+Foundation to Level 5, **Evidence** at Levels 6 and 7, and **Embedded
+evidence** from Level 8, where the rubric says so. The green row reads **How it
+makes you feel** on the two access rungs before it becomes **Effect on the
+reader**.

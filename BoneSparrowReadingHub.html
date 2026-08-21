@@ -1921,30 +1921,28 @@ const WK_BUILD = {
    =========================================================================== */
 const TEACH = {
  slides:[
- { k:"title", h:"One sentence, four colours",
-   lead:"This is the Year 7 response from the wall. Every slide shows the same sentence, with one part lit up.",
-   note:"Drive with the → key, or the Next button. ← goes back. Esc leaves the deck." },
+ { k:"title", h:"" },
  { k:"part", c:"idea", h:"The idea",
-   brief:"What the sentence is about, underneath the plot. It is arguable — the same moment could carry fear, or survival, and you would have to defend your pick." },
+   brief:"What the sentence is about, underneath the plot. It is arguable: the same moment could carry fear, or survival, and you would have to defend your pick." },
  { k:"part", c:"verb", h:"The analytical verb",
-   brief:"The verb that carries the thinking. \u201CShows\u201D only reports that something happened; \u201Crevealed\u201D claims the writing uncovers it. At Level 7 the reporting verbs are taken away." },
- { k:"part", c:"ev", h:"The embedded evidence",
-   brief:"The author's own words, inside the sentence. Lift the quotation marks out and the sentence still reads — that is the test of an embedded quote." },
+   brief:"\u201CShows\u201D reports that something happened. \u201CRevealed\u201D claims the writing uncovers it. At Level 7 the reporting verbs are taken away." },
+ { k:"part", c:"ev", h:"The evidence",
+   brief:"The author's own words, inside the sentence. Lift the quote marks out and it still reads." },
  { k:"part", c:"eff", h:"The effect on the reader",
    brief:"What the writing makes a reader understand. Not a feeling: \u201Cthe fear is physical before it is anything else\u201D is a claim, and the claim is what gets marked." },
- { k:"rails", h:"Now fix one, live",
-   lead:"The builder opens with a survival sentence one tile short of Level 7. The flagged tile comes out with a tap; its replacement drags straight from the bank into the gap. Check it, and the level is reached — that is the whole app, in three moves." }
+ { k:"rails", h:"Lift this one to Level 7" }
  ]
 };
 
-/* The rails sentence, in the starter pair format wkStarter reads. Every entry
-   is a real tile from WK_BUILD's banks; "shows" is the deliberate flaw, retired
-   at Level 7, so the builder itself flags the tile to fix. */
-const TEACH_RAILS = [
-  ["subj","Eli's advice"], ["verb","shows"], ["idea","the issue of survival inside the fences"],
-  ["con","when he says"], ["q","Never let anyone see your scared"],
-  ["con","which shows"], ["eff","that the boys have learned survival rules no child should need"]
-];
+/* The demo starts on the Level 5 sentence students are handed for free, with
+   the level set to 7. Three of its tiles retire on the way up and the builder
+   flags all three, so the demonstration is one climb rather than one swap:
+   trade the reporting verb, grow the idea into an issue, trade the feeling for
+   what the reader understands, and put the quote inside the sentence instead
+   of after a full stop. */
+const TEACH_RAILS_FOCUS = "fear";
+const TEACH_RAILS_LEVEL = 7;
+
 
 /* ==================== SHARED GLOSSARY (generated) ==========================
    Generated from the Vocab Hub's LESSONS + TR by scratchpad/gen_glossary.js —
@@ -2651,7 +2649,7 @@ function wallPage(n){ WK.wallStart=n; renderWall(); }
 function renderWall(){
   if(WK.wallStart===undefined) WK.wallStart=0;
   let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall
-</div>
+    <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button></div>
   <h2>${esc(WK_WALL.q)}</h2>
   <p class="lead">${esc(WK_WALL.note)} The <b>Example</b> row is the one you fill in.</p>
   ${wkColourKey()}`;
@@ -2803,12 +2801,11 @@ function wkText(canvas){
 
 function renderWkBuild(){
   const L=wkLevel();
-  let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb</div>
+  let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb${
+    WK.rails?"":` <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button>`}</div>
   <h2>${esc(WK_BUILD.prompt)}</h2>`;
   if(WK.rails){
-    h+=`<div class="railbar noprint"><b>Teacher demo.</b> This sentence is one tile short of Level 7 — the flagged tile is retired up here.
-      Tap it out, drag its replacement from the verb bank straight into the gap, then press Check.
-      Nothing in this demo is saved.
+    h+=`<div class="railbar noprint"><b>Teacher demo</b> · nothing here is saved
       <button class="linkbtn" onclick="runTeach(${TEACH.slides.length-1})">back to the slides</button>
       <button class="linkbtn" onclick="go('home')">leave the demo</button></div>`;
   }
@@ -3561,11 +3558,10 @@ function teachSentence(only){
 
 function renderTeach(){
   const sl=TEACH.slides[TM.i], n=TEACH.slides.length;
+  if(sl.k==="title") sl.h=WK_WALL.q;
   let inner="";
   if(sl.k==="title"){
-    inner=`<div class="tmsent">${teachSentence(null)}</div>
-      ${wkColourKey()}
-      <p class="tmnote">${esc(sl.note)}</p>`;
+    inner=`<div class="tmsent">${teachSentence(null)}</div>${wkColourKey()}`;
   } else if(sl.k==="part"){
     inner=`<div class="tmsent">${teachSentence(sl.c)}</div>
       <p class="tmbrief">${sl.brief}</p>`;
@@ -3579,7 +3575,7 @@ function renderTeach(){
       <span class="tmcount">${TM.i+1} / ${n}</span>
       <button class="linkbtn" onclick="teachExit()">Leave the deck (Esc)</button>
     </div>
-    <h1 class="tmh ${sl.k==="part"?"tmh-"+sl.c:""}">${esc(sl.h)}</h1>
+    ${sl.h?`<h1 class="tmh ${sl.k==="part"?"tmh-"+sl.c:""}">${esc(sl.h)}</h1>`:""}
     ${sl.lead?`<p class="tmlead">${sl.lead}</p>`:""}
     ${inner}
     <div class="tmnav noprint">
@@ -3598,19 +3594,10 @@ function renderTeach(){
 function teachRails(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
-  WK={armed:null, placed:{}, firstTried:{}, focus:"protect", canvas:[], harvested:[],
-      level:7, versions:{}, tried:{}, wallStart:0, climbStart:2, rails:true};
-  const lists={open:WK_BUILD.opens, subj:WK_BUILD.subjects, verb:WK_BUILD.verbs,
-               idea:WK_BUILD.ideas, eff:WK_BUILD.effects, con:WK_BUILD.cons};
-  TEACH_RAILS.forEach(([k,t])=>{
-    if(k==="q"){
-      const i=WK_BUILD.segs.findIndex(sg=>sg.t.includes(t));
-      if(i>=0){ if(!WK.harvested.includes(i)) WK.harvested.push(i); WK.canvas.push({k:"q",i}); }
-    } else {
-      const i=lists[k].findIndex(x=>x.t===t);
-      if(i>=0) WK.canvas.push({k,i});
-    }
-  });
+  WK={armed:null, placed:{}, firstTried:{}, focus:TEACH_RAILS_FOCUS, canvas:[], harvested:[],
+      level:TEACH_RAILS_LEVEL, versions:{}, tried:{}, wallStart:0, climbStart:0, rails:true};
+  const st=wkStarter(TEACH_RAILS_FOCUS);
+  WK.canvas=st.canvas; WK.harvested=st.harvested;
   screen="wk";
   $("homeBtn").style.display="inline";
   document.body.classList.add("wide");
