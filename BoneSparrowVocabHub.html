@@ -158,6 +158,7 @@
   /* ---- task shell (apply / review / tiers) ---- */
   .prompt{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
   .qtext{font-size:17px;line-height:1.6;margin-bottom:16px}
+  .qtext .hid{display:inline-block;min-width:52px;border-bottom:2px solid var(--ink);opacity:.55}
   .qtext .gap{display:inline-block;min-width:120px;border-bottom:2px solid var(--ink);text-align:center;font-weight:800;color:var(--earth)}
   .opts{display:flex;flex-direction:column;gap:8px}
   .opts.chips{flex-direction:row;flex-wrap:wrap}
@@ -2435,23 +2436,43 @@ function morphMap(word){
   return word.tiles ? word.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" + ")+" → <b>"+esc(word.w)+"</b>" : (word.note||"");
 }
 function genTypesFor(word){
+  /* Meaning to word is the item that actually teaches the vocabulary, so it is
+     the one students mostly get. The morphology items are here to support it —
+     they are not the point — so they come up about a third of the time. */
   if(!word.tiles) return ["meaningmatch"];
-  /* Only ask the word sum when the book holds other words built from the same
-     pieces. Without them there is nothing to confuse it with and the item is a
-     giveaway, so that word gets the other two instead. */
-  return wordsumSharers(word).length>=2 ? ["meaningmatch","wordsum","morphmeaning"] : ["meaningmatch","morphmeaning"];
+  const morph = wordsumSharers(word).length>=2 ? ["wordsum","morphmeaning"] : ["morphmeaning"];
+  return ["meaningmatch","meaningmatch","meaningmatch"].concat(morph);
 }
 
-/* A word sum shows the parts, so distractors drawn at random from the lesson can
-   be ruled out by skimming for the chunk on screen. These share morphemes with
-   the answer instead: same root where the book has one, otherwise the same
-   affix or the same ending, so the parts have to actually be read. */
+/* The definitions were written to be read next to the word, so half of them use
+   it: "Blind Anka learns to navigate by clicking her tongue". Asked as a
+   question that hands the answer over, so the word is blanked out of its own
+   definition — the example sentence still does its work. */
+function wordStem(w){
+  let s = w.toLowerCase().replace(/[^a-z]/g,"");
+  const full = s;
+  s = s.replace(/(ations?|ions?|ments?|ings?|edly|ed|ers?|ors?|ly|es|s)$/,"");
+  s = s.replace(/e$/,"");
+  const un = s.replace(/([bdfglmnprt])\1$/,"$1");
+  if(un.length>=4) s = un;
+  return s.length>=3 ? s : full;
+}
+function maskTarget(html, word){
+  const stem = wordStem(word);
+  if(stem.length<3) return html;
+  const re = new RegExp("\\b"+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[a-z\u2019']*\\b","gi");
+  return html.replace(re, '<span class="hid">&nbsp;</span>');
+}
+
+/* Distractors that look like the answer. Words built from the same parts first,
+   then words that start or end the same way, so the choice cannot be made on
+   the shape of the word alone. */
 function morphKey(piece){ return piece.replace(/[()\u2010-\u2015-]/g,"").toLowerCase(); }
 function wordsumSharers(word){
   const mine = (word.tiles||[]).map(t=>morphKey(t[0]));
   const roots = (word.tiles||[]).filter(t=>classifyMorph(t[0])==="root").map(t=>morphKey(t[0]));
   const tail = word.w.toLowerCase().slice(-4);
-  return ALL_WORDS.filter(x=>x.w!==word.w && x.tiles && x.tiles.length).map(x=>{
+  return lookalikePool(word).filter(x=>x.w!==word.w && x.tiles && x.tiles.length).map(x=>{
     const theirs = x.tiles.map(t=>morphKey(t[0]));
     let sc = 0;
     theirs.forEach(m=>{ if(roots.indexOf(m)>=0) sc+=5; else if(mine.indexOf(m)>=0) sc+=3; });
@@ -2459,12 +2480,45 @@ function wordsumSharers(word){
     return {w:x.w, sc, pos:x.pos};
   }).filter(x=>x.sc>0);
 }
+/* Only offer words the class has already met — a distractor from four chapters
+   ahead is a word they have never seen, which makes it easy to rule out and
+   spoils the word besides. Falls back to the whole book if that pool is thin. */
+function lookalikePool(word){
+  const out = [];
+  LESSONS.forEach(l=>{ const st=S.lessons[l.id]; if(st && st.studied) l.words.forEach(w=>out.push(w)); });
+  LESSON_BY_ID[WORD_LESSON[word.w]].words.forEach(w=>{ if(out.indexOf(w)<0) out.push(w); });
+  return out.length>=6 ? out : ALL_WORDS;
+}
+function lookalikeDistractors(word, n, pool){
+  const me = word.w.toLowerCase();
+  const mine = (word.tiles||[]).map(t=>morphKey(t[0]));
+  const roots = (word.tiles||[]).filter(t=>classifyMorph(t[0])==="root").map(t=>morphKey(t[0]));
+  const cands = pool || lookalikePool(word);
+  const scored = shuffle(cands.filter(x=>x.w!==word.w)).map(x=>{
+    const them = x.w.toLowerCase();
+    let sc = 0;
+    (x.tiles||[]).map(t=>morphKey(t[0])).forEach(m=>{
+      if(roots.indexOf(m)>=0) sc+=5; else if(mine.indexOf(m)>=0) sc+=3;
+    });
+    if(them.slice(-3)===me.slice(-3)) sc+=3;
+    if(them.slice(-4)===me.slice(-4)) sc+=2;
+    if(them.slice(0,3)===me.slice(0,3)) sc+=3;
+    if(x.pos===word.pos) sc+=1;
+    if(Math.abs(them.length-me.length)<=2) sc+=1;
+    return {w:x.w, sc};
+  }).filter(x=>x.sc>0);
+  scored.sort((a,b)=>b.sc-a.sc);                       /* pool was shuffled: ties stay random */
+  const out=[]; scored.forEach(x=>{ if(out.indexOf(x.w)<0 && out.length<n) out.push(x.w); });
+  if(out.length<n && pool) lookalikeDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  if(out.length<n) sameLessonDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  return out;
+}
 function wordsumDistractors(word, n){
   const scored = shuffle(wordsumSharers(word));        /* shuffled first: ties stay random */
   scored.forEach(x=>{ if(x.pos===word.pos) x.sc+=1; });
   scored.sort((a,b)=>b.sc-a.sc);
   const out=[]; scored.forEach(x=>{ if(out.indexOf(x.w)<0 && out.length<n) out.push(x.w); });
-  if(out.length<n) sameLessonDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  if(out.length<n) lookalikeDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
   return out;
 }
 
@@ -2494,8 +2548,8 @@ function genTask(gtype, word){
     return { type:"morphmeaning", q:`In <b>${esc(word.w)}</b>, what does the part <b>${esc(t[0])}</b> mean?`,
       a:t[1], opts:[t[1]].concat(wrong), explain:`<b>${esc(t[0])}</b> = ${esc(t[1])}. &nbsp; ${morphMap(word)}` };
   }
-  return { type:"meaningmatch", q:`Which word means this?<br><i>${esc(word.meaning)}</i>`,
-    a:word.w, opts:[word.w].concat(sameLessonDistractors(word,3)), explain:morphMap(word) };
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${maskTarget(esc(word.meaning), word.w)}</i>`,
+    a:word.w, opts:[word.w].concat(lookalikeDistractors(word,3)), explain:morphMap(word) };
 }
 
 /* ================= STEP 3 · USE THE WORDS ================= */
@@ -2712,9 +2766,8 @@ function reviewTaskFor(word, pool){
   const clozes=(word.apply||[]).filter(it=>it.type==="cloze");
   if(clozes.length && Math.random()<0.5) return Object.assign({}, pick(clozes));
   /* match word -> definition, with distractors drawn from the review pool */
-  const others=shuffle(pool.filter(x=>x.w!==word.w)).slice(0,3).map(x=>x.w);
-  const opts=[word.w].concat(others.length>=3?others:sameLessonDistractors(word,3));
-  return { type:"meaningmatch", q:`Which word means this?<br><i>${esc(word.meaning)}</i>`,
+  const opts=[word.w].concat(lookalikeDistractors(word, 3, pool));
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${maskTarget(esc(word.meaning), word.w)}</i>`,
     a:word.w, opts, explain:morphMap(word) };
 }
 function runReview(uptoIdx, opts){
