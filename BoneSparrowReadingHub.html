@@ -311,39 +311,49 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .changed .cup{color:var(--correct);background:var(--okbg);border:1px solid var(--correct)}
 .changed .cdown{color:var(--wrong);background:var(--badbg);border:1px solid var(--wrong)}
 .ctile.retired{outline:2px solid var(--wrong);opacity:.7;text-decoration:line-through}
-/* ---- teacher demo: the same machinery, smaller ----
-   A demonstration on a projector needs to be legible from the back and fit on
-   one screen. It does NOT need to be a pixel copy of what is on the student's
-   laptop, so on rails the tiles, the rubric table and the dock all come down a
-   size, the bank scrolls instead of growing, and the page stops scrolling. */
+/* ---- teacher demo: the same machinery, bigger ----
+   This is read from the back of a room, off a projector, by thirty people who
+   are not holding the mouse. Every size here is the student page's size times
+   --rk, so the demo scales as one thing rather than as thirty separate
+   numbers: raise --rk for a bigger room, and everything keeps its proportions.
+   The rubric table is down to its Example row on rails (see wagollTable), and
+   that is what pays for the scale — three rows of small print nobody reads
+   from row four, traded for a sentence they can. */
+body.rails{--rk:1.6}
+@media (max-height:820px){ body.rails{--rk:1.5} }    /* a 1366x768 laptop */
+@media (max-height:660px){ body.rails{--rk:1.4} }
+
 body.rails .container{max-width:min(1720px,99vw);padding:14px 18px}
-body.rails h2{font-size:17px;margin-bottom:4px}
+body.rails h2{font-size:calc(17px * var(--rk));margin-bottom:4px}
 body.rails .eyebrow{margin-bottom:2px}
-body.rails .wag2 .wcell{padding:5px 7px;font-size:11px;line-height:1.35}
-body.rails .wag2 .head .lvname{font-size:10.5px}
-body.rails .wag2 .focus{font-size:11.5px}
-body.rails .ckey{font-size:10.5px;margin-bottom:6px}
+body.rails .wag2 .wcell{padding:calc(5px * var(--rk)) calc(7px * var(--rk));
+  font-size:calc(11px * var(--rk));line-height:1.35}
+body.rails .wag2 .head .lvname{font-size:calc(10.5px * var(--rk))}
+.wag2.nolab .rowlab{padding:0;border-left:0;border-right:0}
+/* the sentence on the wall is the thing the room is looking at */
+body.rails .wag2 .ex .wresp{font-size:calc(12.5px * var(--rk));line-height:1.5}
+body.rails .wag2 .ex .wempty{font-size:calc(11px * var(--rk))}
+body.rails .wag2 .ex .giventag{font-size:calc(.6rem * var(--rk))}
+body.rails .ckey{font-size:calc(10.5px * var(--rk));margin-bottom:6px}
 body.rails .dock{padding:8px 0 6px}
-body.rails .canvas{min-height:44px;padding:7px;gap:5px}
-body.rails .ctile{font-size:12.5px;padding:4px 7px}
-body.rails .preview{font-size:14px;padding:7px 10px}
-body.rails .bins5{grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:6px;margin-bottom:8px}
+body.rails .canvas{min-height:calc(44px * var(--rk));padding:calc(7px * var(--rk));gap:calc(5px * var(--rk))}
+body.rails .ctile{font-size:calc(12.5px * var(--rk));padding:calc(4px * var(--rk)) calc(7px * var(--rk))}
+body.rails .preview{font-size:calc(14px * var(--rk));padding:calc(7px * var(--rk)) calc(10px * var(--rk))}
+body.rails .bins5{grid-template-columns:repeat(auto-fit,minmax(calc(132px * var(--rk)),1fr));gap:6px;margin-bottom:8px}
 body.rails .bin{padding:5px 6px}
-body.rails .bin h4{font-size:9px;margin-bottom:3px}
-body.rails .binbody{max-height:104px;overflow-y:auto;overflow-x:hidden;padding:5px;gap:4px}
-/* A 1366x768 laptop is the smallest screen these get projected from, and it
-   was 34px short. The bank is the block that can afford to scroll: it is a
-   list you pick from, not something you read straight through. */
-@media (max-height:820px){
-  body.rails .binbody{max-height:74px}
-  body.rails .wag2 .wcell{padding:4px 6px;font-size:10.5px}
-  body.rails .dock{padding:6px 0 4px}
-  body.rails .railbar{margin-bottom:6px}
-}
-body.rails .tile{font-size:11.5px;padding:4px 6px;border-radius:6px;line-height:1.3}
-body.rails .q{font-size:12px;margin:4px 0}
-body.rails .feedback{font-size:12.5px;padding:8px 10px}
-body.rails .railbar{padding:6px 10px;font-size:12.5px;margin-bottom:8px}
+body.rails .bin h4{font-size:calc(9px * var(--rk));margin-bottom:3px}
+/* The bank is the block that can afford to scroll: it is a list you pick from,
+   not something you read straight through. */
+body.rails .binbody{max-height:calc(104px * var(--rk));overflow-y:auto;overflow-x:hidden;padding:5px;gap:4px}
+@media (max-height:820px){ body.rails .binbody{max-height:calc(74px * var(--rk))} }
+body.rails .tile{font-size:calc(11.5px * var(--rk));padding:calc(4px * var(--rk)) calc(6px * var(--rk));
+  border-radius:6px;line-height:1.3}
+body.rails .q{font-size:calc(12px * var(--rk));margin:4px 0}
+body.rails .feedback{font-size:calc(12.5px * var(--rk));padding:8px 10px;
+  max-height:34vh;overflow-y:auto}
+body.rails .dock .btnrow{margin:0 0 4px}
+body.rails .railbar{padding:6px 10px;font-size:calc(12.5px * var(--rk));margin-bottom:8px}
+body.rails .btn{font-size:calc(14px * var(--rk))}
 
 /* the tile in your hand: fixed to the pointer, free of every container */
 .dragghost{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;margin:0;
@@ -2754,10 +2764,14 @@ function wagollTable(o){
                role="button" tabindex="0" title="Level ${levels[idx].n} — click to scroll">${inner}</div>`;
 
   const whole = vis.length===total;
-  let h=`<div class="wag2${pL<0?" nol":""}${pR<0?" nor":""}${whole?" whole":""}"
-    style="grid-template-columns:74px ${whole?"":"52px "}repeat(${COLS},1fr)${whole?"":" 52px 34px"}">`;
+  /* With one row on the wall there is nothing for a row-label column to label,
+     and at demo scale the word "Example" runs out of its 74px anyway. */
+  const nolab = o.labels===false;
+  const labW = nolab ? "0" : "74px";
+  let h=`<div class="wag2${pL<0?" nol":""}${pR<0?" nor":""}${whole?" whole":""}${nolab?" nolab":""}"
+    style="grid-template-columns:${labW} ${whole?"":"52px "}repeat(${COLS},1fr)${whole?"":" 52px 34px"}">`;
   /* header row */
-  h+=`<div class="wcell rowlab">${whole?"":`<button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button>`}</div>`;
+  h+=`<div class="wcell rowlab">${whole||nolab?"":`<button class="pager" ${start<=0?"disabled":""} onclick="${o.pageFn}(${start-1})" aria-label="earlier levels">‹</button>`}</div>`;
   /* the trailing pager column only exists while the table pages */
   if(!whole) h+=peek(pL,"l", pL<0?"":`<div class="lvname">${esc(levels[pL].lv||("Level "+levels[pL].n))}</div>`);
   vis.forEach(i=>{ const L=levels[i];
@@ -2768,20 +2782,25 @@ function wagollTable(o){
   if(!whole) h+=`<div class="wcell rowlab endpage"><button class="pager" ${start>=maxStart?"disabled":""} onclick="${o.pageFn}(${start+1})" aria-label="later levels">›</button></div>`;
 
   const row=(label, cellFn, peekFn)=>{
-    h+=`<div class="wcell rowlab">${label}</div>`;
+    h+=`<div class="wcell rowlab">${nolab?"":label}</div>`;
     if(!whole) h+=peek(pL,"l", pL<0?"":peekFn(pL));
     vis.forEach(i=>{ h+=cellFn(i); });
     if(!whole) h+=peek(pR,"r", pR<0?"":peekFn(pR));
     if(!whole) h+=`<div class="wcell rowlab"></div>`;
   };
-  row("Skill focus",
+  /* Which rows to draw. The demo asks for the wall and nothing else: on the
+     projector the rubric wording, the skill focus and the what-makes-it row
+     are three rows of small print nobody reads from the back, and the teacher
+     is saying all of it out loud anyway. */
+  const rows = o.rows || ["focus","vic","example","exp"];
+  if(rows.includes("focus")) row("Skill focus",
       i=>`<div class="wcell focus ${o.activeIdx===i?"active":""}">${esc(levels[i].focus||"")}</div>`,
       i=>esc(levels[i].focus||""));
-  row("The rubric",
+  if(rows.includes("vic")) row("The rubric",
       i=>`<div class="wcell vic ${o.activeIdx===i?"active":""}">${levels[i].vicH||esc(levels[i].vic||"")}</div>`,
       i=>esc(levels[i].vic||""));
-  row("Example", i=>o.exampleCell(i), i=>"");
-  row("What makes it",
+  if(rows.includes("example")) row("Example", i=>o.exampleCell(i), i=>"");
+  if(rows.includes("exp")) row("What makes it",
       i=>{ const got=o.doneIdx&&o.doneIdx(i); const fresh=(o.justIdx===i)?" reveal":"";
         return `<div class="wcell exp ${o.activeIdx===i?"active":""}${fresh}">`+
           (got?(levels[i].exp||""):`<span class="explock">fills in once you get this one</span>`)+`</div>`; },
@@ -2962,16 +2981,23 @@ function renderWkBuild(){
   if(idx<WK.climbStart) WK.climbStart=idx;
   else if(idx>WK.climbStart+wagollCols()-1) WK.climbStart=idx-wagollCols()+1;
   h+=wkColourKey();
+  /* The demo lifts a Year 4 sentence to Year 7 in one pass, so its wall is
+     those two columns: where the sentence started and where it is going. The
+     levels in between are a rung nobody stands on during the demonstration. */
+  const tLevels = WK.rails ? WK_LEVELS.filter(l=>l.n===5||l.n===TEACH_RAILS_LEVEL) : WK_LEVELS;
+  const tIdx = WK.rails ? tLevels.findIndex(l=>l.n===WK_LEVELS[idx].n) : idx;
   h+=wagollTable({
-    levels:WK_LEVELS, start:WK.climbStart, pageFn:"wkPage", activeIdx:idx, justIdx:WK.justIdx,
-    doneIdx:(k)=>!!WK.versions[WK_LEVELS[k].n],
+    levels: tLevels,
+    start:WK.rails?0:WK.climbStart, pageFn:"wkPage", activeIdx:tIdx, justIdx:WK.justIdx,
+    rows: WK.rails ? ["example"] : null, labels: WK.rails ? false : null,
+    doneIdx:(k)=>!!WK.versions[tLevels[k].n],
     exampleCell:(k)=>{
-      const lv=WK_LEVELS[k], mine=WK.versions[lv.n];
+      const lv=tLevels[k], mine=WK.versions[lv.n];
       const fresh=(WK.justIdx===k)?" justplaced":"";
       if(mine) return `<div class="wcell ex filled${fresh}">${mine.given?`<span class="giventag">done for you</span>`:""}<div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
-      if(k===idx) return `<div class="wcell ex now"><span class="wempty">you're writing this one now — build it below</span></div>`;
+      if(k===tIdx) return `<div class="wcell ex now"><span class="wempty">${WK.rails?"this is what we are building — watch the banks below":"you're writing this one now — build it below"}</span></div>`;
       if(lv.n===5 && !WK.rails) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
-      return `<div class="wcell ex"><span class="wempty">${k<idx?"—":"not yet"}</span></div>`;
+      return `<div class="wcell ex"><span class="wempty">${k<tIdx?"—":"not yet"}</span></div>`;
     }
   });
 
@@ -3004,9 +3030,19 @@ function renderWkBuild(){
      looking at the banks and the sentence at the same time, and on a laptop the
      banks push the sentence off the top of the screen exactly when a student
      needs to see what they are adding to. */
+  /* On rails the feedback and the Check button ride in the sticky dock with the
+     sentence, instead of sitting under the banks. The demo is set large enough
+     to read from the back, which means the page scrolls; the one thing a
+     teacher must never hunt for mid-demonstration is the button they press. */
+  const actions = `<div class="feedback" id="fb" aria-live="polite"></div>
+  <div class="btnrow" id="wkrow">
+    <button class="btn btn-primary" onclick="wkCheck()">Check my sentence</button>
+    <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
+  </div>`;
   h+=`<div class="dock">
     <p class="q">${WK.rails ? "The sentence" : "Your sentence"} — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
     <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
+    ${WK.rails?actions:""}
   </div>`;
 
   /* ---- banks, filtered to this level ---- */
@@ -3019,11 +3055,7 @@ function renderWkBuild(){
   h+=`<div class="bin effects"><h4>Purpose</h4><div class="binbody" id="wb-eff"></div></div>`;
   h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div></div>`;
 
-  h+=`<div class="feedback" id="fb" aria-live="polite"></div>
-  <div class="btnrow" id="wkrow">
-    <button class="btn btn-primary" onclick="wkCheck()">Check my sentence</button>
-    <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
-  </div>`;
+  if(!WK.rails) h+=actions;
   $("body").innerHTML=h;
   wkFillBins(); wkDraw(); wkAnimateFresh();
 }
@@ -3456,12 +3488,26 @@ function wkCheckTail(findings){
   if(level==="ok"){
     WK.versions[WK.level]={t:wkText(), h:wkTextHtml()};
     WK.justIdx=wkLevelIdx();
+    /* On rails the demo stops here, so nothing re-renders the wall afterwards
+       and the payoff — the two sentences side by side, where it started and
+       where it landed — would never appear. Fill the cell in place. */
+    if(WK.rails){
+      const cells=document.querySelectorAll(".wag2 .ex");
+      const cell=cells[cells.length-1];
+      if(cell){
+        cell.className="wcell ex filled justplaced";
+        cell.innerHTML=`<div class="wresp">${wkTextHtml()}</div>`;
+        const head=document.querySelectorAll(".wag2 .head");
+        const h=head[head.length-1]; if(h) h.classList.add("done");
+      }
+    }
     /* the highest rung they've written at — what the report quotes */
     if(!WK.rails){ S.wkLevel=Math.max(S.wkLevel||0, WK.level); save(); }
     const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
     fb.innerHTML="<b>Level "+WK.level+" reached.</b> "+esc(L.why)+
-      (next?" Now keep this sentence and rejig it — you don't start again, you lift what you've already got.":" That's the top of the ladder.");
+      (WK.rails ? " Same sentence, same quote — every part of it grew up. Both versions are on the wall above."
+        : next?" Now keep this sentence and rejig it — you don't start again, you lift what you've already got.":" That's the top of the ladder.");
     const btn=document.createElement("button");
     btn.id="liftBtn"; btn.className="btn btn-primary";
     /* the demo stops where it was aimed: Year 7, then the four colours */
@@ -3844,6 +3890,11 @@ function teachRails(){
       if(ti>=0) WK.canvas.push({k,i:ti});
     }
   });
+  /* The starting sentence goes on the wall, in the Level 5 column, before the
+     demo touches it. The whole point of the demo is the difference between
+     where it started and where it lands, and a class cannot see a difference
+     from one sentence. */
+  WK.versions[5]={t:wkText(WK.canvas), h:wkTextHtml(WK.canvas), given:true};
   screen="wk";
   $("homeBtn").style.display="inline";
   document.body.classList.add("wide","rails");
