@@ -206,6 +206,14 @@ Nothing in teacher mode is scored or saved. The rails flag turns every write to
 the student record into a no-op, so the demonstration can be driven on a
 signed-in student's device without leaving a mark on it.
 
+**On rails, the builder is stripped for the projector.** It is the same page
+the students use, not a mock-up, but the tile banks, the rubric table and the
+sentence tiles all shrink, and the parts that only matter when you are working
+alone — the passage to harvest quotations from, the running note of what
+unlocked and retired, the focus reminder — are hidden. The whole climb then
+fits on a 1366×768 projector without scrolling, with the Check button on
+screen, so nothing has to be hunted for mid-demonstration.
+
 ## Dragging a tile into place
 
 The builder used to make you tap a tile (which put it on the end of the
@@ -213,15 +221,20 @@ sentence) and then drag it back to where you wanted it. Now a tile drags
 **straight from the bank into the spot you want**, in one motion: pick it up,
 the sentence opens a gap where the pointer is, let go and it lands there.
 
-The mechanics, in case they ever need changing: a bank tile and a canvas tile
-run the same gesture, and the only difference is that a bank tile has no tile
-on the canvas yet, so the first movement past the threshold materialises one
-and everything after that is the identical code path. Under 8 pixels it is a
-tap, and a tap still means what it always did — on a bank tile it adds to the
-end, on a tile in the sentence it takes it out. Dragging a tile out of the
-canvas and dropping it well away cancels the add. It works with a mouse, a
-trackpad and a finger; the tiles set `touch-action:none` so a drag on a tablet
-does not scroll the page instead.
+The mechanics, in case they ever need changing: past an 8-pixel threshold the
+tile you picked up is cloned into a **floating copy that follows the pointer**,
+anywhere on the page — nothing enters the sentence while you are still moving.
+The sentence itself shows a **gap** at the position the tile would take, and
+only while the pointer is actually over it, so a student can carry a tile
+across the screen, change their mind, and see plainly that nothing has been
+placed yet. Letting go over the sentence drops the tile into the gap; letting
+go anywhere else drops it nowhere, and a tile dragged out of the sentence that
+way is simply put back in the bank. Under 8 pixels it is a tap, and a tap still
+means what it always did — on a bank tile it adds to the end, on a tile in the
+sentence it takes it out. Bank tiles and tiles already in the sentence run the
+identical gesture. It works with a mouse, a trackpad and a finger; the tiles
+set `touch-action:none` so a drag on a tablet does not scroll the page
+instead.
 
 ## The full WAGOLL wall, on its own address
 
