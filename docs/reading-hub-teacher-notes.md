@@ -146,6 +146,25 @@ catches it. The type scale is a formula with a floor and a ceiling, tuned so the
 longest sheet (Level 10) fits and the shortest (Foundation) is not swimming in
 white space.
 
+## The wall as cut and paste
+
+`BoneSparrowWallCards.html` is Part A on paper: three A4 portrait pages, print
+double-sided or separately.
+
+1. **The cards.** The five wall responses, shuffled and lettered A to E, dashed
+   borders to cut along, colour and underline patterns intact. The letters are
+   a fixed scramble, not a random one, so every printed set matches the key.
+2. **The board.** Five rubric rows, Level 5 to 9, each with the skill focus,
+   the rubric line in quotation marks, and a lined paste box sized for a card.
+3. **The key.** Letters against levels with each response's "why" line, for
+   your desk.
+
+Like the on-screen wall, it reads the responses and rubric wording out of the
+hub at load time, so it cannot drift from what students see. That means it has
+to be opened from the website (or any http serve of the folder), not
+double-clicked as a bare file; opened wrongly it says so instead of printing a
+blank.
+
 ## Teacher mode: the slides, then the builder on rails
 
 The reading hub home screen and Part A of the Analysis workshop both carry a

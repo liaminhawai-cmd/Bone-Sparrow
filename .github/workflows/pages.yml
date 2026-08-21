@@ -11,6 +11,7 @@ on:
       - "BoneSparrowVocabHub.html"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
+      - "BoneSparrowWallCards.html"
       - "GrammarHuboffline.html"
       - "bonesparrowtrainer.html"
       - "index.html"
@@ -42,6 +43,7 @@ jobs:
           cp BoneSparrowVocabHub.html dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
+          cp BoneSparrowWallCards.html dist/
           cp GrammarHuboffline.html dist/
           cp bonesparrowtrainer.html dist/
       - uses: actions/configure-pages@v5
