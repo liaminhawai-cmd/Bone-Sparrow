@@ -167,33 +167,32 @@ white space.
 ## The climb as cut and paste
 
 `BoneSparrowClimbCards.html` is Part B on paper — the sentence builder, with
-scissors. One pack per theme (fear in the body, power and control, protection
-and survival). **Two identical sets to a sheet**, halved along the middle rule,
-so one sheet serves two students — four A4 sheets in total, one per theme plus
-the key.
+scissors. One sheet per theme (fear in the body, power and control, protection
+and survival), plus one key sheet for your desk.
 
-1. **Two done.** The Level 5 and Level 6 sentences arrive written and
-   colour-coded, because the paper task should start where the difficulty
-   starts. Level 6's header says the one change: the quote moved inside.
-2. **Two to build.** Under each of Level 7 and Level 8 — its rubric line and
-   the task in a sentence — sits that sentence cut into parts, scrambled,
-   coloured on the same four-colour key as the app. Every part belongs in the
-   sentence; none are spare and none are wrong, so the task is ordering, not
-   elimination. Seven parts for Level 7, ten for Level 8. They are packed as
-   cells at their own width rather than bars across the page: "reveals" does
-   not need a line of its own, and the space that saves is what fits the second
-   set on the sheet. There are no ruled paste boxes either — the parts get
-   joined on the desk and stuck into an exercise book.
-3. **The key.** All six target sentences on one page for your desk.
+**Everything on a theme sheet is a card, and four complete sets fit on one A4.**
+Cut the three vertical lines, hand a column to each student, and they cut their
+own column into cards. Two copies of each theme sheet covers twenty-four
+students in **six A4 pages**.
 
-There was a Part A pack too — the five wall responses as cards to sort against
-the rubric — and it is gone. It cost three sheets a student before anybody had
-written anything, and the sorting it asked for is what the on-screen wall
-already does. The cut-and-paste link now points here.
+Down a column: the Level 5 and Level 6 sentences, written out and colour-coded,
+because the paper task should start where the difficulty starts. Then a **Level
+7 card** — its rubric line, the task in a sentence, and how many cards follow —
+and the seven parts of that sentence, scrambled. Then the same for Level 8, ten
+parts. Every part belongs in its sentence; none are spare and none are wrong,
+so the task is ordering, not elimination. The parts are scrambled precisely
+because they are printed in a column: read straight down an uncut one and you
+would have the sentence.
+
+The level cards are the only labels, and they earn it — they are what tells the
+two piles apart once the column is cut. There is otherwise no page furniture:
+no running head, no colour legend, no footer. A card sheet gets cut up, so
+anything on it that is not a card is either binned or cut through, and the four
+colours are already taught on the wall and in the app.
 
 **The parts are the app's own tiles.** Each pack is a list of tile names
 resolved against the hub's banks at load time, exactly the way the app lays
-its Level 5 freebie on the canvas. A student who joins the strips on the desk
+its Level 5 freebie on the canvas. A student who joins the cards on the desk
 has built a sentence the builder would accept — all nine sentences pass the
 hub's own grammar checker with no errors and no warnings. Rename a tile in the
 hub and this page refuses to print rather than handing out a part that no
@@ -202,6 +201,14 @@ longer exists.
 Level 8 carries **two quotations**, because its idea claims two perspectives
 and one quote cannot show two. That is also what makes it visibly bigger than
 Level 7 on the desk.
+
+There was a Part A pack too — the five wall responses as cards to sort against
+the rubric — and it is gone. It cost three sheets a student before anybody had
+written anything, and the sorting it asked for is what the on-screen wall
+already does. The cut-and-paste link now points here.
+
+Like everything that reads from the hub, it has to be opened from the website
+(or any http serve of the folder), not double-clicked as a bare file.
 
 ## Teacher mode: five slides, one climb, and the Frayer
 
