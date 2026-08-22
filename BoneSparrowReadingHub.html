@@ -380,6 +380,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
 .dock .q{margin-bottom:6px}
 .dock .canvas{margin-bottom:8px}
 .dock .preview{margin-bottom:8px}
+.dock .locked8{background:var(--okbg);border-color:var(--line);margin-bottom:6px}
 @media (max-width:700px){ .dock .q{font-size:12.5px} }
 
 .canvas{border:2px dashed var(--line);border-radius:10px;min-height:56px;padding:10px;background:#fff;
@@ -1815,11 +1816,10 @@ const WK_LEVELS = [
    vic:"I can analyse the way different people and perspectives are represented in the story",
    vicH:`I can <em class="hl-verb">analyse</em> the way different people and perspectives are <em class="hl-idea">represented</em> in the story`,
    eal:"C4+ — Interpret",
-   goal:"Make the representation itself your idea, and let the purpose question what the writing withholds.",
-   need:["open","subj","verb","idea","q","eff"],
-   exp:`The <i class="sw idea"></i> idea is now the <em class="hl-idea">representation itself</em>, and the <i class="sw eff"></i> purpose questions what the writing <em class="hl-eff">withholds</em>.`,
-   unlocks:"Representation-level ideas, positioning verbs and interpretive endings unlock.",
-   retires:"Issue-level ideas and reader-effect endings retire in favour of the interpretive ones.",
+   goal:"Your Level 8 sentence stays. Add a second sentence: the representation as your subject, a verb that says what it does to the reader, and an ending about what the writing withholds.",
+   need:["subj","verb","eff"],
+   exp:`A second sentence: the <i class="sw feat"></i> subject is the <em class="hl-idea">representation itself</em>, the <i class="sw verb"></i> verb says what it does to the reader, and the <i class="sw eff"></i> ending questions what the writing <em class="hl-eff">withholds</em>.`,
+   unlocks:"Representation subjects, positioning verbs and interpretive endings.",
    why:"You're questioning the representation itself. Top of the ladder." }
 ];
 
@@ -3028,8 +3028,8 @@ function renderWkBuild(){
   }
 
   /* ---- passage harvest: skipped on rails, where the quote is already in the
-         sentence and the passage is the tallest block on the page ---- */
-  if(!WK.rails){
+         sentence, and at Level 9, whose second sentence carries no quote ---- */
+  if(!WK.rails && WK.level!==9){
     h+=`<p class="q">Collect evidence — tap lines to add them to your quote tiles:</p>
     <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
     `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
@@ -3049,7 +3049,8 @@ function renderWkBuild(){
     <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
   </div>`;
   h+=`<div class="dock">
-    ${WK.rails?"":`<p class="q">Drag tiles into your sentence. Tap one to take it out.</p>`}
+    ${WK.level===9 && WK.versions[8] ? `<div class="preview locked8">${WK.versions[8].h}</div>` : ""}
+    ${WK.rails?"":`<p class="q">${WK.level===9?"Add your second sentence.":"Drag tiles into your sentence. Tap one to take it out."}</p>`}
     <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
     ${actions}
   </div>`;
@@ -3061,10 +3062,13 @@ function renderWkBuild(){
   if(WK.level>=8) h+=`<div class="bin opens"><h4>Lead-in</h4><div class="binbody" id="wb-open"></div></div>`;
   h+=`<div class="bin subjects"><h4>Subjects</h4><div class="binbody" id="wb-subj"></div></div>
       <div class="bin verbs"><h4>Verbs</h4><div class="binbody" id="wb-verb"></div></div>`;
-  h+=`<div class="bin ideas"><h4>Idea</h4><div class="binbody" id="wb-idea"></div></div>`;
-  h+=`<div class="bin quotes"><h4>Evidence</h4><div class="binbody" id="wb-q"></div></div>`;
+  if(WK.level!==9){
+    h+=`<div class="bin ideas"><h4>Idea</h4><div class="binbody" id="wb-idea"></div></div>`;
+    h+=`<div class="bin quotes"><h4>Evidence</h4><div class="binbody" id="wb-q"></div></div>`;
+  }
   h+=`<div class="bin effects"><h4>Purpose</h4><div class="binbody" id="wb-eff"></div></div>`;
-  h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div></div>`;
+  if(WK.level!==9) h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div>`;
+  h+=`</div>`;
 
 
   $("body").innerHTML=h;
@@ -3079,10 +3083,11 @@ function wkHarvest(i){
 }
 
 function wkFillBins(){
-  const fill=(elId, list, kind, cls)=>{
+  const fill=(elId, list, kind, cls, only)=>{
     const bin=$(elId); if(!bin) return;
     bin.innerHTML="";
-    wkAvail(list).forEach(o=>{
+    let av=wkAvail(list); if(only) av=av.filter(only);
+    av.forEach(o=>{
       const b=document.createElement("button");
       b.className="tile "+cls;
       b.textContent=o.x.t;
@@ -3091,11 +3096,15 @@ function wkFillBins(){
       bin.appendChild(b);
     });
   };
-  fill("wb-open", WK_BUILD.opens, "open", "k-open");
-  fill("wb-subj", WK_BUILD.subjects, "subj", "k-subj");
-  fill("wb-verb", WK_BUILD.verbs, "verb", "k-verb");
+  /* At Level 9 the banks hold only the second sentence's parts: the three
+     representation subjects, the positioning verbs, the interpretive endings,
+     and the two Level 9 lead-ins. */
+  const p9 = WK.level===9;
+  fill("wb-open", WK_BUILD.opens, "open", "k-open", p9 ? o=>(o.x.lv||[5,9])[0]===9 : null);
+  fill("wb-subj", WK_BUILD.subjects, "subj", "k-subj", p9 ? o=>(o.x.lv||[5,9])[0]===9 : null);
+  fill("wb-verb", WK_BUILD.verbs, "verb", "k-verb", p9 ? o=>o.x.q==="pos" : null);
   fill("wb-idea", WK_BUILD.ideas, "idea", "k-idea");
-  fill("wb-eff",  WK_BUILD.effects, "eff", "k-eff");
+  fill("wb-eff",  WK_BUILD.effects, "eff", "k-eff", p9 ? o=>o.x.q==="interp" : null);
   fill("wb-con",  WK_BUILD.cons, "con", "k-con");
   const qbin=$("wb-q");
   if(qbin){
@@ -3499,7 +3508,11 @@ function wkCheckTail(findings){
   if(!WK.rails && !WK.tried["L"+WK.level]){ WK.tried["L"+WK.level]=true; recFirst("wk.build.L"+WK.level, level==="ok"); }
 
   if(level==="ok"){
-    WK.versions[WK.level]={t:wkText(), h:wkTextHtml()};
+    /* Level 9 goes on the wall as the pair: the kept Level 8 sentence and the
+       new one about the reader, together. */
+    WK.versions[WK.level] = (WK.level===9 && WK.versions[8])
+      ? {t:WK.versions[8].t+" "+wkText(), h:WK.versions[8].h+" "+wkTextHtml()}
+      : {t:wkText(), h:wkTextHtml()};
     WK.justIdx=wkLevelIdx();
     /* On rails the demo stops here, so nothing re-renders the wall afterwards
        and the payoff — the two sentences side by side, where it started and
@@ -3536,6 +3549,10 @@ function wkLift(){
   const next=WK_LEVELS[wkLevelIdx()+1];
   if(!next) return wkFinishClimb();
   WK.level=next.n;
+  /* Level 9 is a second sentence, not a fourth rewrite of the first: the
+     Level 8 sentence is kept and shown locked, the canvas clears, and the
+     banks come down to the three parts the new sentence needs. */
+  if(next.n===9) WK.canvas=[];
   renderWkBuild();
   const fb=$("fb");
   fb.className="feedback warn";
