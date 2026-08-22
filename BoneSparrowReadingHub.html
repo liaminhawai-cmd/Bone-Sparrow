@@ -3123,28 +3123,31 @@ function wkDraw(){
 }
 
 /* ---- one drag gesture, both directions ----
-   A bank tile and a canvas tile start the SAME gesture. The only difference is
-   that a bank tile has no canvas node yet, so the first move past the threshold
-   materialises one and the rest of the drag is the identical code path. That is
-   what makes "drag it straight into the middle of the sentence" one motion
-   instead of tap-to-the-end-then-drag-it-back.
+   A bank tile and a canvas tile start the SAME gesture. Past an 8px threshold
+   the tile you picked up is cloned into a floating copy that follows the
+   pointer anywhere on the page, and the sentence answers with a GAP showing
+   where it would land. Nothing enters the sentence until you let go over the
+   canvas, so the tile never jumps out of your hand into the box.
 
-   Under the 8px threshold it is a tap, and a tap keeps its old meaning: on a
-   bank tile it appends, on a canvas tile it removes. Bank tiles keep a real
-   click handler as well, so a keyboard or screen reader can still add one; the
-   _dragged flag swallows the click that follows a mouse drag.
+   Under the threshold it is a tap: on a bank tile it appends, on a canvas tile
+   it removes. That is handled once, in pointerup. Enter and Space are handled
+   separately, because the pointer path never fires for a keyboard.
 
-   Drag = move the DOM node only, no re-render mid-drag, so the handlers stay
-   alive. The model is committed from DOM order on every reorder rather than on
-   release: a lost pointerup (released off the page, capture denied) then cannot
-   leave WK.canvas behind the DOM, which used to make the next render shuffle
-   the sentence back. */
+   Drop away from the canvas and nothing is added; a canvas tile dragged out
+   that way goes back to the bank. */
 function wkBindDrag(el, o){
   const fromBank = !!o.make;
 
-  if(fromBank) el.addEventListener("click", ()=>{
-    if(el._dragged){ el._dragged=false; return; }
-    WK.canvas.push(o.make()); wkDraw();
+  /* A tap is handled once, in the pointer-up below. There used to be a click
+     listener here as well, guarded by a flag the drag rewrite stopped setting,
+     so every tap on a bank tile added the tile twice. Keyboard users need a
+     route in that the pointer path never fires for, and that is this: */
+  el.addEventListener("keydown", e=>{
+    if(e.key!=="Enter" && e.key!==" ") return;
+    e.preventDefault();
+    if(fromBank) WK.canvas.push(o.make());
+    else WK.canvas.splice(+el.dataset.idx, 1);
+    wkDraw();
   });
 
   el.addEventListener("pointerdown", e=>{
@@ -3235,7 +3238,6 @@ function wkBindDrag(el, o){
         clearGap(); wkDraw(); return;
       }
 
-      el._dragged=true;
       const landed = gap && gap.parentNode && ev && overCanvas(ev.clientX, ev.clientY);
       if(landed){
         /* read the slot off the gap itself, so what lands is what was shown */
