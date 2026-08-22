@@ -222,8 +222,6 @@ table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter
 .wag2 .ex.filled{background:var(--okbg)}
 .wag2 .ex.now{background:var(--bg);outline:2px solid var(--ink);outline-offset:-2px}
 .wag2 .ex .wresp{font-family:Georgia,serif;font-size:12.5px;line-height:1.55}
-.wag2 .ex .giventag{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  background:var(--bg);color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:1px 7px;margin:0 0 5px}
 .wag2 .ex .wempty{font-size:11px;color:var(--muted);font-style:italic}
 .wag2 .head.active,.wag2 .focus.active,.wag2 .vic.active,.wag2 .exp.active{background:#f6f1e4}
 .wag2 .head.done .lvname{color:var(--correct)}
@@ -333,7 +331,6 @@ body.rails .wag2 .head .lvname{font-size:calc(10.5px * var(--rk))}
 /* the sentence on the wall is the thing the room is looking at */
 body.rails .wag2 .ex .wresp{font-size:calc(12.5px * var(--rk));line-height:1.5}
 body.rails .wag2 .ex .wempty{font-size:calc(11px * var(--rk))}
-body.rails .wag2 .ex .giventag{font-size:calc(.6rem * var(--rk))}
 body.rails .ckey{font-size:calc(10.5px * var(--rk));margin-bottom:6px}
 body.rails .dock{padding:8px 0 6px}
 body.rails .canvas{min-height:calc(44px * var(--rk));padding:calc(7px * var(--rk));gap:calc(5px * var(--rk))}
@@ -1774,10 +1771,10 @@ const WK_LEVELS = [
    vic:"I can identify parts of the story that relate to key ideas",
    vicH:`I can identify parts of the story that relate to <em class="hl-idea">key ideas</em>`,
    eal:"C2 — Describe",
-   goal:"A complete simple sentence with all three parts: an idea, a quote, and what it makes the reader feel. This one is done for you.",
+   goal:"A complete simple sentence with all three parts: an idea, a quote, and what it makes the reader feel.",
    need:["subj","verb","idea","q","eff"],
    exp:`<i class="sw idea"></i> a plain idea, <i class="sw ev"></i> a quote, <i class="sw eff"></i> a general feeling — all three, each as simply as it can be done.`,
-   unlocks:"Pick a focus. This sentence is done for you.",
+   unlocks:"Pick a focus.",
    why:"You've written a complete analytical sentence — idea, evidence and purpose all present." },
  { n:6, name:"Describe with detail", focus:"Describe it, with evidence",
    vic:"I can describe characters and events that relate to key ideas",
@@ -2900,12 +2897,12 @@ function wkSetFocus(fid){
   if(startOfClimb && untouched){
     const st=wkStarter(fid);
     WK.canvas=st.canvas; WK.harvested=st.harvested.slice();
-    WK.versions[5]={t:wkText(st.canvas), h:wkTextHtml(st.canvas), given:true};
+    WK.versions[5]={t:wkText(st.canvas), h:wkTextHtml(st.canvas)};
   }
   renderWkBuild();
   if(startOfClimb && untouched){
     const fb=$("fb"); if(fb){ fb.className="feedback warn";
-    fb.innerHTML="<b>Level 5 is done for you.</b> At <b>Level 6</b>, weave the quote inside the sentence with a joiner."; }
+    fb.innerHTML="At <b>Level 6</b>, weave the quote inside the sentence with a joiner."; }
   }
 }
 
@@ -2989,9 +2986,9 @@ function renderWkBuild(){
     exampleCell:(k)=>{
       const lv=tLevels[k], mine=WK.versions[lv.n];
       const fresh=(WK.justIdx===k)?" justplaced":"";
-      if(mine) return `<div class="wcell ex filled${fresh}">${mine.given?`<span class="giventag">done for you</span>`:""}<div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
+      if(mine) return `<div class="wcell ex filled${fresh}"><div class="wresp">${mine.h||esc(mine.t)}</div></div>`;
       if(k===tIdx) return `<div class="wcell ex now"><span class="wempty">${WK.rails?"":"you're writing this one now — build it below"}</span></div>`;
-      if(lv.n===5 && !WK.rails) return `<div class="wcell ex"><span class="wempty">pick a focus below — this one comes done for you</span></div>`;
+      if(lv.n===5 && !WK.rails) return `<div class="wcell ex"><span class="wempty">pick a focus below</span></div>`;
       return `<div class="wcell ex"><span class="wempty">${k<tIdx?"—":"not yet"}</span></div>`;
     }
   });
@@ -3891,7 +3888,7 @@ function teachRails(){
      demo touches it. The whole point of the demo is the difference between
      where it started and where it lands, and a class cannot see a difference
      from one sentence. */
-  WK.versions[5]={t:wkText(WK.canvas), h:wkTextHtml(WK.canvas), given:true};
+  WK.versions[5]={t:wkText(WK.canvas), h:wkTextHtml(WK.canvas)};
   screen="wk";
   $("homeBtn").style.display="inline";
   document.body.classList.add("wide","rails");
