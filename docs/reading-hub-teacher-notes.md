@@ -408,6 +408,30 @@ now one option among several rather than the only door.
 If you add tiles at Level 9, check the count per focus rather than the total.
 The total looked healthy the whole time.
 
+## A wrong attempt narrows the banks
+
+A failed check now takes the tiles it named out of the banks, so a second
+attempt is chosen from a smaller, better set and the same trap is not sitting
+in front of the student again. Try a vague subject and "this" and "the book"
+leave the Subjects bank; try a review-word ending and it goes; try a plot line
+as evidence and it dims in the passage.
+
+**Only tiles the checker blamed by name go.** Never a tile that was merely
+present in a failed sentence, and never a word-order or pairing problem: a
+sentence can fail because the verb sits before the subject, and both tiles are
+correct. Deleting a right answer for a wrong reason would teach the opposite
+of the lesson. What can be culled is the closed list of things that cannot
+work at that level: a retired tile, a vague subject, a flat verb from Level 7
+up, a review-word idea or ending, and a quotation that carries no idea at all.
+
+Culls are keyed by **level and focus**, not globally. An ending culled for
+being the wrong theme comes back the moment the focus changes, because
+switching focus is one of the two fixes the message itself offers. Nothing is
+culled on rails: the demo never mutates anything.
+
+The banks visibly shrink and the findings already name each tile, so there is
+no note announcing what happened.
+
 ## Level 9 is now a second sentence
 
 Rewriting the same sentence a fourth time was still asking Year 7 students to
