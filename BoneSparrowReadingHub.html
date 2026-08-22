@@ -493,6 +493,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
 .switch.on .track{background:var(--correct)}
 .switch.on .track:after{left:20px}
 .gatednote{font-size:12px;color:var(--muted);font-style:italic}
+.passage .seg.spent{opacity:.4;cursor:default}
 /* The teacher button lives in the top bar, on every screen, because it was a
    line of small red text in a breadcrumb before and nobody could find it. */
 .teachbtn{font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
@@ -2709,7 +2710,7 @@ function evFinish(){
 let WK=null;
 function runWk(){
   WK={armed:null, placed:{}, firstTried:{}, focus:null, canvas:[], harvested:[],
-      level:6, versions:{}, tried:{}, wallStart:0, climbStart:0};
+      level:6, versions:{}, tried:{}, wallStart:0, climbStart:0, culled:{}};
   /* Shuffle the response bank. Listed in rubric order it can be placed top
      to bottom without reading a word of it. */
   WK.bank=WK_WALL.resps.map(r=>r.id);
@@ -2885,6 +2886,27 @@ function wkAvail(list){
     ((b.o.x.lv||[5,9])[0]-(a.o.x.lv||[5,9])[0]) || (a.k-b.k)).map(e=>e.o);
 }
 function wkRetired(x){ const lv=x.lv||[5,9]; return WK.level>lv[1]; }
+/* Tiles the checker has already blamed by name are taken out of the banks, so
+   a wrong attempt narrows what is left rather than leaving the same trap in
+   front of the student. Keyed by level AND focus: a tile culled for being the
+   wrong theme comes back if the focus changes, because switching focus is one
+   of the two fixes the message offers. Only tiles the checker named go: never
+   a tile that was merely present in a failed sentence, and never a word-order
+   or pairing problem, which would delete a right answer for a wrong reason. */
+function wkCullKey(kind, i){ return WK.level+"|"+(WK.focus||"")+"|"+kind+"|"+i; }
+function wkIsCulled(kind, i){ return !!WK.culled[wkCullKey(kind,i)]; }
+function wkCull(findings){
+  if(WK.rails) return 0;            /* the demo never mutates anything */
+  let n=0;
+  findings.forEach(f=>(f.cull||[]).forEach(c=>{
+    const k=wkCullKey(c.k, c.i);
+    if(!WK.culled[k]){ WK.culled[k]=true; n++; }
+  }));
+  /* A culled quote leaves the harvest too, so the passage does not show it
+     collected while its tile is gone from the bank. */
+  WK.harvested = WK.harvested.filter(i=>!wkIsCulled("q", i));
+  return n;
+}
 function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
 /* Resolve a starter recipe (kind + tile text) into canvas refs. */
 function wkStarter(fid){
@@ -3031,7 +3053,9 @@ function renderWkBuild(){
          sentence, and at Level 9, whose second sentence carries no quote ---- */
   if(!WK.rails && WK.level!==9){
     h+=`<p class="q">Collect evidence — tap lines to add them to your quote tiles:</p>
-    <div class="passage">`+WK_BUILD.segs.map((sg,i)=>`<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
+    <div class="passage">`+WK_BUILD.segs.map((sg,i)=>wkIsCulled("q",i)
+        ? `<span class="seg spent">${esc(sg.t)}</span> `
+        : `<span class="seg ${WK.harvested.includes(i)?"harv":""}" onclick="wkHarvest(${i})">${esc(sg.t)}</span> `).join("")+
     `<span class="pg">${esc(WK_BUILD.where)} — The Bone Sparrow, Zana Fraillon</span></div>`;
   }
 
@@ -3086,7 +3110,8 @@ function wkFillBins(){
   const fill=(elId, list, kind, cls, only)=>{
     const bin=$(elId); if(!bin) return;
     bin.innerHTML="";
-    let av=wkAvail(list); if(only) av=av.filter(only);
+    let av=wkAvail(list).filter(o=>!wkIsCulled(kind, o.i));
+    if(only) av=av.filter(only);
     av.forEach(o=>{
       const b=document.createElement("button");
       b.className="tile "+cls;
@@ -3108,8 +3133,9 @@ function wkFillBins(){
   fill("wb-con",  WK_BUILD.cons, "con", "k-con");
   const qbin=$("wb-q");
   if(qbin){
-    qbin.innerHTML = WK.harvested.length ? "" : `<span class="gatednote">Tap lines in the passage above to collect quotes.</span>`;
-    WK.harvested.forEach(i=>{
+    const live = WK.harvested.filter(i=>!wkIsCulled("q", i));
+    qbin.innerHTML = live.length ? "" : `<span class="gatednote">Tap lines in the passage above to collect quotes.</span>`;
+    WK.harvested.filter(i=>!wkIsCulled("q", i)).forEach(i=>{
       const sg=WK_BUILD.segs[i];
       const b=document.createElement("button"); b.className="tile k-q";
       b.textContent="“"+sg.t.replace(/^[‘’'"]+/,"").replace(/[‘’'".,]+$/,"")+"”";
@@ -3426,7 +3452,8 @@ function wkFindings(canvas, level, focus){
      every kind, so a retired IDEA was answered with a paragraph about verbs
      and feeling-endings, which is the wrong category and reads as a bug. */
   tiles.forEach(t=>{ if(wkRetired(t.d))
-    findings.push({sev:"err", text:"“"+t.d.t+"” belongs to a level you've passed. "+wkRetiredHint(t.c.k, level)}); });
+    findings.push({sev:"err", text:"“"+t.d.t+"” belongs to a level you've passed. "+wkRetiredHint(t.c.k, level),
+                   cull:[t.c]}); });
 
   /* what this level requires */
   L.need.forEach(k=>{
@@ -3461,7 +3488,8 @@ function wkFindings(canvas, level, focus){
   /* quality */
   const subj=tiles.filter(t=>t.c.k==="subj"), verbs=tiles.filter(t=>t.c.k==="verb");
   if(subj.some(t=>t.d.q==="vague"))
-    findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Name the actual thing — a body, a voice, a technique, or the author."});
+    findings.push({sev:"err", text:"You've used a vague subject ('this', 'it', 'the quote', 'the book'). Name the actual thing — a body, a voice, a technique, or the author.",
+                   cull:subj.filter(t=>t.d.q==="vague").map(t=>t.c)});
   if(level>=8 && !subj.some(t=>t.d.q==="craft"))
     findings.push({sev:"warn", text:"At this level the subject of your sentence should be a writing choice — the simile, the clipped dialogue, the narration, or Fraillon herself."});
   if(level>=9 && !verbs.some(t=>t.d.q==="pos"))
@@ -3469,16 +3497,17 @@ function wkFindings(canvas, level, focus){
   if(level>=9 && !tiles.some(t=>(t.c.k==="eff") && t.d.q==="interp"))
     findings.push({sev:"warn", text:"Level 9 asks what the writing withholds or makes us accept. Pick one of the interpretive endings — the ones about what the reader is given or denied."});
   if(level>=7 && verbs.some(t=>t.d.q==="weak"))
-    findings.push({sev:"warn", text:"That verb is flat. Trade up to an analytical verb — reveals, suggests, exposes, betrays, emphasises."});
+    findings.push({sev:"warn", text:"That verb is flat. Trade up to an analytical verb — reveals, suggests, exposes, betrays, emphasises.",
+                   cull:verbs.filter(t=>t.d.q==="weak").map(t=>t.c)});
   tiles.filter(t=>t.c.k==="q").forEach(t=>{
     const th=t.d.seg.themes||{};
-    if(!Object.keys(th).length) findings.push({sev:"warn", text:"Your quote is "+t.d.seg.note+". Swap it for a line that shows the idea."});
-    else if(!th[focus]) findings.push({sev:"warn", text:"That quote is "+t.d.seg.note+" — but your focus is "+wkFocusLabel()+". Match the quote to the focus, or switch focus."});
+    if(!Object.keys(th).length) findings.push({sev:"warn", text:"Your quote is "+t.d.seg.note+". Swap it for a line that shows the idea.", cull:[t.c]});
+    else if(!th[focus]) findings.push({sev:"warn", text:"That quote is "+t.d.seg.note+" — but your focus is "+wkFocusLabel()+". Match the quote to the focus, or switch focus.", cull:[t.c]});
   });
   tiles.filter(t=>t.c.k==="idea"||t.c.k==="eff").forEach(t=>{
-    if(t.d.q==="weak") findings.push({sev:"warn", text:t.d.fb});
+    if(t.d.q==="weak") findings.push({sev:"warn", text:t.d.fb, cull:[t.c]});
     else if(t.d.themes && !t.d.themes.includes(focus))
-      findings.push({sev:"warn", text:"Your ending is about a different idea than your focus ("+wkFocusLabel()+"). Match them — or switch your focus chip."});
+      findings.push({sev:"warn", text:"Your ending is about a different idea than your focus ("+wkFocusLabel()+"). Match them — or switch your focus chip.", cull:[t.c]});
   });
 
   WK.level=wasLevel;
@@ -3543,6 +3572,7 @@ function wkCheckTail(findings){
     fb.className="feedback "+(level==="err"?"bad":"warn");
     fb.innerHTML="<b>"+(level==="err"?"Not there yet.":"Close — here's how to lift it:")+"</b><ul>"+
       findings.map(f=>"<li>"+esc(f.text)+"</li>").join("")+"</ul>";
+    if(wkCull(findings)) wkFillBins();
   }
 }
 function wkLift(){
@@ -3907,7 +3937,7 @@ function teachRails(){
   document.removeEventListener("keydown", teachKeys);
   TM=null;
   WK={armed:null, placed:{}, firstTried:{}, focus:TEACH_RAILS_FOCUS, canvas:[], harvested:[],
-      level:TEACH_RAILS_LEVEL, versions:{}, tried:{}, wallStart:0, climbStart:0, rails:true};
+      level:TEACH_RAILS_LEVEL, versions:{}, tried:{}, wallStart:0, climbStart:0, rails:true, culled:{}};
   const lists={open:WK_BUILD.opens, subj:WK_BUILD.subjects, verb:WK_BUILD.verbs,
                idea:WK_BUILD.ideas, eff:WK_BUILD.effects, con:WK_BUILD.cons};
   TEACH_RAILS.forEach(([k,t])=>{
