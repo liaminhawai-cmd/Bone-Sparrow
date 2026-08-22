@@ -2874,8 +2874,16 @@ function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); retu
 function wkLevel(){ return WK_LEVELS.find(L=>L.n===WK.level); }
 function wkPage(n){ WK.climbStart=n; renderWkBuild(); }
 function wkLevelIdx(){ return WK_LEVELS.findIndex(L=>L.n===WK.level); }
-function wkAvail(list){ return list.map((x,i)=>({x,i})).filter(o=>{
-  const lv=o.x.lv||[5,9]; return WK.level>=lv[0] && WK.level<=lv[1]; }); }
+function wkAvail(list){
+  const out=list.map((x,i)=>({x,i})).filter(o=>{
+    const lv=o.x.lv||[5,9]; return WK.level>=lv[0] && WK.level<=lv[1]; });
+  /* Newest unlocks first. The banks scroll inside a fixed height, and the data
+     is written lowest-level-first, so without this a Level 9 student opens
+     every bank onto Level 5 tiles and the ones this level asks for sit below
+     the fold. Stable sort: ties keep their authored order. */
+  return out.map((o,k)=>({o,k})).sort((a,b)=>
+    ((b.o.x.lv||[5,9])[0]-(a.o.x.lv||[5,9])[0]) || (a.k-b.k)).map(e=>e.o);
+}
 function wkRetired(x){ const lv=x.lv||[5,9]; return WK.level>lv[1]; }
 function wkFocusLabel(){ const f=WK_BUILD.focuses.find(x=>x.id===WK.focus); return f?f.label:""; }
 /* Resolve a starter recipe (kind + tile text) into canvas refs. */
