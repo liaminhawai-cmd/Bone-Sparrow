@@ -385,7 +385,9 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
 .ctile:after{content:" \2715";font-size:9px;color:var(--muted)}
 .ctile.flag-err{outline:2px solid var(--wrong)}
 .ctile.flag-warn{outline:2px solid #cf8336}
-.bins5{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:0 0 12px}
+/* align-items:start, or every bin inflates to the tallest column and the
+   Evidence bin with one quote in it becomes half a metre of empty border. */
+.bins5{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:0 0 12px;align-items:start}
 @media (max-width:820px){.bins5{grid-template-columns:repeat(2,1fr)}}
 .bin.subjects h4, .tile.k-subj, .ctile.k-subj{background:var(--feat-bg);color:var(--feat-tx)}
 .bin.verbs h4, .tile.k-verb, .ctile.k-verb{background:var(--verb-bg);color:var(--verb-tx)}
@@ -2170,6 +2172,10 @@ function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S
 function go(s, arg){
   if(!idOk() && s!=="id") s="id";
   screen=s;
+  /* The workshop is a workbench, not a reading page: rubric table, passage,
+     canvas and six banks all want width. Every other screen keeps the narrow
+     reading column. */
+  document.body.classList.toggle("wide", s==="wk" || s==="teach");
   $("homeBtn").style.display = (s==="home"||s==="id"||s==="teach") ? "none" : "inline";
   const tb=$("teachBtn"); if(tb) tb.style.display = (s==="teach"||s==="id") ? "none" : "inline";
   window.scrollTo({top:0,behavior:"smooth"});
@@ -3022,10 +3028,9 @@ function renderWkBuild(){
      looking at the banks and the sentence at the same time, and on a laptop the
      banks push the sentence off the top of the screen exactly when a student
      needs to see what they are adding to. */
-  /* On rails the feedback and the Check button ride in the sticky dock with the
-     sentence, instead of sitting under the banks. The demo is set large enough
-     to read from the back, which means the page scrolls; the one thing a
-     teacher must never hunt for mid-demonstration is the button they press. */
+  /* The feedback and the Check button ride in the sticky dock with the
+     sentence rather than under the banks, where a check's verdict would land
+     off-screen. */
   const actions = `<div class="feedback" id="fb" aria-live="polite"></div>
   <div class="btnrow" id="wkrow">
     <button class="btn btn-primary" onclick="wkCheck()">Check my sentence</button>
@@ -3034,7 +3039,7 @@ function renderWkBuild(){
   h+=`<div class="dock">
     ${WK.rails?"":`<p class="q">Drag tiles into your sentence. Tap one to take it out.</p>`}
     <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
-    ${WK.rails?actions:""}
+    ${actions}
   </div>`;
 
   /* ---- banks, filtered to this level ---- */
@@ -3047,7 +3052,7 @@ function renderWkBuild(){
   h+=`<div class="bin effects"><h4>Purpose</h4><div class="binbody" id="wb-eff"></div></div>`;
   h+=`<div class="bin connects"><h4>Joiners</h4><div class="binbody" id="wb-con"></div></div></div>`;
 
-  if(!WK.rails) h+=actions;
+
   $("body").innerHTML=h;
   wkFillBins(); wkDraw(); wkAnimateFresh();
 }
@@ -3500,8 +3505,7 @@ function wkCheckTail(findings){
     const next=WK_LEVELS[wkLevelIdx()+1];
     fb.className="feedback ok";
     fb.innerHTML="<b>Level "+WK.level+" reached.</b> "+esc(L.why)+
-      (WK.rails ? " Same sentence, same quote — every part of it grew up. Both versions are on the wall above."
-        : next?" Now keep this sentence and rejig it — you don't start again, you lift what you've already got.":" That's the top of the ladder.");
+      (WK.rails ? "" : next?"":" Top of the ladder.");
     const btn=document.createElement("button");
     btn.id="liftBtn"; btn.className="btn btn-primary";
     /* the demo stops where it was aimed: Year 7, then the four colours */
