@@ -408,6 +408,25 @@ now one option among several rather than the only door.
 If you add tiles at Level 9, check the count per focus rather than the total.
 The total looked healthy the whole time.
 
+## Level 9 is now a second sentence
+
+Rewriting the same sentence a fourth time was still asking Year 7 students to
+satisfy three constraints in one breath. Level 9 now keeps the Level 8
+sentence, locked and shown above the canvas, and asks for a **short second
+sentence**: the representation as the subject, a verb that says what it does
+to the reader, and an ending about what the writing withholds. That is how the
+move appears in a real paragraph — the analysis sentence, then the
+reader-positioning sentence — and it is the one distinctly Year 9 move
+rehearsed on its own rather than buried in a rewrite.
+
+The banks come down with it: two lead-ins, three representation subjects, five
+positioning verbs and eleven interpretive endings; the idea, evidence and
+joiner banks and the passage are gone, because the evidence lives in the first
+sentence. Swept over every combination per focus, about a fifth pass clean and
+the failures are the teaching kind — a theme mismatch, or an ending that needs
+a withholding verb in front of it. The wall's Level 9 cell and the report
+carry the pair.
+
 ## The sentence stays on screen while you build
 
 The canvas and its preview ride in a sticky dock at the top of the builder.
