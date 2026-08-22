@@ -1705,7 +1705,7 @@ const REDUNDANCY = {
 const WK_WALL = {
  ch:5,
  q:"How does Fraillon show what Beaver is like?",
- note:"Five students answered the same question. Build the WAGOLL wall: tap a response, then tap the level it demonstrates. Get it right and it locks into the wall — your finished wall stays with you for Part B.",
+ note:"Five students answered the same question. Tap a response, then tap the level it demonstrates.",
  levels:[
   { lv:"Level 5", n:5, eal:"C2 — Describe",
     focus:"Say what happens",
@@ -1777,7 +1777,7 @@ const WK_LEVELS = [
    goal:"A complete simple sentence with all three parts: an idea, a quote, and what it makes the reader feel. This one is done for you.",
    need:["subj","verb","idea","q","eff"],
    exp:`<i class="sw idea"></i> a plain idea, <i class="sw ev"></i> a quote, <i class="sw eff"></i> a general feeling — all three, each as simply as it can be done.`,
-   unlocks:"Done for you — pick a focus and this sentence lands on your canvas, ready to lift.",
+   unlocks:"Pick a focus. This sentence is done for you.",
    why:"You've written a complete analytical sentence — idea, evidence and purpose all present." },
  { n:6, name:"Describe with detail", focus:"Describe it, with evidence",
    vic:"I can describe characters and events that relate to key ideas",
@@ -1786,7 +1786,7 @@ const WK_LEVELS = [
    goal:"Your first level. Keep all three parts, but make the evidence work harder — weave the quote in with a joiner ('when he says', 'in the line') instead of leaving it beside the sentence after a full stop.",
    need:["subj","verb","idea","q","eff"],
    exp:`The same three parts, with the <i class="sw ev"></i> evidence woven inside the sentence and a more specific <i class="sw eff"></i> purpose.`,
-   unlocks:"Your climb starts here. Rejig the Level 5 freebie: get the quote inside the sentence, not beside it.",
+   unlocks:"Rejig the Level 5 sentence: get the quote inside it, not beside it.",
    why:"Your evidence is embedded now, and your purpose is specific rather than general." },
  { n:7, name:"Explain the effect", focus:"Explain the effect",
    vic:"I can describe the ideas and issues that are illustrated through characters and events",
@@ -2725,11 +2725,11 @@ function wkAnimateFresh(){
 }
 function wkColourKey(){
   return `<div class="ckey">
-    <span><i class="sw feat"></i>subject — who or what (a person, a body, a language feature)</span>
-    <span><i class="sw verb"></i>analytical verb</span>
+    <span><i class="sw feat"></i>subject</span>
+    <span><i class="sw verb"></i>verb</span>
     <span><i class="sw idea"></i>idea</span>
     <span><i class="sw ev"></i>evidence</span>
-    <span><i class="sw eff"></i>purpose — effect on the reader</span>
+    <span><i class="sw eff"></i>purpose</span>
   </div>`;
 }
 /* How many rubric columns fit. Three was a fixed number written for a laptop,
@@ -2810,10 +2810,9 @@ function wagollTable(o){
 function wallPage(n){ WK.wallStart=n; renderWall(); }
 function renderWall(){
   if(WK.wallStart===undefined) WK.wallStart=0;
-  let h=`<div class="eyebrow">Analysis workshop · part A — build the WAGOLL wall
-    <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button></div>
+  let h=`<div class="eyebrow"><button class="linkbtn noprint" onclick="go('teach')">teacher mode</button></div>
   <h2>${esc(WK_WALL.q)}</h2>
-  <p class="lead">${esc(WK_WALL.note)} </p>
+  <p class="lead">${esc(WK_WALL.note)}</p>
   ${wkColourKey()}`;
   h+=wagollTable({
     levels:WK_WALL.levels, start:WK.wallStart, pageFn:"wallPage", activeIdx:-1, justIdx:WK.justIdx,
@@ -2963,12 +2962,10 @@ function wkText(canvas){
 
 function renderWkBuild(){
   const L=wkLevel();
-  let h=`<div class="eyebrow">${esc(WK_BUILD.where)} · analysis workshop · part B — the climb${
-    WK.rails?"":` <button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button>`}</div>
-  <h2>${esc(WK_BUILD.prompt)}</h2>`;
+  let h = WK.rails ? "" : `<div class="eyebrow">${esc(WK_BUILD.where)}<button class="linkbtn noprint" onclick="go('teach')" style="margin-left:10px">teacher mode</button></div>`;
+  h+=`<h2>${esc(WK_BUILD.prompt)}</h2>`;
   if(WK.rails){
-    h+=`<div class="railbar noprint"><b>Teacher demo</b> · nothing here is saved
-      <button class="linkbtn" onclick="runTeach(0)">back to the slides</button>
+    h+=`<div class="railbar noprint"><button class="linkbtn" onclick="runTeach(0)">back to the slides</button>
       <button class="linkbtn" onclick="teachColours()">the four colours</button>
       <button class="linkbtn" onclick="go('home')">leave the demo</button></div>`;
   }
@@ -3038,7 +3035,7 @@ function renderWkBuild(){
     <button class="btn btn-ghost" onclick="WK.canvas=[];wkDraw()">Clear</button>
   </div>`;
   h+=`<div class="dock">
-    <p class="q">${WK.rails ? "The sentence" : "Your sentence"} — <b>drag a tile straight into the spot you want</b>, from the banks below or from inside the sentence. Tap a tile in the sentence to take it out:</p>
+    ${WK.rails?"":`<p class="q">Drag tiles into your sentence. Tap one to take it out.</p>`}
     <div class="canvas" id="wkCanvas"></div><div class="preview" id="wkPrev"></div>
     ${WK.rails?actions:""}
   </div>`;
