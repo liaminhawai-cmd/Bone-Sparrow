@@ -43,28 +43,36 @@ const label=t=>new Paragraph({spacing:{before:90,after:40},children:[
 const swatch=(k,t)=>new TextRun({text:" "+t+" ",size:12,color:C[k],bold:true,font:"Calibri",shading:{type:ShadingType.CLEAR,fill:SH[k]}});
 
 const gridBorder={style:BorderStyle.SINGLE,size:4,color:"9C9382"};
-const cell=(children,w,shade,opts)=>new TableCell({
+const cell=(children,w,shade)=>new TableCell({
   width:{size:w,type:WidthType.DXA}, children, verticalAlign:VerticalAlign.CENTER,
   shading:shade?{type:ShadingType.CLEAR,fill:shade,color:"auto"}:undefined,
-  margins:{top:70,bottom:70,left:110,right:110},
+  margins:{top:60,bottom:60,left:80,right:80},
   borders:{top:gridBorder,bottom:gridBorder,left:gridBorder,right:gridBorder}
 });
-const headCell=(text,w)=>cell([new Paragraph({children:[new TextRun({text:text,bold:true,size:15,color:"F6F1E6",font:"Calibri",characterSpacing:14})]})],w,"1D3C34");
+const headCell=(children,w)=>cell(children,w,"1D3C34");
 
-/* A proper rubric grid — a header row naming the columns, generous cell
-   padding, a visible border on every cell — not a condensed reference strip.
-   Text column is 9746 dxa (A4 minus the two 1080 margins). */
-const COLS=[750,1800,7196];
-const headerRow=new TableRow({tableHeader:true, children:[
-  headCell("Level",COLS[0]), headCell("Focus",COLS[1]), headCell("What you need to show",COLS[2])
-]});
-const rubricRows=[headerRow].concat(D.levels.map((L,i)=>new TableRow({children:[
-  cell([new Paragraph({children:[new TextRun({text:String(L.n),bold:true,size:18,color:DEEP,font:"Calibri"})],alignment:AlignmentType.CENTER})],COLS[0],i%2?"FFFFFF":"F4EFE5"),
-  cell([new Paragraph({children:[new TextRun({text:L.focus,bold:true,size:14,color:INK,font:"Calibri"})]})],COLS[1],i%2?"FFFFFF":"F4EFE5"),
-  cell([new Paragraph({children:L.runs.map(function(r){ return r.hl
-        ? new TextRun({text:r.t,size:14,color:C[r.hl],bold:true,font:"Calibri",shading:{type:ShadingType.CLEAR,fill:SH[r.hl]}})
-        : new TextRun({text:r.t,size:14,color:INK,font:"Calibri"}); })})],COLS[2],i%2?"FFFFFF":"F4EFE5")
-]})));
+/* The app's own orientation, not a description-with-a-level-column: a level
+   per COLUMN, a criterion per ROW — the same grid as the hub's rubric table,
+   the wall, and the A3 print sheets. Text width is 9746 dxa (A4 minus the two
+   1080 margins); a label column plus five level columns split it. */
+const LABW=900, LVLW=Math.floor((9746-LABW)/5);
+const COLS=[LABW].concat(D.levels.map(function(){return LVLW;}));
+
+const headerRow=new TableRow({tableHeader:true, children:[headCell([new Paragraph({children:[]})],LABW)]
+  .concat(D.levels.map(function(L){ return headCell([new Paragraph({alignment:AlignmentType.CENTER,
+    children:[new TextRun({text:"LEVEL "+L.n,bold:true,size:13,color:"F6F1E6",font:"Calibri",characterSpacing:10})]})],LVLW); }))});
+
+const rowLabel=(t)=>cell([new Paragraph({children:[new TextRun({text:t,bold:true,size:12,color:MUTED,font:"Calibri",characterSpacing:8})]})],LABW,"F4EFE5");
+
+const focusRow=new TableRow({children:[rowLabel("SKILL FOCUS")].concat(D.levels.map(function(L){
+  return cell([new Paragraph({children:[new TextRun({text:L.focus,bold:true,size:12,color:INK,font:"Calibri"})]})],LVLW,"FFFFFF"); }))});
+
+const rubricRow=new TableRow({children:[rowLabel("WHAT YOU NEED TO SHOW")].concat(D.levels.map(function(L){
+  return cell([new Paragraph({children:L.runs.map(function(r){ return r.hl
+    ? new TextRun({text:r.t,size:12,color:C[r.hl],bold:true,font:"Calibri",shading:{type:ShadingType.CLEAR,fill:SH[r.hl]}})
+    : new TextRun({text:r.t,size:12,color:INK,font:"Calibri"}); })})],LVLW,"FFFFFF"); }))});
+
+const rubricRows=[headerRow, focusRow, rubricRow];
 
 const doc=new Document({
   styles:{default:{document:{run:{font:"Georgia",size:20,color:INK}}}},
@@ -84,7 +92,7 @@ const doc=new Document({
       rule(0),
 
       label("DRAFT"),
-      ...lines(5),
+      ...lines(6),
 
       label("THE RUBRIC — LEVELS 5 TO 9"),
       new Table({columnWidths:COLS,width:{size:COLS.reduce((a,b)=>a+b,0),type:WidthType.DXA},rows:rubricRows}),
@@ -96,7 +104,7 @@ const doc=new Document({
         swatch("eff","purpose")]}),
 
       label("REWRITE"),
-      ...lines(9),
+      ...lines(13),
     ]
   }]
 });
