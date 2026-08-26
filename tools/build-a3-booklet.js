@@ -62,8 +62,8 @@ const G={style:BorderStyle.SINGLE,size:4,color:"9C9382"};
 const NONE={style:BorderStyle.NONE,size:0,color:"FFFFFF"};
 
 const PANW=11200;                       /* an A4-ish panel inside A3 landscape */
-const rule=(a)=>new Paragraph({spacing:{after:a||60,line:300},
-  border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE,space:1}},children:[new TextRun({text:"",size:19})]});
+const rule=(a)=>new Paragraph({spacing:{after:a||75,line:400},
+  border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE,space:1}},children:[new TextRun({text:"",size:21})]});
 const lines=n=>Array.from({length:n},()=>rule());
 const lab=(t,c,sz)=>new Paragraph({spacing:{before:70,after:30},children:[
   new TextRun({text:t,bold:true,size:sz||13,color:c||DEEP,characterSpacing:18,font:"Calibri"})]});
@@ -81,14 +81,14 @@ const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
 /* The four questions, as the four-colour grid the teacher deck ends on. */
 const optCell=(k,title,q,items,w)=>cell([
   new Paragraph({spacing:{after:20},children:[
-    new TextRun({text:title,bold:true,size:12,color:C[k],font:"Calibri"}),
+    new TextRun({text:title,bold:true,size:13,color:C[k],font:"Calibri"}),
     new TextRun({text:"  "+q,size:10,color:MUTED,font:"Calibri",italics:true})]}),
   new Paragraph({children:[new TextRun({text:items.join("   ·   "),size:10,color:INK,font:"Calibri"})]})
 ],w,SH[k]);
 
 const writeCell=(w)=>cell([
   new Paragraph({spacing:{after:20},children:[
-    new TextRun({text:"Evidence",bold:true,size:12,color:C.ev,font:"Calibri"}),
+    new TextRun({text:"Evidence",bold:true,size:13,color:C.ev,font:"Calibri"}),
     new TextRun({text:"  when",size:10,color:MUTED,font:"Calibri",italics:true})]}),
   rule(30), rule(0)
 ],w,SH.ev);
@@ -111,7 +111,7 @@ const rubric=()=>{const LW=1250,CW=Math.floor((PANW-LW)/WALL.length);
       new TextRun({text:L.lv.toUpperCase(),bold:true,size:11,color:"F6F1E6",font:"Calibri"})]})],CW,DEEP)))});
   const row=(name,fn)=>new TableRow({children:[
     cell([new Paragraph({children:[new TextRun({text:name,bold:true,size:10,color:MUTED,font:"Calibri"})]})],LW,"F4EFE5")]
-    .concat(WALL.map(L=>cell([new Paragraph({children:[new TextRun({text:fn(L),size:10,color:INK,font:"Calibri"})]})],CW,"FFFFFF")))});
+    .concat(WALL.map(L=>cell([new Paragraph({children:[new TextRun({text:fn(L),size:11,color:INK,font:"Calibri"})]})],CW,"FFFFFF")))});
   return new Table({columnWidths:[LW].concat(WALL.map(()=>CW)),width:{size:LW+CW*WALL.length,type:WidthType.DXA},
     rows:[hdr,row("SKILL FOCUS",L=>L.focus),row("THE RUBRIC",L=>L.vic),row("WHAT MAKES IT",L=>L.exp)]});};
 
@@ -130,14 +130,16 @@ const P1=()=>[
     ["From the effect",'To make {eff|the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi so hard that {ev|"my feet leave the ground"}.']
   ].map(p=>new TableRow({children:[
     cell([new Paragraph({children:[new TextRun({text:p[0],bold:true,size:11,color:DEEP,font:"Calibri"})]})],2000,"F4EFE5"),
-    cell([new Paragraph({children:tagged(p[1],12)})],PANW-2000,"FFFFFF")]}))}),
+    cell([new Paragraph({children:tagged(p[1],13)})],PANW-2000,"FFFFFF")]}))}),
+  lab("THE FOUR QUESTIONS"),
+  grid(),
   lab("THE WALL"),
   rubric()
 ];
 
 const head=(t)=>new Paragraph({spacing:{after:14},
   border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
-  children:[new TextRun({text:t,bold:true,size:19,color:DEEP})]});
+  children:[new TextRun({text:t,bold:true,size:21,color:DEEP})]});
 const note=(t)=>new Paragraph({spacing:{after:22},children:[
   new TextRun({text:t,size:11,color:MUTED,font:"Calibri"})]});
 
@@ -150,21 +152,21 @@ const panel=(title,startRuns,noteText,ref)=>[
   note(noteText),
   grid(),
   lab("WRITE YOUR SENTENCE"),
-  ...lines(8),
+  ...lines(10),
   lab("NOW LIFT IT"),
-  ...lines(9)
+  ...lines(11)
 ];
 
 const P2=(qt)=>panel("1 — Start from the evidence",
-  [new TextRun({text:"\u201C"+qt.t+"\u201D",size:15,color:INK,italics:true})],
+  [new TextRun({text:"\u201C"+qt.t+"\u201D",size:17,color:INK,italics:true})],
   "Write the line into the Evidence box, then circle the rest.", qt.ref);
 
 const P3=(idea,ref)=>panel("2 — Start from the idea",
-  [new TextRun({text:idea,size:16,color:C.idea,bold:true})],
+  [new TextRun({text:idea,size:18,color:C.idea,bold:true})],
   "Go back and find a line that proves it.", ref);
 
 const P4=(eff,ref)=>panel("3 — Start from the effect on the reader",
-  [new TextRun({text:eff,size:16,color:C.eff,bold:true})],
+  [new TextRun({text:eff,size:18,color:C.eff,bold:true})],
   "Find the writing that does this to you.", ref);
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
