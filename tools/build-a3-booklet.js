@@ -128,24 +128,36 @@ const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
     last=x.index+x[0].length;}
   if(last<s.length)out.push(new TextRun({text:s.slice(last),size:sz||13}));return out;};
 
-/* The four questions, as the four-colour grid the teacher deck ends on. */
-const optCell=(k,title,q,items,w)=>cell([
-  new Paragraph({spacing:{after:40},children:[
+/* The four questions, as the four-colour grid the teacher deck ends on.
+   Options sit in two columns, read down then across, so a box is as wide as
+   it is tall instead of a long thin list. */
+const optCell=(k,title,q,items,w)=>{
+  const IW=Math.floor((w-260)/2), rows=Math.ceil(items.length/2);
+  const opt=t=>new Paragraph({spacing:{after:44},children:[
+    new TextRun({text:t?"○  "+t:"",size:19,color:INK,font:"Calibri"})]});
+  const body=items.length<2?items.map(opt)
+    :[new Table({columnWidths:[IW,IW],width:{size:IW*2,type:WidthType.DXA},
+        borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:NONE},
+        rows:Array.from({length:rows},(_,r)=>new TableRow({children:[items[r],items[r+rows]]
+          .map(t=>new TableCell({width:{size:IW,type:WidthType.DXA},
+            margins:{top:0,bottom:0,left:0,right:60},
+            borders:{top:NONE,bottom:NONE,left:NONE,right:NONE},
+            children:[opt(t)]}))}))})];
+  return cell([new Paragraph({spacing:{after:40},children:[
     new TextRun({text:title,bold:true,size:20,color:C[k],font:"Calibri"}),
-    new TextRun({text:"  "+q,size:15,color:MUTED,font:"Calibri",italics:true})]}),
-  ...items.map(t=>new Paragraph({spacing:{after:44},children:[
-    new TextRun({text:"\u25CB  "+t,size:19,color:INK,font:"Calibri"})]}))
-],w,SH[k]);
+    new TextRun({text:"  "+q,size:15,color:MUTED,font:"Calibri",italics:true})]})
+  ].concat(body),w,SH[k]);
+};
 
 /* Cycle 1 already knows the line, so the yellow box carries it rather than
    asking the student to copy it out twice. Cycles 2 and 3 leave it ruled. */
 const writeCell=(w,quote)=>cell([
   new Paragraph({spacing:{after:40},children:[
     new TextRun({text:"Evidence",bold:true,size:20,color:C.ev,font:"Calibri"}),
-    new TextRun({text:quote?"  the line you are working from":"  when",size:15,color:MUTED,font:"Calibri",italics:true})]}),
+    new TextRun({text:"  "+(quote?"chapter "+quote.ch:"when"),size:15,color:MUTED,font:"Calibri",italics:true})]}),
   ...(quote
     ? [new Paragraph({spacing:{after:0,line:300,lineRule:LineRuleType.EXACT},
-        children:[new TextRun({text:"\u201C"+quote+"\u201D",size:19,color:INK,italics:true})]})]
+        children:[new TextRun({text:"“"+quote.t+"”",size:19,color:INK,italics:true})]})]
     : [rule(40), rule(40), rule(0)])
 ],w,SH.ev);
 
@@ -170,6 +182,17 @@ const rubric=()=>{const LW=1250,CW=Math.floor((PANW-LW)/WALL.length);
     .concat(WALL.map(L=>cell([new Paragraph({children:[new TextRun({text:fn(L),size:15,color:INK,font:"Calibri"})]})],CW,"FFFFFF")))});
   return new Table({columnWidths:[LW].concat(WALL.map(()=>CW)),width:{size:LW+CW*WALL.length,type:WidthType.DXA},
     rows:[hdr,row("SKILL FOCUS",L=>L.focus),row("THE RUBRIC",L=>L.vic),row("WHAT MAKES IT",L=>L.exp)]});};
+
+/* A one-line-per-level strip: enough of the wall to lift a draft against,
+   without reprinting the whole grid on every page. */
+const strip=()=>{const LW=Math.floor(PANW/WALL.length);
+  return new Table({columnWidths:WALL.map(()=>LW),width:{size:LW*WALL.length,type:WidthType.DXA},
+    rows:[
+      new TableRow({children:WALL.map(L=>cell([new Paragraph({alignment:AlignmentType.CENTER,
+        children:[new TextRun({text:L.lv.toUpperCase(),bold:true,size:14,color:"F6F1E6",font:"Calibri"})]})],LW,DEEP))}),
+      new TableRow({children:WALL.map(L=>cell([new Paragraph({alignment:AlignmentType.CENTER,
+        children:[new TextRun({text:L.focus,size:15,color:INK,font:"Calibri"})]})],LW,"FFFFFF"))})
+    ]});};
 
 /* ---- the four panels ---- */
 
@@ -204,10 +227,8 @@ const P1=()=>[
     new TextRun({text:"Class",size:14,color:MUTED,font:"Calibri"}),
     new TextRun({text:"  __________",size:14,color:LINE,font:"Calibri"})]}),
   new Paragraph({spacing:{after:16},border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
-    children:[new TextRun({text:"Three ways into a sentence",bold:true,size:22,color:DEEP})]}),
-  new Paragraph({spacing:{after:16},children:[
-    new TextRun({text:"One passage, Beaver at the fence in chapter 5, worked three ways.",
-      size:15,color:MUTED,font:"Calibri"})]}),
+    children:[new TextRun({text:"Three ways into a sentence",bold:true,size:22,color:DEEP}),
+    new TextRun({text:"\u2003Chapter 5",size:15,color:MUTED,font:"Calibri"})]}),
 
   lab("1  START FROM THE EVIDENCE",C.ev),
   mapRow("ev","THE LINE",'"My throat is as dry as the dirt"',
@@ -228,9 +249,6 @@ const P1=()=>[
     'To {eff|make the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi until {ev|"my feet leave the ground"}.'),
 
   lab("ONE SENTENCE, LIFTED"),
-  new Paragraph({spacing:{after:14},children:[
-    new TextRun({text:"Any of the three routes can end anywhere on the wall. This is the same sentence, climbing.",
-      size:15,color:MUTED,font:"Calibri"})]}),
   new Table({columnWidths:[1250,PANW-1250],width:{size:PANW,type:WidthType.DXA},
     rows:RESPS.filter(x=>x.n>=6&&x.n<=8).map(x=>new TableRow({children:[
       cell([new Paragraph({alignment:AlignmentType.CENTER,children:[
@@ -248,34 +266,32 @@ const head=(t)=>new Paragraph({spacing:{after:14},
 const note=(t)=>new Paragraph({spacing:{after:22},children:[
   new TextRun({text:t,size:14,color:MUTED,font:"Calibri"})]});
 
-/* Every process page: the starting point, the grid, write, then lift. */
-const panel=(title,startRuns,noteText,ref,ideaOpts,purposeOpts,quote)=>[
-  head(title),
-  new Paragraph({spacing:{after:8},children:startRuns}),
-  new Paragraph({spacing:{after:22},children:[
-    new TextRun({text:"Read "+ref+" for the context.",size:14,color:MUTED,font:"Calibri",italics:true})]}),
-  note(noteText),
+/* A page carries what a student writes on and nothing that talks to them:
+   the starting point, the boxes, the draft, the wall strip, the rewrite. */
+const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote)=>[
+  new Paragraph({spacing:{after:14},
+    border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
+    children:[new TextRun({text:title,bold:true,size:22,color:DEEP}),
+              new TextRun({text:" "+ref,size:15,color:MUTED,font:"Calibri"})]}),
+  ...(startRuns.length?[new Paragraph({spacing:{after:24},children:startRuns})]:[]),
   grid(ideaOpts,purposeOpts,quote),
-  lab("WRITE YOUR SENTENCE"),
+  lab("DRAFT"),
   ...lines(7),
-  lab("NOW LIFT IT"),
+  lab("THE WALL"),
+  strip(),
+  lab("REWRITE"),
   ...lines(7)
 ];
 
 const P2=(L,opts)=>panel("1 · Start from the evidence",
   [new TextRun({text:"“"+L.quote+"”",size:19,color:INK,italics:true})],
-  "Circle one from each box, then write.", L.ref, opts, null, L.quote);
+  L.ref, opts, null, {t:L.quote,ch:L.chk.replace('Chapter ','')});
 
 const P3=(L,theme,opts)=>panel("2 · Start from the idea",
-  [new TextRun({text:theme,size:22,color:C.idea,bold:true})],
-  "Go back to the same section and find a line that proves it. Write it in the yellow box.",
-  L.ref, opts);
+  [new TextRun({text:theme,size:22,color:C.idea,bold:true})], L.ref, opts);
 
 const P4=(L,opts)=>panel("3 · Start from the effect on the reader",
-  [new TextRun({text:"Fraillon writes this section so that it "+(AIM[L.chk]||"makes the reader feel…"),
-    size:19,color:C.eff,bold:true})],
-  "Find the writing that does it. Write that line in the yellow box.", L.ref, opts,
-  [AIM[L.chk]||"makes the reader feel…"]);
+  [], L.ref, opts, [AIM[L.chk]||"makes the reader feel…"]);
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
