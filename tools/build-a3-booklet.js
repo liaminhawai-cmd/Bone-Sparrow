@@ -1,6 +1,6 @@
 const fs=require('fs');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,BorderStyle,
-       ShadingType,AlignmentType,VerticalAlign,PageBreak,PageOrientation}=require('docx');
+       ShadingType,AlignmentType,VerticalAlign,PageBreak,PageOrientation,LineRuleType}=require('docx');
 
 /* One A3 sheet per student, printed double sided and folded once: four A4
    panels. Imposed so the fold reads 1,2,3,4 — side one carries panels 4 and 1,
@@ -68,7 +68,11 @@ const G={style:BorderStyle.SINGLE,size:4,color:"9C9382"};
 const NONE={style:BorderStyle.NONE,size:0,color:"FFFFFF"};
 
 const PANW=11200;                       /* an A4-ish panel inside A3 landscape */
-const rule=(a)=>new Paragraph({spacing:{after:a||75,line:400},
+/* spacing.line with no lineRule is an AUTO multiplier in 240ths, not a fixed
+   height — line:400 was rendering each blank line at 1.67x, which is what
+   opened the huge gaps between ruled lines. exact + a twips value fixes the
+   line height in place, the way real ruled paper is evenly spaced. */
+const rule=(a)=>new Paragraph({spacing:{after:a||40,line:280,lineRule:LineRuleType.EXACT},
   border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE,space:1}},children:[new TextRun({text:"",size:21})]});
 const lines=n=>Array.from({length:n},()=>rule());
 const lab=(t,c,sz)=>new Paragraph({spacing:{before:70,after:30},children:[
@@ -173,9 +177,9 @@ const panel=(title,startRuns,noteText,ref)=>[
   note(noteText),
   grid(),
   lab("WRITE YOUR SENTENCE"),
-  ...lines(10),
+  ...lines(16),
   lab("NOW LIFT IT"),
-  ...lines(11)
+  ...lines(17)
 ];
 
 const P2=(qt)=>panel("1 — Start from the evidence",
