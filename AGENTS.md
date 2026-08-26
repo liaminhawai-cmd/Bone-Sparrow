@@ -2,6 +2,10 @@
 
 Rules for anyone building teaching resources in this repository, human or model.
 
+Read `STYLE_GUIDE.md` first — the portable build principles behind everything
+below. Rule 0 here is that guide's minimalism principle, made specific to this
+repo's failures.
+
 ## The core rule
 
 ### 0. The resource is a tool a teacher uses. It is not the teacher.
