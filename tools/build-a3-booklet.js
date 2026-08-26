@@ -76,12 +76,6 @@ const WALL=[];{const re=/lv:"(Level \d)", n:(\d), eal:"([^"]*)",\s*\n\s*focus:"(
  while((m=re.exec(wallBlk))) WALL.push({lv:m[1],n:+m[2],eal:m[3],focus:m[4],vic:m[5],
    exp:m[6].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()});}
 
-/* The wall's own worked responses. The rubric grid below them carries no
-   Example row, so this is where a student sees a finished sentence. */
-const RESPS=[];{const rb=src.slice(src.indexOf('resps:['),src.indexOf('const WK_LEVELS'));
- const re=/id:"w(\d)", lvl:\d,[\s\S]*?h:`([^`]*)`/g;let m;
- while((m=re.exec(rb))) RESPS.push({n:+m[1],h:m[2].replace(/\s+/g,' ').trim()});}
-
 const C={idea:"0B447C",verb:"8A4B12",ev:"7A5A00",eff:"1F5C33",feat:"4B2F7A"};
 const SH={idea:"D6EAFC",verb:"FAE3CF",ev:"FFF3B0",eff:"DFF0E2",feat:"E7DDF6"};
 const INK="1E211F",MUTED="645D54",LINE="C9BFAE",DEEP="1D3C34";
@@ -113,15 +107,6 @@ const cell=(ch,w,shade,brd)=>new TableCell({width:{size:w,type:WidthType.DXA},ch
   shading:shade?{type:ShadingType.CLEAR,fill:shade,color:"auto"}:undefined,
   margins:{top:50,bottom:50,left:80,right:80},
   borders:brd||{top:G,bottom:G,left:G,right:G}});
-const fromHtml=(h,sz)=>{const out=[];const re=/<em class="hl-(\w+)">(.*?)<\/em>/g;let last=0,x;
-  const plain=t=>t.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
-  while((x=re.exec(h))){ if(x.index>last) out.push(new TextRun({text:plain(h.slice(last,x.index)),size:sz||14}));
-    out.push(new TextRun({text:plain(x[2]),size:sz||14,color:C[x[1]],bold:true,
-      shading:{type:ShadingType.CLEAR,fill:SH[x[1]]}}));
-    last=x.index+x[0].length; }
-  if(last<h.length) out.push(new TextRun({text:plain(h.slice(last)),size:sz||14}));
-  return out;};
-
 const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
   while((x=re.exec(s))){if(x.index>last)out.push(new TextRun({text:s.slice(last,x.index),size:sz||13}));
     out.push(new TextRun({text:x[2],size:sz||13,color:C[x[1]],bold:true,shading:{type:ShadingType.CLEAR,fill:SH[x[1]]}}));
@@ -247,14 +232,6 @@ const P1=()=>[
     "feat","WRITING THAT DOES IT",
     ["the shove","the questions with no right answer","the dry‑throat image","the dog comparison"],
     'To {eff|make the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi until {ev|"my feet leave the ground"}.'),
-
-  lab("ONE SENTENCE, LIFTED"),
-  new Table({columnWidths:[1250,PANW-1250],width:{size:PANW,type:WidthType.DXA},
-    rows:RESPS.filter(x=>x.n>=6&&x.n<=8).map(x=>new TableRow({children:[
-      cell([new Paragraph({alignment:AlignmentType.CENTER,children:[
-        new TextRun({text:"LEVEL "+x.n,bold:true,size:15,color:"F6F1E6",font:"Calibri"})]})],1250,DEEP),
-      cell([new Paragraph({spacing:{line:290,lineRule:LineRuleType.EXACT},
-        children:fromHtml(x.h,17)})],PANW-1250,"FFFFFF")]}))}),
 
   lab("THE WALL"),
   rubric()
