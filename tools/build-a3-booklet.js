@@ -1,6 +1,6 @@
 const fs=require('fs');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,BorderStyle,
-       ShadingType,AlignmentType,VerticalAlign,PageBreak,PageOrientation,LineRuleType}=require('docx');
+       ShadingType,AlignmentType,VerticalAlign,PageBreak,PageOrientation,LineRuleType,HeightRule}=require('docx');
 
 /* One A3 sheet per student, printed double sided and folded once: four A4
    panels. Imposed so the fold reads 1,2,3,4 — side one carries panels 4 and 1,
@@ -15,39 +15,36 @@ const cut=(a,b)=>src.slice(src.indexOf(a),src.indexOf(b,src.indexOf(a)));
 const wb=cut('const WK_BUILD','const TEACH_RAILS_FOCUS');
 const qr=cut('const QUICKREADS','const MODULES');
 
-/* ---- a different quote per student, each with the section to read for
-   context. Chapter 5 is deliberately excluded: those lines are the ones the
-   app already works through, so the paper task uses fresh material. ---- */
+/* ---- one sheet per VERIFIED (chapter, idea, quote) triple -----------------
+   Each quickread link holds an idea, four options and the index of the correct
+   one. Only that correct option is evidence for that idea in that chapter; the
+   other three are distractors, and several are lines from elsewhere in the
+   novel. An earlier version of this file used all four as quotes, which is why
+   quotes did not match their chapters and ideas did not match their quotes. */
 const refs={}; {const rx=/id:"(qr\d)"[\s\S]{0,300}?where:"([^"]*)"/g;let r;
   while((r=rx.exec(qr))) refs[r[1]]=r[2].trim();}
-const QUOTES=[]; const seen={};
-{const re=/id:"(qr\d)L\d",\s*idea:"(?:[^"\\]|\\.)*",\s*opts:\[([\s\S]*?)\],\s*\n\s*a:\d/g;let m;
+const LINKS=[];
+{const re=/id:"(qr\d)L\d",\s*idea:"((?:[^"\\]|\\.)*)",\s*opts:\[([\s\S]*?)\],\s*\n\s*a:(\d)/g;let m;
  while((m=re.exec(qr))){
-   const ref=refs[m[1]]||''; if(/Chapter 5/.test(ref)) continue;
-   m[2].split(/",\s*\n?\s*"/).map(x=>x.replace(/^\s*"|"\s*$/g,'').trim())
-     .forEach(t=>{ const q=t.replace(/^['\u2018\u2019"]+|['\u2018\u2019".,]+$/g,'').trim();
-       if(q.length<25) return; QUOTES.push({t:q,ref:ref}); });
+   const ref=refs[m[1]]||''; if(!ref||/Chapter 5/.test(ref)) continue;
+   const opts=m[3].split(/",\s*\n?\s*"/).map(x=>x.replace(/^\s*"|"\s*$/g,'').trim());
+   const q=(opts[+m[4]]||'').replace(/^['\u2018\u2019"]+|['\u2018\u2019"]+$/g,'').trim();
+   if(q.length<20) continue;
+   LINKS.push({ch:m[1], ref:ref, idea:m[2].replace(/\\'/g,"'").trim(), quote:q});
  }}
-
-/* The same line appears both whole and truncated with an ellipsis. Keep the
-   fuller one: a quote that is a prefix of another is the same quote. */
-{const norm=x=>x.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
- QUOTES.sort((a,b)=>b.t.length-a.t.length);
- const kept=[];
- QUOTES.slice().forEach(x=>{ const k=norm(x.t);
-   if(kept.some(y=>y.indexOf(k)===0||k.indexOf(y)===0)) return; kept.push(k);
-   x._keep=1; });
- for(let i=QUOTES.length-1;i>=0;i--) if(!QUOTES[i]._keep) QUOTES.splice(i,1);
- QUOTES.sort((a,b)=>a.ref.localeCompare(b.ref)||a.t.localeCompare(b.t));}
+if(!LINKS.length) throw new Error('no verified quote/idea pairs found in the hub');
 
 /* ---- banks ---- */
 const bank=(n,p)=>{const b=wb.slice(wb.indexOf(' '+n+':['));const s=b.indexOf('\n ],');
   const body=b.slice(0,s<0?b.length:s);const o=[];const re=/\{ t:"((?:[^"\\]|\\.)*)"([^}]*)\}/g;let x;
   while((x=re.exec(body))){const mt=x[2];const lv=(mt.match(/lv:\[(\d),(\d)\]/)||[0,5,9]);
     o.push({t:x[1],lo:+lv[1],hi:+lv[2],q:(mt.match(/q:"(\w+)"/)||[])[1]});}return o.filter(p);};
-const IDEAS  =bank('ideas',  o=>o.lo>=7&&o.hi<=8&&o.q!=='weak').slice(0,5);
+const IDEAS_APP=bank('ideas', o=>o.lo>=7&&o.hi<=8&&o.q!=='weak');
 const VERBS  =bank('verbs',  o=>o.q==='good'&&o.lo<=7).slice(0,7);
-const EFFECTS=bank('effects',o=>o.lo>=7&&o.q!=='weak'&&o.q!=='interp').slice(0,5);
+/* The four kinds of purpose, in the rubric's own words. Unlike a bank of
+   specific effect sentences, these are true of any page of the novel. */
+const PURPOSES=["makes the reader feel\u2026","makes the reader understand\u2026",
+                "positions the reader to\u2026","keeps from the reader\u2026"];
 
 /* ---- the wall, exactly, minus the Example row ---- */
 const wallBlk=cut('const WK_WALL','resps:[');
@@ -68,13 +65,23 @@ const G={style:BorderStyle.SINGLE,size:4,color:"9C9382"};
 const NONE={style:BorderStyle.NONE,size:0,color:"FFFFFF"};
 
 const PANW=11200;                       /* an A4-ish panel inside A3 landscape */
-/* spacing.line with no lineRule is an AUTO multiplier in 240ths, not a fixed
-   height — line:400 was rendering each blank line at 1.67x, which is what
-   opened the huge gaps between ruled lines. exact + a twips value fixes the
-   line height in place, the way real ruled paper is evenly spaced. */
+/* Writing lines are a single-column table with only its horizontal borders
+   drawn: no box down the left and right. Row height is set explicitly so the
+   lines are evenly spaced whatever is typed into them. This is the mechanism
+   from the EAL film booklets. */
+const RULEB={style:BorderStyle.SINGLE,size:4,color:LINE};
 const rule=(a)=>new Paragraph({spacing:{after:a||40,line:280,lineRule:LineRuleType.EXACT},
   border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE,space:1}},children:[new TextRun({text:"",size:21})]});
-const lines=n=>Array.from({length:n},()=>rule());
+const lines=(n)=>[new Table({
+  columnWidths:[PANW], width:{size:PANW,type:WidthType.DXA},
+  borders:{top:NONE,left:NONE,right:NONE,bottom:RULEB,insideH:RULEB,insideV:NONE},
+  rows:Array.from({length:n},()=>new TableRow({
+    height:{value:620,rule:HeightRule.ATLEAST},
+    children:[new TableCell({width:{size:PANW,type:WidthType.DXA},
+      margins:{top:0,bottom:0,left:20,right:20},
+      children:[new Paragraph({spacing:{after:0,line:280,lineRule:LineRuleType.EXACT},
+        children:[new TextRun({text:"",size:24})]})]})]
+  }))})];
 const lab=(t,c,sz)=>new Paragraph({spacing:{before:70,after:30},children:[
   new TextRun({text:t,bold:true,size:sz||13,color:c||DEEP,characterSpacing:18,font:"Calibri"})]});
 const cell=(ch,w,shade,brd)=>new TableCell({width:{size:w,type:WidthType.DXA},children:ch,
@@ -102,7 +109,8 @@ const optCell=(k,title,q,items,w)=>cell([
   new Paragraph({spacing:{after:20},children:[
     new TextRun({text:title,bold:true,size:13,color:C[k],font:"Calibri"}),
     new TextRun({text:"  "+q,size:10,color:MUTED,font:"Calibri",italics:true})]}),
-  new Paragraph({children:[new TextRun({text:items.join("   ·   "),size:10,color:INK,font:"Calibri"})]})
+  ...items.map(t=>new Paragraph({spacing:{after:10},children:[
+    new TextRun({text:"○  "+t,size:10,color:INK,font:"Calibri"})]}))
 ],w,SH[k]);
 
 const writeCell=(w)=>cell([
@@ -113,11 +121,11 @@ const writeCell=(w)=>cell([
 ],w,SH.ev);
 
 /* 2x2: circle three, write one. */
-const grid=()=>{const W=Math.floor(PANW/2);
+const grid=(ideaOpts)=>{const W=Math.floor(PANW/2);
   return new Table({columnWidths:[W,W],width:{size:W*2,type:WidthType.DXA},rows:[
     new TableRow({children:[
-      optCell("idea","Idea","what",IDEAS.map(o=>o.t),W),
-      optCell("eff","Purpose","why",EFFECTS.map(o=>o.t),W)]}),
+      optCell("idea","Idea","what",ideaOpts,W),
+      optCell("eff","Purpose","why",PURPOSES,W)]}),
     new TableRow({children:[
       writeCell(W),
       optCell("verb","Verb","how",VERBS.map(o=>o.t),W)]})
@@ -159,7 +167,7 @@ const P1=()=>[
   lab("THE WALL"),
   rubric(),
   lab("YOUR FIRST GO"),
-  ...lines(6)
+  ...lines(4)
 ];
 
 const head=(t)=>new Paragraph({spacing:{after:14},
@@ -169,30 +177,30 @@ const note=(t)=>new Paragraph({spacing:{after:22},children:[
   new TextRun({text:t,size:11,color:MUTED,font:"Calibri"})]});
 
 /* Every process page: the starting point, the grid, write, then lift. */
-const panel=(title,startRuns,noteText,ref)=>[
+const panel=(title,startRuns,noteText,ref,ideaOpts)=>[
   head(title),
   new Paragraph({spacing:{after:8},children:startRuns}),
   new Paragraph({spacing:{after:22},children:[
     new TextRun({text:"Read "+ref+" for the context.",size:11,color:MUTED,font:"Calibri",italics:true})]}),
   note(noteText),
-  grid(),
+  grid(ideaOpts),
   lab("WRITE YOUR SENTENCE"),
-  ...lines(16),
+  ...lines(8),
   lab("NOW LIFT IT"),
-  ...lines(17)
+  ...lines(8)
 ];
 
-const P2=(qt)=>panel("1 — Start from the evidence",
-  [new TextRun({text:"\u201C"+qt.t+"\u201D",size:17,color:INK,italics:true})],
-  "Write the line into the Evidence box, then circle the rest.", qt.ref);
+const P2=(L,opts)=>panel("1 — Start from the evidence",
+  [new TextRun({text:"“"+L.quote+"”",size:17,color:INK,italics:true})],
+  "Write the line into the Evidence box, then circle the rest.", L.ref, opts);
 
-const P3=(idea,ref)=>panel("2 — Start from the idea",
-  [new TextRun({text:idea,size:18,color:C.idea,bold:true})],
-  "Go back and find a line that proves it.", ref);
+const P3=(L,other,opts)=>panel("2 — Start from the idea",
+  [new TextRun({text:other,size:18,color:C.idea,bold:true})],
+  "Go back to the same section and find a line that proves it.", L.ref, opts);
 
-const P4=(eff,ref)=>panel("3 — Start from the effect on the reader",
-  [new TextRun({text:eff,size:18,color:C.eff,bold:true})],
-  "Find the writing that does this to you.", ref);
+const P4=(L,opts)=>panel("3 — Start from the effect on the reader",
+  [new TextRun({text:"Circle a purpose in the box, then find the writing that does it.",size:15,color:C.eff,bold:true})],
+  "", L.ref, opts);
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
@@ -204,14 +212,24 @@ const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
     cell(right,PANW,null,{top:NONE,bottom:NONE,left:NONE,right:NONE})]})]});
 
 /* Folded once, an A3 sheet reads 1,2,3,4. Side one carries panels 4 and 1;
-   side two carries panels 2 and 3. */
-const kids=QUOTES.slice(0,LIMIT||QUOTES.length);
+   side two carries panels 2 and 3.
+
+   The Idea box always offers BOTH ideas verified for this student's chapter,
+   so at least one circle-able option is correct for the page in front of
+   them, plus three ideas from elsewhere as distractors. */
+const kids=LINKS.slice(0,LIMIT||LINKS.length);
 const children=[];
-kids.forEach((qt,i)=>{
-  const idea=IDEAS[i%IDEAS.length].t, eff=EFFECTS[i%EFFECTS.length].t;
-  children.push(spread(P4(eff,qt.ref), P1()));
+kids.forEach((L,i)=>{
+  const sameCh = LINKS.filter(x=>x.ch===L.ch);
+  const other  = (sameCh.find(x=>x.quote!==L.quote)||L).idea;
+  const mine   = [L.idea].concat(other!==L.idea?[other]:[]);
+  const others = LINKS.filter(x=>x.ch!==L.ch).map(x=>x.idea);
+  const picks  = [];
+  for(let k=0;k<3;k++) picks.push(others[(i*3+k)%others.length]);
+  const opts   = mine.concat(picks.filter(x=>mine.indexOf(x)<0)).slice(0,5);
+  children.push(spread(P4(L,opts), P1()));
   children.push(new Paragraph({children:[new PageBreak()]}));
-  children.push(spread(P2(qt), P3(idea,qt.ref)));
+  children.push(spread(P2(L,opts), P3(L,other,opts)));
   if(i<kids.length-1) children.push(new Paragraph({children:[new PageBreak()]}));
 });
 
@@ -220,4 +238,4 @@ const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:19,c
     margin:{top:560,bottom:440,left:560,right:560}}},children}]});
 Packer.toBuffer(doc).then(b=>{fs.writeFileSync(OUT,b);
   console.log('written '+OUT+' — '+kids.length+' A3 sheets, '+(kids.length*2)+' printed sides');
-  kids.forEach((x,i)=>console.log('  '+(i+1)+'. ['+x.ref+'] '+x.t.slice(0,64)));});
+  kids.forEach((x,i)=>console.log('  '+(i+1)+'. ['+x.ref+'] \u201C'+x.quote.slice(0,54)+'\u201D\n        idea: '+x.idea.slice(0,62)));});
