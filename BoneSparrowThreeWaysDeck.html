@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three ways in — projector</title>
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --accent:#a83232; --correct:#2f6a3e; --badbg:#f7ecec;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink)}
+
+#bar{position:fixed;top:0;left:0;right:0;display:flex;gap:8px;align-items:center;
+  padding:10px 14px;z-index:40}
+#bar button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
+  padding:8px 14px;font-family:inherit;font-size:14px;color:var(--muted);cursor:pointer}
+#bar button.on{border-color:var(--ink);color:var(--ink);font-weight:600}
+#bar .sp{flex:1}
+#bar #restart{font-size:13px}
+
+#stagewrap{position:absolute;inset:0}
+#cloud{position:absolute;inset:0}
+
+.centre{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);
+  max-width:44vw;text-align:center;z-index:10;
+  border-radius:14px;padding:20px 26px;font-family:Georgia,serif;font-weight:700;
+  font-size:clamp(20px,2.6vw,34px);line-height:1.35;box-shadow:0 2px 14px rgba(0,0,0,.08)}
+.centre.ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+.centre.idea{background:var(--idea-bg);color:var(--idea-tx)}
+.centre.eff{background:var(--eff-bg);color:var(--eff-tx)}
+
+.dock{position:absolute;left:50%;top:58%;transform:translateX(-50%);z-index:10;
+  display:flex;gap:12px;max-width:80vw;flex-wrap:wrap;justify-content:center}
+.dock .chip{border-radius:10px;padding:10px 16px;font-family:Georgia,serif;font-weight:700;
+  font-size:clamp(14px,1.6vw,21px);animation:pop .3s ease}
+.chip.idea{background:var(--idea-bg);color:var(--idea-tx)}
+.chip.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.chip.ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+
+.node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none;
+  border-radius:12px;padding:12px 18px;font-weight:600;text-align:center;
+  font-size:clamp(15px,1.7vw,24px);max-width:26vw;line-height:1.3;
+  box-shadow:0 2px 8px rgba(0,0,0,.10);animation:pop .35s ease;z-index:5}
+.node.idea{background:var(--idea-bg);color:var(--idea-tx)}
+.node.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.node.ev{background:var(--ev-bg);color:var(--ev-tx);font-family:Georgia,serif;font-style:italic;font-weight:700}
+.node.dim{opacity:.35;pointer-events:none;transition:opacity .5s}
+.node.gone{opacity:0;pointer-events:none;transition:opacity .6s}
+.node.bad{animation:shake .4s ease;background:var(--badbg)!important;color:var(--accent)!important;opacity:.45}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.3);opacity:0}
+               to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes shake{0%,100%{margin-left:0}20%,60%{margin-left:-9px}40%,80%{margin-left:9px}}
+
+#toast{position:fixed;left:50%;bottom:8vh;transform:translateX(-50%);z-index:50;
+  background:var(--badbg);color:var(--accent);border-radius:10px;padding:12px 20px;
+  font-size:clamp(14px,1.5vw,20px);max-width:70vw;text-align:center;
+  opacity:0;transition:opacity .25s;pointer-events:none}
+#toast.show{opacity:1}
+
+#hint{position:fixed;right:18px;bottom:14px;color:var(--muted);font-size:13px;z-index:40}
+
+/* ---- builder ---- */
+#build{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:8vh 6vw 6vh}
+#frame{display:flex;flex-wrap:wrap;gap:10px;row-gap:16px;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:clamp(17px,2.1vw,28px);line-height:1.5;max-width:88vw}
+#frame .fchip{border-radius:10px;padding:8px 14px;font-weight:700}
+#frame .ftext{color:var(--ink)}
+#frame .fslot{border:2px dashed var(--line);border-radius:10px;padding:8px 18px;color:var(--muted);
+  min-width:70px;text-align:center}
+#frame .fslot.active{border-color:var(--ink)}
+#frame .fslot.filled{border-style:solid;border-color:var(--line);color:var(--ink);font-weight:700}
+#frame .fslot.filled.verb{background:var(--verb-bg);color:var(--verb-tx);border-color:var(--verb-bg)}
+#bank{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:7vh}
+#bank button{border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;
+  padding:14px 22px;font-family:inherit;font-size:clamp(16px,1.9vw,25px);font-weight:600;color:var(--ink)}
+#bank button.verb{background:var(--verb-bg);color:var(--verb-tx)}
+#bank button:hover{border-color:var(--ink)}
+#bank button.no{background:var(--badbg);color:var(--accent);animation:shake .4s ease}
+
+/* ---- final ---- */
+#final{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:0 8vw;gap:6vh}
+#final .sent{font-family:Georgia,serif;font-size:clamp(22px,3vw,40px);line-height:2;text-align:center}
+#final .sent em{font-style:normal;font-weight:700;border-radius:8px;padding:2px 8px}
+em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
+em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic!important}
+em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+#final button{border:1px solid var(--line);border-radius:10px;background:var(--paper);
+  padding:12px 22px;font-family:inherit;font-size:17px;cursor:pointer;color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stagewrap">
+  <div id="cloud"></div>
+  <div id="build"><div id="frame"></div><div id="bank"></div></div>
+  <div id="final"><div class="sent"></div><button id="nextact"></button></div>
+</div>
+<div id="toast"></div>
+<div id="hint"></div>
+<script>
+"use strict";
+/* ================= data ================= */
+const ACTS=[
+{ id:"ev", name:"From the evidence",
+  centre:{kind:"ev", text:"“My throat is as dry as the dirt”"},
+  levels:[
+   {kind:"idea", nodes:[
+     {t:"fear",ok:1},{t:"power",ok:1},{t:"a body someone else controls",ok:1},
+     {t:"Subhi is thirsty",ok:0,why:"That reads the line as information. The dry throat is fear, not thirst."},
+     {t:"friendship",ok:0,why:"No friend anywhere near this fence."},
+     {t:"the Night Sea",ok:0,why:"Chapter 1, and a different feeling altogether."}]},
+   {kind:"eff", nodes:[
+     {t:"makes the reader feel the danger before Subhi names it",ok:1},
+     {t:"makes the reader feel how little control a child has",ok:1},
+     {t:"makes the reader laugh",ok:0,why:"Nobody is laughing at this fence."},
+     {t:"makes the sentence more interesting",ok:0,why:"That's about the sentence, not the reader."}]}],
+  frame:a=>[
+   {chip:"c"},
+   {slot:[{t:"reveals",q:1},{t:"shows",q:1},{t:"is",q:0,why:"'Is' says what something equals — pick a verb that says what the writing does."}],k:"verb"},
+   {chip:0},
+   {slot:[{t:", which",q:1},{t:". Also it",q:0,why:"That snaps one thought into two sentences."},{t:"and stuff like",q:0,why:"Chat, not analysis."}]},
+   {chip:1},
+   {slot:[{t:".",q:1},{t:"!!!",q:0,why:"One full stop carries it."},{t:"…",q:0,why:"Finish the thought."}]}],
+  sent:(a,s)=>`<em class="hl-ev">${a.centre.text}</em> <em class="hl-verb">${s[0]}</em> <em class="hl-idea">${a.picks[0].t}</em>${s[1]} <em class="hl-eff">${a.picks[1].t}</em>${s[2]}`
+},
+{ id:"idea", name:"From the idea",
+  centre:{kind:"idea", text:"power"},
+  levels:[
+   {kind:"ev", nodes:[
+     {t:"“I asked you a question”",ok:1},{t:"“my feet leave the ground”",ok:1},
+     {t:"“I can’t say a single thing”",ok:1},
+     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"Chapter 1 — the Night Sea, not this scene."},
+     {t:"“her whole face shines like someone’s lit a candle in her cheeks”",ok:0,why:"Chapter 14, and a happy line."}]},
+   {kind:"eff", nodes:[
+     {t:"positions the reader to fear Beaver before he is described",ok:1},
+     {t:"makes the reader understand how little control a child has",ok:1},
+     {t:"makes the reader feel cosy and safe",ok:0,why:"Nothing in this scene is cosy."},
+     {t:"makes the reader keep reading",ok:0,why:"True of any page of any book."}]}],
+  frame:a=>[
+   {text:"The issue of"},
+   {chip:"c"},
+   {slot:[{t:"is exposed when",q:1},{t:"is shown when",q:1},{t:"is mentioned when",q:0,why:"Nothing here is mentioned. The scene acts it out."}],k:"verb"},
+   {chip:0},
+   {slot:[{t:", which",q:1},{t:", and also it",q:0,why:"Loose — 'which' ties the effect to the line."},{t:". Then",q:0,why:"That breaks the sentence in half."}]},
+   {chip:1},
+   {slot:[{t:".",q:1},{t:"?",q:0,why:"You are telling the reader, not asking them."},{t:"…",q:0,why:"Finish the thought."}]}],
+  sent:(a,s)=>`The issue of <em class="hl-idea">${a.centre.text}</em> <em class="hl-verb">${s[0]}</em> <em class="hl-ev">${a.picks[0].t}</em>${s[1]} <em class="hl-eff">${a.picks[1].t}</em>${s[2]}`
+},
+{ id:"eff", name:"From the effect",
+  centre:{kind:"eff", text:"make the reader feel how little control a child has"},
+  levels:[
+   {kind:"ev", nodes:[
+     {t:"“my feet leave the ground”",ok:1},{t:"“I asked you a question”",ok:1},
+     {t:"“I can’t say a single thing”",ok:1},
+     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"The Night Sea is Subhi in control of his own world — the opposite."},
+     {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4 — about what the camp gives, not this scene."}]},
+   {kind:"idea", nodes:[
+     {t:"power",ok:1},{t:"fear",ok:1},{t:"a body someone else controls",ok:1},
+     {t:"imagination",ok:0,why:"That's the Night Sea's idea, not Beaver's fence."},
+     {t:"happiness",ok:0,why:"Read the line again."}]}],
+  frame:a=>[
+   {text:"To"},
+   {chip:"c"},
+   {text:", Fraillon"},
+   {slot:[{t:"writes",q:1},{t:"describes",q:1},{t:"does",q:0,why:"'Does' says nothing about the writing."}],k:"verb"},
+   {text:"Beaver shoving Subhi until"},
+   {chip:0},
+   {slot:[{t:", exposing",q:1},{t:", and it shows",q:0,why:"Flat — let one strong word do it."},{t:". Then",q:0,why:"That breaks the sentence in half."}],k:"verb"},
+   {chip:1},
+   {slot:[{t:".",q:1},{t:"!",q:0,why:"The sentence is already loud enough."},{t:"…",q:0,why:"Finish the thought."}]}],
+  sent:(a,s)=>`To <em class="hl-eff">${a.centre.text}</em>, Fraillon <em class="hl-verb">${s[0]}</em> Beaver shoving Subhi until <em class="hl-ev">${a.picks[0].t}</em><em class="hl-verb">${s[1]}</em> <em class="hl-idea">${a.picks[1].t}</em>${s[2]}`
+}];
+
+/* ================= state ================= */
+const S={act:0, level:-1, phase:"idle", picks:[], slotPicks:[], slotIdx:0, nodes:[]};
+const $=id=>document.getElementById(id);
+const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ================= top bar ================= */
+function drawBar(){
+  $("bar").innerHTML=ACTS.map((a,i)=>
+    `<button class="${i===S.act?'on':''}" data-a="${i}">${i+1} · ${esc(a.name)}</button>`).join("")+
+    `<span class="sp"></span><button id="restart">again</button>`;
+  [...$("bar").querySelectorAll("button[data-a]")].forEach(b=>
+    b.addEventListener("click",()=>startAct(+b.dataset.a)));
+  $("restart").addEventListener("click",()=>startAct(S.act));
+}
+
+/* ================= floaty cloud ================= */
+let anim=null, spawnTimer=null;
+function startAct(i){
+  S.act=i; S.level=-1; S.phase="centre"; S.picks=[]; S.slotPicks=[]; S.slotIdx=0;
+  killCloud();
+  $("build").style.display="none"; $("final").style.display="none";
+  $("cloud").style.display="block"; $("cloud").innerHTML="";
+  const A=ACTS[i];
+  const c=document.createElement("div");
+  c.className="centre "+A.centre.kind; c.textContent=A.centre.text; c.id="centrebox";
+  $("cloud").appendChild(c);
+  const d=document.createElement("div"); d.className="dock"; d.id="dock";
+  $("cloud").appendChild(d);
+  drawBar(); hint("space · next");
+}
+function hint(t){ $("hint").textContent=t; }
+function killCloud(){ if(anim)cancelAnimationFrame(anim); anim=null;
+  if(spawnTimer)clearInterval(spawnTimer); spawnTimer=null; S.nodes=[]; }
+
+function spawnLevel(){
+  S.level++;
+  const A=ACTS[S.act], L=A.levels[S.level];
+  if(!L){ toBuilder(); return; }
+  S.phase="cloud";
+  const W=innerWidth,H=innerHeight;
+  const list=[...L.nodes].sort(()=>Math.random()-.5);
+  let k=0;
+  killCloud(); S.nodes=[];
+  spawnTimer=setInterval(()=>{
+    if(k>=list.length){clearInterval(spawnTimer);spawnTimer=null;return;}
+    const o=list[k++];
+    const el=document.createElement("div");
+    el.className="node "+L.kind; el.textContent=o.t;
+    $("cloud").appendChild(el);
+    const ang=Math.random()*Math.PI*2;
+    const n={el,o,kind:L.kind,
+      x:W/2+Math.cos(ang)*60, y:H*0.42+Math.sin(ang)*40,
+      vx:Math.cos(ang)*3, vy:Math.sin(ang)*2,
+      ph:Math.random()*Math.PI*2, dead:false};
+    el.addEventListener("click",()=>clickNode(n));
+    S.nodes.push(n);
+  },650);
+  physics();
+  hint("");
+}
+function physics(){
+  const cx=()=>innerWidth/2, cy=()=>innerHeight*0.42;
+  const step=(t)=>{
+    const R=Math.min(innerWidth,innerHeight)*0.36;
+    for(const n of S.nodes){
+      if(n.dead) continue;
+      const dx=n.x-cx(), dy=n.y-cy(), d=Math.hypot(dx,dy)||1;
+      const pull=(d-R)*-0.004;               /* spring to the ring */
+      n.vx+=dx/d*pull*d*0.02; n.vy+=dy/d*pull*d*0.02;
+      const cw=(n.el.offsetWidth||120)/2, ch=(n.el.offsetHeight||40)/2;
+      /* keep off the centre card */
+      const cb=document.getElementById("centrebox");
+      if(cb){const r=cb.getBoundingClientRect();
+        const ox=Math.max(0,(r.width/2+cw+30)-Math.abs(n.x-(r.left+r.width/2)));
+        const oy=Math.max(0,(r.height/2+ch+30)-Math.abs(n.y-(r.top+r.height/2)));
+        if(ox>0&&oy>0){ n.vx+=Math.sign(n.x-(r.left+r.width/2))*0.5;
+                        n.vy+=Math.sign(n.y-(r.top+r.height/2))*0.5; } }
+      n.vx+=Math.sin(t/900+n.ph)*0.012;      /* lazy wander */
+      n.vy+=Math.cos(t/1100+n.ph)*0.012;
+    }
+    /* elastic spacing: pairs shove each other apart */
+    for(let i=0;i<S.nodes.length;i++)for(let j=i+1;j<S.nodes.length;j++){
+      const a=S.nodes[i],b=S.nodes[j]; if(a.dead||b.dead)continue;
+      const need=(a.el.offsetWidth+b.el.offsetWidth)/2*0.72+26;
+      const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1;
+      if(d<need){const f=(need-d)/need*0.9;
+        a.vx-=dx/d*f; a.vy-=dy/d*f; b.vx+=dx/d*f; b.vy+=dy/d*f;}
+    }
+    for(const n of S.nodes){
+      if(n.dead) continue;
+      n.vx*=0.92; n.vy*=0.92; n.x+=n.vx; n.y+=n.vy;
+      const mW=n.el.offsetWidth/2+8, mH=n.el.offsetHeight/2+8;
+      n.x=Math.max(mW,Math.min(innerWidth-mW,n.x));
+      n.y=Math.max(mH+56,Math.min(innerHeight-mH,n.y));
+      n.el.style.left=n.x+"px"; n.el.style.top=n.y+"px";
+    }
+    anim=requestAnimationFrame(step);
+  };
+  anim=requestAnimationFrame(step);
+}
+let toastT=null;
+function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),3200); }
+
+function clickNode(n){
+  if(S.phase!=="cloud"||n.dead) return;
+  if(!n.o.ok){ n.el.classList.remove("bad"); void n.el.offsetWidth;
+    n.el.classList.add("bad"); toast(n.o.why); return; }
+  /* a good pick: dock it, fade the rest, next level floats in */
+  S.picks.push({t:n.o.t,kind:n.kind});
+  const chip=document.createElement("div");
+  chip.className="chip "+n.kind; chip.textContent=n.o.t;
+  $("dock").appendChild(chip);
+  for(const m of S.nodes){ m.dead=true; m.el.classList.add(m===n?"gone":"dim");
+    setTimeout(()=>m.el.remove(),700); }
+  S.nodes=[];
+  setTimeout(spawnLevel,750);
+}
+
+/* ================= builder ================= */
+function toBuilder(){
+  killCloud(); S.phase="build"; S.slotIdx=0; S.slotPicks=[];
+  $("cloud").style.display="none"; $("build").style.display="flex";
+  const A=ACTS[S.act]; A.picks=S.picks;
+  drawBuild(); hint("");
+}
+function drawBuild(){
+  const A=ACTS[S.act], parts=A.frame(A);
+  let slotN=0, html="";
+  for(const p of parts){
+    if(p.text!==undefined) html+=`<span class="ftext">${esc(p.text)}</span>`;
+    else if(p.chip!==undefined){
+      const pk=p.chip==="c"?{t:A.centre.text,kind:A.centre.kind}:A.picks[p.chip];
+      html+=`<span class="fchip chip ${pk.kind}">${esc(pk.t)}</span>`;
+    }else{
+      const me=slotN++;
+      const got=S.slotPicks[me];
+      html+=`<span class="fslot ${got!==undefined?"filled":""} ${me===S.slotIdx?"active":""} ${p.k||""}">${
+        got!==undefined?esc(p.slot[got].t):"   "}</span>`;
+    }
+  }
+  $("frame").innerHTML=html;
+  const slots=parts.filter(p=>p.slot);
+  if(S.slotIdx>=slots.length){ toFinal(); return; }
+  const cur=slots[S.slotIdx];
+  $("bank").innerHTML=[...cur.slot].map((o,j)=>
+    `<button class="${cur.k||""}" data-j="${j}">${esc(o.t)}</button>`).join("");
+  [...$("bank").querySelectorAll("button")].forEach(b=>
+    b.addEventListener("click",()=>{
+      const o=cur.slot[+b.dataset.j];
+      if(!o.q){ b.classList.remove("no"); void b.offsetWidth; b.classList.add("no"); toast(o.why); return; }
+      S.slotPicks[S.slotIdx]=+b.dataset.j; S.slotIdx++; drawBuild();
+    }));
+}
+function toFinal(){
+  S.phase="final";
+  $("build").style.display="none"; $("final").style.display="flex";
+  const A=ACTS[S.act];
+  const s=[];
+  let i=0; for(const p of A.frame(A)) if(p.slot) s.push(p.slot[S.slotPicks[i++]].t);
+  $("final").querySelector(".sent").innerHTML=A.sent(A,s.map(esc));
+  const nxt=(S.act+1)%ACTS.length;
+  $("nextact").textContent=(S.act<ACTS.length-1)?((nxt+1)+" · "+ACTS[nxt].name):"start again";
+  $("nextact").onclick=()=>startAct(nxt);
+}
+
+/* ================= keys ================= */
+addEventListener("keydown",e=>{
+  if(e.key===" "||e.key==="ArrowRight"){ e.preventDefault();
+    if(S.phase==="centre") spawnLevel(); }
+  if(e.key==="r"||e.key==="R") startAct(S.act);
+});
+$("stagewrap").addEventListener("click",e=>{
+  if(S.phase==="centre"&&(e.target.id==="cloud"||e.target.id==="centrebox")) spawnLevel();
+});
+
+startAct(0);
+</script>
+</body>
+</html>
