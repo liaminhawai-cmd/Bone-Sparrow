@@ -16,6 +16,7 @@ on:
       - "GrammarHuboffline.html"
       - "bonesparrowtrainer.html"
       - "BoneSparrowThreeWays.html"
+      - "BoneSparrowThreeWaysDeck.html"
       - "index.html"
       - "teacher/index.html"
       - "BoneSparrow-*.docx"
@@ -51,6 +52,7 @@ jobs:
           cp GrammarHuboffline.html dist/
           cp bonesparrowtrainer.html dist/
           cp BoneSparrowThreeWays.html dist/
+          cp BoneSparrowThreeWaysDeck.html dist/
           mkdir dist/teacher
           cp teacher/index.html dist/teacher/
           cp BoneSparrow-*.docx dist/
