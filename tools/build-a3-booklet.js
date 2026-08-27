@@ -46,74 +46,58 @@ const VERBS  =bank('verbs',  o=>o.q==='good'&&o.lo<=7).slice(0,7);
 const PURPOSES=["makes the reader feel\u2026","makes the reader understand\u2026",
                 "positions the reader to\u2026","keeps from the reader\u2026"];
 
-/* Ideas are offered as single words. A student who can only write "loneliness"
-   has still named something true about the page; a student who can go further
-   has somewhere to go. Each chapter's first four are read from the ideas the
-   app already verifies for that chapter, so every option in the box is
-   circle-able for the page the student is holding. */
-const THEMES={
-  "Chapter 6" :["grief","being unseen","curiosity","family"],
-  "Chapter 8" :["dignity","not enough to go round","kindness","being a number"],
-  "Chapter 10":["friendship","imagination","hope","darkness"],
-  "Chapter 14":["trust","friendship","happiness","promises"],
-  "Chapter 17":["identity","shame","survival","being forgotten"],
-  "Chapter 20":["powerlessness","having a voice","protest","witness"]
-};
-/* Cycle 3 hands the student one purpose, not a menu: naming the effect is the
-   hard part, and the work of that cycle is finding writing that does it.
-   One purpose per theme, so the purpose can be pointed at whichever thread
-   this sheet's cycle 3 works. */
-const AIMS={
- "Chapter 6":{
-  "grief":"help the reader to feel how grief has changed Jimmie's family",
-  "being unseen":"help the reader to notice who in this family is not being seen",
-  "curiosity":"help the reader to feel Jimmie's pull towards the fence",
-  "family":"help the reader to understand the importance of family"},
- "Chapter 8":{
-  "dignity":"help the reader to understand what dignity costs in the camp",
-  "not enough to go round":"help the reader to understand that nothing in the camp comes in the amounts people need",
-  "kindness":"help the reader to feel how much one small kindness matters",
-  "being a number":"help the reader to understand what it does to people to be counted instead of named"},
- "Chapter 10":{
-  "friendship":"help the reader to feel what Jimmie's friendship gives Subhi",
-  "imagination":"help the reader to understand why imagination matters in the camp",
-  "hope":"help the reader to feel hope arriving",
-  "darkness":"help the reader to feel the darkness pressing in"},
- "Chapter 14":{
-  "trust":"help the reader to understand how the two children come to trust each other",
-  "friendship":"help the reader to feel the friendship growing",
-  "happiness":"help the reader to feel the happiness in this moment",
-  "promises":"help the reader to understand why a kept promise matters so much here"},
- "Chapter 17":{
-  "identity":"help the reader to understand what Subhi is giving up to fit in",
-  "shame":"help the reader to feel the shame the camp puts on people",
-  "survival":"help the reader to understand what survival costs here",
-  "being forgotten":"help the reader to understand that the camp is built to be forgotten"},
- "Chapter 20":{
-  "powerlessness":"help the reader to feel how little power anyone inside the fence has",
-  "having a voice":"help the reader to understand what it takes to be heard",
-  "protest":"help the reader to read the men's silence as protest",
-  "witness":"help the reader to understand why Queeny photographs everything"}
+/* The idea vocabulary is the broad set taught across the unit, the same on
+   every sheet. Broad words hold on any page of the novel, which is what lets
+   one box serve every chapter. */
+const IDEAS=["imagination","loneliness","fear","hope","freedom","friendship","power","survival"];
+
+/* One purpose per idea, all built on the same frame. */
+const PUR={
+  imagination:"help the reader to see what imagination does for Subhi",
+  loneliness:"help the reader to feel the loneliness on this page",
+  fear:"help the reader to feel the fear on this page",
+  hope:"help the reader to see where the hope comes from",
+  freedom:"help the reader to understand what freedom means here",
+  friendship:"help the reader to see what the friendship gives",
+  power:"help the reader to understand who has the power here",
+  survival:"help the reader to understand what surviving costs"
 };
 
-/* The three cycles on one sheet work three different threads: the quote's own
-   idea in cycle 1, an assigned theme in cycle 2, a purpose built from a third
-   theme in cycle 3. Indexed by sheet, [cycle-2 theme, cycle-3 theme], each
-   chosen away from what that sheet's quote is about. */
-const ASSIGN=[
- ["grief","family"],            ["being unseen","grief"],
- ["dignity","not enough to go round"], ["being a number","kindness"],
- ["imagination","darkness"],    ["hope","friendship"],
- ["friendship","happiness"],    ["promises","trust"],
- ["shame","being forgotten"],   ["survival","identity"],
- ["witness","powerlessness"],   ["having a voice","protest"]
-];
+/* Twelve sheets, weighted to chapters 1–14. The chapter-1 lines are the
+   hub's own quickread lines; the rest are matched against the verified
+   quote store by their opening words. Each sheet's three cycles work three
+   different threads: the quote in cycle 1, the c2 idea in cycle 2, the c3
+   purpose in cycle 3. */
+const pick=(start)=>{const L=LINKS.find(x=>x.quote.indexOf(start)===0);
+  if(!L) throw new Error('no verified quote starting: '+start); return L;};
+const SHEETS=[
+ {ref:"Chapter 1, pages 1–2", quote:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", c2:"hope", c3:"power"},
+ {ref:"Chapter 1, pages 1–2", quote:"Queeny, she never tries to look in the shadows. She doesn't even squint.", c2:"loneliness", c3:"survival"},
+ {q:"Jimmie wonders", c2:"freedom", c3:"fear"},
+ {q:"A fence just means", c2:"friendship", c3:"power"},
+ {q:"…learn their names", c2:"power", c3:"survival"},
+ {q:"There are only fourteen", c2:"fear", c3:"hope"},
+ {q:"Knowing Jimmie has a whole real book", c2:"imagination", c3:"friendship"},
+ {q:"…disappearing into the dark", c2:"survival", c3:"imagination"},
+ {q:"I know for sure that she", c2:"freedom", c3:"loneliness"},
+ {q:"her whole face shines", c2:"power", c3:"friendship"},
+ {q:"…if I only speak in English", c2:"fear", c3:"freedom"},
+ {q:"…Queeny takes a picture", c2:"hope", c3:"freedom"}
+].map(sh=>{
+  if(sh.q){const L=pick(sh.q); return {ref:L.ref, quote:L.quote, c2:sh.c2, c3:sh.c3};}
+  return sh;
+});
 
-/* ---- the wall, exactly, minus the Example row ---- */
+/* ---- the wall, exactly as the site draws it ---- */
 const wallBlk=cut('const WK_WALL','resps:[');
-const WALL=[];{const re=/lv:"(Level \d)", n:(\d), eal:"([^"]*)",\s*\n\s*focus:"([^"]*)",\s*\n\s*vic:"([^"]*)"[\s\S]*?exp:`([^`]*)`/g;let m;
- while((m=re.exec(wallBlk))) WALL.push({lv:m[1],n:+m[2],eal:m[3],focus:m[4],vic:m[5],
-   exp:m[6].replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim()});}
+const WALL=[];{const re=/lv:"(Level \d)", n:(\d), eal:"([^"]*)",\s*\n\s*focus:"([^"]*)",\s*\n\s*vic:"[^"]*",\s*\n\s*vicH:`([^`]*)`,\s*\n\s*exp:`([^`]*)`/g;let m;
+ while((m=re.exec(wallBlk))) WALL.push({lv:m[1],n:+m[2],eal:m[3],focus:m[4],vicH:m[5],expH:m[6]});}
+if(WALL.length!==5) throw new Error('wall parse: got '+WALL.length+' levels');
+
+/* The wall's own worked responses, one per level: the Example row. */
+const RESPS={};{const rb=src.slice(src.indexOf('resps:['),src.indexOf('const WK_LEVELS'));
+ const re=/id:"w(\d)", lvl:\d,[\s\S]*?h:`([^`]*)`/g;let m;
+ while((m=re.exec(rb))) RESPS[+m[1]]=m[2].replace(/\s+/g,' ').trim();}
 
 const C={idea:"0B447C",verb:"8A4B12",ev:"7A5A00",eff:"1F5C33",feat:"4B2F7A"};
 const SH={idea:"D6EAFC",verb:"FAE3CF",ev:"FFF3B0",eff:"DFF0E2",feat:"E7DDF6"};
@@ -146,6 +130,15 @@ const cell=(ch,w,shade,brd)=>new TableCell({width:{size:w,type:WidthType.DXA},ch
   shading:shade?{type:ShadingType.CLEAR,fill:shade,color:"auto"}:undefined,
   margins:{top:50,bottom:50,left:80,right:80},
   borders:brd||{top:G,bottom:G,left:G,right:G}});
+const fromHtml=(h,sz)=>{const out=[];const re=/<em class="hl-(\w+)">(.*?)<\/em>/g;let last=0,x;
+  const plain=t=>t.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\s+/g,' ');
+  while((x=re.exec(h))){ const pre=plain(h.slice(last,x.index)); if(pre) out.push(new TextRun({text:pre,size:sz||13}));
+    out.push(new TextRun({text:plain(x[2]),size:sz||13,color:C[x[1]]||INK,bold:true,
+      shading:SH[x[1]]?{type:ShadingType.CLEAR,fill:SH[x[1]]}:undefined}));
+    last=x.index+x[0].length; }
+  const tail=plain(h.slice(last)); if(tail) out.push(new TextRun({text:tail,size:sz||13}));
+  return out;};
+
 const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
   while((x=re.exec(s))){if(x.index>last)out.push(new TextRun({text:s.slice(last,x.index),size:sz||13}));
     out.push(new TextRun({text:x[2],size:sz||13,color:C[x[1]],bold:true,shading:{type:ShadingType.CLEAR,fill:SH[x[1]]}}));
@@ -204,6 +197,23 @@ const grid=(ideaOpts,purposeOpts,quote,ideaText)=>{const W=Math.floor(PANW/2);
       writeCell(W,quote),
       optCell("verb","Verb","how",VERBS.map(o=>o.t),W)]})
   ]});};
+
+/* The wall as the site draws it: skill focus, rubric line, worked example,
+   what makes it — colour highlights intact. */
+const wallTable=()=>{const LW=900,CW=Math.floor((PANW-LW)/WALL.length);
+  const hdr=new TableRow({children:[cell([new Paragraph({children:[]})],LW,DEEP)]
+    .concat(WALL.map(L=>cell([new Paragraph({alignment:AlignmentType.CENTER,children:[
+      new TextRun({text:L.lv.toUpperCase(),bold:true,size:13,color:"F6F1E6",font:"Calibri"})]})],CW,DEEP)))});
+  const row=(name,fn,shade)=>new TableRow({children:[
+    cell([new Paragraph({children:[new TextRun({text:name,bold:true,size:11,color:MUTED,font:"Calibri"})]})],LW,"F4EFE5")]
+    .concat(WALL.map(L=>cell([new Paragraph({spacing:{line:200,lineRule:LineRuleType.EXACT},
+      children:fn(L)})],CW,shade||"FFFFFF")))});
+  return new Table({columnWidths:[LW].concat(WALL.map(()=>CW)),width:{size:LW+CW*WALL.length,type:WidthType.DXA},
+    rows:[hdr,
+      row("SKILL FOCUS",L=>[new TextRun({text:L.focus,bold:true,size:13,font:"Calibri"})]),
+      row("THE RUBRIC",L=>fromHtml(L.vicH,12)),
+      row("EXAMPLE",L=>fromHtml(RESPS[L.n]||'',12),"FDFBF5"),
+      row("WHAT MAKES IT",L=>fromHtml(L.expH,12))]});};
 
 /* A one-line-per-level strip: enough of the wall to lift a draft against,
    without reprinting the whole grid on every page. */
@@ -271,18 +281,16 @@ const P1=()=>[
     'To {eff|make the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi until {ev|"my feet leave the ground"}.'),
 
   lab("THE WALL"),
-  new Paragraph({spacing:{after:20},children:[
-    new ImageRun({type:"png",data:fs.readFileSync(__dirname+"/wall.png"),
-      transformation:{width:737,height:236}})]}),
+  wallTable(),
 
   lab("TYPES OF LANGUAGE TO DISCUSS"),
   ...[["Descriptive writing","writing that uses the senses (sights, feelings, sounds, smells) to describe settings, characters and events.",0],
       ["Dialogue","conversation between characters.",0],
       ["Internal dialogue","a voice written in the story that shows what a character is thinking. We might also think of this as imagined dialogue.",1],
       ["Symbolism","the use of repeated objects or motifs that represent important ideas. For example, birds symbolise freedom, the fence and the Jackets symbolise imprisonment, the camera and photographs symbolise hope.",0]
-     ].map(([t,d,ind])=>new Paragraph({spacing:{after:36},indent:ind?{left:340}:undefined,children:[
-       new TextRun({text:t+" — ",bold:true,size:17,color:DEEP,font:"Calibri"}),
-       new TextRun({text:d,size:17,color:INK,font:"Calibri"})]}))
+     ].map(([t,d,ind])=>new Paragraph({spacing:{after:30},indent:ind?{left:340}:undefined,children:[
+       new TextRun({text:t+" — ",bold:true,size:16,color:DEEP,font:"Calibri"}),
+       new TextRun({text:d,size:16,color:INK,font:"Calibri"})]}))
 ];
 
 const head=(t)=>new Paragraph({spacing:{after:14},
@@ -308,16 +316,16 @@ const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText)=>[
   ...lines(7)
 ];
 
-const P2=(L,opts)=>panel("1 · Start from the evidence",
+const P2=(L)=>panel("1 · Start from the evidence",
   [new TextRun({text:"“"+L.quote+"”",size:19,color:INK,italics:true})],
-  L.ref, opts, null, {t:L.quote,ch:L.chk.replace('Chapter ','')});
+  L.ref, IDEAS, null, {t:L.quote,ch:(L.ref.match(/\d+/)||[''])[0]});
 
 const P3=(L,theme)=>panel("2 · Start from the idea",
   [new TextRun({text:theme,size:22,color:C.idea,bold:true})],
   L.ref, null, null, null, theme);
 
-const P4=(L,theme,opts)=>panel("3 · Start from the effect and purpose",
-  [], L.ref, opts, [AIMS[L.chk][theme]]);
+const P4=(L,theme)=>panel("3 · Start from the effect and purpose",
+  [], L.ref, IDEAS, [PUR[theme]]);
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
@@ -334,20 +342,12 @@ const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
    The Idea box always offers BOTH ideas verified for this student's chapter,
    so at least one circle-able option is correct for the page in front of
    them, plus three ideas from elsewhere as distractors. */
-const kids=LINKS.slice(0,LIMIT||LINKS.length);
+const kids=SHEETS.slice(0,LIMIT||SHEETS.length);
 const children=[];
 kids.forEach((L,i)=>{
-  const [t2,t3]=ASSIGN[i%ASSIGN.length];
-  const mine   = THEMES[L.chk]||[];
-  const others = Object.keys(THEMES).filter(k=>k!==L.chk)
-                   .reduce((a,k)=>a.concat(THEMES[k]),[]);
-  const picks  = [];
-  for(let k=0;k<2;k++){const t=others[(i*5+k*7)%others.length];
-    if(mine.indexOf(t)<0 && picks.indexOf(t)<0) picks.push(t);}
-  const opts   = mine.concat(picks).slice(0,6);
-  children.push(spread(P4(L,t3,opts), P1()));
+  children.push(spread(P4(L,L.c3), P1()));
   children.push(new Paragraph({children:[new PageBreak()]}));
-  children.push(spread(P2(L,opts), P3(L,t2)));
+  children.push(spread(P2(L), P3(L,L.c2)));
   if(i<kids.length-1) children.push(new Paragraph({children:[new PageBreak()]}));
 });
 
@@ -356,4 +356,4 @@ const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:19,c
     margin:{top:560,bottom:440,left:560,right:560}}},children}]});
 Packer.toBuffer(doc).then(b=>{fs.writeFileSync(OUT,b);
   console.log('written '+OUT+' — '+kids.length+' A3 sheets, '+(kids.length*2)+' printed sides');
-  kids.forEach((x,i)=>console.log('  '+(i+1)+'. ['+x.ref+'] \u201C'+x.quote.slice(0,54)+'\u201D\n        idea: '+x.idea.slice(0,62)));});
+  kids.forEach((x,i)=>console.log('  '+(i+1)+'. ['+x.ref+'] \u201C'+x.quote.slice(0,54)+'\u201D  c2:'+x.c2+'  c3:'+x.c3));});
