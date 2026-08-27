@@ -150,8 +150,9 @@ const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
    it is tall instead of a long thin list. */
 const optCell=(k,title,q,items,w)=>{
   const IW=Math.floor((w-260)/2), rows=Math.ceil(items.length/2);
+  const osz=items.length<2?23:19;
   const opt=t=>new Paragraph({spacing:{after:44},children:[
-    new TextRun({text:t?"○  "+t:"",size:19,color:INK,font:"Calibri"})]});
+    new TextRun({text:t?"○  "+t:"",size:osz,color:INK,font:"Calibri"})]});
   const body=items.length<2?items.map(opt)
     :[new Table({columnWidths:[IW,IW],width:{size:IW*2,type:WidthType.DXA},
         borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:NONE},
@@ -259,38 +260,45 @@ const P1=()=>[
     new TextRun({text:"Class",size:14,color:MUTED,font:"Calibri"}),
     new TextRun({text:"  __________",size:14,color:LINE,font:"Calibri"})]}),
   new Paragraph({spacing:{after:16},border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
-    children:[new TextRun({text:"Three ways into a sentence",bold:true,size:22,color:DEEP}),
+    children:[new TextRun({text:"Writing an analytical sentence from three starting points",bold:true,size:22,color:DEEP}),
     new TextRun({text:"\u2003Chapter 5",size:15,color:MUTED,font:"Calibri"})]}),
 
   lab("1  START FROM THE EVIDENCE",C.ev),
   mapRow("ev","THE LINE",'"My throat is as dry as the dirt"',
-    "idea","WHAT IT COULD BE ABOUT",
+    "idea","related ideas",
     ["thirst","fear","who is allowed to speak","a body someone else controls"],
     '{ev|"My throat is as dry as the dirt"} {verb|reveals} {idea|how completely Beaver controls what Subhi’s body can do}, which {eff|makes the reader feel the danger before Subhi names it}.'),
 
   lab("2  START FROM THE IDEA",C.idea),
   mapRow("idea","THE IDEA","power",
-    "ev","LINES THAT PROVE IT",
+    "ev","related evidence",
     ['"I asked you a question"','"my feet leave the ground"','"as dark as the Jackets’ dogs"','"I can’t say a single thing"'],
     '{idea|The issue of power} is {verb|exposed} when Beaver’s voice arrives {ev|"as dark as the Jackets’ dogs"}, which {eff|positions the reader to fear him before he is described}.'),
 
   lab("3  START FROM THE PURPOSE",C.eff),
   mapRow("eff","THE PURPOSE","makes the reader feel how little control a child has",
-    "feat","WRITING THAT DOES IT",
+    "feat","related evidence",
     ["the shove","the questions with no right answer","the dry‑throat image","the dog comparison"],
     'To {eff|make the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi until {ev|"my feet leave the ground"}.'),
 
-  lab("THE WALL"),
   wallTable(),
 
   lab("TYPES OF LANGUAGE TO DISCUSS"),
-  ...[["Descriptive writing","writing that uses the senses (sights, feelings, sounds, smells) to describe settings, characters and events.",0],
-      ["Dialogue","conversation between characters.",0],
-      ["Internal dialogue","a voice written in the story that shows what a character is thinking. We might also think of this as imagined dialogue.",1],
-      ["Symbolism","the use of repeated objects or motifs that represent important ideas. For example, birds symbolise freedom, the fence and the Jackets symbolise imprisonment, the camera and photographs symbolise hope.",0]
-     ].map(([t,d,ind])=>new Paragraph({spacing:{after:30},indent:ind?{left:340}:undefined,children:[
-       new TextRun({text:t+" — ",bold:true,size:16,color:DEEP,font:"Calibri"}),
-       new TextRun({text:d,size:16,color:INK,font:"Calibri"})]}))
+  ...[["Descriptive writing","writing that uses the senses (sights, feelings, sounds, smells) to describe settings, characters and events.",
+       "Fraillon uses \u2026 in the line \u201C\u2026\u201D to \u2026",0],
+      ["Dialogue","conversation between characters.",
+       "The dialogue in line \u201C\u2026\u201D reveals \u2026",0],
+      ["Internal dialogue","a voice written in the story that shows what a character is thinking. We might also think of this as imagined dialogue.",
+       "Subhi\u2019s internal dialogue in line \u201C\u2026\u201D reveals \u2026",1],
+      ["Symbolism","the use of repeated objects or motifs that represent important ideas. For example, birds symbolise freedom, the fence and the Jackets symbolise imprisonment, the camera and photographs symbolise hope.",
+       "Fraillon employs the symbol of the \u2026 in the lines \u201C\u2026\u201D to \u2026",0]
+     ].flatMap(([t,d,stem,ind])=>[
+       new Paragraph({spacing:{after:8},indent:ind?{left:340}:undefined,children:[
+         new TextRun({text:t+" — ",bold:true,size:16,color:DEEP,font:"Calibri"}),
+         new TextRun({text:d,size:16,color:INK,font:"Calibri"})]}),
+       new Paragraph({spacing:{after:26},indent:{left:(ind?340:0)+280},children:[
+         new TextRun({text:stem,size:16,color:MUTED,italics:true})]})
+     ])
 ];
 
 const head=(t)=>new Paragraph({spacing:{after:14},
