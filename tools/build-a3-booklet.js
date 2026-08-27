@@ -75,14 +75,14 @@ const SHEETS=[
  {ref:"Chapter 1, pages 1–2", quote:"Queeny, she never tries to look in the shadows. She doesn't even squint.", c2:"loneliness", c3:"survival"},
  {q:"Jimmie wonders", c2:"freedom", c3:"fear"},
  {q:"A fence just means", c2:"friendship", c3:"power"},
- {q:"…learn their names", c2:"power", c3:"survival"},
- {q:"There are only fourteen", c2:"fear", c3:"hope"},
- {q:"Knowing Jimmie has a whole real book", c2:"imagination", c3:"friendship"},
- {q:"…disappearing into the dark", c2:"survival", c3:"imagination"},
- {q:"I know for sure that she", c2:"freedom", c3:"loneliness"},
+ {q:"That’s not what his paper says", c2:"imagination", c3:"survival"},
+ {q:"I guess they don’t want us getting", c2:"fear", c3:"hope"},
+ {q:"…knowing that Jimmie has a whole real book", c2:"imagination", c3:"friendship"},
+ {q:"…that quiet ballooning up", c2:"survival", c3:"imagination"},
+ {q:"I know for sure that Jimmie", c2:"freedom", c3:"loneliness"},
  {q:"her whole face shines", c2:"power", c3:"friendship"},
- {q:"…if I only speak in English", c2:"fear", c3:"freedom"},
- {q:"…Queeny takes a picture", c2:"hope", c3:"freedom"}
+ {q:"I whisper the few words of Rohingya", c2:"fear", c3:"freedom"},
+ {q:"…about Queeny and Eli sneaking in the camera", c2:"hope", c3:"freedom"}
 ].map(sh=>{
   if(sh.q){const L=pick(sh.q); return {ref:L.ref, quote:L.quote, c2:sh.c2, c3:sh.c3};}
   return sh;
@@ -271,7 +271,7 @@ const P1=()=>[
   lab("2  START FROM THE IDEA",C.idea),
   mapRow("idea","THE IDEA","power",
     "ev","LINES THAT PROVE IT",
-    ['"I asked you a question"','"my feet leave the ground"','"as dark as the Jackets’ dogs"','"I don\u2019t say anything"'],
+    ['"I asked you a question"','"my feet leave the ground"','"as dark as the Jackets’ dogs"','"I can’t say a single thing"'],
     '{idea|The issue of power} is {verb|exposed} when Beaver’s voice arrives {ev|"as dark as the Jackets’ dogs"}, which {eff|positions the reader to fear him before he is described}.'),
 
   lab("3  START FROM THE PURPOSE",C.eff),
