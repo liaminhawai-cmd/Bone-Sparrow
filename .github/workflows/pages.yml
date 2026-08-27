@@ -17,7 +17,7 @@ on:
       - "bonesparrowtrainer.html"
       - "index.html"
       - "teacher/index.html"
-      - "BoneSparrow-A3-booklet.docx"
+      - "BoneSparrow-*.docx"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -51,7 +51,7 @@ jobs:
           cp bonesparrowtrainer.html dist/
           mkdir dist/teacher
           cp teacher/index.html dist/teacher/
-          cp BoneSparrow-A3-booklet.docx dist/
+          cp BoneSparrow-*.docx dist/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
