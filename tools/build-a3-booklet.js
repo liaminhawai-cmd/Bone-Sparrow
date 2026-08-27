@@ -148,7 +148,7 @@ const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
 /* The four questions, as the four-colour grid the teacher deck ends on.
    Options sit in two columns, read down then across, so a box is as wide as
    it is tall instead of a long thin list. */
-const optCell=(k,title,q,items,w)=>{
+const optCell=(k,title,q,items,w,brd)=>{
   const IW=Math.floor((w-260)/2), rows=Math.ceil(items.length/2);
   const osz=items.length<2?23:19;
   const opt=t=>new Paragraph({spacing:{after:44},children:[
@@ -164,12 +164,12 @@ const optCell=(k,title,q,items,w)=>{
   return cell([new Paragraph({spacing:{after:40},children:[
     new TextRun({text:title,bold:true,size:20,color:C[k],font:"Calibri"}),
     new TextRun({text:"  "+q,size:15,color:MUTED,font:"Calibri",italics:true})]})
-  ].concat(body),w,SH[k]);
+  ].concat(body),w,SH[k],brd||undefined);
 };
 
 /* Cycle 1 already knows the line, so the yellow box carries it rather than
    asking the student to copy it out twice. Cycles 2 and 3 leave it ruled. */
-const writeCell=(w,quote)=>cell([
+const writeCell=(w,quote,brd)=>cell([
   new Paragraph({spacing:{after:40},children:[
     new TextRun({text:"Evidence",bold:true,size:20,color:C.ev,font:"Calibri"}),
     new TextRun({text:"  "+(quote?"chapter "+quote.ch:"when"),size:15,color:MUTED,font:"Calibri",italics:true})]}),
@@ -177,25 +177,29 @@ const writeCell=(w,quote)=>cell([
     ? [new Paragraph({spacing:{after:0,line:300,lineRule:LineRuleType.EXACT},
         children:[new TextRun({text:"“"+quote.t+"”",size:19,bold:true,color:C.ev,italics:true})]})]
     : [rule(40), rule(40), rule(0)])
-],w,SH.ev);
+],w,SH.ev,brd||undefined);
 
 /* Cycle 2's blue box carries its assigned theme the way cycle 1's yellow box
    carries its quote: given, not chosen. */
-const ideaCell=(w,theme)=>cell([
+const ideaCell=(w,theme,brd)=>cell([
   new Paragraph({spacing:{after:40},children:[
     new TextRun({text:"Idea",bold:true,size:20,color:C.idea,font:"Calibri"}),
     new TextRun({text:"  what",size:15,color:MUTED,font:"Calibri",italics:true})]}),
   new Paragraph({children:[new TextRun({text:theme,size:22,color:C.idea,bold:true,font:"Calibri"})]})
-],w,SH.idea);
+],w,SH.idea,brd||undefined);
 
 /* 2x2: circle three, write one. */
-const grid=(ideaOpts,purposeOpts,quote,ideaText)=>{const W=Math.floor(PANW/2);
+/* The cycle's starting box wears a thick border in its own colour. */
+const FOCUSB=k=>{const b={style:BorderStyle.SINGLE,size:24,color:C[k]};
+  return {top:b,bottom:b,left:b,right:b};};
+const grid=(ideaOpts,purposeOpts,quote,ideaText,focus)=>{const W=Math.floor(PANW/2);
   return new Table({columnWidths:[W,W],width:{size:W*2,type:WidthType.DXA},rows:[
     new TableRow({children:[
-      ideaText?ideaCell(W,ideaText):optCell("idea","Idea","what",ideaOpts,W),
-      optCell("eff","Purpose","why",purposeOpts||PURPOSES,W)]}),
+      ideaText?ideaCell(W,ideaText,focus==="idea"?FOCUSB("idea"):null)
+              :optCell("idea","Idea","what",ideaOpts,W,focus==="idea"?FOCUSB("idea"):null),
+      optCell("eff","Purpose","why",purposeOpts||PURPOSES,W,focus==="eff"?FOCUSB("eff"):null)]}),
     new TableRow({children:[
-      writeCell(W,quote),
+      writeCell(W,quote,focus==="ev"?FOCUSB("ev"):null),
       optCell("verb","Verb","how",VERBS.map(o=>o.t),W)]})
   ]});};
 
@@ -309,13 +313,13 @@ const note=(t)=>new Paragraph({spacing:{after:22},children:[
 
 /* A page carries what a student writes on and nothing that talks to them:
    the starting point, the boxes, the draft, the wall strip, the rewrite. */
-const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText)=>[
+const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText,focus)=>[
   new Paragraph({spacing:{after:14},
     border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
     children:[new TextRun({text:title,bold:true,size:22,color:DEEP}),
               new TextRun({text:" "+ref,size:15,color:MUTED,font:"Calibri"})]}),
   ...(startRuns.length?[new Paragraph({spacing:{after:24},children:startRuns})]:[]),
-  grid(ideaOpts,purposeOpts,quote,ideaText),
+  grid(ideaOpts,purposeOpts,quote,ideaText,focus),
   lab("DRAFT"),
   ...lines(7),
   lab("THE WALL"),
@@ -326,14 +330,14 @@ const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText)=>[
 
 const P2=(L)=>panel("1 · Start from the evidence",
   [new TextRun({text:"“"+L.quote+"”",size:19,bold:true,color:C.ev,italics:true})],
-  L.ref, IDEAS, null, {t:L.quote,ch:(L.ref.match(/\d+/)||[''])[0]});
+  L.ref, IDEAS, null, {t:L.quote,ch:(L.ref.match(/\d+/)||[''])[0]}, null, "ev");
 
 const P3=(L,theme)=>panel("2 · Start from the idea",
   [new TextRun({text:theme,size:22,color:C.idea,bold:true})],
-  L.ref, null, null, null, theme);
+  L.ref, null, null, null, theme, "idea");
 
 const P4=(L,theme)=>panel("3 · Start from the effect and purpose",
-  [], L.ref, IDEAS, [PUR[theme]]);
+  [], L.ref, IDEAS, [PUR[theme]], null, null, "eff");
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
