@@ -148,7 +148,10 @@ const tagged=(s,sz)=>{const out=[];const re=/\{(\w+)\|([^}]*)\}/g;let last=0,x;
 /* The four questions, as the four-colour grid the teacher deck ends on.
    Options sit in two columns, read down then across, so a box is as wide as
    it is tall instead of a long thin list. */
-const optCell=(k,title,q,items,w,brd)=>{
+/* A menu box ends in an empty circle: a student with a better word than the
+   eight on offer needs somewhere to put it. A purpose menu ends in a ruled
+   line, because every option on it stops mid-sentence. */
+const optCell=(k,title,q,items,w,brd,tail)=>{
   const IW=Math.floor((w-260)/2), rows=Math.ceil(items.length/2);
   const osz=items.length<2?23:19;
   const opt=t=>new Paragraph({spacing:{after:44},children:[
@@ -161,10 +164,16 @@ const optCell=(k,title,q,items,w,brd)=>{
             margins:{top:0,bottom:0,left:0,right:60},
             borders:{top:NONE,bottom:NONE,left:NONE,right:NONE},
             children:[opt(t)]}))}))})];
+  const extra = tail==="rule" ? [rule(0)]
+              : tail==="open" ? [new Paragraph({spacing:{before:10},children:[
+                  new TextRun({text:"○  ",size:osz,bold:true,color:C[k],font:"Calibri"}),
+                  new TextRun({text:"\u00A0".repeat(18),size:osz,color:C[k],font:"Calibri",
+                    underline:{type:"single",color:C[k]}})]})]
+              : [];
   return cell([new Paragraph({spacing:{after:40},children:[
     new TextRun({text:title,bold:true,size:20,color:C[k],font:"Calibri"}),
     new TextRun({text:"  "+q,size:15,color:MUTED,font:"Calibri",italics:true})]})
-  ].concat(body),w,SH[k],brd||undefined);
+  ].concat(body).concat(extra),w,SH[k],brd||undefined);
 };
 
 /* Cycle 1 already knows the line, so the yellow box carries it rather than
@@ -172,7 +181,9 @@ const optCell=(k,title,q,items,w,brd)=>{
 const writeCell=(w,quote,brd)=>cell([
   new Paragraph({spacing:{after:40},children:[
     new TextRun({text:"Evidence",bold:true,size:20,color:C.ev,font:"Calibri"}),
-    new TextRun({text:"  "+(quote?"chapter "+quote.ch:"when"),size:15,color:MUTED,font:"Calibri",italics:true})]}),
+    new TextRun({text:"  "+(quote?"chapter "+quote.ch:"page"),size:15,color:MUTED,font:"Calibri",italics:true}),
+    ...(quote?[]:[new TextRun({text:" \u00A0\u00A0\u00A0\u00A0\u00A0",size:15,color:C.ev,
+      underline:{type:"single",color:C.ev}})])]}),
   ...(quote
     ? [new Paragraph({spacing:{after:0,line:300,lineRule:LineRuleType.EXACT},
         children:[new TextRun({text:"“"+quote.t+"”",size:19,bold:true,color:C.ev,italics:true})]})]
@@ -193,14 +204,16 @@ const ideaCell=(w,theme,brd)=>cell([
 const FOCUSB=k=>{const b={style:BorderStyle.SINGLE,size:24,color:C[k]};
   return {top:b,bottom:b,left:b,right:b};};
 const grid=(ideaOpts,purposeOpts,quote,ideaText,focus)=>{const W=Math.floor(PANW/2);
+  const given=!!purposeOpts;      /* cycle 3: the purpose is handed over whole */
   return new Table({columnWidths:[W,W],width:{size:W*2,type:WidthType.DXA},rows:[
     new TableRow({children:[
       ideaText?ideaCell(W,ideaText,focus==="idea"?FOCUSB("idea"):null)
-              :optCell("idea","Idea","what",ideaOpts,W,focus==="idea"?FOCUSB("idea"):null),
-      optCell("eff","Purpose","why",purposeOpts||PURPOSES,W,focus==="eff"?FOCUSB("eff"):null)]}),
+              :optCell("idea","Idea","what",ideaOpts,W,focus==="idea"?FOCUSB("idea"):null,"open"),
+      optCell("eff","Purpose","why",purposeOpts||PURPOSES,W,
+              focus==="eff"?FOCUSB("eff"):null, given?null:"rule")]}),
     new TableRow({children:[
       writeCell(W,quote,focus==="ev"?FOCUSB("ev"):null),
-      optCell("verb","Verb","how",VERBS.map(o=>o.t),W)]})
+      optCell("verb","Verb","how",VERBS.map(o=>o.t),W,null,"open")]})
   ]});};
 
 /* The wall as the site draws it: skill focus, rubric line, worked example,
@@ -337,7 +350,7 @@ const P3=(L,theme)=>panel("2 · Start from the idea",
   null, null, null, null, theme, "idea");
 
 const P4=(L,theme)=>panel("3 · Start from the effect and purpose",
-  [], null, IDEAS, [PUR[theme]], null, null, "eff");
+  [], null, null, [PUR[theme]], null, theme, "eff");
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
