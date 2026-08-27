@@ -132,7 +132,9 @@ const ROUTES=[
 }];
 
 /* ---------------- state ---------------- */
-const S={route:0, step:0, picks:[], done:[false,false,false]};
+const S={route:Math.max(0,ROUTES.findIndex(r=>"#"+r.id===location.hash)), step:0, picks:[], done:[false,false,false]};
+window.addEventListener("hashchange",()=>{const i=ROUTES.findIndex(r=>"#"+r.id===location.hash);
+  if(i>=0&&i!==S.route){S.route=i;S.step=0;S.picks=[];draw();}});
 
 const $=id=>document.getElementById(id);
 const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
