@@ -15,7 +15,7 @@ const STATIONS=[
  {kind:"ev",  label:"EVIDENCE", text:"“Sometimes, at night, the dirt outside turns into a beautiful ocean.”", sub:"Chapter 1"},
  {kind:"idea",label:"IDEA",     text:"imagination", sub:""},
  {kind:"eff", label:"EFFECT",   text:"makes the reader see the camp the way Subhi sees it", sub:""},
- {kind:"ev",  label:"EVIDENCE", text:"“There are only fourteen pairs of real shoes in this whole camp.”", sub:"Chapter 8"},
+ {kind:"ev",  label:"EVIDENCE", text:"“There are only fourteen pairs of real shoes in this whole entire camp.”", sub:"Chapter 4"},
  {kind:"idea",label:"IDEA",     text:"power", sub:""},
  {kind:"eff", label:"EFFECT",   text:"makes the reader feel how little the camp gives people", sub:""}
 ];
