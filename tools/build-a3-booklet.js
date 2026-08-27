@@ -152,7 +152,7 @@ const optCell=(k,title,q,items,w)=>{
   const IW=Math.floor((w-260)/2), rows=Math.ceil(items.length/2);
   const osz=items.length<2?23:19;
   const opt=t=>new Paragraph({spacing:{after:44},children:[
-    new TextRun({text:t?"○  "+t:"",size:osz,color:INK,font:"Calibri"})]});
+    new TextRun({text:t?"○  "+t:"",size:osz,bold:true,color:C[k],font:"Calibri"})]});
   const body=items.length<2?items.map(opt)
     :[new Table({columnWidths:[IW,IW],width:{size:IW*2,type:WidthType.DXA},
         borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:NONE},
@@ -175,7 +175,7 @@ const writeCell=(w,quote)=>cell([
     new TextRun({text:"  "+(quote?"chapter "+quote.ch:"when"),size:15,color:MUTED,font:"Calibri",italics:true})]}),
   ...(quote
     ? [new Paragraph({spacing:{after:0,line:300,lineRule:LineRuleType.EXACT},
-        children:[new TextRun({text:"“"+quote.t+"”",size:19,color:INK,italics:true})]})]
+        children:[new TextRun({text:"“"+quote.t+"”",size:19,bold:true,color:C.ev,italics:true})]})]
     : [rule(40), rule(40), rule(0)])
 ],w,SH.ev);
 
@@ -185,7 +185,7 @@ const ideaCell=(w,theme)=>cell([
   new Paragraph({spacing:{after:40},children:[
     new TextRun({text:"Idea",bold:true,size:20,color:C.idea,font:"Calibri"}),
     new TextRun({text:"  what",size:15,color:MUTED,font:"Calibri",italics:true})]}),
-  new Paragraph({children:[new TextRun({text:theme,size:22,color:INK,bold:true,font:"Calibri"})]})
+  new Paragraph({children:[new TextRun({text:theme,size:22,color:C.idea,bold:true,font:"Calibri"})]})
 ],w,SH.idea);
 
 /* 2x2: circle three, write one. */
@@ -239,12 +239,12 @@ const mapRow=(k,label,text,bk,blabel,branches,sentence)=>{
       cell([new Paragraph({spacing:{after:16},children:[
               new TextRun({text:label,bold:true,size:14,color:C[k],font:"Calibri"})]}),
             new Paragraph({spacing:{line:280,lineRule:LineRuleType.EXACT},children:[
-              new TextRun({text:text,size:17,color:INK,italics:k==="ev"})]})],A,SH[k]),
+              new TextRun({text:text,size:17,bold:true,color:C[k],italics:k==="ev"})]})],A,SH[k]),
       cell([new Paragraph({spacing:{after:16},children:[
               new TextRun({text:blabel,bold:true,size:14,color:C[bk],font:"Calibri"})]})]
            .concat(branches.map(b=>new Paragraph({spacing:{after:12},children:[
               new TextRun({text:"⤷  ",size:15,color:MUTED}),
-              new TextRun({text:b,size:16,color:INK,
+              new TextRun({text:b,size:16,bold:true,color:C[bk],
                 shading:{type:ShadingType.CLEAR,fill:SH[bk]}})]}))),B,"FFFFFF"),
       cell([new Paragraph({spacing:{after:10},children:[
               new TextRun({text:"THE SENTENCE",bold:true,size:14,color:DEEP,
@@ -325,7 +325,7 @@ const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText)=>[
 ];
 
 const P2=(L)=>panel("1 · Start from the evidence",
-  [new TextRun({text:"“"+L.quote+"”",size:19,color:INK,italics:true})],
+  [new TextRun({text:"“"+L.quote+"”",size:19,bold:true,color:C.ev,italics:true})],
   L.ref, IDEAS, null, {t:L.quote,ch:(L.ref.match(/\d+/)||[''])[0]});
 
 const P3=(L,theme)=>panel("2 · Start from the idea",
