@@ -91,6 +91,7 @@ p.lead{color:var(--muted);font-size:13.5px;margin:0 0 10px}
 .opt:disabled{cursor:default}
 .opt.right{background:var(--okbg);border-color:var(--correct)}
 .opt.wrongpick{background:var(--badbg);border-color:var(--wrong)}
+.opt.nearpick{background:var(--warnbg);border-color:var(--warntx)}
 .feedback{display:none;border-radius:8px;padding:11px 13px;font-size:14px;margin:0 0 12px;line-height:1.5;
   max-height:32vh;overflow-y:auto}
 .feedback.show{display:block;animation:rise .2s ease}
@@ -1091,7 +1092,7 @@ I still can't talk. He shoves me backwards so hard that my feet leave the ground
   ] },
 
 { id:"qr9", ch:2, step:"Quickread 9", title:"Names and numbers", where:"Chapter 2", vocabSet:"1-2",
-  intro:"Back to chapter 2, and a longer read this time. Read it slowly, twice — the questions build to a sentence you will put together yourself at the end.",
+  intro:"Back to chapter 2, and a longer read this time. Read it twice. The questions lead up to a sentence you build yourself at the end.",
   passage:`Harvey, he’s one of the Jackets. Most Jackets don’t bother with us Limbo kids, except to search us over with their beeper wands or shove us out of the way. But not Harvey. All the kids like Harvey. Some of the other Jackets can be nice enough too, but not like Harvey. Usually the nice ones don’t stay too long anyway. But Harvey’s been here longer than me even.<br><br>
 The first thing Harvey does when new kids arrive is to learn their names so that he can talk with us for real, instead of talking to us by our numbers. Most people have their Boat ID as their number. Maá is NAP-24 and Queeny is NAP-23. But I was born in here, so I have a different ID. DAR-1, that’s me. The 1 is because I was the first baby ever born here. But Harvey, he won’t use those numbers, not even when he’s supposed to.<br><br>
 Harvey doesn’t start until lunch, but he’s come in extra early today, and he tells me to wait and watch because he’s brought something that he’s sure I’ll appreciate. I know already what it is, because Harvey, he brings this same thing every time it gets this hot. It’s a plastic pool. It’s small but round and shaped like a giant clamshell, so he always has trouble getting it through the fences and gates. While he struggles with all the locks and holding on to that pool and his bag, the other Jackets smile and laugh and jingle their keys up and down on their chains, and not a single one helps with the locks so that Harvey can get in more quickly.<br><br>
@@ -1102,7 +1103,7 @@ Harvey doesn’t start until lunch, but he’s come in extra early today, and he
           "He arrived on the first boat, before Maá and Queeny did",
           "The Jackets gave him a special number because Harvey likes him",
           "It is the name his ba chose for him before he was born"],
-    a:0, explain:"DAR is the camp's code and the 1 is a birth record: the first child the camp ever produced. Every part of his ID says the camp made him — which is what this passage is quietly arguing.",
+    a:0, explain:"DAR is the camp's code and the 1 means the first baby born here. His whole ID comes from the camp: he has never been outside it.",
     line:"But I was born in here, so I have a different ID. DAR-1, that's me." },
   { id:"qr9b", stim:`Find the <em class="hl-ev">evidence</em> — the line doing the most work.`,
     q:"Which line shows most sharply what the camp does to people's names?",
@@ -1110,7 +1111,7 @@ Harvey doesn’t start until lunch, but he’s come in extra early today, and he
           "Maá is NAP-24 and Queeny is NAP-23.",
           "All the kids like Harvey.",
           "It's a plastic pool."],
-    a:0, explain:"NAP-24 shows you the numbers — a strong second choice. But this line carries both halves at once: the numbering, and what it costs ('for real'). Evidence with a built-in contrast beats evidence that only shows one side.",
+    a:0, near:[1], explain:"NAP-24 shows you the numbers — a strong second choice. But this line does both jobs at once: the numbers, and what they cost ('for real').",
     line:"Most people have their Boat ID as their number." },
   { id:"qr9c", stim:`Find the <em class="hl-eff">feeling</em> Fraillon never names.`,
     q:"Which line lets us feel Subhi's anger?",
@@ -1118,41 +1119,41 @@ Harvey doesn’t start until lunch, but he’s come in extra early today, and he
           "Harvey always has a joke.",
           "It's small but round and shaped like a giant clamshell.",
           "But not Harvey."],
-    a:0, explain:"The anger is real and silenced in the same breath — he borrows Eli's words but not, yet, Eli's courage. Fraillon never writes the word angry; the whisper does it.",
+    a:0, explain:"Subhi uses Eli's words, but only in a whisper. Fraillon never writes the word angry — the whisper tells us.",
     line:"Eli says that a lot. But Eli goes right up to the person he's talking to and makes sure they hear every word." },
   { id:"qr9d", stim:`Name the <em class="hl-idea">idea</em> underneath it all.`,
     q:"The numbers, the jingling keys, the locks no one helps with — which idea do they all feed?",
-    opts:["power — who holds it, and how casually it gets used",
+    opts:["power — who has it and who doesn't",
           "friendship — the Jackets and the kids getting along",
           "imagination — the pool Subhi dreams about all summer",
           "hope — things in the camp slowly getting better"],
-    a:0, explain:"Three small details, one system: the people holding the keys do not have to care. Naming that as power is what lifts a retell into analysis.",
+    a:0, explain:"The numbers, the keys and the locks all show the same thing: the Jackets have the power and don't have to care. Naming that idea is what makes a sentence analytical instead of a retell.",
     line:"…the other Jackets smile and laugh and jingle their keys up and down on their chains…" },
   { id:"qr9e", stim:`Choose the <em class="hl-verb">verb</em> for what the writing does.`,
     q:"Fraillon never writes 'the Jackets are cruel'. The line about the keys ___ the cruelty instead.",
     opts:["reveals","lists","hides","solves"],
-    a:0, explain:"The cruelty is uncovered by one small action, never announced. That is exactly the claim an analytical verb like 'reveals' makes about a piece of writing.",
+    a:0, explain:"Fraillon shows the cruelty in one small action instead of telling us about it. 'Reveals' says exactly that.",
     line:"…and not a single one helps with the locks so that Harvey can get in more quickly." },
   { id:"qr9f", q:"And what does 'not a single one helps' do to the reader?",
     opts:["makes the reader understand why one kind man matters so much here",
           "makes the reader laugh along with the Jackets' game",
           "tells the reader how the locks on the gates work",
           "makes the reader want a pool of their own"],
-    a:0, explain:"Harvey only stands out against the jingling key chains. The line builds the background that makes his kindness visible — and that is its effect on you.",
+    a:0, explain:"Harvey only stands out because of the Jackets around him. The line shows what he is up against, so you understand why he matters.",
     line:"…not a single one helps with the locks so that Harvey can get in more quickly." }
   ],
   links:[
-  { id:"qr9L1", idea:"The camp files people as numbers, and Harvey's names are a small refusal.",
+  { id:"qr9L1", idea:"In a place that calls people by numbers, using a name is a way of pushing back.",
     opts:["'…learn their names so that he can talk with us for real, instead of talking to us by our numbers.'",
           "'Harvey doesn't start until lunch, but he's come in extra early today.'",
           "'It's Harvey's horn, because no one else honks like that.'",
           "'Usually the nice ones don't stay too long anyway.'"],
-    a:0, explain:"'For real' is the hinge: talking by numbers is not real talk. One line carries the system and the refusal of it in the same breath.",
+    a:0, explain:"'For real' is the key phrase: talking to someone by a number is not really talking to them. The line shows the numbers and Harvey's answer to them, together.",
     why:{ opts:["It proves Harvey has a good memory for names, which the other Jackets do not",
-                "It sets Harvey's habit against the system's default, so we see what the numbering costs",
+                "It puts Harvey's way next to the camp's way, so we see what the numbers cost",
                 "It shows that new kids keep arriving, so the camp must be growing",
                 "It tells us Harvey has been in the camp longer than Subhi has"],
-          a:1, explain:"'Instead of' is the working phrase. Without the contrast, learning a name is politeness; with it, it is a refusal." } }
+          a:1, explain:"'Instead of' matters. Without it, learning names is just being friendly. With it, we see Harvey choosing not to do what the camp does." } }
   ] }
 
 ];
@@ -2426,14 +2427,17 @@ function runQuizzer(cfg){
     [...document.querySelectorAll("#opts .opt")].forEach(b=>{
       if(b.textContent===step.opts[step.a]) b.classList.add("right");
     });
-    if(!correct) btn.classList.add("wrongpick");
+    const near = !correct && step.near && step.near.includes(oi);
+    if(!correct) btn.classList.add(near?"nearpick":"wrongpick");
     const key=cfg.mod+"."+item.id+"."+step.key;
     const firstTime = !item.redundant && S.first[key]===undefined;
     if(!item.redundant) recFirst(key, correct);
     if(!correct && firstTime) missed.push({item,label:cfg.missLabel(item,step)});
     const fb=$("fb");
-    fb.className="feedback "+(correct?"ok":"bad");
-    fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — the answer is “${esc(step.opts[step.a])}”.</b> `)+step.explain
+    fb.className="feedback "+(correct?"ok":near?"warn":"bad");
+    fb.innerHTML=(correct?"<b>Correct.</b> ":
+      near?`<b>A fair pick — the stronger answer is “${esc(step.opts[step.a])}”.</b> `:
+      `<b>Not quite — the answer is “${esc(step.opts[step.a])}”.</b> `)+step.explain
       +(!correct&&step.requote?`<div class="requote">“${esc(step.requote)}”</div>`:"");
     if(!correct){ (item._missed=item._missed||[]).push(step); }
     const nb=$("nextBtn");
@@ -2495,7 +2499,7 @@ function linkItems(qr){
     stim:`<b>The idea:</b> ${esc(l.idea)}`,
     steps:[
       { key:"pick", skill:"evpick", q:"Which line is the best evidence for that idea?",
-        opts:l.opts, a:l.a, explain:l.explain },
+        opts:l.opts, a:l.a, near:l.near, explain:l.explain },
       { key:"why", skill:"evwhy", q:"Now the harder half: what makes that line the proof?",
         opts:l.why.opts, a:l.why.a, explain:l.why.explain }
     ]
@@ -2507,7 +2511,7 @@ function startQr(id){
   runQuizzer({
     mod:qr.id, title:qr.title+" — questions (no looking back)", where:qr.where, preferCh:qr.ch,
     lowNote: "If word meanings tripped you, do exactly this: open "+hubRef("BoneSparrowVocabHub.html","Vocab Hub → CH "+qrVocabSet(qr),"run 'Meet the words' and 'Build the words' for this chapter set, then come back and retry."),
-    items:qr.items.map(it=>({ id:it.id, stim:it.stim, steps:[{key:"a", skill:"infer", q:it.q, opts:it.opts, a:it.a, explain:it.explain, requote:it.line}] }))
+    items:qr.items.map(it=>({ id:it.id, stim:it.stim, steps:[{key:"a", skill:"infer", q:it.q, opts:it.opts, a:it.a, near:it.near, explain:it.explain, requote:it.line}] }))
       .concat(linkItems(qr)),
     missLabel:(item,step)=>item.id,
     doneNote: id==="qr9" ? `<button class="btn btn-primary" onclick="renderQr9Build()">Now build the sentence →</button>` :
@@ -2526,11 +2530,11 @@ const QB_TILES=[
   {k:"ev",  t:"'instead of talking to us by our numbers'"},
   {k:"verb",t:"reveals"},
   {k:"verb",t:"shows"},
-  {k:"idea",t:"how casually the Jackets hold their power"},
+  {k:"idea",t:"how much power the Jackets have"},
   {k:"idea",t:"how the camp turns people into numbers"},
   {k:"join",t:", which"},
   {k:"eff", t:"makes the reader understand why Harvey matters here"},
-  {k:"eff", t:"makes the reader see Harvey's kindness as a small refusal"},
+  {k:"eff", t:"makes the reader see how unusual Harvey's kindness is"},
   {k:"end", t:"."}
 ];
 const QB_ORDER=["ev","verb","idea","join","eff","end"];
