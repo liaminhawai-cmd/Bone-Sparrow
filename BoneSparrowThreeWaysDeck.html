@@ -160,8 +160,9 @@ const ACTS=[
   centre:{kind:"eff", text:"make the reader feel how little control a child has"},
   levels:[
    {kind:"ev", nodes:[
-     {t:"“my feet leave the ground”",ok:1},{t:"“I asked you a question”",ok:1},
-     {t:"“I can’t say a single thing”",ok:1},
+     {t:"“my feet leave the ground”",ok:1,lead:"Beaver shoving Subhi until"},
+     {t:"“I asked you a question”",ok:1,lead:"Beaver demanding"},
+     {t:"“I can’t say a single thing”",ok:1,lead:"Subhi silenced:"},
      {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"The Night Sea is Subhi in control of his own world — the opposite."},
      {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4 — about what the camp gives, not this scene."}]},
    {kind:"idea", nodes:[
@@ -173,12 +174,12 @@ const ACTS=[
    {chip:"c"},
    {text:", Fraillon"},
    {slot:[{t:"writes",q:1},{t:"describes",q:1},{t:"does",q:0,why:"'Does' says nothing about the writing."}],k:"verb"},
-   {text:"Beaver shoving Subhi until"},
+   {text:a.picks[0].lead},
    {chip:0},
    {slot:[{t:", exposing",q:1},{t:", and it shows",q:0,why:"Flat — let one strong word do it."},{t:". Then",q:0,why:"That breaks the sentence in half."}],k:"verb"},
    {chip:1},
    {slot:[{t:".",q:1},{t:"!",q:0,why:"The sentence is already loud enough."},{t:"…",q:0,why:"Finish the thought."}]}],
-  sent:(a,s)=>`To <em class="hl-eff">${a.centre.text}</em>, Fraillon <em class="hl-verb">${s[0]}</em> Beaver shoving Subhi until <em class="hl-ev">${a.picks[0].t}</em><em class="hl-verb">${s[1]}</em> <em class="hl-idea">${a.picks[1].t}</em>${s[2]}`
+  sent:(a,s)=>`To <em class="hl-eff">${a.centre.text}</em>, Fraillon <em class="hl-verb">${s[0]}</em> ${a.picks[0].lead} <em class="hl-ev">${a.picks[0].t}</em><em class="hl-verb">${s[1]}</em> <em class="hl-idea">${a.picks[1].t}</em>${s[2]}`
 }];
 
 /* ================= state ================= */
@@ -290,7 +291,7 @@ function clickNode(n){
   if(!n.o.ok){ n.el.classList.remove("bad"); void n.el.offsetWidth;
     n.el.classList.add("bad"); toast(n.o.why); return; }
   /* a good pick: dock it, fade the rest, next level floats in */
-  S.picks.push({t:n.o.t,kind:n.kind});
+  S.picks.push({t:n.o.t,kind:n.kind,lead:n.o.lead});
   const chip=document.createElement("div");
   chip.className="chip "+n.kind; chip.textContent=n.o.t;
   $("dock").appendChild(chip);
