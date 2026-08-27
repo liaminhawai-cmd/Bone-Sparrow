@@ -46,7 +46,7 @@ STATIONS.forEach((st,i)=>{
         margins:{top:400,bottom:400,left:500,right:500},
         children:[new Paragraph({alignment:AlignmentType.CENTER,spacing:{line:640,lineRule:"exact"},
           children:[new TextRun({text:st.text,bold:true,size:st.kind==="idea"?96:52,
-            italics:st.kind==="ev",color:INK,font:"Georgia"})]})]})]})]}));
+            italics:st.kind==="ev",color:C[st.kind],font:"Georgia"})]})]})]})]}));
   if(st.sub) children.push(new Paragraph({spacing:{before:500},alignment:AlignmentType.CENTER,
     children:[new TextRun({text:st.sub,size:30,color:MUTED,font:"Calibri"})]}));
   if(i<STATIONS.length-1) children.push(new Paragraph({children:[new PageBreak()]}));
@@ -65,8 +65,8 @@ const node=(st,i,w)=>new TableCell({width:{size:w,type:WidthType.DXA},
     new Paragraph({alignment:AlignmentType.CENTER,spacing:{after:40},children:[
       new TextRun({text:(i+1)+" · "+st.label,bold:true,size:14,color:C[st.kind],font:"Calibri"})]}),
     new Paragraph({alignment:AlignmentType.CENTER,children:[
-      new TextRun({text:st.text,size:st.kind==="idea"?26:16,bold:st.kind==="idea",
-        italics:st.kind==="ev",color:INK,font:"Georgia"})]}),
+      new TextRun({text:st.text,size:st.kind==="idea"?26:16,bold:true,
+        italics:st.kind==="ev",color:C[st.kind],font:"Georgia"})]}),
     ...(st.sub?[new Paragraph({alignment:AlignmentType.CENTER,children:[
       new TextRun({text:st.sub,size:12,color:MUTED,font:"Calibri"})]})]:[])
   ]});
