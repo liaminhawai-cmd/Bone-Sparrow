@@ -30,23 +30,30 @@ h1{font-family:Georgia,serif;font-size:20px;margin:0 0 2px}
   background:var(--bg);border:1px solid var(--line);text-align:center;font-size:11px;margin-right:6px}
 .routes button.done .n{background:var(--correct);color:#fff;border-color:var(--correct)}
 
-.given{border:1px solid var(--line);border-radius:10px;background:var(--paper);
-  padding:14px 16px;margin-bottom:18px}
-.given .k{font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:6px}
-.given .t{font-family:Georgia,serif;font-size:18px}
+.given{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:20px}
+.given .k{font-size:12px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+.given .t{font-family:Georgia,serif;font-size:21px;font-weight:700}
+.given.ev{background:var(--ev-bg)} .given.ev .t{color:var(--ev-tx);font-style:italic}
+.given.idea{background:var(--idea-bg)} .given.idea .t{color:var(--idea-tx)}
+.given.eff{background:var(--eff-bg)} .given.eff .t{color:var(--eff-tx)}
 .k.idea{color:var(--idea-tx)} .k.verb{color:var(--verb-tx)}
 .k.ev{color:var(--ev-tx)} .k.eff{color:var(--eff-tx)} .k.feat{color:#4b2f7a}
 
-.step{margin-bottom:16px}
-.step .q{font-size:13px;color:var(--muted);margin-bottom:8px}
-.step .q b{font-size:13px;letter-spacing:.06em}
+.step{margin-bottom:18px}
+.step .q{margin-bottom:8px}
+.step .q b{font-size:14px;letter-spacing:.06em}
 .opts{display:flex;flex-direction:column;gap:8px}
-.opt{border:1px solid var(--line);border-radius:8px;background:#fff;padding:11px 13px;
-  font-family:Georgia,serif;font-size:15.5px;text-align:left;cursor:pointer;color:var(--ink);
-  transition:border-color .12s}
-.opt:hover{border-color:var(--accent)}
-.opt.picked{border-color:var(--ink);border-width:2px;padding:10px 12px}
-.opt.no{background:var(--badbg);border-color:#c99}
+.opt{border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+  font-size:15px;font-weight:600;text-align:left;cursor:pointer;font-family:inherit;
+  transition:border-color .12s,box-shadow .12s}
+.opt.ev{background:var(--ev-bg);color:var(--ev-tx);font-family:Georgia,serif;font-style:italic;font-weight:700}
+.opt.idea{background:var(--idea-bg);color:var(--idea-tx)}
+.opt.verb{background:var(--verb-bg);color:var(--verb-tx)}
+.opt.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.opt.feat{background:#e7ddf6;color:#4b2f7a}
+.opt:hover{border-color:var(--ink)}
+.opt.picked{border-color:var(--ink);border-width:2px;padding:11px 13px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.opt.no{background:var(--badbg);color:var(--accent);border-color:#c99;font-style:normal}
 .opt:disabled{cursor:default;opacity:.55}
 .opt.picked:disabled,.opt.no:disabled{opacity:1}
 .why{font-size:13px;border-radius:8px;padding:9px 12px;margin-top:8px;font-family:'Segoe UI',sans-serif}
@@ -55,8 +62,8 @@ h1{font-family:Georgia,serif;font-size:20px;margin:0 0 2px}
 .why.weak{background:var(--badbg);color:var(--accent)}
 
 .sentence{border:1px solid var(--line);border-radius:10px;background:var(--paper);
-  padding:16px 18px;margin-top:6px;font-family:Georgia,serif;font-size:17px;line-height:1.8}
-.sentence em{font-style:normal;border-radius:4px;padding:1px 4px}
+  padding:18px 20px;margin-top:6px;font-family:Georgia,serif;font-size:19px;line-height:1.9}
+.sentence em{font-style:normal;font-weight:700;border-radius:4px;padding:1px 5px}
 em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
 em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
 em.hl-ev{background:var(--ev-bg);color:var(--ev-tx)}
@@ -150,7 +157,7 @@ function drawRoutes(){
 function draw(){
   drawRoutes();
   const R=ROUTES[S.route];
-  let h=`<div class="given"><div class="k ${R.given.kind}">${R.given.label}</div>`+
+  let h=`<div class="given ${R.given.kind}"><div class="k ${R.given.kind}">${R.given.label}</div>`+
         `<div class="t serif">${esc(R.given.text)}</div></div>`;
 
   R.steps.forEach((st,i)=>{
@@ -160,7 +167,7 @@ function draw(){
        `<div class="q"><b class="k ${st.kind}">${st.ask.toUpperCase()}</b></div>`+
        `<div class="opts">`+
        st.opts.map((o,j)=>{
-         const cls=picked===j?"picked":(S.no&&S.no.s===i&&S.no.j===j?"no":"");
+         const cls=(picked===j?"picked ":(S.no&&S.no.s===i&&S.no.j===j?"no ":""))+st.kind;
          const dis=picked!==undefined?"disabled":"";
          return `<button class="opt ${cls}" ${dis} data-s="${i}" data-j="${j}">${esc(o.t)}</button>`;
        }).join("")+
