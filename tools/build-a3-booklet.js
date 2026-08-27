@@ -317,7 +317,7 @@ const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText,focus)=>[
   new Paragraph({spacing:{after:14},
     border:{bottom:{style:BorderStyle.SINGLE,size:10,color:DEEP,space:4}},
     children:[new TextRun({text:title,bold:true,size:22,color:DEEP}),
-              new TextRun({text:" "+ref,size:15,color:MUTED,font:"Calibri"})]}),
+              ...(ref?[new TextRun({text:" "+ref,size:15,color:MUTED,font:"Calibri"})]:[])]}),
   ...(startRuns.length?[new Paragraph({spacing:{after:24},children:startRuns})]:[]),
   grid(ideaOpts,purposeOpts,quote,ideaText,focus),
   lab("DRAFT"),
@@ -334,10 +334,10 @@ const P2=(L)=>panel("1 · Start from the evidence",
 
 const P3=(L,theme)=>panel("2 · Start from the idea",
   [new TextRun({text:theme,size:22,color:C.idea,bold:true})],
-  L.ref, null, null, null, theme, "idea");
+  null, null, null, null, theme, "idea");
 
 const P4=(L,theme)=>panel("3 · Start from the effect and purpose",
-  [], L.ref, IDEAS, [PUR[theme]], null, null, "eff");
+  [], null, IDEAS, [PUR[theme]], null, null, "eff");
 
 /* Two panels side by side on one A3 landscape page, no visible border. */
 const spread=(left,right)=>new Table({columnWidths:[PANW,600,PANW],
