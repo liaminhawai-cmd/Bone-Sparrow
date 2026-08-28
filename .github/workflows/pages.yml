@@ -19,7 +19,8 @@ on:
       - "BoneSparrowThreeWaysDeck.html"
       - "index.html"
       - "teacher/index.html"
-      - "BoneSparrow-*.docx"
+      - "BoneSparrow-A3-booklet.docx"
+      - "BoneSparrow-stations.docx"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -55,7 +56,7 @@ jobs:
           cp BoneSparrowThreeWaysDeck.html dist/
           mkdir dist/teacher
           cp teacher/index.html dist/teacher/
-          cp BoneSparrow-*.docx dist/
+          cp BoneSparrow-A3-booklet.docx BoneSparrow-stations.docx dist/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
