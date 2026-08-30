@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEEL — The Bone Sparrow</title>
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --accent:#a83232; --deep:#1d3c34;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink)}
+main{max-width:960px;margin:0 auto;padding:18px 22px 80px}
+h1{font-family:Georgia,serif;font-size:24px;margin:6px 0 18px}
+h2{font-family:Georgia,serif;font-size:19px;color:var(--deep);margin:44px 0 14px;
+   border-bottom:2px solid var(--deep);padding-bottom:6px}
+nav{position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:10;
+    display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+nav a{border:1px solid var(--line);border-radius:8px;background:var(--paper);
+  padding:8px 13px;font-size:14px;color:var(--ink);text-decoration:none}
+nav a:hover{border-color:var(--ink)}
+
+em{font-style:normal;border-radius:4px;padding:1px 4px;font-weight:600}
+em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
+em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:14px 16px}
+.card .letter{font-family:Georgia,serif;font-size:34px;font-weight:700;color:var(--deep)}
+.card .what{font-size:15px;margin:6px 0 10px}
+.card .dots{font-size:13.5px;color:var(--muted)}
+.dot{display:inline-block;width:13px;height:13px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.dot.idea{background:var(--idea-bg);border:1.5px solid var(--idea-tx)}
+.dot.ev{background:var(--ev-bg);border:1.5px solid var(--ev-tx)}
+.dot.verb{background:var(--verb-bg);border:1.5px solid var(--verb-tx)}
+.dot.eff{background:var(--eff-bg);border:1.5px solid var(--eff-tx)}
+
+.rule{border-left:4px solid var(--accent);background:var(--paper);border-radius:0 10px 10px 0;
+  padding:12px 16px;margin:16px 0;font-size:16px}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media screen and (max-width:700px){.pair{grid-template-columns:1fr}}
+.tsx{border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-family:Georgia,serif;font-size:17px;background:#fff}
+.tsx.bad{border-color:#c99;background:#f7ecec}
+.tsx.good{border-color:#9bc0a4;background:#f0f7f1}
+.tsx .tag{font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:700;display:block;margin-bottom:6px}
+.tsx.bad .tag{color:var(--accent)} .tsx.good .tag{color:#2f6a3e}
+.tsnote{font-size:14.5px;color:var(--muted);margin-top:10px}
+
+.para{border:1px solid var(--line);border-radius:10px;background:var(--paper);
+  padding:6px 0;margin:14px 0}
+.sent{display:flex;gap:14px;padding:11px 18px;align-items:baseline}
+.sent+.sent{border-top:1px dashed var(--line)}
+.sent .l{flex:0 0 26px;font-family:Georgia,serif;font-size:21px;font-weight:700;color:var(--deep)}
+.sent .t{font-family:Georgia,serif;font-size:17.5px;line-height:1.75}
+.pwhere{font-size:12.5px;color:var(--muted);margin:2px 0 0 4px}
+
+table{border-collapse:collapse;width:100%;margin-top:10px}
+th,td{border:1px solid var(--line);padding:11px 13px;vertical-align:top;font-size:15px;background:#fff}
+th{background:var(--deep);color:#f6f1e6;font-size:13px;letter-spacing:.05em}
+td.ex{font-family:Georgia,serif;font-size:16px}
+td.why{color:var(--muted);font-size:13.5px;background:var(--paper)}
+.wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+<h1>A TEEL paragraph</h1>
+<nav>
+  <a href="#letters">The letters</a>
+  <a href="#topic">The topic sentence</a>
+  <a href="#paras">Two paragraphs</a>
+  <a href="#link">The last sentence</a>
+</nav>
+
+<h2 id="letters">The letters</h2>
+<div class="cards">
+  <div class="card"><div class="letter">T</div>
+    <div class="what"><b>Topic sentence.</b> Your claim. The subject is an idea, the verb is analytical.</div>
+    <div class="dots"><span class="dot idea"></span>idea only</div></div>
+  <div class="card"><div class="letter">E</div>
+    <div class="what"><b>Evidence.</b> The moment, with the quote inside the sentence.</div>
+    <div class="dots"><span class="dot ev"></span>quote</div></div>
+  <div class="card"><div class="letter">E</div>
+    <div class="what"><b>Explanation.</b> What the writing does, and what the reader gets from it.</div>
+    <div class="dots"><span class="dot verb"></span>verb &nbsp;<span class="dot eff"></span>effect</div></div>
+  <div class="card"><div class="letter">L</div>
+    <div class="what"><b>Link.</b> Back to your idea — saying more than your topic sentence did.</div>
+    <div class="dots"><span class="dot idea"></span>idea &nbsp;<span class="dot eff"></span>effect &nbsp;· never <span class="dot ev"></span></div></div>
+</div>
+<div class="rule">No new quote in the L. If you need one, it is another E — a paragraph grows T·E·E·E·L, not by squeezing the ending.</div>
+
+<h2 id="topic">The topic sentence</h2>
+<div class="pair">
+  <div class="tsx bad"><span class="tag">✗</span>The Bone Sparrow is about a boy who lives in a detention camp.</div>
+  <div class="tsx good"><span class="tag">✓</span>Fraillon <em class="hl-verb">presents</em> the camp as a place where <em class="hl-idea">a child has no power over his own life</em>.</div>
+</div>
+<p class="tsnote">The subject of the weak one is the book. The subject of the strong one is an idea, and the verb — presents, suggests, reveals, exposes — does analytical work. Never <i>is about</i>.</p>
+
+<h2 id="paras">Two paragraphs</h2>
+<div class="para">
+  <div class="sent"><span class="l">T</span><span class="t">Fraillon <em class="hl-verb">presents</em> the camp as a place where <em class="hl-idea">a child has no power over his own life</em>.</span></div>
+  <div class="sent"><span class="l">E</span><span class="t">When Beaver catches Subhi at the fence, Subhi's throat goes <em class="hl-ev">"as dry as the dirt"</em> before Beaver has even touched him.</span></div>
+  <div class="sent"><span class="l">E</span><span class="t">The fear arrives in his body first, which <em class="hl-verb">shows</em> the reader that <em class="hl-eff">Beaver's power does not need words or violence to work</em>.</span></div>
+  <div class="sent"><span class="l">L</span><span class="t">By putting the fear in Subhi's body, Fraillon <em class="hl-verb">shows</em> that <em class="hl-idea">power in the camp</em> decides <em class="hl-eff">even what a child can say</em>.</span></div>
+</div>
+<p class="pwhere">Chapter 5</p>
+
+<div class="para">
+  <div class="sent"><span class="l">T</span><span class="t">Fraillon also <em class="hl-verb">presents</em> <em class="hl-idea">imagination</em> as the one thing the camp cannot take.</span></div>
+  <div class="sent"><span class="l">E</span><span class="t">The novel opens at night, when the dirt outside turns into <em class="hl-ev">"a beautiful ocean"</em>, <em class="hl-ev">"as red as the sun and as deep as the sky"</em>.</span></div>
+  <div class="sent"><span class="l">E</span><span class="t">The camp's own dirt becomes something beautiful, which <em class="hl-verb">lets</em> the reader <em class="hl-eff">see the camp the way Subhi sees it</em>.</span></div>
+  <div class="sent"><span class="l">L</span><span class="t">By starting the novel inside <em class="hl-idea">Subhi's imagination</em>, Fraillon <em class="hl-verb">shows</em> the reader <em class="hl-eff">the person before the prisoner</em>.</span></div>
+</div>
+<p class="pwhere">Chapter 1</p>
+
+<h2 id="link">The last sentence</h2>
+<div class="wrap">
+<table>
+  <tr><th>RESTATE</th><th>GENERALISE</th><th>ANALYSE</th></tr>
+  <tr>
+    <td class="ex">This shows that the camp has power.</td>
+    <td class="ex">These examples show that the camp controls the children.</td>
+    <td class="ex">By putting the fear in Subhi's body, Fraillon shows that power in the camp decides even what a child can say.</td>
+  </tr>
+  <tr>
+    <td class="why">Repeats the topic sentence. <i>This</i> points at nothing; <i>shows</i> is doing no work.</td>
+    <td class="why">A bigger claim, but still no reason. Nothing connects the evidence to the idea.</td>
+    <td class="why">Points at the evidence, gives the cause, and says something the topic sentence didn't.</td>
+  </tr>
+  <tr>
+    <td class="why">Level 5</td>
+    <td class="why">Level 6–7</td>
+    <td class="why">Level 8</td>
+  </tr>
+</table>
+</div>
+</main>
+</body>
+</html>
