@@ -17,6 +17,7 @@ on:
       - "bonesparrowtrainer.html"
       - "BoneSparrowThreeWays.html"
       - "BoneSparrowThreeWaysDeck.html"
+      - "BoneSparrowTeel.html"
       - "index.html"
       - "teacher/index.html"
       - "BoneSparrow-A3-booklet.docx"
@@ -54,6 +55,7 @@ jobs:
           cp bonesparrowtrainer.html dist/
           cp BoneSparrowThreeWays.html dist/
           cp BoneSparrowThreeWaysDeck.html dist/
+          cp BoneSparrowTeel.html dist/
           mkdir dist/teacher
           cp teacher/index.html dist/teacher/
           cp BoneSparrow-A3-booklet.docx BoneSparrow-stations.docx dist/
