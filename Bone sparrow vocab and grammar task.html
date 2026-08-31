@@ -10,6 +10,8 @@
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
+    /* morpheme colours — blue prefix / red-brown root / green suffix (matches the word builder) */
+    --m-pre:#2c6fa8; --m-root:#9a5518; --m-suf:#3f7a4a;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
@@ -52,10 +54,17 @@
   /* vocab study cards */
   .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
   .vcard .w{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .vcard .w .mp{color:var(--m-pre)} .vcard .w .mr{color:var(--m-root)} .vcard .w .ms{color:var(--m-suf)}
   .vcard .pos{font-size:12px;color:var(--muted);font-style:italic;margin-left:6px}
   .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
   .vcard .morph b{color:var(--ink)}
+  .vcard .morph code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:13px}
+  .vcard .morph code.mp{color:var(--m-pre)} .vcard .morph code.mr{color:var(--m-root)} .vcard .morph code.ms{color:var(--m-suf)}
+  .mlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:700;margin:0 0 12px;
+           border:1px solid var(--line-soft);border-radius:8px;padding:10px 14px;background:var(--bg)}
+  .mlegend .mp{color:var(--m-pre)} .mlegend .mr{color:var(--m-root)} .mlegend .ms{color:var(--m-suf)}
+  .mlegend .note{font-weight:400;color:var(--muted)}
 
   /* task shell */
   .prompt{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
@@ -179,38 +188,52 @@
 /* ---------------- VOCABULARY (from the unit vocab sheet) ---------------- */
 const VOCAB = [
   { w:"Immigration", pos:"noun", meaning:"The process of coming to live permanently in a foreign country.",
+    tiles:[["im","p","into"],["migr","r","move"],["ation","s","process"]],
     morph:"Root <b>immigr-</b> (to move into) + suffix <b>-ation</b> (process). Latin <i>im-</i> (into) + <i>migrare</i> (to move). Compare: <i>emigration</i> = moving OUT of a country." },
   { w:"Refugee", pos:"noun", meaning:"A person forced to leave their country to escape war, persecution, or natural disaster.",
+    tiles:[["refug","r","shelter"],["ee","s","a person receiving an action"]],
     morph:"Root <b>refuge</b> (shelter) + suffix <b>-ee</b> (a person receiving an action). From Latin <i>re-</i> (back) + <i>fugere</i> (to flee)." },
   { w:"Asylum seeker", pos:"noun phrase", meaning:"A person seeking refuge in another country whose claim for refugee status has NOT yet been assessed.",
+    tiles:[["asylum","r","place of safety"],["seek","r","look for"],["er","s","one who does"]],
     morph:"<b>Asylum</b>: Greek <i>ásylon</i> — a place of safety beyond the reach of law. <b>Seeker</b>: <i>-er</i> = one who does. The key difference from <i>refugee</i>: the claim is still waiting." },
   { w:"Persecution", pos:"noun", meaning:"Hostility and ill-treatment, especially because of race, political or religious beliefs, or ethnicity.",
+    tiles:[["per","p","thoroughly"],["secut","r","follow/pursue"],["ion","s","act/state"]],
     morph:"Prefix <b>per-</b> (thoroughly) + root <b>-secut-</b> (to follow/pursue) + <b>-ion</b>. Literally 'to pursue relentlessly'. Don't confuse with <i>prosecution</i> (taking someone to court)." },
   { w:"Inmate", pos:"noun", meaning:"A person confined to an institution such as a prison or a detention centre.",
+    tiles:[["in","p","inside"],["mate","r","companion"]],
     morph:"Compound: <b>in-</b> (inside) + <b>mate</b> (companion). Originally 'one who shares a house'. Related: roommate, classmate. Don't confuse with <i>intimate</i>." },
   { w:"Incarceration", pos:"noun", meaning:"The state of being imprisoned or confined.",
+    tiles:[["in","p","into"],["carcer","r","prison"],["ation","s","state"]],
     morph:"Prefix <b>in-</b> (into) + root <b>carcer</b> (prison) + <b>-ation</b> (state). Don't confuse with <i>incineration</i> (burning) or <i>incarnation</i> (taking bodily form)." },
   { w:"Bureaucracy", pos:"noun", meaning:"A system of administration with many complex rules and processes, often slow and frustrating.",
+    tiles:[["bureau","r","desk/office"],["cracy","s","rule, power"]],
     morph:"<b>Bureau</b> (desk/office) + <b>-cracy</b> (rule, power — Greek <i>kratos</i>). Related: demo<i>cracy</i>, auto<i>cracy</i>." },
   { w:"Off-shore detention", pos:"noun phrase", meaning:"Holding asylum seekers in detention centres in other countries (e.g. Nauru, Manus Island) while claims are processed.",
+    tiles:[["off-shore","r","away from the mainland"],["detention","r","held (Latin de- away + tenere to hold)"]],
     morph:"<b>Off-shore</b>: away from the mainland. <b>Detention</b>: Latin <i>de-</i> (away) + <i>tenere</i> (to hold) — 'held back'." },
   { w:"Trauma", pos:"noun", meaning:"A deeply distressing experience, or the lasting psychological harm it causes.",
     morph:"Greek <b>trauma</b> = wound. Originally a physical injury; extended to harm you can't see. Related: traumatic, post-traumatic." },
   { w:"Identification", pos:"noun", meaning:"Establishing who someone is, or the documents that prove a person's identity.",
+    tiles:[["ident","r","the same"],["ification","s","the act/process of making"]],
     morph:"Latin <b>idem</b> (the same) + <b>facere</b> (to make): 'to make the same as' a record. Related: identity, identical." },
   { w:"Dislocation", pos:"noun", meaning:"Being removed from a familiar place, community or sense of belonging; an order disrupted.",
+    tiles:[["dis","p","apart, away"],["loc","r","place"],["ation","s","process"]],
     morph:"Prefix <b>dis-</b> (apart, away) + root <b>loc-</b> (place) + <b>-ation</b>. Literally 'put out of place'. Compare: <i>relocation</i> = moving to a new place on purpose." },
   { w:"Disheartened", pos:"adjective", meaning:"Having lost determination or confidence; discouraged.",
+    tiles:[["dis","p","removal"],["heart","r","courage"],["ened","s","made / became"]],
     morph:"Prefix <b>dis-</b> (removal) + root <b>heart</b> (courage) + <b>-en</b> + <b>-ed</b>. To have the courage taken out of you. It's about how you FEEL." },
   { w:"Dispossessed", pos:"adjective", meaning:"Having had property, land, rights, or a sense of home taken away.",
+    tiles:[["dis","p","removal"],["possess","r","to own"],["ed","s","past participle"]],
     morph:"Prefix <b>dis-</b> (removal) + <b>possess</b> (to own) + <b>-ed</b>. It's about what you've HAD TAKEN — not how you feel. Compare <i>disheartened</i>." },
   { w:"Bystander", pos:"noun", meaning:"A person present at an event who does not take part; an onlooker who doesn't intervene.",
+    tiles:[["by","p","near"],["stand","r","stand"],["er","s","one who"]],
     morph:"<b>by</b> (near) + <b>stand</b> + <b>-er</b> (one who): one who stands by without acting. Opposite idea: <i>upstander</i> — someone who steps in." },
   { w:"Grief", pos:"noun", meaning:"Intense sorrow, especially caused by someone's death or a significant loss.",
     morph:"From Latin <b>gravis</b> (heavy) via French <i>grever</i> (to burden) — grief is a 'heaviness' of feeling. Grief is the FEELING; loss is the FACT." },
   { w:"Loss", pos:"noun", meaning:"The fact of losing someone or something; being deprived of something valued.",
     morph:"Old English <b>losian</b> (to perish). Watch the spelling family: <i>lose</i> (verb), <i>loss</i> (noun), <i>lost</i> (past) — and <i>loose</i> is a different word (not tight)." },
   { w:"Friendship", pos:"noun", meaning:"A close relationship marked by mutual affection, trust, and support.",
+    tiles:[["friend","r","one who loves"],["ship","s","condition, state of being"]],
     morph:"Root <b>friend</b> (Old English <i>freond</i>, 'one who loves') + suffix <b>-ship</b> (condition, state of being). Related: kinship, companionship." },
 ];
 
@@ -564,12 +587,33 @@ function renderHome(){
 }
 
 /* ================= STUDY ================= */
+// tiles: [surface, role, gloss] where role is p=prefix, r=root, s=suffix.
+// Rebuild the headword with each morpheme's own letters coloured by role —
+// the same colours used in the morph line below it.
+function colourWord(v){
+  if(!v.tiles) return v.w;
+  let out="", rest=v.w, lower=v.w.toLowerCase();
+  for(const [surf, role] of v.tiles){
+    const idx = lower.indexOf(surf.toLowerCase());
+    if(idx===-1) return v.w;
+    out += rest.slice(0, idx) + `<span class="m${role}">${rest.slice(idx, idx+surf.length)}</span>`;
+    rest = rest.slice(idx+surf.length);
+    lower = lower.slice(idx+surf.length);
+  }
+  return out + rest;
+}
 function renderStudy(){
   const wrap = document.getElementById("vocab-list"); wrap.innerHTML="";
+  wrap.insertAdjacentHTML("beforeend",
+    `<div class="mlegend"><span class="mp">prefix</span><span class="mr">root</span><span class="ms">suffix</span>
+     <span class="note">— the same colours mark each word's parts below</span></div>`);
   VOCAB.forEach(v=>{
     const d = document.createElement("div"); d.className="vcard";
-    d.innerHTML = `<span class="w">${v.w}</span><span class="pos">${v.pos}</span>
-      <div class="meaning">${v.meaning}</div><div class="morph">${v.morph}</div>`;
+    const chips = v.tiles
+      ? v.tiles.map(([surf,role,gloss])=>`<code class="m${role}">${surf}</code> <i>${gloss}</i>`).join(" + ") + "<br>"
+      : "";
+    d.innerHTML = `<span class="w">${colourWord(v)}</span><span class="pos">${v.pos}</span>
+      <div class="meaning">${v.meaning}</div><div class="morph">${chips}${v.morph}</div>`;
     wrap.appendChild(d);
   });
 }

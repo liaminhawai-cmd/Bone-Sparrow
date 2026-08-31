@@ -530,10 +530,19 @@ a.card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(60,45,2
 /* --- build board (study → build any-order → meaning check) ------------- */
 .board-intro h2 { margin: 4px 0 2px; }
 .mo-gloss { font-style: normal; font-weight: 400; font-size: .72rem; opacity: .8; margin-left: 5px; }
-/* study */
+/* study — the "purple-lab" word-card treatment: a legend once above the list,
+   then each headword spelt with its own letters coloured by morpheme role. */
+.mo-legend { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-size: .85rem;
+  font-weight: 700; margin: 0 0 10px; border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 14px; background: var(--surface-2); }
+.mo-legend .lg-prefix { color: var(--prefix-ink); } .mo-legend .lg-root { color: var(--root-ink); }
+.mo-legend .lg-suffix { color: var(--suffix-ink); }
+.mo-legend .lg-note { font-weight: 400; color: var(--muted); }
 .study-list { display: flex; flex-direction: column; gap: 10px; }
 .study-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
 .study-word { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.study-word .wm-prefix { color: var(--prefix-ink); } .study-word .wm-root { color: var(--root-ink); }
+.study-word .wm-suffix { color: var(--suffix-ink); }
 .study-morphs { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
 .study-def { color: var(--ink); margin: 4px 0 2px; }
 .study-trans { display: inline-block; margin-top: 4px; }
@@ -1356,6 +1365,26 @@ function spellingChip(part) {
   // any other change (assimilation, substitution): note the familiar form.
   return [surf, h('span', { class: 'mo-was', title: `usually spelt "${variant}"` }, `≈${variant}`)];
 }
+// Rebuild a headword with each morpheme's own letters coloured by role —
+// the purple-lab "colour-in-the-spelling" treatment, layered on top of the
+// existing prefix/root/suffix palette. Falls back to the plain word if the
+// parts don't line up against the spelling (should not happen with clean data).
+function colourWord(w) {
+  const parts = w.parts || [];
+  if (parts.length < 2) return w.word;
+  let out = [], rest = w.word, lower = w.word.toLowerCase();
+  for (const p of parts) {
+    const needle = (p.surface || '').toLowerCase();
+    const idx = needle ? lower.indexOf(needle) : -1;
+    if (idx === -1) return w.word;
+    if (idx > 0) out.push(rest.slice(0, idx));
+    out.push(h('span', { class: `wm-${p.type || 'root'}` }, rest.slice(idx, idx + needle.length)));
+    rest = rest.slice(idx + needle.length);
+    lower = lower.slice(idx + needle.length);
+  }
+  if (rest) out.push(rest);
+  return out;
+}
 // A morpheme chip. Coloured by type; roots/prefixes with a family are tappable.
 function morphemeChip(part, extraCls = '') {
   const fam = FAMILY_TYPES.has(part.type) ? morphemeFamily(part) : null;
@@ -1900,8 +1929,13 @@ function renderBuildBoard({ levelId, subjectId, unitId }) {
   function studyView() {
     const lang = getLang();
     const dispLang = unitDisplayLang(unit, lang);
+    const hasMorphs = sets[si].some((w) => w.parts && w.parts.length >= 2);
+    const legend = hasMorphs && h('div', { class: 'mo-legend' },
+      h('span', { class: 'lg-prefix' }, 'prefix'), h('span', { class: 'lg-root' }, 'root'),
+      h('span', { class: 'lg-suffix' }, 'suffix'),
+      h('span', { class: 'lg-note' }, '— the same colours mark each word’s parts below'));
     const cards = sets[si].map((w) => h('div', { class: 'study-card' },
-      h('div', { class: 'study-word' }, h('strong', {}, w.word), say(w.word)),
+      h('div', { class: 'study-word' }, h('strong', {}, colourWord(w)), say(w.word)),
       (w.parts && w.parts.length >= 2) && h('div', { class: 'study-morphs' },
         ...w.parts.map((p) => h('span', { class: `mo-chip ${p.type || ''}` },
           ...spellingChip(p), h('i', { class: 'mo-gloss' }, p.meaning || '')))),
@@ -1913,6 +1947,7 @@ function renderBuildBoard({ levelId, subjectId, unitId }) {
       h('div', { class: 'board-intro' },
         h('h2', {}, 'Study the words'),
         h('p', { class: 'muted small' }, 'Read each word, its parts and meaning. When you build, the words are hidden — so learn them now.')),
+      legend,
       h('div', { class: 'study-list' }, ...cards),
       h('div', { class: 'row gap end' },
         h('button', { class: 'btn primary', onclick: () => { phase = 'build'; initSet(); render_(); } },
