@@ -20,6 +20,8 @@
   --stem-bg:#d6eafc; --stem-tx:#0b447c;   /* blue   = sentence stem   */
   --quote-bg:#fff3b0; --quote-tx:#7a5a00; /* yellow = embedded quote  */
   --tail-bg:#fbeaf0;  --tail-tx:#993556;  /* pink   = ending / effect */
+  /* morpheme roles (same values as the Vocab Hub) */
+  --mpre:#2c6fa8; --mroot:#9a5518; --msuf:#3f7a4a; --mcon:#6c6353;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -548,6 +550,16 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
 .mchip b{font-size:13.5px}
 .mchip small{font-size:10px;opacity:.85}
 .mplus{font-weight:800;color:#8a7c56}
+.gparts{display:block;color:#8a7c56;font-size:12.5px;line-height:1.7;
+  border-top:1px dashed #d8cfae;padding-top:6px;margin-top:6px}
+.gparts i{color:var(--ink);font-size:12px}
+.gparts code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:16px}
+.gparts code.mp{color:var(--mpre)} .gparts code.mr{color:var(--mroot)}
+.gparts code.ms{color:var(--msuf)} .gparts code.mc{color:var(--mcon)}
+.gword .gt .mp,.mpw .mp{color:var(--mpre)} .gword .gt .mr,.mpw .mr{color:var(--mroot)}
+.gword .gt .ms,.mpw .ms{color:var(--msuf)} .gword .gt .mc,.mpw .mc{color:var(--mcon)}
+.gmlegend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;font-weight:800;padding:6px 2px 2px}
+.gmlegend .mp{color:var(--mpre)} .gmlegend .mr{color:var(--mroot)} .gmlegend .ms{color:var(--msuf)}
 .gm{font-size:12.5px;line-height:1.45}
 .gtr{font-size:14px;font-weight:700;margin-top:4px;color:#0b447c}
 .gfoot{font-size:11px;color:#8a7c56;line-height:1.45;padding:8px 12px;border-top:1px dashed #d8cfae;background:#fbf7e6}
@@ -3769,6 +3781,31 @@ function glossLang(){ const pr=readProfile(); return (pr&&pr.lang)||""; }
 function glossStudied(setId){ const V=vocabSt(); return !!(V.lessons&&V.lessons[setId]&&V.lessons[setId].studied); }
 function glossState(w){ const V=vocabSt(); const ws=(V.wstat||{})[w]; return (ws&&ws.mastered)?"mastered":"met"; }
 function escJs(t){ return String(t).replace(/\\/g,"\\\\").replace(/'/g,"\\'"); }
+/* Morpheme roles, and a headword rebuilt with each part's own letters coloured
+   by role — the same colours the morph line uses underneath it. */
+function morphCls(piece){
+  if(/^-.*-$/.test(piece)) return "mc";
+  if(/^-/.test(piece)) return "ms";
+  if(/-$/.test(piece)) return "mp";
+  return "mr";
+}
+function colourWord(word, parts){
+  if(!parts || !parts.length) return esc(word);
+  let out="", rest=word, lower=word.toLowerCase();
+  for(const t of parts){
+    const piece=t[0].replace(/[-()]/g,"");
+    if(!piece) continue;
+    const idx=lower.indexOf(piece.toLowerCase());
+    if(idx===-1) return esc(word);
+    out += esc(rest.slice(0,idx)) + `<span class="${morphCls(t[0])}">${esc(rest.slice(idx,idx+piece.length))}</span>`;
+    rest=rest.slice(idx+piece.length); lower=lower.slice(idx+piece.length);
+  }
+  return out+esc(rest);
+}
+function morphLine(parts, cls){
+  if(!parts || !parts.length) return "";
+  return parts.map((t,i)=>`<code class="${morphCls(t[0])}"${cls?` style="animation-delay:${140+i*170}ms"`:""}>${esc(t[0])}</code> <i>${esc(t[1])}</i>`).join(" + ");
+}
 
 function glossMount(){
   if(!$("gnoteBtn")){
@@ -3850,7 +3887,8 @@ function renderGloss(){
      <button class="gx" onclick="GP.open=false;renderGloss()" aria-label="close">×</button></div>
    <div class="gtools">${tools}</div>
    <div class="gbody">${body||`<div class="glock">Nothing here yet.</div>`}</div>
-   <div class="gfoot"><i class="hint ok"></i> unlocked · <i class="hint todo"></i> still in the Vocab Hub</div>`;
+   <div class="gfoot"><div class="gmlegend"><span class="mp">prefix</span><span class="mr">root</span><span class="ms">suffix</span></div>
+     <i class="hint ok"></i> unlocked · <i class="hint todo"></i> still in the Vocab Hub</div>`;
   const on=pn.querySelector(".gword.on");
   if(on) on.scrollIntoView({block:"nearest"});
 }
@@ -3871,13 +3909,13 @@ function glossRow(g,w,lang){
   const st=glossState(w.w), on=GP.exp===w.w;
   let d="";
   if(on){
-    const parts=w.parts?w.parts.map(t=>`<span class="mchip"><b>${esc(t[0])}</b><small>${esc(t[1])}</small></span>`).join(`<span class="mplus">+</span>`):"";
+    const parts=morphLine(w.parts);
     const tr=(lang&&w.tr&&w.tr[lang])?`<div class="gtr"${GRTL[lang]?' dir="rtl"':""} lang="${esc(lang)}">${esc(w.tr[lang])}</div>`:"";
-    d=`<div class="gdetail">${parts?`<div class="gparts">${parts}</div>`:""}<div class="gm">${esc(w.m)}</div>${tr}
+    d=`<div class="gdetail"><div class="gm">${esc(w.m)}</div>${tr}${parts?`<div class="gparts">${parts}</div>`:""}
        <button class="glink" onclick="glossGo('${escJs(g.set)}')">practise it in the Vocab Hub →</button></div>`;
   }
   return `<div class="gword ${st}${on?" on":""}" onclick="GP.exp=(GP.exp==='${escJs(w.w)}')?null:'${escJs(w.w)}';renderGloss()">
-    <span class="st"></span><span class="gt">${esc(w.w)}</span><span class="gpos">${esc(w.pos)}</span>${st==="mastered"?`<span class="gtick">✓</span>`:""}</div>`+d;
+    <span class="st"></span><span class="gt">${colourWord(w.w, w.parts)}</span><span class="gpos">${esc(w.pos)}</span>${st==="mastered"?`<span class="gtick">✓</span>`:""}</div>`+d;
 }
 function glossGo(setId){
   localStorage.setItem("bonesparrow.return.v1",
@@ -3937,13 +3975,13 @@ function morphPop(ev){
      instead — that's where the way into the Vocab Hub lives */
   if(!glossStudied(hit.g.set)){ glossOpenAt(word); return; }
   const lang=glossLang();
-  const parts=hit.w.parts?hit.w.parts.map((t,i)=>`<span class="mchip pop" style="animation-delay:${140+i*170}ms"><b>${esc(t[0])}</b><small>${esc(t[1])}</small></span>`).join(`<span class="mplus">+</span>`):"";
+  const parts=morphLine(hit.w.parts);
   const tr=(lang&&hit.w.tr&&hit.w.tr[lang])?`<div class="gtr"${GRTL[lang]?' dir="rtl"':""} lang="${esc(lang)}">${esc(hit.w.tr[lang])}</div>`:"";
   const d=document.createElement("div"); d.className="morphpop"; d.id="morphpop";
   d.innerHTML=`<button class="gx" onclick="morphPopClose()" aria-label="close">×</button>
-    <div class="mpw">${esc(hit.w.w)}</div>
-    ${parts?`<div class="gparts">${parts}</div>`:""}
+    <div class="mpw">${colourWord(hit.w.w, hit.w.parts)}</div>
     <div class="gm">${esc(hit.w.m)}</div>${tr}
+    ${parts?`<div class="gparts">${parts}</div>`:""}
     <div class="mpnote">${glossWordClass(hit.w.w)==="gw-ok"?"from your word notepad — mastered ✓":"from your word notepad — keep drilling it"}</div>
     <button class="glink" onclick="morphPopClose();glossOpenAt('${escJs(hit.w.w)}')">open my notepad here →</button>`;
   document.body.appendChild(d);
