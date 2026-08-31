@@ -543,7 +543,17 @@ a.card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(60,45,2
 .study-word { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .study-word .wm-prefix { color: var(--prefix-ink); } .study-word .wm-root { color: var(--root-ink); }
 .study-word .wm-suffix { color: var(--suffix-ink); }
-.study-morphs { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+/* the word-list morph line: a coloured monospace morpheme + its italic gloss,
+   the purple-lab treatment. Pills stay for the chips a student taps or drags. */
+.study-morphs { font-size: .9rem; color: var(--muted); line-height: 1.7; margin: 8px 0 0;
+  border-top: 1px dashed var(--line); padding-top: 6px; }
+.study-morphs code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 700; font-size: 1rem; }
+.study-morphs code.prefix { color: var(--prefix-ink); }
+.study-morphs code.root   { color: var(--root-ink); }
+.study-morphs code.suffix { color: var(--suffix-ink); }
+.study-morphs i { font-style: italic; color: var(--ink); }
+.study-morphs .mo-join { font-weight: 700; margin: 0 4px; }
+.study-morphs .mo-whole { color: var(--ink); font-family: var(--serif); font-weight: 700; }
 .study-def { color: var(--ink); margin: 4px 0 2px; }
 .study-trans { display: inline-block; margin-top: 4px; }
 .wtr { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 6px; padding: 1px 8px; font-weight: 600; }
@@ -1936,12 +1946,17 @@ function renderBuildBoard({ levelId, subjectId, unitId }) {
       h('span', { class: 'lg-note' }, '— the same colours mark each word’s parts below'));
     const cards = sets[si].map((w) => h('div', { class: 'study-card' },
       h('div', { class: 'study-word' }, h('strong', {}, colourWord(w)), say(w.word)),
-      (w.parts && w.parts.length >= 2) && h('div', { class: 'study-morphs' },
-        ...w.parts.map((p) => h('span', { class: `mo-chip ${p.type || ''}` },
-          ...spellingChip(p), h('i', { class: 'mo-gloss' }, p.meaning || '')))),
       h('p', { class: 'study-def' }, w.meaning || ''),
       (pickTranslation(w.translations, lang) || pickExact(w.translations, dispLang)) &&
-        h('p', { class: 'study-trans wtr' }, pickTranslation(w.translations, lang) || pickExact(w.translations, dispLang))));
+        h('p', { class: 'study-trans wtr' }, pickTranslation(w.translations, lang) || pickExact(w.translations, dispLang)),
+      (w.parts && w.parts.length >= 2) && h('div', { class: 'study-morphs' },
+        ...w.parts.flatMap((p, i) => [
+          i ? h('span', { class: 'mo-join' }, '+') : null,
+          h('code', { class: p.type || 'root' }, ...spellingChip(p)),
+          h('i', {}, p.meaning || ''),
+        ]),
+        h('span', { class: 'mo-join' }, '→'),
+        h('span', { class: 'mo-whole' }, w.word))));
     return h('div', { class: 'stack learn' }, crumbBar(),
       head(null),
       h('div', { class: 'board-intro' },
