@@ -110,11 +110,14 @@
   /* ---- study list ---- */
   .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
   .vcard .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-  .vcard .w{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .vcard .w{font-family:Georgia,serif;font-size:23px;font-weight:700}
+  .vcard .w .mp{color:var(--mpre)} .vcard .w .mr{color:var(--mroot)} .vcard .w .ms{color:var(--msuf)} .vcard .w .mc{color:var(--mcon)}
   .vcard .pos{font-size:12px;color:var(--muted);font-style:italic}
   .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
   .vcard .morph b,.vcard .morph i{color:var(--ink)}
+  .vcard .morph code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:16px}
+  .vcard .morph code.mp{color:var(--mpre)} .vcard .morph code.mr{color:var(--mroot)} .vcard .morph code.ms{color:var(--msuf)} .vcard .morph code.mc{color:var(--mcon)}
   .wstate{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 9px;border-radius:20px;
     text-transform:uppercase;flex-shrink:0;border:1px solid transparent}
   .wstate.ok{color:var(--correct);background:var(--okbg);border-color:var(--correct)}
@@ -1793,6 +1796,31 @@ function classifyMorph(piece){
   if(/-$/.test(piece)) return "prefix";
   return "root";
 }
+const MCLASS={prefix:"mp",root:"mr",suffix:"ms",connector:"mc"};
+function morphCls(piece){ return MCLASS[classifyMorph(piece)]||"mr"; }
+/* Rebuild a headword with each morpheme's own letters coloured by its role —
+   the same colours used on the morph line and in the legend. */
+function colourWord(w){
+  if(!w.tiles || !w.tiles.length) return esc(w.w);
+  let out="", rest=w.w, lower=w.w.toLowerCase();
+  for(const t of w.tiles){
+    const piece=t[0].replace(/-/g,"");
+    if(!piece) continue;
+    const idx=lower.indexOf(piece.toLowerCase());
+    if(idx===-1) return esc(w.w);
+    out += esc(rest.slice(0,idx)) + `<span class="${morphCls(t[0])}">${esc(rest.slice(idx,idx+piece.length))}</span>`;
+    rest=rest.slice(idx+piece.length); lower=lower.slice(idx+piece.length);
+  }
+  return out+esc(rest);
+}
+function morphLine(w){
+  if(!w.tiles || !w.tiles.length) return "";
+  return w.tiles.map(t=>`<code class="${morphCls(t[0])}">${esc(t[0])}</code> <i>${esc(t[1])}</i>`).join(" + ");
+}
+const MLEGEND_ROW=`<div class="mlegend"><span><i style="background:var(--mpre)"></i><span style="color:var(--mpre)">prefix</span></span>`+
+  `<span><i style="background:var(--mroot)"></i><span style="color:var(--mroot)">root</span></span>`+
+  `<span><i style="background:var(--msuf)"></i><span style="color:var(--msuf)">suffix</span></span>`+
+  `</div>`;
 const MORPHS = [];                 // {piece, gloss, type, examples:[wordName]}
 const MORPH_BY_PIECE = {};
 LESSONS.forEach(l=>l.words.forEach(w=>(w.tiles||[]).forEach(([p,g])=>{
@@ -2085,16 +2113,17 @@ function renderStudy(l){
   const mount=document.getElementById("study-body");
   document.getElementById("study-prog").textContent=`STEP 1 · MEET THE WORDS · ${l.id}`;
   let html=`<h2>Lesson ${esc(l.id)} — ${esc(l.title)}</h2>
-    <p class="muted" style="margin-bottom:14px">Read each word: its meaning, and how its <b>morphemes</b> build that meaning. Tags show each word’s domain.</p>`;
+    <p class="muted" style="margin-bottom:14px">Read each word: its meaning, and how its <b>morphemes</b> build that meaning. Tags show each word’s domain.</p>
+    ${MLEGEND_ROW}`;
   mount.innerHTML=html;
   l.words.forEach(v=>{
-    const map=(v.type==="origin")?"":v.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" &nbsp;+&nbsp; ");
+    const map=(v.type==="origin")?"":morphLine(v);
     const d=document.createElement("div"); d.className="vcard";
     const domLabel={camp:"THE CAMP",story:"STORY & MEMORY",feeling:"FEELINGS & THE BODY",world:"THE OUTSIDE WORLD"}[v.domain]||v.domain;
-    d.innerHTML=`<div class="top"><span class="w">${esc(v.w)}</span><span class="pos">${esc(v.pos)}</span>${trSpan(v.w)}
+    d.innerHTML=`<div class="top"><span class="w">${(v.type==="origin")?esc(v.w):colourWord(v)}</span><span class="pos">${esc(v.pos)}</span>${trSpan(v.w)}
         <span class="dtag ${v.domain}">${domLabel}</span></div>
       <div class="meaning">${esc(v.meaning)}</div>
-      <div class="morph">${ v.type==="origin" ? v.note : (map+" &nbsp;→&nbsp; "+esc(v.w)+"<br>"+v.note) }</div>`;
+      <div class="morph">${ (v.type==="origin"||!map) ? v.note : (map+" &nbsp;→&nbsp; <b>"+esc(v.w)+"</b><br>"+v.note) }</div>`;
     mount.appendChild(d);
   });
   const row=document.createElement("div"); row.className="nextrow noprint";
@@ -2856,6 +2885,7 @@ function renderGlossary(){
   m.innerHTML=`<h2 style="text-align:center">Word list</h2>
     <p class="muted" style="text-align:center;margin-bottom:10px">Every key word in the unit — meaning, parts and (if you’ve chosen a language) your translation. Search or scroll.</p>
     <div class="reffilter"><input id="gloss-search" placeholder="Search a word or meaning…" aria-label="search words"></div>
+    ${MLEGEND_ROW}
     <div id="gloss-list"></div>`;
   const input=m.querySelector("#gloss-search");
   input.addEventListener("input", ()=>drawGloss(input.value.trim().toLowerCase()));
@@ -2871,15 +2901,15 @@ function drawGloss(q){
     html+=`<div class="topichead">${esc(l.id==="0"?"Before you read":"Chapters "+l.id)} · ${esc(l.title)} — ${done}/${ws.length} mastered</div>`;
     ws.forEach(w=>{
       const map=w.tiles
-        ? w.tiles.map(t=>`<span class="mtile ${classifyMorph(t[0])}"><span class="mm">${esc(t[0])}</span><span class="gl">${esc(t[1])}</span></span>`).join(" ")
+        ? morphLine(w)+" &nbsp;→&nbsp; <b>"+esc(w.w)+"</b>"
         : `<span class="muted">from a name or place — see its story in the lesson</span>`;
       const domLabel={camp:"THE CAMP",story:"STORY & MEMORY",feeling:"FEELINGS & THE BODY",world:"THE OUTSIDE WORLD"}[w.domain]||w.domain;
       const stt=wordState(w.w);
-      html+=`<div class="vcard"><div class="top"><span class="w">${esc(w.w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
+      html+=`<div class="vcard"><div class="top"><span class="w">${colourWord(w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
           <span class="wstate ${stt.k}">${esc(stt.label)}</span>
           <span class="dtag ${w.domain}">${domLabel}</span></div>
         <div class="meaning">${esc(w.meaning)}</div>
-        <div class="morph" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px dashed var(--line-soft);padding-top:8px">${map}</div></div>`;
+        <div class="morph">${map}</div></div>`;
     });
   });
   wrap.innerHTML=html || `<p class="muted" style="text-align:center">No words match “${esc(q)}”.</p>`;
