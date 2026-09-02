@@ -2,6 +2,25 @@
 
 Rules for anyone building teaching resources in this repository, human or model.
 
+## Where the live site comes from — read before you push
+
+The site is built and published from the branch
+**`claude/bone-sparrow-units-planning-l9ptqq`**, by
+`.github/workflows/pages.yml`, which exists only on that branch. That branch is
+the trunk of this project. Work on it.
+
+`main` is **not** the trunk and is **not** deployed. It shares no commit with the
+live branch at all — the two are unrelated histories with no common ancestor, so
+they cannot be merged or fast-forwarded into each other. Nothing pushed to `main`
+ever reaches a student, and nothing warns you: the push succeeds, no workflow
+runs, and the site silently stays as it was. That has already cost one round of
+work.
+
+Two files exist only on `main` and are therefore not published:
+`wordbuilderoffline.html` and
+`Lesson Resources/Oral formative assessment - Five conversations.docx`. If either
+is wanted on the live site, copy it onto the live branch deliberately.
+
 Read `STYLE_GUIDE.md` first — the portable build principles behind everything
 below. Rule 0 here is that guide's minimalism principle, made specific to this
 repo's failures.
