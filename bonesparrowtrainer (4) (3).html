@@ -10,6 +10,8 @@
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
+    /* morpheme roles — same values as the Vocab Hub / Climb cards */
+    --mpre:#2c6fa8; --mroot:#9a5518; --msuf:#3f7a4a; --mcon:#6c6353;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
@@ -68,11 +70,17 @@
   .reveal.show{display:block}
   /* study list */
   .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
-  .vcard .w{font-family:Georgia,serif;font-size:17px;font-weight:700}
+  .vcard .w{font-family:Georgia,serif;font-size:23px;font-weight:700}
+  .vcard .w .mp{color:var(--mpre)} .vcard .w .mr{color:var(--mroot)} .vcard .w .ms{color:var(--msuf)} .vcard .w .mc{color:var(--mcon)}
   .vcard .pos{font-size:12px;color:var(--muted);font-style:italic;margin-left:6px}
   .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
   .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
   .vcard .morph b,.vcard .morph i{color:var(--ink)}
+  .vcard .morph code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:16px}
+  .vcard .morph code.mp{color:var(--mpre)} .vcard .morph code.mr{color:var(--mroot)} .vcard .morph code.ms{color:var(--msuf)} .vcard .morph code.mc{color:var(--mcon)}
+  .mlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:700;margin:0 0 12px;
+           border:1px solid var(--line-soft);border-radius:8px;padding:10px 14px;background:var(--bg)}
+  .mlegend .mp{color:var(--mpre)} .mlegend .mr{color:var(--mroot)} .mlegend .ms{color:var(--msuf)}
   .buildprog{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:14px}
   .bdot{width:12px;height:12px;border-radius:50%;border:1px solid var(--line);background:var(--bg)}
   .bdot.done{background:var(--correct);border-color:var(--correct)}
@@ -779,12 +787,43 @@ function go(name){
 }
 
 /* ================= STUDY (read-first) ================= */
+/* The study cards reuse the builder's own morpheme split (BUILD.tiles) so the
+   word-introduction view and the build task teach exactly the same parts. */
+const TILES_BY_WORD={}; BUILD.forEach(b=>{ if(b.tiles) TILES_BY_WORD[b.w]=b.tiles; });
+function morphCls(piece){
+  if(/^-.*-$/.test(piece)) return "mc";   // connector, e.g. -o-
+  if(/^-/.test(piece)) return "ms";       // suffix
+  if(/-$/.test(piece)) return "mp";       // prefix
+  return "mr";                            // root / base
+}
+/* Rebuild the headword with each morpheme's own letters coloured by its role —
+   the same colours used on the morph line and in the legend above. */
+function colourWord(word, tiles){
+  if(!tiles || !tiles.length) return esc(word);
+  let out="", rest=word, lower=word.toLowerCase();
+  for(const t of tiles){
+    const piece=t[0].replace(/-/g,"");
+    if(!piece) continue;
+    const idx=lower.indexOf(piece.toLowerCase());
+    if(idx===-1) return esc(word);
+    out += esc(rest.slice(0,idx)) + `<span class="${morphCls(t[0])}">${esc(rest.slice(idx,idx+piece.length))}</span>`;
+    rest=rest.slice(idx+piece.length); lower=lower.slice(idx+piece.length);
+  }
+  return out+esc(rest);
+}
 function renderStudy(){
   const wrap=document.getElementById("study-list"); wrap.innerHTML="";
+  wrap.insertAdjacentHTML("beforeend",
+    `<div class="mlegend"><span class="mp">prefix</span><span class="mr">root</span><span class="ms">suffix</span></div>`);
   STUDY.forEach(v=>{
+    const tiles=TILES_BY_WORD[v.w];
     const d=document.createElement("div"); d.className="vcard";
-    d.innerHTML=`<span class="w">${esc(v.w)}</span><span class="pos">${esc(v.pos)}</span>
-      <div class="meaning">${esc(v.meaning)}</div><div class="morph">${v.morph}</div>`;
+    const parts=tiles
+      ? tiles.map(t=>`<code class="${morphCls(t[0])}">${esc(t[0])}</code> <i>${esc(t[1])}</i>`).join(" + ")
+        + ` &nbsp;&rarr;&nbsp; <b>${esc(v.w)}</b><br>`
+      : "";
+    d.innerHTML=`<span class="w">${colourWord(v.w, tiles)}</span><span class="pos">${esc(v.pos)}</span>
+      <div class="meaning">${esc(v.meaning)}</div><div class="morph">${parts}${v.morph}</div>`;
     wrap.appendChild(d);
   });
 }
