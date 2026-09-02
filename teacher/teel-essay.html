@@ -113,12 +113,52 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .qcard .e{font-size:15px;color:var(--eff-tx);background:var(--eff-bg);border-radius:8px;padding:8px 12px}
 .arrow{color:var(--muted);text-align:center;font-size:20px;line-height:1}
 
+/* ---- display: plain / spotlight / full ---- */
+.view{position:fixed;top:12px;right:14px;display:flex;gap:4px;z-index:20;
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px}
+.view button{border:0;border-radius:999px;background:transparent;padding:6px 12px;
+  font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.view button.on{background:var(--deep);color:#f6f1e6}
+.spot{display:none;gap:6px;margin:12px 0 0;align-items:center}
+.spot button{border:1px solid var(--line);border-radius:999px;background:#fff;padding:6px 12px;
+  font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.spot button.on{color:var(--ink);border-color:var(--ink);font-weight:700}
+body.v-spot .spot{display:flex}
+body.v-spot .palette,body.v-plain .palette{display:none}
+
+/* plain: every role reads as ink; the letters carry the structure */
+body.v-plain em[class^="hl-"],body.v-spot em[class^="hl-"]{background:transparent;color:inherit;font-weight:inherit;padding:0;font-style:inherit}
+body.v-plain .chip,body.v-spot .chip{background:#fff;color:var(--ink);border:1px solid var(--line);font-style:normal;font-weight:500}
+body.v-plain .dots,body.v-spot .dots{display:none}
+body.v-plain .qcard .q,body.v-spot .qcard .q{background:transparent;color:var(--ink);padding:0}
+body.v-plain .qcard .e,body.v-spot .qcard .e{background:transparent;color:var(--muted);padding:0}
+body.v-plain .themes button.on,body.v-spot .themes button.on{background:var(--paper);color:var(--ink);border-color:var(--ink)}
+body.v-plain .skel em,body.v-spot .skel em{background:transparent;color:inherit;font-weight:inherit;padding:0}
+body.v-plain .branch>div:first-child,body.v-spot .branch>div:first-child{background:transparent!important;color:var(--ink)!important;padding:0!important}
+
+/* spotlight: one role lit */
+body.v-spot[data-spot="idea"] em.hl-idea,body.v-spot[data-spot="idea"] .skel em.hl-idea{background:var(--idea-bg);color:var(--idea-tx);font-weight:600;padding:1px 4px}
+body.v-spot[data-spot="idea"] .chip.idea{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-bg);font-weight:600}
+body.v-spot[data-spot="verb"] em.hl-verb,body.v-spot[data-spot="verb"] .skel em.hl-verb{background:var(--verb-bg);color:var(--verb-tx);font-weight:600;padding:1px 4px}
+body.v-spot[data-spot="verb"] .chip.verb{background:var(--verb-bg);color:var(--verb-tx);border-color:var(--verb-bg);font-weight:600}
+body.v-spot[data-spot="ev"] em.hl-ev,body.v-spot[data-spot="ev"] .skel em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-weight:600;font-style:italic;padding:1px 4px}
+body.v-spot[data-spot="ev"] .chip.quote{background:var(--ev-bg);color:var(--ev-tx);border-color:var(--ev-bg);font-weight:600;font-style:italic}
+body.v-spot[data-spot="ev"] .qcard .q{background:var(--ev-bg);color:var(--ev-tx);padding:8px 12px}
+body.v-spot[data-spot="eff"] em.hl-eff,body.v-spot[data-spot="eff"] .skel em.hl-eff{background:var(--eff-bg);color:var(--eff-tx);font-weight:600;padding:1px 4px}
+body.v-spot[data-spot="eff"] .chip.eff{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-bg);font-weight:600}
+body.v-spot[data-spot="eff"] .qcard .e{background:var(--eff-bg);color:var(--eff-tx);padding:8px 12px}
+
 /* rule */
 .rule{border-left:4px solid var(--accent);background:var(--paper);border-radius:0 10px 10px 0;
   padding:12px 16px;margin:14px 0 0;font-size:15.5px}
 </style>
 </head>
 <body>
+<div class="view" id="view">
+  <button data-v="plain">plain</button>
+  <button data-v="spot">spotlight</button>
+  <button data-v="full">full</button>
+</div>
 <main>
 <h1>A TEEL essay</h1>
 <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
@@ -137,6 +177,12 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
   <button class="p-ev" data-c="ev">evidence</button>
   <button class="p-eff" data-c="eff">effect</button>
   <button class="p-plain" data-c="plain">plain</button>
+</div>
+<div class="spot" id="spot">
+  <button data-s="idea">idea</button>
+  <button data-s="verb">verb</button>
+  <button data-s="ev">evidence</button>
+  <button data-s="eff">effect</button>
 </div>
 <div class="frame" id="frame"></div>
 <div class="btns">
@@ -439,6 +485,28 @@ function colour(cls){
   box.normalize();
   D().outer[+box.dataset.o]=box.innerHTML; save(); syncSkelA(); sel.removeAllRanges();
 }
+
+/* ---------------- display ---------------- */
+const VKEY="bonesparrow.view.v1";
+let V={view:"full",spot:"ev"};
+try{ const j=JSON.parse(localStorage.getItem(VKEY)); if(j&&j.view) V=j; }catch(e){}
+function applyView(){
+  document.body.classList.remove("v-plain","v-spot","v-full");
+  document.body.classList.add("v-"+V.view);
+  document.body.dataset.spot=V.spot;
+  [...$("view").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.v===V.view));
+  [...$("spot").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.s===V.spot));
+  try{ localStorage.setItem(VKEY,JSON.stringify(V)); }catch(e){}
+}
+[...$("view").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.view=b.dataset.v;applyView();}));
+[...$("spot").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.spot=b.dataset.s;applyView();}));
+addEventListener("keydown",e=>{
+  if(e.target.isContentEditable) return;
+  if(e.key==="1"){V.view="plain";applyView();}
+  if(e.key==="2"){V.view="spot";applyView();}
+  if(e.key==="3"){V.view="full";applyView();}
+});
+applyView();
 
 drawAll();
 </script>
