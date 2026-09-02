@@ -22,6 +22,7 @@ on:
       - "teacher/*.html"
       - "BoneSparrow-A3-booklet.docx"
       - "BoneSparrow-stations.docx"
+      - "BoneSparrow-TEEL-worksheet.docx"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -58,7 +59,7 @@ jobs:
           cp BoneSparrowTeel.html dist/
           mkdir dist/teacher
           cp teacher/*.html dist/teacher/
-          cp BoneSparrow-A3-booklet.docx BoneSparrow-stations.docx dist/
+          cp BoneSparrow-A3-booklet.docx BoneSparrow-stations.docx BoneSparrow-TEEL-worksheet.docx dist/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
