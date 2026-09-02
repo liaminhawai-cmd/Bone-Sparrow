@@ -35,6 +35,7 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .themes button{border:1px solid var(--line);border-radius:999px;background:var(--paper);
   padding:9px 16px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer}
 .themes button.on{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-tx);font-weight:700}
+.themes button[data-t="imagination"]{cursor:default}
 .themes button b{display:inline-block;font-size:12px;background:var(--idea-tx);color:#fff;border-radius:50%;
   width:20px;height:20px;line-height:20px;text-align:center;margin-right:8px;vertical-align:1px}
 body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)}
@@ -66,7 +67,7 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
 
 /* co-construct frame */
 .frame{border:2px solid var(--deep);border-radius:12px;background:var(--paper);padding:6px 0;margin-top:12px}
-.slot{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:10px 16px;align-items:start}
+.slot{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 14px;align-items:start}
 .slot+.slot{border-top:1px dashed var(--line)}
 .slot .l{font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--deep);line-height:1.2}
 .slot .dots{font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -92,6 +93,7 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
 .slot .line{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;
   font-family:Georgia,serif;font-size:19px;line-height:1.6;min-height:52px;display:grid;gap:6px}
 .row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.row .chip .ct{min-height:34px;padding:4px 10px}
 .row .chip{flex:1;display:flex;align-items:center;gap:8px;min-width:72%;padding:4px 6px;cursor:default}
 .row .chip .ct{flex:1;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:6px;padding:5px 10px;min-height:36px;font-weight:600}
 .row .chip .ct:focus{border-color:var(--ink)}
@@ -114,7 +116,7 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
 body.v-plain .row .chip .lb,body.v-spot .row .chip .lb{color:var(--muted)}
 
 /* bank */
-.build{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start}
+.build{display:grid;grid-template-columns:1fr 290px;gap:18px;align-items:start}
 @media screen and (max-width:900px){.build{grid-template-columns:1fr}}
 .bank{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px 12px;position:sticky;top:60px}
 .bank h3{font-family:'Segoe UI',sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin:10px 0 6px;font-weight:700}
@@ -178,7 +180,7 @@ body.v-spot[data-spot="eff"] .chip.eff{background:var(--eff-bg);color:var(--eff-
 body.v-spot[data-spot="eff"] .qcard .e{background:var(--eff-bg);color:var(--eff-tx);padding:8px 12px}
 
 /* ---- slides ---- */
-main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
+main{max-width:1500px;padding:0 40px 80px;min-height:100vh}
 .slide{display:none;min-height:100vh;flex-direction:column;justify-content:center;padding:56px 0 70px}
 .slide.on{display:flex}
 .slide h2{margin:0 0 22px;font-size:26px}
@@ -223,7 +225,7 @@ main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
 <section class="slide title on" id="s1">
   <h1>A TEEL essay</h1>
   <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
-  <div class="lab">THEMES · A, B, C</div>
+  <div class="lab">PARAGRAPHS A, B, C</div>
   <div class="themes" id="themes"></div>
   <div class="lab">SHAPE</div>
   <div class="modes" id="modes"></div>
@@ -297,14 +299,14 @@ const THEMES=[
    "Even the camp's shoes tell the same story: <em class=\"hl-ev\">\"There are only fourteen pairs of real shoes in this whole entire camp.\"</em>",
    "Fraillon lets two numbers do the arguing, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">see how little the camp gives people</em>.",
    "By making the outside so near and so unknown, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the camp imprisons the mind</em> <em class=\"hl-eff\">as much as the body</em>."]},
- {id:"imagination", name:"imagination", link:"This shows that <em class=\"hl-idea\">imagination</em> turns dirt into an ocean and a book into courage, and in doing so <em class=\"hl-eff\">gives Subhi the one thing the camp cannot take</em>.",
+ {id:"imagination", name:"imagination", link:"This shows that <em class=\"hl-idea\">imagination is the most precious thing in the camp</em> and that <em class=\"hl-idea\">it can never be stolen</em>, and in doing so Fraillon <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">the fences hold Subhi's body but not his mind</em>.",
   quotes:[
    {q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", ch:"Chapter 1",
-    e:"lets the reader see the camp the way Subhi sees it", lead:"the novel opens at night", verb:"reveals", idea:"imagination as the one thing the camp cannot take", e2:"lets the reader see the camp the way Subhi sees it", eInf:"let the reader see the camp the way Subhi sees it"},
+    e:"lets the reader see the camp the way Subhi sees it", lead:"the novel opens at night", verb:"shows", idea:"that imagination is the most precious thing in the camp", e2:"lets the reader see the camp the way Subhi sees it", eInf:"let the reader see the camp the way Subhi sees it"},
    {q:"…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", ch:"Chapter 10",
-    e:"shows the reader what a story is worth in the camp", lead:"Jimmie brings her mother's book", verb:"shows", idea:"that imagination is worth more than anything in the camp", e2:"makes the reader understand where Subhi's courage comes from", eInf:"make the reader understand where Subhi's courage comes from"}],
+    e:"shows the reader what a story is worth in the camp", lead:"Jimmie brings her mother's book", verb:"shows", idea:"that imagination can never be taken away, even when people are", e2:"makes the reader understand where Subhi's courage comes from", eInf:"make the reader understand where Subhi's courage comes from"}],
   para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imagination</em> as the one thing the camp cannot take from Subhi.",
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imagination</em> as the most precious thing Subhi has, because it is the one thing the camp cannot take from him.",
    "The novel opens at night, when the dirt outside turns into <em class=\"hl-ev\">\"a beautiful ocean\"</em>, <em class=\"hl-ev\">\"as red as the sun and as deep as the sky\"</em>.",
    "The camp's own dirt becomes something beautiful, which <em class=\"hl-verb\">lets</em> the reader <em class=\"hl-eff\">see the camp the way Subhi sees it</em>.",
    "Later, knowing that Jimmie <em class=\"hl-ev\">\"has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.\"</em>",
@@ -388,10 +390,10 @@ const dkey=()=>S.theme+"."+S.mode;
 /* ---------------- state ---------------- */
 const $=id=>document.getElementById(id);
 const KEY="bonesparrow.teel.v2";
-let S={theme:"power", picks:["power"], mode:"TEEL", way:"evidence", drafts:{}};
+let S={theme:"imagination", picks:["imagination"], mode:"TEEL", way:"evidence", drafts:{}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.theme) S=j; }catch(e){}
 S.mode=S.mode||"TEEL"; S.way=S.way||"evidence"; S.drafts=S.drafts||{};
-if(!S.picks||!S.picks.length) S.picks=[S.theme]; S.theme=S.picks[0];
+S.picks=["imagination",...(S.picks||[]).filter(x=>x!=="imagination")].slice(0,3); S.theme="imagination";
 const NAME=id=>{const t=THEMES.find(t=>t.id===id); return t?t.name:"";};
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 const T=()=>THEMES.find(t=>t.id===S.theme);
@@ -406,10 +408,10 @@ function drawThemes(){
     const i=S.picks.indexOf(t.id);
     return `<button class="${i>=0?'on':''}" data-t="${t.id}">${i>=0?'<b>'+"ABC"[i]+'</b>':''}${t.name}</button>`;}).join("");
   [...$("themes").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{
-    const id=b.dataset.t, i=S.picks.indexOf(id);
-    if(i>=0){ if(S.picks.length>1) S.picks.splice(i,1); }
+    const id=b.dataset.t, i=S.picks.indexOf(id); if(id==="imagination") return;
+    if(i>=0) S.picks.splice(i,1);
     else { if(S.picks.length>=3) S.picks.pop(); S.picks.push(id); }
-    S.theme=S.picks[0]; save(); drawAll();
+    save(); drawAll();
   }));
 }
 function drawModes(){
