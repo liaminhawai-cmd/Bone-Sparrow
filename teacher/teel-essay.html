@@ -79,7 +79,7 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
   border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;outline:none}
 .slot .box:focus{border-color:var(--deep)}
 .slot .box:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
-.slot .box.reveal{animation:rise .35s ease}
+.slot .box.reveal,.ct.reveal{animation:rise .35s ease}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .btns button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
@@ -89,8 +89,14 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
 /* the middle: a line of chips with joiners between */
 .modes .sp{flex:1}
 .modes button.way{border-radius:999px}
-.slot .line{border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 12px;
-  font-family:Georgia,serif;font-size:18px;line-height:2.2;min-height:52px}
+.slot .line{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;
+  font-family:Georgia,serif;font-size:19px;line-height:1.6;min-height:52px;display:grid;gap:6px}
+.row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.row .chip{flex:1;display:flex;align-items:center;gap:8px;min-width:72%;padding:4px 6px;cursor:default}
+.row .chip .ct{flex:1;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:6px;padding:5px 10px;min-height:36px;font-weight:600}
+.row .chip .ct:focus{border-color:var(--ink)}
+.row .chip .lb{font-family:'Segoe UI',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-style:normal;min-width:52px;opacity:.85}
 .join{display:inline;min-width:14px;padding:2px 3px;border-bottom:1.5px dashed #c9bfae;color:var(--ink);outline:none;white-space:pre-wrap}
 .join:empty{padding:2px 8px}
 .join:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
@@ -105,6 +111,24 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
 .chip .ct{outline:none;cursor:text}
 .chip .ct:empty:before{content:attr(data-stem);opacity:.55;font-style:italic;font-weight:500}
 .chip.dragging{opacity:.4}
+body.v-plain .row .chip .lb,body.v-spot .row .chip .lb{color:var(--muted)}
+
+/* bank */
+.build{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start}
+@media screen and (max-width:900px){.build{grid-template-columns:1fr}}
+.bank{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px 12px;position:sticky;top:60px}
+.bank h3{font-family:'Segoe UI',sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin:10px 0 6px;font-weight:700}
+.bank h3:first-child{margin-top:2px}
+.bank h3.k-quote{color:var(--ev-tx)}.bank h3.k-verb{color:var(--verb-tx)}.bank h3.k-idea{color:var(--idea-tx)}.bank h3.k-eff{color:var(--eff-tx)}
+.bank button{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:8px;background:#fff;
+  padding:6px 10px;margin-bottom:5px;font-family:Georgia,serif;font-size:14.5px;color:var(--ink);cursor:pointer;line-height:1.35}
+.bank button.k-quote{font-style:italic;color:var(--ev-tx);background:var(--ev-bg)}
+.bank button.k-verb{display:inline-block;width:auto;margin-right:4px;color:var(--verb-tx);background:var(--verb-bg);font-weight:700}
+.bank button.k-idea{color:var(--idea-tx);background:var(--idea-bg)}
+.bank button.k-eff{color:var(--eff-tx);background:var(--eff-bg)}
+.bank button:hover{border-color:var(--ink)}
+body.v-plain .bank button,body.v-spot .bank button{background:#fff;color:var(--ink);font-weight:500}
+body.v-plain .bank h3,body.v-spot .bank h3{color:var(--muted)}
 .chip.over{box-shadow:0 0 0 2px var(--ink)}
 
 /* branch */
@@ -232,7 +256,12 @@ main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
     <button data-s="ev">evidence</button>
     <button data-s="eff">effect</button>
   </div>
-  <div class="frame" id="frame"></div>
+  <div class="build">
+    <div>
+      <div class="frame" id="frame"></div>
+    </div>
+    <div class="bank" id="bank"></div>
+  </div>
   <div class="btns">
     <button class="primary" id="prepared">Here's one we prepared earlier</button>
     <button id="clear">Clear</button>
@@ -255,7 +284,7 @@ main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
 "use strict";
 /* ---------------- data: six themes, all quotes from the novel ---------------- */
 const THEMES=[
- {id:"imprisonment", name:"imprisonment", link:"Imprisonment, for Subhi, is the only world there is.",
+ {id:"imprisonment", name:"imprisonment", link:"This shows that <em class=\"hl-idea\">imprisonment</em> takes away the outside world and even the shoes on people's feet, and in doing so <em class=\"hl-eff\">shrinks Subhi's whole world to the fence</em>.",
   quotes:[
    {q:"None of us knows what it is like just on the other side of the fences.", ch:"Chapter 14",
     e:"makes the reader feel how small Subhi's whole world is", lead:"Subhi thinks about the world past the fence", verb:"reveals", idea:"how small imprisonment makes Subhi's world", e2:"makes the reader feel how close and how final the fence is", eInf:"make the reader feel how close and how final the fence is"},
@@ -268,7 +297,7 @@ const THEMES=[
    "Even the camp's shoes tell the same story: <em class=\"hl-ev\">\"There are only fourteen pairs of real shoes in this whole entire camp.\"</em>",
    "Fraillon lets two numbers do the arguing, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">see how little the camp gives people</em>.",
    "By making the outside so near and so unknown, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the camp imprisons the mind</em> <em class=\"hl-eff\">as much as the body</em>."]},
- {id:"imagination", name:"imagination", link:"The fences hold Subhi's body, not his mind.",
+ {id:"imagination", name:"imagination", link:"This shows that <em class=\"hl-idea\">imagination</em> turns dirt into an ocean and a book into courage, and in doing so <em class=\"hl-eff\">gives Subhi the one thing the camp cannot take</em>.",
   quotes:[
    {q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", ch:"Chapter 1",
     e:"lets the reader see the camp the way Subhi sees it", lead:"the novel opens at night", verb:"reveals", idea:"imagination as the one thing the camp cannot take", e2:"lets the reader see the camp the way Subhi sees it", eInf:"let the reader see the camp the way Subhi sees it"},
@@ -281,7 +310,7 @@ const THEMES=[
    "Later, knowing that Jimmie <em class=\"hl-ev\">\"has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.\"</em>",
    "A story is enough to make Subhi brave, which <em class=\"hl-verb\">shows</em> the reader <em class=\"hl-eff\">what imagination is worth in the camp</em>.",
    "By starting the novel inside <em class=\"hl-idea\">Subhi's imagination</em>, Fraillon <em class=\"hl-verb\">shows</em> the reader <em class=\"hl-eff\">the person before the prisoner</em>."]},
- {id:"friendship", name:"friendship", link:"Friendship, in this novel, is trust that turns out to be deserved.",
+ {id:"friendship", name:"friendship", link:"This shows that <em class=\"hl-idea\">friendship</em> means a promise kept and a face that lights up, and in doing so <em class=\"hl-eff\">gives Subhi something the adults' promises never have</em>.",
   quotes:[
    {q:"I know for sure that Jimmie is the kind of person that keeps a promise.", ch:"Chapter 14",
     e:"makes the reader understand how rare a kept promise is in Subhi's life", lead:"Jimmie promises to come back", verb:"reveals", idea:"friendship built out of promises kept", e2:"makes the reader understand how rare a kept promise is in Subhi's life", eInf:"make the reader understand how rare a kept promise is in Subhi's life"},
@@ -294,7 +323,7 @@ const THEMES=[
    "When Jimmie laughs, <em class=\"hl-ev\">\"her whole face shines like someone's lit a candle in her cheeks.\"</em>",
    "A candle is small and easily put out, which <em class=\"hl-verb\">lets</em> the reader <em class=\"hl-eff\">feel how fragile and how warm this friendship is</em>.",
    "By making trust the heart of the friendship, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">Jimmie gives Subhi something</em> <em class=\"hl-eff\">the adults' promises never have</em>."]},
- {id:"power", name:"power", link:"In the camp, power is felt before it is seen.",
+ {id:"power", name:"power", link:"This shows that <em class=\"hl-idea\">power</em> lives in Beaver's hands and in a piece of paper, and in doing so <em class=\"hl-eff\">decides even what a child can say</em>.",
   quotes:[
    {q:"My throat is as dry as the dirt.", ch:"Chapter 5",
     e:"makes the reader feel the danger before Subhi names it", lead:"Beaver catches Subhi at the fence", verb:"reveals", idea:"how little power a child has in the camp", e2:"makes the reader feel the danger before Subhi names it", eInf:"make the reader feel the danger before Subhi names it"},
@@ -307,7 +336,7 @@ const THEMES=[
    "When Eli is moved to Alpha, the Jacket says: <em class=\"hl-ev\">\"That's not what his paper says. He was meant to move last week. And writing doesn't lie.\"</em>",
    "Everyone can see the paper is wrong and it wins anyway, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">in the camp a piece of paper counts for more than a person</em>.",
    "By putting the fear in Subhi's body, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">power in the camp</em> decides <em class=\"hl-eff\">even what a child can say</em>."]},
- {id:"loneliness", name:"loneliness", link:"Loneliness in this novel does not need a fence.",
+ {id:"loneliness", name:"loneliness", link:"This shows that <em class=\"hl-idea\">loneliness</em> lives in Jimmie's kitchen as much as in the camp, and in doing so <em class=\"hl-eff\">proves the fence is not the only thing that shuts people away</em>.",
   quotes:[
    {q:"Jimmie wonders if her dad even remembers that she can't read.", ch:"Chapter 6",
     e:"makes the reader feel that Jimmie has become invisible in her own house", lead:"Jimmie sits in her own kitchen", verb:"reveals", idea:"how lonely Jimmie is even at home", e2:"makes the reader feel that she is as unseen as Subhi", eInf:"make the reader feel that she is as unseen as Subhi"},
@@ -320,7 +349,7 @@ const THEMES=[
    "By the end of the chapter, <em class=\"hl-ev\">\"Jimmie has never felt so alone.\"</em>",
    "Fraillon gives the free girl the plainest sentence in the chapter, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel that loneliness reaches the free side of the fence too</em>.",
    "By giving the free girl the same loneliness as the boy in the camp, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the fence</em> <em class=\"hl-eff\">is not the only thing that shuts people away</em>."]},
- {id:"hope", name:"hope", link:"Hope, in the camp, is something you do.",
+ {id:"hope", name:"hope", link:"This shows that <em class=\"hl-idea\">hope</em> is a camera smuggled in and a star pointed out, and in doing so <em class=\"hl-eff\">makes hope something people do for each other</em>.",
   quotes:[
    {q:"…about Queeny and Eli sneaking in the camera to get their pictures out into the world.", ch:"Chapter 20",
     e:"shows the reader that hope here means being seen by someone outside", lead:"Queeny and Eli smuggle in a camera", verb:"reveals", idea:"hope as something you have to make", e2:"shows the reader that hope here means being seen by someone outside", eInf:"show the reader that hope here means being seen by someone outside"},
@@ -340,8 +369,8 @@ const THEMES=[
    idea, verb, quote, effect. Their order is dragged; the joiners between
    them are typed. */
 const OUTER={
- TEEL: [{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"L",dots:["idea","eff"],stem:"By … , Fraillon shows that …"}],
- TEEAL:[{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"A",dots:["idea","eff"],stem:"By … , Fraillon shows that …"},{l:"L",dots:["idea"],stem:"… , then, …"}]
+ TEEL: [{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"L",dots:["idea","eff"],stem:"LINK"}],
+ TEEAL:[{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"A",dots:["idea","eff"],stem:"By … , Fraillon shows that …"},{l:"L",dots:["idea","eff"],stem:"LINK"}]
 };
 /* the three ways in: chip order and the joiners around them */
 const WAYS={
@@ -353,7 +382,7 @@ const WAYS={
    joins:q=>["To ", ", Fraillon ", " ", " when "+q.lead+": ", "."], hints:["To ",", Fraillon ",""," when …: ","."], eff:"eInf"}
 };
 const CHIPTEXT=(q,k,way)=>k==="quote"?"“"+q.q.replace(/\.$/,"")+"”":k==="eff"?q[WAYS[way].eff]:q[k];
-const STEM=k=>({idea:"what this shows about "+T().name,verb:"verb",quote:"quote",eff:"effect on the reader"})[k];
+const STEM=k=>({idea:"what this shows about "+T().name,verb:"reveals, shows, suggests …",quote:"the words from the book",eff:"what it does to the reader"})[k];
 const dkey=()=>S.theme+"."+S.mode;
 
 /* ---------------- state ---------------- */
@@ -445,14 +474,15 @@ function outerBox(part,oi){
   const d=D();
   return `<div class="slot">
     <div><div class="l">${part.l}</div><div class="dots">${part.dots.map(k=>`<span class="dot ${k}"></span>`).join("")}</div></div>
-    <div class="box" contenteditable="true" spellcheck="false" data-o="${oi}" data-stem="${part.stem}">${d.outer[oi]||""}</div></div>`;
+    <div class="box" contenteditable="true" spellcheck="false" data-o="${oi}" data-stem="${part.stem==="LINK"?"This shows that "+T().name+" … and … , and in doing so …":part.stem}">${d.outer[oi]||""}</div></div>`;
 }
+const LABEL={idea:"idea",verb:"verb",quote:"quote",eff:"effect"};
 function lineHtml(row,ri){
+  const H=WAYS[S.way].hints, n=row.chips.length;
+  const join=i=>`<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}" data-stem="${esc(H[i]||"")}">${esc(row.joins[i]||"")}</span>`;
   return row.chips.map((c,i)=>
-      `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}" data-stem="${esc(WAYS[S.way].hints[i]||"")}">${esc(row.joins[i]||"")}</span>`+
-      `<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span></span>`
-    ).join("")+
-    `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${row.chips.length}" data-stem="${esc(WAYS[S.way].hints[row.chips.length]||"")}">${esc(row.joins[row.chips.length]||"")}</span>`;
+      `<div class="row">${join(i)}<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="lb">${LABEL[c.k]}</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span></span>${i===n-1?join(n):""}</div>`
+    ).join("");
 }
 function midRows(){
   return D().rows.map((row,ri)=>`<div class="slot"><div><div class="l">E</div><div class="dots">
@@ -480,7 +510,7 @@ let drag=null;
 $("frame").addEventListener("pointerdown",e=>{
   const g=e.target.closest(".grab"); if(!g) return;
   e.preventDefault();
-  const chip=g.closest(".chip"), line=chip.parentElement;
+  const chip=g.closest(".chip"), line=chip.closest(".line");
   drag={line, r:+chip.dataset.r, i:+chip.dataset.i, id:e.pointerId};
   line.setPointerCapture(e.pointerId);
   chip.classList.add("dragging");
@@ -490,10 +520,10 @@ $("frame").addEventListener("pointermove",e=>{
   const line=drag.line;
   const el=document.elementFromPoint(e.clientX,e.clientY);
   const over=el&&el.closest?el.closest(".chip"):null;
-  if(!over||over.parentElement!==line) return;
+  if(!over||over.closest(".line")!==line) return;
   const to=+over.dataset.i; if(to===drag.i) return;
   const b=over.getBoundingClientRect();
-  const before=e.clientX<b.left+b.width/2;
+  const before=e.clientY<b.top+b.height/2;
   const target=before?(drag.i<to?to-1:to):(drag.i<to?to:to+1);
   if(target===drag.i) return;
   const row=D().rows[drag.r]; const [c]=row.chips.splice(drag.i,1); row.chips.splice(target,0,c);
@@ -515,14 +545,39 @@ function drawBranch(){
     `<div class="arrow">↓</div>`+
     t.quotes.map(q=>`<div class="qcard"><div class="q">“${q.q}”<small>${q.ch}</small></div><div class="e">${q.e}</div></div>`).join("");
 }
-function drawAll(){ drawThemes(); drawModes(); drawSkel(); drawFrame(); drawBranch(); }
+const VERBS=["reveals","shows","suggests","highlights","presents","makes the reader","lets the reader"];
+function drawBank(){
+  const t=T(), W=WAYS[S.way];
+  const sec=(k,title,items)=>`<h3 class="k-${k}">${title}</h3>`+items.map(x=>`<button class="k-${k}" data-k="${k}">${x}</button>`).join("");
+  $("bank").innerHTML=
+    sec("quote","quote",t.quotes.map(q=>"“"+q.q.replace(/\.$/,"")+"”"))+
+    sec("verb","verb",VERBS)+
+    sec("idea","what it shows about "+t.name,t.quotes.map(q=>q.idea))+
+    sec("eff","effect on the reader",t.quotes.map(q=>q[W.eff]));
+}
+/* a bank item goes into the focused box of its kind, else the first empty one */
+let lastCt=null;
+$("frame").addEventListener("focusin",e=>{ if(e.target.classList.contains("ct")) lastCt=e.target; });
+$("bank").addEventListener("mousedown",e=>e.preventDefault());
+$("bank").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const k=b.dataset.k;
+  let ct=(lastCt&&lastCt.isConnected&&lastCt.closest(".chip").classList.contains(k))?lastCt:null;
+  if(!ct) ct=[...$("frame").querySelectorAll(".chip."+k+" .ct")].find(x=>!x.textContent.trim());
+  if(!ct) ct=$("frame").querySelector(".chip."+k+" .ct");
+  if(!ct) return;
+  ct.textContent=b.textContent;
+  const ch=ct.closest(".chip"); D().rows[+ch.dataset.r].chips[+ch.dataset.i].t=ct.textContent;
+  save(); syncSkelA(); ct.classList.add("reveal"); setTimeout(()=>ct.classList.remove("reveal"),400);
+});
+function drawAll(){ drawThemes(); drawModes(); drawSkel(); drawFrame(); drawBank(); drawBranch(); }
 
 /* ---------------- buttons ---------------- */
 $("prepared").addEventListener("click",()=>{
   const d=blank(); const t=T(), W=WAYS[S.way];
   /* outer: T, (A), L from the prepared paragraph */
   const outerParts=OUTER[S.mode].filter(p=>p!=="MID");
-  const texts=S.mode==="TEEAL"?[t.para[0],t.para[t.para.length-1],t.link]:[t.para[0],t.para[t.para.length-1]];
+  const texts=S.mode==="TEEAL"?[t.para[0],t.para[t.para.length-1],t.link]:[t.para[0],t.link];
   outerParts.forEach((p,i)=>d.outer[i]=texts[i]);
   d.rows=t.quotes.map(q=>({chips:W.order.map(k=>({k,t:CHIPTEXT(q,k,S.way)})),joins:W.joins(q)}));
   S.drafts[dkey()]=d; save(); drawFrame();
