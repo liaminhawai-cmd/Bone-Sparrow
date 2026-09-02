@@ -644,7 +644,7 @@ const bankEnd=e=>{
     const line=over, ri=+line.dataset.r, row=D().rows[ri];
     const el=document.elementFromPoint(e.clientX,e.clientY); const ch=el&&el.closest?el.closest(".chip"):null;
     const at=ch&&ch.closest(".line")===line?+ch.dataset.i+1:row.chips.length;
-    row.chips.splice(at,0,{k,t:""}); row.joins.splice(at+1,0,"");
+    row.chips.splice(at,0,{k,t:""}); row.joins.splice(at,0,"");
     line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
     const ct=line.querySelector(`.chip[data-i="${at}"] .ct`); if(ct) ct.focus();
   } else setCt(over,b.textContent);
@@ -668,7 +668,7 @@ function fillFirst(k,text){
 $("frame").addEventListener("click",e=>{
   const x=e.target.closest(".rm"); if(!x) return;
   const ch=x.closest(".chip"), line=ch.closest(".line"), ri=+line.dataset.r, i=+ch.dataset.i, row=D().rows[ri];
-  row.chips.splice(i,1); row.joins.splice(i+1,1);
+  row.chips.splice(i,1); row.joins.splice(i,1);
   line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
 });
 function drawAll(){ drawThemes(); drawModes(); drawSkel(); drawFrame(); drawBank(); drawBranch(); }
