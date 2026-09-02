@@ -35,6 +35,9 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .themes button{border:1px solid var(--line);border-radius:999px;background:var(--paper);
   padding:9px 16px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer}
 .themes button.on{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-tx);font-weight:700}
+.themes button b{display:inline-block;font-size:12px;background:var(--idea-tx);color:#fff;border-radius:50%;
+  width:20px;height:20px;line-height:20px;text-align:center;margin-right:8px;vertical-align:1px}
+body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)}
 
 .modes{display:flex;gap:8px;margin-top:10px}
 .modes button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
@@ -58,6 +61,7 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .gap.long{min-width:320px}
 .part.onday{border-style:dashed;color:var(--muted);background:transparent}
 .part.onday .txt{font-family:inherit;font-size:14px;color:var(--muted)}
+.part.onday .ts{font-family:Georgia,serif;font-size:20px;color:var(--ink);display:block;margin-bottom:4px}
 .part.A{border-color:var(--deep);border-width:2px}
 
 /* co-construct frame */
@@ -194,7 +198,7 @@ main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
 <section class="slide title on" id="s1">
   <h1>A TEEL essay</h1>
   <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
-  <div class="lab">PARAGRAPH A</div>
+  <div class="lab">THEMES · A, B, C</div>
   <div class="themes" id="themes"></div>
   <div class="lab">SHAPE</div>
   <div class="modes" id="modes"></div>
@@ -354,22 +358,28 @@ const dkey=()=>S.theme+"."+S.mode;
 /* ---------------- state ---------------- */
 const $=id=>document.getElementById(id);
 const KEY="bonesparrow.teel.v2";
-let S={theme:"power", mode:"TEEL", way:"evidence", drafts:{}};
+let S={theme:"power", picks:["power"], mode:"TEEL", way:"evidence", drafts:{}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.theme) S=j; }catch(e){}
 S.mode=S.mode||"TEEL"; S.way=S.way||"evidence"; S.drafts=S.drafts||{};
+if(!S.picks||!S.picks.length) S.picks=[S.theme]; S.theme=S.picks[0];
+const NAME=id=>{const t=THEMES.find(t=>t.id===id); return t?t.name:"";};
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 const T=()=>THEMES.find(t=>t.id===S.theme);
 /* a draft: outer boxes by letter index, and two rows of chips + joiners */
-function blank(){ return {outer:{}, rows:T().quotes.map(q=>({
+function blank(){ return {outer:{0:`Fraillon <em class="hl-verb">presents</em> <em class="hl-idea">${T().name}</em> in the novel.`}, rows:T().quotes.map(q=>({
   chips:WAYS[S.way].order.map(k=>({k,t:""})), joins:WAYS[S.way].joins(q)}))}; }
 function D(){ if(!S.drafts[dkey()]) S.drafts[dkey()]=blank(); return S.drafts[dkey()]; }
 
 /* ---------------- draw ---------------- */
 function drawThemes(){
-  $("themes").innerHTML=THEMES.map(t=>
-    `<button class="${t.id===S.theme?'on':''}" data-t="${t.id}">${t.name}</button>`).join("");
+  $("themes").innerHTML=THEMES.map(t=>{
+    const i=S.picks.indexOf(t.id);
+    return `<button class="${i>=0?'on':''}" data-t="${t.id}">${i>=0?'<b>'+"ABC"[i]+'</b>':''}${t.name}</button>`;}).join("");
   [...$("themes").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{
-    S.theme=b.dataset.t; save(); drawAll();
+    const id=b.dataset.t, i=S.picks.indexOf(id);
+    if(i>=0){ if(S.picks.length>1) S.picks.splice(i,1); }
+    else { if(S.picks.length>=3) S.picks.pop(); S.picks.push(id); }
+    S.theme=S.picks[0]; save(); drawAll();
   }));
 }
 function drawModes(){
@@ -397,16 +407,19 @@ function applyWay(){
   });
 }
 function drawSkel(){
-  const a=T().name;
+  const [a,b,c]=S.picks.map(NAME);
+  const I=n=>n?`<em class="hl-idea">${n}</em>`:`<span class="gap"></span>`;
+  const list=`${I(a)}, ${I(b)} and ${I(c)}`;
+  const para=(L,n)=>`<div class="part onday"><div class="pn">PARAGRAPH ${L}${n?' · '+n.toUpperCase():''}</div><div class="txt">
+    ${n?`<span class="ts">Fraillon also presents ${I(n)}.</span> `:''}on the day</div></div>`;
   document.querySelectorAll(".skel").forEach(el=>el.innerHTML=`
   <div class="part"><div class="pn">INTRODUCTION</div><div class="txt">
     In <i>The Bone Sparrow</i>, Zana Fraillon tells the story of Subhi, a boy born inside a detention camp, and Jimmie, the girl who finds a way in.
-    Through these two children, Fraillon presents <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.</div></div>
+    Through these two children, Fraillon presents ${list}.</div></div>
   <div class="part A"><div class="pn">PARAGRAPH A · ${a.toUpperCase()}</div><div class="txt skelA"></div></div>
-  <div class="part onday"><div class="pn">PARAGRAPH B</div><div class="txt">on the day</div></div>
-  <div class="part onday"><div class="pn">PARAGRAPH C</div><div class="txt">on the day</div></div>
+  ${para("B",b)}${para("C",c)}
   <div class="part"><div class="pn">CONCLUSION</div><div class="txt">
-    Fraillon uses Subhi and Jimmie to show the reader <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.
+    Fraillon uses Subhi and Jimmie to show the reader ${list}.
     Together, these ideas suggest that <span class="gap long"></span>.</div></div>`);
   syncSkelA();
 }
@@ -422,7 +435,7 @@ function syncSkelA(){
   const d=D(), shape=OUTER[S.mode];
   let out=[]; let oi=0;
   shape.forEach(part=>{
-    if(part==="MID") d.rows.forEach(r=>{ const h=rowHtml(r); if(h.replace(/<[^>]+>/g,"").trim()) out.push(h); });
+    if(part==="MID") d.rows.forEach(r=>{ if(r.chips.some(c=>c.t.trim())) out.push(rowHtml(r)); });
     else { const t=d.outer[oi++]||""; if(t.replace(/<[^>]+>/g,"").trim()) out.push(t); }
   });
   document.querySelectorAll(".skelA").forEach(el=>el.innerHTML=out.length?out.join(" "):'<span style="color:#b8ae9d">T · E · E · L</span>');
