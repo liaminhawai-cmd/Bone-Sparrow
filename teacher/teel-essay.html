@@ -93,6 +93,7 @@ body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)
   font-family:Georgia,serif;font-size:18px;line-height:2.2;min-height:52px}
 .join{display:inline;min-width:14px;padding:2px 3px;border-bottom:1.5px dashed #c9bfae;color:var(--ink);outline:none;white-space:pre-wrap}
 .join:empty{padding:2px 8px}
+.join:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
 .join:focus{border-bottom-color:var(--ink)}
 .chip{display:inline-block;border-radius:8px;padding:3px 10px 3px 6px;margin:2px 1px;font-weight:600;cursor:grab;
   vertical-align:baseline;line-height:1.6;max-width:100%}
@@ -257,9 +258,9 @@ const THEMES=[
  {id:"imprisonment", name:"imprisonment", link:"Imprisonment, for Subhi, is the only world there is.",
   quotes:[
    {q:"None of us knows what it is like just on the other side of the fences.", ch:"Chapter 14",
-    e:"makes the reader feel how small Subhi's whole world is", lead:"Subhi thinks about the world past the fence", verb:"reveals", idea:"how small a prisoner's world is", e2:"makes the reader feel how close and how final the fence is", eInf:"make the reader feel how close and how final the fence is"},
+    e:"makes the reader feel how small Subhi's whole world is", lead:"Subhi thinks about the world past the fence", verb:"reveals", idea:"how small imprisonment makes Subhi's world", e2:"makes the reader feel how close and how final the fence is", eInf:"make the reader feel how close and how final the fence is"},
    {q:"There are only fourteen pairs of real shoes in this whole entire camp.", ch:"Chapter 4",
-    e:"makes the reader see how little the camp gives people", lead:"Subhi counts the camp's shoes", verb:"shows", idea:"how little the camp gives people", e2:"makes the reader see the shortage without an adjective", eInf:"make the reader see the shortage without an adjective"}],
+    e:"makes the reader see how little the camp gives people", lead:"Subhi counts the camp's shoes", verb:"shows", idea:"how little imprisonment leaves people", e2:"makes the reader see the shortage without an adjective", eInf:"make the reader see the shortage without an adjective"}],
   para:[
    "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imprisonment</em> as something that shapes every part of Subhi's life.",
    "Subhi has never seen the outside world: <em class=\"hl-ev\">\"None of us knows what it is like just on the other side of the fences.\"</em>",
@@ -272,7 +273,7 @@ const THEMES=[
    {q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", ch:"Chapter 1",
     e:"lets the reader see the camp the way Subhi sees it", lead:"the novel opens at night", verb:"reveals", idea:"imagination as the one thing the camp cannot take", e2:"lets the reader see the camp the way Subhi sees it", eInf:"let the reader see the camp the way Subhi sees it"},
    {q:"…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", ch:"Chapter 10",
-    e:"shows the reader what a story is worth in the camp", lead:"Jimmie brings her mother's book", verb:"shows", idea:"what a story is worth in the camp", e2:"makes the reader understand where Subhi's courage comes from", eInf:"make the reader understand where Subhi's courage comes from"}],
+    e:"shows the reader what a story is worth in the camp", lead:"Jimmie brings her mother's book", verb:"shows", idea:"that imagination is worth more than anything in the camp", e2:"makes the reader understand where Subhi's courage comes from", eInf:"make the reader understand where Subhi's courage comes from"}],
   para:[
    "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imagination</em> as the one thing the camp cannot take from Subhi.",
    "The novel opens at night, when the dirt outside turns into <em class=\"hl-ev\">\"a beautiful ocean\"</em>, <em class=\"hl-ev\">\"as red as the sun and as deep as the sky\"</em>.",
@@ -296,9 +297,9 @@ const THEMES=[
  {id:"power", name:"power", link:"In the camp, power is felt before it is seen.",
   quotes:[
    {q:"My throat is as dry as the dirt.", ch:"Chapter 5",
-    e:"makes the reader feel the danger before Subhi names it", lead:"Beaver catches Subhi at the fence", verb:"reveals", idea:"how little power a child has", e2:"makes the reader feel the danger before Subhi names it", eInf:"make the reader feel the danger before Subhi names it"},
+    e:"makes the reader feel the danger before Subhi names it", lead:"Beaver catches Subhi at the fence", verb:"reveals", idea:"how little power a child has in the camp", e2:"makes the reader feel the danger before Subhi names it", eInf:"make the reader feel the danger before Subhi names it"},
    {q:"That's not what his paper says. He was meant to move last week. And writing doesn't lie.", ch:"Chapter 8",
-    e:"shows the reader that a paper counts for more than a person", lead:"Eli is moved to Alpha", verb:"shows", idea:"that a paper counts for more than a person", e2:"makes the reader see that the paper wins even when everyone knows it is wrong", eInf:"make the reader see that the paper wins even when everyone knows it is wrong"}],
+    e:"shows the reader that a paper counts for more than a person", lead:"Eli is moved to Alpha", verb:"shows", idea:"that power in the camp belongs to a piece of paper, not a person", e2:"makes the reader see that the paper wins even when everyone knows it is wrong", eInf:"make the reader see that the paper wins even when everyone knows it is wrong"}],
   para:[
    "Fraillon <em class=\"hl-verb\">presents</em> the camp as a place where <em class=\"hl-idea\">a child has no power over his own life</em>.",
    "When Beaver catches Subhi at the fence, Subhi's throat goes <em class=\"hl-ev\">\"as dry as the dirt\"</em> before Beaver has even touched him.",
@@ -309,7 +310,7 @@ const THEMES=[
  {id:"loneliness", name:"loneliness", link:"Loneliness in this novel does not need a fence.",
   quotes:[
    {q:"Jimmie wonders if her dad even remembers that she can't read.", ch:"Chapter 6",
-    e:"makes the reader feel that Jimmie has become invisible in her own house", lead:"Jimmie sits in her own kitchen", verb:"reveals", idea:"how invisible Jimmie has become at home", e2:"makes the reader feel that she is as unseen as Subhi", eInf:"make the reader feel that she is as unseen as Subhi"},
+    e:"makes the reader feel that Jimmie has become invisible in her own house", lead:"Jimmie sits in her own kitchen", verb:"reveals", idea:"how lonely Jimmie is even at home", e2:"makes the reader feel that she is as unseen as Subhi", eInf:"make the reader feel that she is as unseen as Subhi"},
    {q:"Jimmie has never felt so alone.", ch:"Chapter 20",
     e:"shows the reader that loneliness reaches the free side of the fence too", lead:"her father turns to the sports pages", verb:"shows", idea:"loneliness on the free side of the fence", e2:"makes the reader feel that the fence is not the only thing that shuts people away", eInf:"make the reader feel that the fence is not the only thing that shuts people away"}],
   para:[
@@ -345,14 +346,14 @@ const OUTER={
 /* the three ways in: chip order and the joiners around them */
 const WAYS={
  evidence:{name:"Evidence first", order:["quote","verb","idea","eff"],
-   joins:q=>["When "+q.lead+", ", " ", " ", ", which ", "."], eff:"e2"},
+   joins:q=>["When "+q.lead+", ", " ", " ", ", which ", "."], hints:["When …, ","","",", which ","."], eff:"e2"},
  idea:    {name:"Idea first",     order:["verb","idea","quote","eff"],
-   joins:q=>["Fraillon ", " ", " when "+q.lead+": ", ", which ", "."], eff:"e2"},
+   joins:q=>["Fraillon ", " ", " when "+q.lead+": ", ", which ", "."], hints:["Fraillon ",""," when …: ",", which ","."], eff:"e2"},
  effect:  {name:"Effect first",   order:["eff","verb","idea","quote"],
-   joins:q=>["To ", ", Fraillon ", " ", " when "+q.lead+": ", "."], eff:"eInf"}
+   joins:q=>["To ", ", Fraillon ", " ", " when "+q.lead+": ", "."], hints:["To ",", Fraillon ",""," when …: ","."], eff:"eInf"}
 };
 const CHIPTEXT=(q,k,way)=>k==="quote"?"“"+q.q.replace(/\.$/,"")+"”":k==="eff"?q[WAYS[way].eff]:q[k];
-const STEM={idea:"idea",verb:"verb",quote:"quote",eff:"effect"};
+const STEM=k=>({idea:"what this shows about "+T().name,verb:"verb",quote:"quote",eff:"effect on the reader"})[k];
 const dkey=()=>S.theme+"."+S.mode;
 
 /* ---------------- state ---------------- */
@@ -448,10 +449,10 @@ function outerBox(part,oi){
 }
 function lineHtml(row,ri){
   return row.chips.map((c,i)=>
-      `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}">${esc(row.joins[i]||"")}</span>`+
-      `<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM[c.k]}">${c.t}</span></span>`
+      `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}" data-stem="${esc(WAYS[S.way].hints[i]||"")}">${esc(row.joins[i]||"")}</span>`+
+      `<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span></span>`
     ).join("")+
-    `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${row.chips.length}">${esc(row.joins[row.chips.length]||"")}</span>`;
+    `<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${row.chips.length}" data-stem="${esc(WAYS[S.way].hints[row.chips.length]||"")}">${esc(row.joins[row.chips.length]||"")}</span>`;
 }
 function midRows(){
   return D().rows.map((row,ri)=>`<div class="slot"><div><div class="l">E</div><div class="dots">
