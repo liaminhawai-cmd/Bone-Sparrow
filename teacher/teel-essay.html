@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>TEEL essay — The Bone Sparrow</title>
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --accent:#a83232; --deep:#1d3c34;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink)}
+main{max-width:1000px;margin:0 auto;padding:18px 22px 90px}
+h1{font-family:Georgia,serif;font-size:24px;margin:6px 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.sub a{color:var(--muted)}
+h2{font-family:Georgia,serif;font-size:19px;color:var(--deep);margin:40px 0 14px;
+   border-bottom:2px solid var(--deep);padding-bottom:6px}
+
+em{font-style:normal;border-radius:4px;padding:1px 4px;font-weight:600}
+em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
+em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+
+/* theme picker */
+.themes{display:flex;gap:8px;flex-wrap:wrap}
+.themes button{border:1px solid var(--line);border-radius:999px;background:var(--paper);
+  padding:9px 16px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer}
+.themes button.on{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-tx);font-weight:700}
+
+/* skeleton */
+.skel{display:grid;gap:10px}
+.part{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:12px 16px}
+.part .pn{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.part .txt{font-family:Georgia,serif;font-size:16.5px;line-height:1.75}
+.gap{display:inline-block;min-width:110px;border-bottom:2px solid var(--ink);margin:0 3px;vertical-align:-2px}
+.gap.long{min-width:320px}
+.part.onday{border-style:dashed;color:var(--muted);background:transparent}
+.part.onday .txt{font-family:inherit;font-size:14px;color:var(--muted)}
+.part.A{border-color:var(--deep);border-width:2px}
+
+/* co-construct frame */
+.frame{border:2px solid var(--deep);border-radius:12px;background:var(--paper);padding:6px 0;margin-top:12px}
+.slot{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:10px 16px;align-items:start}
+.slot+.slot{border-top:1px dashed var(--line)}
+.slot .l{font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--deep);line-height:1.2}
+.slot .dots{font-size:11.5px;color:var(--muted);margin-top:2px}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:2px;vertical-align:-1px}
+.dot.idea{background:var(--idea-bg);border:1.5px solid var(--idea-tx)}
+.dot.ev{background:var(--ev-bg);border:1.5px solid var(--ev-tx)}
+.dot.verb{background:var(--verb-bg);border:1.5px solid var(--verb-tx)}
+.dot.eff{background:var(--eff-bg);border:1.5px solid var(--eff-tx)}
+.slot .box{font-family:Georgia,serif;font-size:19px;line-height:1.7;min-height:52px;
+  border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;outline:none}
+.slot .box:focus{border-color:var(--deep)}
+.slot .box:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
+.slot .box.reveal{animation:rise .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btns button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
+  padding:10px 16px;font-family:inherit;font-size:14.5px;color:var(--ink);cursor:pointer}
+.btns button.primary{background:var(--deep);color:#f6f1e6;border-color:var(--deep)}
+
+/* branch */
+.branch{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
+.qcard{border:1px solid var(--line);border-radius:10px;background:#fff;padding:12px 14px;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media screen and (max-width:700px){.qcard{grid-template-columns:1fr}}
+.qcard .q{font-family:Georgia,serif;font-size:16.5px;color:var(--ev-tx);font-style:italic;
+  background:var(--ev-bg);border-radius:8px;padding:8px 12px}
+.qcard .q small{display:block;font-style:normal;font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);margin-top:4px}
+.qcard .e{font-size:15px;color:var(--eff-tx);background:var(--eff-bg);border-radius:8px;padding:8px 12px}
+.arrow{color:var(--muted);text-align:center;font-size:20px;line-height:1}
+
+/* rule */
+.rule{border-left:4px solid var(--accent);background:var(--paper);border-radius:0 10px 10px 0;
+  padding:12px 16px;margin:14px 0 0;font-size:15.5px}
+</style>
+</head>
+<body>
+<main>
+<h1>A TEEL essay</h1>
+<p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
+
+<h2>Paragraph A</h2>
+<div class="themes" id="themes"></div>
+
+<h2>The essay</h2>
+<div class="skel" id="skel"></div>
+
+<h2 id="buildH">Paragraph A, built with the class</h2>
+<div class="frame" id="frame"></div>
+<div class="btns">
+  <button class="primary" id="prepared">Here's one we prepared earlier</button>
+  <button id="clear">Clear</button>
+</div>
+<div class="rule">No new quote in the L. If one is needed, it is another E.</div>
+
+<h2>Where paragraph A comes from</h2>
+<div class="branch" id="branch"></div>
+
+</main>
+<script>
+"use strict";
+/* ---------------- data: six themes, all quotes from the novel ---------------- */
+const THEMES=[
+ {id:"imprisonment", name:"imprisonment",
+  quotes:[
+   {q:"None of us knows what it is like just on the other side of the fences.", ch:"Chapter 14",
+    e:"makes the reader feel how small Subhi's whole world is"},
+   {q:"There are only fourteen pairs of real shoes in this whole entire camp.", ch:"Chapter 4",
+    e:"makes the reader see how little the camp gives people"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imprisonment</em> as something that shapes every part of Subhi's life.",
+   "Subhi has never seen the outside world: <em class=\"hl-ev\">\"None of us knows what it is like just on the other side of the fences.\"</em>",
+   "The fence is so close and so final, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel how small Subhi's whole world is</em>.",
+   "By making the outside so near and so unknown, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the camp imprisons the mind</em> <em class=\"hl-eff\">as much as the body</em>."]},
+ {id:"imagination", name:"imagination",
+  quotes:[
+   {q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", ch:"Chapter 1",
+    e:"lets the reader see the camp the way Subhi sees it"},
+   {q:"…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", ch:"Chapter 10",
+    e:"shows the reader what a story is worth in the camp"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imagination</em> as the one thing the camp cannot take from Subhi.",
+   "The novel opens at night, when the dirt outside turns into <em class=\"hl-ev\">\"a beautiful ocean\"</em>, <em class=\"hl-ev\">\"as red as the sun and as deep as the sky\"</em>.",
+   "The camp's own dirt becomes something beautiful, which <em class=\"hl-verb\">lets</em> the reader <em class=\"hl-eff\">see the camp the way Subhi sees it</em>.",
+   "By starting the novel inside <em class=\"hl-idea\">Subhi's imagination</em>, Fraillon <em class=\"hl-verb\">shows</em> the reader <em class=\"hl-eff\">the person before the prisoner</em>."]},
+ {id:"friendship", name:"friendship",
+  quotes:[
+   {q:"I know for sure that Jimmie is the kind of person that keeps a promise.", ch:"Chapter 14",
+    e:"makes the reader understand how rare a kept promise is in Subhi's life"},
+   {q:"her whole face shines like someone's lit a candle in her cheeks", ch:"Chapter 14",
+    e:"lets the reader feel the happiness the friendship brings"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">friendship</em> as something built out of promises kept.",
+   "After Jimmie promises to come back, Subhi decides: <em class=\"hl-ev\">\"I know for sure that Jimmie is the kind of person that keeps a promise.\"</em>",
+   "\"For sure\" <em class=\"hl-verb\">shows</em> how much Subhi is staking on her, which makes the reader <em class=\"hl-eff\">understand how rare a kept promise is in his life</em>.",
+   "By making trust the heart of the friendship, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">Jimmie gives Subhi something</em> <em class=\"hl-eff\">the adults' promises never have</em>."]},
+ {id:"power", name:"power",
+  quotes:[
+   {q:"My throat is as dry as the dirt.", ch:"Chapter 5",
+    e:"makes the reader feel the danger before Subhi names it"},
+   {q:"That's not what his paper says. He was meant to move last week. And writing doesn't lie.", ch:"Chapter 8",
+    e:"shows the reader that a paper counts for more than a person"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> the camp as a place where <em class=\"hl-idea\">a child has no power over his own life</em>.",
+   "When Beaver catches Subhi at the fence, Subhi's throat goes <em class=\"hl-ev\">\"as dry as the dirt\"</em> before Beaver has even touched him.",
+   "The fear arrives in his body first, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">Beaver's power does not need words or violence to work</em>.",
+   "By putting the fear in Subhi's body, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">power in the camp</em> decides <em class=\"hl-eff\">even what a child can say</em>."]},
+ {id:"loneliness", name:"loneliness",
+  quotes:[
+   {q:"Jimmie wonders if her dad even remembers that she can't read.", ch:"Chapter 6",
+    e:"makes the reader feel that Jimmie has become invisible in her own house"},
+   {q:"Jimmie has never felt so alone.", ch:"Chapter 20",
+    e:"shows the reader that loneliness reaches the free side of the fence too"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">loneliness</em> as something that reaches both sides of the fence.",
+   "Inside her own house, <em class=\"hl-ev\">\"Jimmie wonders if her dad even remembers that she can't read.\"</em>",
+   "The people meant to notice Jimmie have stopped looking, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel that she is as unseen as Subhi</em>.",
+   "By giving the free girl the same loneliness as the boy in the camp, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the fence</em> <em class=\"hl-eff\">is not the only thing that shuts people away</em>."]},
+ {id:"hope", name:"hope",
+  quotes:[
+   {q:"…about Queeny and Eli sneaking in the camera to get their pictures out into the world.", ch:"Chapter 20",
+    e:"shows the reader that hope here means being seen by someone outside"},
+   {q:"Tonight, you look up at that sky, and there will be a new star there.", ch:"Chapter 17",
+    e:"makes the reader feel Harvey giving Subhi something to hold on to"}],
+  para:[
+   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">hope</em> as something people in the camp have to make for themselves.",
+   "Queeny and Eli smuggle a camera in <em class=\"hl-ev\">\"to get their pictures out into the world.\"</em>",
+   "The photos are the only thing that can leave the camp, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">hope here means being seen by someone outside</em>.",
+   "By making hope an action rather than a feeling, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the people inside the fence</em> <em class=\"hl-eff\">are not waiting to be rescued</em>."]}
+];
+const SLOTS=[
+ {l:"T", dots:["idea"],       stem:"Fraillon presents … as …"},
+ {l:"E", dots:["ev"],         stem:"When … , “…”"},
+ {l:"E", dots:["verb","eff"], stem:"… which makes the reader …"},
+ {l:"L", dots:["idea","eff"], stem:"By … , Fraillon shows that …"}
+];
+
+/* ---------------- state ---------------- */
+const $=id=>document.getElementById(id);
+const KEY="bonesparrow.teel.v1";
+let S={theme:"power", drafts:{}};
+try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.theme) S=j; }catch(e){}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+const T=()=>THEMES.find(t=>t.id===S.theme);
+
+/* ---------------- draw ---------------- */
+function drawThemes(){
+  $("themes").innerHTML=THEMES.map(t=>
+    `<button class="${t.id===S.theme?'on':''}" data-t="${t.id}">${t.name}</button>`).join("");
+  [...$("themes").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{
+    S.theme=b.dataset.t; save(); drawAll();
+  }));
+}
+function drawSkel(){
+  const a=T().name;
+  $("skel").innerHTML=`
+  <div class="part"><div class="pn">INTRODUCTION</div><div class="txt">
+    In <i>The Bone Sparrow</i>, Zana Fraillon tells the story of Subhi, a boy born inside a detention camp, and Jimmie, the girl who finds a way in.
+    Through these two children, Fraillon presents <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.</div></div>
+  <div class="part A"><div class="pn">PARAGRAPH A · ${a.toUpperCase()}</div><div class="txt" id="skelA"></div></div>
+  <div class="part onday"><div class="pn">PARAGRAPH B</div><div class="txt">on the day</div></div>
+  <div class="part onday"><div class="pn">PARAGRAPH C</div><div class="txt">on the day</div></div>
+  <div class="part"><div class="pn">CONCLUSION</div><div class="txt">
+    Fraillon uses Subhi and Jimmie to show the reader <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.
+    Together, these ideas suggest that <span class="gap long"></span>.</div></div>`;
+  syncSkelA();
+}
+function syncSkelA(){
+  const d=S.drafts[S.theme]||[];
+  const txt=d.map(x=>x||"").join(" ").replace(/<[^>]+>/g,"").trim();
+  const el=$("skelA"); if(el) el.innerHTML=txt?txt:'<span style="color:#b8ae9d">T · E · E · L</span>';
+}
+function drawFrame(){
+  const d=S.drafts[S.theme]||[];
+  $("buildH").textContent="Paragraph A, built with the class — "+T().name;
+  $("frame").innerHTML=SLOTS.map((s,i)=>`
+    <div class="slot">
+      <div><div class="l">${s.l}</div><div class="dots">${s.dots.map(k=>`<span class="dot ${k}"></span>`).join("")}</div></div>
+      <div class="box" contenteditable="true" spellcheck="false" data-i="${i}" data-stem="${s.stem}">${d[i]||""}</div>
+    </div>`).join("");
+  [...$("frame").querySelectorAll(".box")].forEach(b=>{
+    b.addEventListener("input",()=>{
+      S.drafts[S.theme]=S.drafts[S.theme]||[];
+      S.drafts[S.theme][+b.dataset.i]=b.innerHTML;
+      save(); syncSkelA();
+    });
+  });
+}
+function drawBranch(){
+  const t=T();
+  $("branch").innerHTML=
+    `<div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:var(--idea-tx);background:var(--idea-bg);border-radius:10px;padding:10px 16px;display:inline-block">${t.name}</div>`+
+    `<div class="arrow">↓</div>`+
+    t.quotes.map(q=>`<div class="qcard"><div class="q">“${q.q}”<small>${q.ch}</small></div><div class="e">${q.e}</div></div>`).join("");
+}
+function drawAll(){ drawThemes(); drawSkel(); drawFrame(); drawBranch(); }
+
+/* ---------------- buttons ---------------- */
+$("prepared").addEventListener("click",()=>{
+  const p=T().para;
+  S.drafts[S.theme]=p.slice(); save();
+  const boxes=[...$("frame").querySelectorAll(".box")];
+  boxes.forEach((b,i)=>{ b.innerHTML=""; setTimeout(()=>{ b.innerHTML=p[i]; b.classList.add("reveal"); syncSkelA(); }, 450*i); });
+});
+$("clear").addEventListener("click",()=>{ S.drafts[S.theme]=[]; save(); drawFrame(); syncSkelA(); });
+
+drawAll();
+</script>
+</body>
+</html>
