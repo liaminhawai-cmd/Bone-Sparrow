@@ -367,7 +367,7 @@ function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 const T=()=>THEMES.find(t=>t.id===S.theme);
 /* a draft: outer boxes by letter index, and two rows of chips + joiners */
 function blank(){ return {outer:{0:`Fraillon <em class="hl-verb">presents</em> <em class="hl-idea">${T().name}</em> in the novel.`}, rows:T().quotes.map(q=>({
-  chips:WAYS[S.way].order.map(k=>({k,t:""})), joins:WAYS[S.way].joins(q)}))}; }
+  chips:WAYS[S.way].order.map(k=>({k,t:""})), joins:["","","","",""]}))}; }
 function D(){ if(!S.drafts[dkey()]) S.drafts[dkey()]=blank(); return S.drafts[dkey()]; }
 
 /* ---------------- draw ---------------- */
@@ -401,7 +401,7 @@ function applyWay(){
     const q=T().quotes[ri];
     const by={}; row.chips.forEach(c=>by[c.k]=c.t);
     row.chips=W.order.map(k=>({k,t:by[k]||""}));
-    row.joins=W.joins(q);
+    if(row.chips.some(c=>c.t.trim())) row.joins=W.joins(q); else row.joins=["","","","",""];
     const eff=row.chips.find(c=>c.k==="eff");
     if(eff.t===q.e2||eff.t===q.eInf) eff.t=q[W.eff];
   });
