@@ -148,6 +148,37 @@ body.v-spot[data-spot="eff"] em.hl-eff,body.v-spot[data-spot="eff"] .skel em.hl-
 body.v-spot[data-spot="eff"] .chip.eff{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-bg);font-weight:600}
 body.v-spot[data-spot="eff"] .qcard .e{background:var(--eff-bg);color:var(--eff-tx);padding:8px 12px}
 
+/* ---- slides ---- */
+main{max-width:1120px;padding:0 40px 80px;min-height:100vh}
+.slide{display:none;min-height:100vh;flex-direction:column;justify-content:center;padding:56px 0 70px}
+.slide.on{display:flex}
+.slide h2{margin:0 0 22px;font-size:26px}
+.slide.title{align-items:flex-start}
+.slide.title h1{font-size:44px;margin:0 0 6px}
+.slide.title .sub{font-size:16px;margin-bottom:34px}
+.slide.title .lab{font-size:12.5px;letter-spacing:.1em;color:var(--muted);font-weight:700;margin:26px 0 8px}
+.slide.title .themes button{font-size:19px;padding:12px 22px}
+.slide.title .modes{margin-top:0}
+.slide.title .modes button{font-size:16px;padding:9px 16px}
+.slide.title .modes .sp{display:none}
+.part .txt{font-size:20px;line-height:1.8}
+.slot .box{font-size:22px}
+.slot .line{font-size:21px}
+.slot .l{font-size:30px}
+.qcard .q{font-size:20px}
+.qcard .e{font-size:18px}
+.rule{font-size:16.5px}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;
+  padding:10px;background:linear-gradient(transparent,var(--bg) 40%);z-index:20}
+.nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;
+  font-size:18px;color:var(--ink);cursor:pointer}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav .dots{display:flex;gap:7px}
+.nav .dots span{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer}
+.nav .dots span.on{background:var(--deep)}
+.nav .now{font-size:13px;color:var(--muted);min-width:170px}
+.here{font-size:13px;color:var(--muted);letter-spacing:.06em;margin:0 0 6px}
+
 /* rule */
 .rule{border-left:4px solid var(--accent);background:var(--paper);border-radius:0 10px 10px 0;
   padding:12px 16px;margin:14px 0 0;font-size:15.5px}
@@ -160,41 +191,61 @@ body.v-spot[data-spot="eff"] .qcard .e{background:var(--eff-bg);color:var(--eff-
   <button data-v="full">full</button>
 </div>
 <main>
-<h1>A TEEL essay</h1>
-<p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
+<section class="slide title on" id="s1">
+  <h1>A TEEL essay</h1>
+  <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
+  <div class="lab">PARAGRAPH A</div>
+  <div class="themes" id="themes"></div>
+  <div class="lab">SHAPE</div>
+  <div class="modes" id="modes"></div>
+  <div class="lab">WAY IN</div>
+  <div class="modes" id="ways"></div>
+</section>
 
-<h2>Paragraph A</h2>
-<div class="themes" id="themes"></div>
-<div class="modes" id="modes"></div>
+<section class="slide" id="s2">
+  <h2>The essay</h2>
+  <div class="skel"></div>
+</section>
 
-<h2>The essay</h2>
-<div class="skel" id="skel"></div>
+<section class="slide" id="s3">
+  <h2>Where paragraph A comes from</h2>
+  <div class="branch" id="branch"></div>
+</section>
 
-<h2 id="buildH">Paragraph A, built with the class</h2>
-<div class="palette" id="palette">
-  <button class="p-idea" data-c="idea">idea</button>
-  <button class="p-verb" data-c="verb">verb</button>
-  <button class="p-ev" data-c="ev">evidence</button>
-  <button class="p-eff" data-c="eff">effect</button>
-  <button class="p-plain" data-c="plain">plain</button>
-</div>
-<div class="spot" id="spot">
-  <button data-s="idea">idea</button>
-  <button data-s="verb">verb</button>
-  <button data-s="ev">evidence</button>
-  <button data-s="eff">effect</button>
-</div>
-<div class="frame" id="frame"></div>
-<div class="btns">
-  <button class="primary" id="prepared">Here's one we prepared earlier</button>
-  <button id="clear">Clear</button>
-</div>
-<div class="rule">Two pieces of evidence, one line each. No new quote in the L — if one is needed, it is another line.</div>
+<section class="slide" id="s4">
+  <h2 id="buildH">Paragraph A, built with the class</h2>
+  <div class="palette" id="palette">
+    <button class="p-idea" data-c="idea">idea</button>
+    <button class="p-verb" data-c="verb">verb</button>
+    <button class="p-ev" data-c="ev">evidence</button>
+    <button class="p-eff" data-c="eff">effect</button>
+    <button class="p-plain" data-c="plain">plain</button>
+  </div>
+  <div class="spot" id="spot">
+    <button data-s="idea">idea</button>
+    <button data-s="verb">verb</button>
+    <button data-s="ev">evidence</button>
+    <button data-s="eff">effect</button>
+  </div>
+  <div class="frame" id="frame"></div>
+  <div class="btns">
+    <button class="primary" id="prepared">Here's one we prepared earlier</button>
+    <button id="clear">Clear</button>
+  </div>
+  <div class="rule">Two pieces of evidence, one line each. No new quote in the L — if one is needed, it is another line.</div>
+</section>
 
-<h2>Where paragraph A comes from</h2>
-<div class="branch" id="branch"></div>
-
+<section class="slide" id="s5">
+  <h2>Paragraph A in the essay</h2>
+  <div class="skel"></div>
+</section>
 </main>
+<div class="nav" id="nav">
+  <button id="prev">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="next">›</button>
+  <div class="now" id="now"></div>
+</div>
 <script>
 "use strict";
 /* ---------------- data: six themes, all quotes from the novel ---------------- */
@@ -323,13 +374,12 @@ function drawThemes(){
 }
 function drawModes(){
   $("modes").innerHTML=Object.keys(OUTER).map(m=>
-    `<button class="${m===S.mode?'on':''}" data-m="${m}">${m.split("").join(" · ")}</button>`).join("")
-   +`<span class="sp"></span>`
-   +Object.keys(WAYS).map(w=>`<button class="way ${w===S.way?'on':''}" data-w="${w}">${WAYS[w].name}</button>`).join("");
+    `<button class="${m===S.mode?'on':''}" data-m="${m}">${m.split("").join(" · ")}</button>`).join("");
+  $("ways").innerHTML=Object.keys(WAYS).map(w=>`<button class="way ${w===S.way?'on':''}" data-w="${w}">${WAYS[w].name}</button>`).join("");
   [...$("modes").querySelectorAll("button[data-m]")].forEach(b=>b.addEventListener("click",()=>{
     S.mode=b.dataset.m; save(); drawAll();
   }));
-  [...$("modes").querySelectorAll("button[data-w]")].forEach(b=>b.addEventListener("click",()=>{
+  [...$("ways").querySelectorAll("button[data-w]")].forEach(b=>b.addEventListener("click",()=>{
     S.way=b.dataset.w; applyWay(); save(); drawAll();
   }));
 }
@@ -348,16 +398,16 @@ function applyWay(){
 }
 function drawSkel(){
   const a=T().name;
-  $("skel").innerHTML=`
+  document.querySelectorAll(".skel").forEach(el=>el.innerHTML=`
   <div class="part"><div class="pn">INTRODUCTION</div><div class="txt">
     In <i>The Bone Sparrow</i>, Zana Fraillon tells the story of Subhi, a boy born inside a detention camp, and Jimmie, the girl who finds a way in.
     Through these two children, Fraillon presents <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.</div></div>
-  <div class="part A"><div class="pn">PARAGRAPH A · ${a.toUpperCase()}</div><div class="txt" id="skelA"></div></div>
+  <div class="part A"><div class="pn">PARAGRAPH A · ${a.toUpperCase()}</div><div class="txt skelA"></div></div>
   <div class="part onday"><div class="pn">PARAGRAPH B</div><div class="txt">on the day</div></div>
   <div class="part onday"><div class="pn">PARAGRAPH C</div><div class="txt">on the day</div></div>
   <div class="part"><div class="pn">CONCLUSION</div><div class="txt">
     Fraillon uses Subhi and Jimmie to show the reader <em class="hl-idea">${a}</em>, <span class="gap"></span> and <span class="gap"></span>.
-    Together, these ideas suggest that <span class="gap long"></span>.</div></div>`;
+    Together, these ideas suggest that <span class="gap long"></span>.</div></div>`);
   syncSkelA();
 }
 const CL={idea:"hl-idea",verb:"hl-verb",quote:"hl-ev",eff:"hl-eff"};
@@ -375,7 +425,7 @@ function syncSkelA(){
     if(part==="MID") d.rows.forEach(r=>{ const h=rowHtml(r); if(h.replace(/<[^>]+>/g,"").trim()) out.push(h); });
     else { const t=d.outer[oi++]||""; if(t.replace(/<[^>]+>/g,"").trim()) out.push(t); }
   });
-  const el=$("skelA"); if(el) el.innerHTML=out.length?out.join(" "):'<span style="color:#b8ae9d">T · E · E · L</span>';
+  document.querySelectorAll(".skelA").forEach(el=>el.innerHTML=out.length?out.join(" "):'<span style="color:#b8ae9d">T · E · E · L</span>');
 }
 function outerBox(part,oi){
   const d=D();
@@ -500,15 +550,36 @@ function applyView(){
 }
 [...$("view").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.view=b.dataset.v;applyView();}));
 [...$("spot").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.spot=b.dataset.s;applyView();}));
+/* ---------------- slides ---------------- */
+const SLIDES=[...document.querySelectorAll(".slide")];
+const NAMES=["Paragraph A","The essay","Where A comes from","Built with the class","A in the essay"];
+let cur=Math.min(SLIDES.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
+$("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
+function go(i){
+  cur=Math.min(SLIDES.length-1,Math.max(0,i));
+  SLIDES.forEach((el,j)=>el.classList.toggle("on",j===cur));
+  [...$("dots").children].forEach((d,j)=>d.classList.toggle("on",j===cur));
+  $("prev").disabled=cur===0; $("next").disabled=cur===SLIDES.length-1;
+  $("now").textContent=(cur+1)+" / "+SLIDES.length+"  ·  "+NAMES[cur];
+  history.replaceState(null,"","#"+(cur+1));
+  scrollTo(0,0);
+}
+$("prev").addEventListener("click",()=>go(cur-1));
+$("next").addEventListener("click",()=>go(cur+1));
+[...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
   if(e.key==="1"){V.view="plain";applyView();}
   if(e.key==="2"){V.view="spot";applyView();}
   if(e.key==="3"){V.view="full";applyView();}
+  if(e.target.tagName==="BUTTON"&&e.key===" ") return;
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(cur+1);}
+  if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1);}
+  if(e.key==="Home"){go(0);} if(e.key==="End"){go(SLIDES.length-1);}
 });
 applyView();
-
 drawAll();
+go(cur);
 </script>
 </body>
 </html>
