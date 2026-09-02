@@ -130,6 +130,29 @@ body.v-plain .row .chip .lb,body.v-spot .row .chip .lb{color:var(--muted)}
 .bank button.k-eff{color:var(--eff-tx);background:var(--eff-bg)}
 .bank button:hover{border-color:var(--ink)}
 body.v-plain .bank button,body.v-spot .bank button{background:#fff;color:var(--ink);font-weight:500}
+.bank{max-height:calc(100vh - 140px);overflow:auto;touch-action:none}
+.bank .tabs{display:flex;gap:4px;margin-bottom:8px}
+.bank .tab{flex:1;text-align:center;font-family:'Segoe UI',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:6px 2px;border-radius:6px;cursor:pointer;color:var(--muted);border:1px solid transparent}
+.bank .tab.k-quote.on{background:var(--ev-bg);color:var(--ev-tx)}.bank .tab.k-verb.on{background:var(--verb-bg);color:var(--verb-tx)}
+.bank .tab.k-idea.on{background:var(--idea-bg);color:var(--idea-tx)}.bank .tab.k-eff.on{background:var(--eff-bg);color:var(--eff-tx)}
+body.v-plain .bank .tab.on,body.v-spot .bank .tab.on{background:var(--paper);color:var(--ink);border-color:var(--ink)}
+.bank button{cursor:grab;user-select:none}
+.bank button.empty{background:#fff;border-style:dashed;font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-style:normal}
+.bank button.empty.k-quote{color:var(--ev-tx);border-color:var(--ev-tx)}
+.bank button.empty.k-verb{color:var(--verb-tx);border-color:var(--verb-tx);display:block;width:100%}
+.bank button.empty.k-idea{color:var(--idea-tx);border-color:var(--idea-tx)}
+.bank button.empty.k-eff{color:var(--eff-tx);border-color:var(--eff-tx)}
+.ghost{position:fixed;z-index:50;pointer-events:none;max-width:320px;border-radius:8px;padding:6px 10px;
+  font-family:Georgia,serif;font-size:14.5px;box-shadow:0 6px 18px rgba(0,0,0,.18);border:1px solid var(--line)}
+.ghost.k-quote{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+.ghost.k-verb{background:var(--verb-bg);color:var(--verb-tx);font-weight:700}
+.ghost.k-idea{background:var(--idea-bg);color:var(--idea-tx)}
+.ghost.k-eff{background:var(--eff-bg);color:var(--eff-tx)}
+body.bank-drag .ct.target{outline:3px solid var(--ink);outline-offset:1px}
+body.bank-drag .line.target{outline:3px solid var(--ink);outline-offset:2px}
+.chip .rm{opacity:0;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
+.chip:hover .rm{opacity:.6}.chip .rm:hover{opacity:1}
 body.v-plain .bank h3,body.v-spot .bank h3{color:var(--muted)}
 .chip.over{box-shadow:0 0 0 2px var(--ink)}
 
@@ -483,7 +506,7 @@ function lineHtml(row,ri){
   const H=WAYS[S.way].hints, n=row.chips.length;
   const join=i=>`<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}" data-stem="${esc(H[i]||"")}">${esc(row.joins[i]||"")}</span>`;
   return row.chips.map((c,i)=>
-      `<div class="row">${join(i)}<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="lb">${LABEL[c.k]}</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span></span>${i===n-1?join(n):""}</div>`
+      `<div class="row">${join(i)}<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="lb">${LABEL[c.k]}</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span><span class="rm" title="remove">×</span></span>${i===n-1?join(n):""}</div>`
     ).join("");
 }
 function midRows(){
@@ -547,30 +570,106 @@ function drawBranch(){
     `<div class="arrow">↓</div>`+
     t.quotes.map(q=>`<div class="qcard"><div class="q">“${q.q}”<small>${q.ch}</small></div><div class="e">${q.e}</div></div>`).join("");
 }
-const VERBS=["reveals","shows","suggests","highlights","presents","makes the reader","lets the reader"];
+/* the bank: more than the paragraph needs, and some that do not belong */
+const BANK={
+ quote:["Sometimes, at night, the dirt outside turns into a beautiful ocean",
+        "…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken",
+        "as red as the sun and as deep as the sky",
+        "My throat is as dry as the dirt",
+        "There are only fourteen pairs of real shoes in this whole entire camp",
+        "None of us knows what it is like just on the other side of the fences",
+        "Jimmie has never felt so alone",
+        "Tonight, you look up at that sky, and there will be a new star there"],
+ verb:["shows","reveals","suggests","highlights","presents","emphasises","demonstrates","makes the reader","lets the reader","helps the reader","positions the reader"],
+ idea:["that imagination is the most precious thing in the camp",
+       "that imagination can never be taken away, even when people are",
+       "that imagination turns the camp into somewhere else",
+       "that a story is worth more than food in the camp",
+       "that Subhi is afraid of Beaver",
+       "that the camp is dirty and hot",
+       "that the guards hold all the power",
+       "that Subhi misses Eli",
+       "that Jimmie cannot read"],
+ eff:["lets the reader see the camp the way Subhi sees it",
+      "makes the reader understand where Subhi's courage comes from",
+      "makes the reader see something beautiful inside the fence",
+      "makes the reader feel what a story is worth",
+      "makes the reader feel the danger before Subhi names it",
+      "makes the reader see how little the camp gives people",
+      "makes the reader feel sorry for Subhi",
+      "makes the reader want to know what happens next"]
+};
+const TITLE={quote:"quote",verb:"verb",idea:"what it shows about imagination",eff:"effect on the reader"};
+let bankTab="quote";
 function drawBank(){
-  const t=T(), W=WAYS[S.way];
-  const sec=(k,title,items)=>`<h3 class="k-${k}">${title}</h3>`+items.map(x=>`<button class="k-${k}" data-k="${k}">${x}</button>`).join("");
-  $("bank").innerHTML=
-    sec("quote","quote",t.quotes.map(q=>"“"+q.q.replace(/\.$/,"")+"”"))+
-    sec("verb","verb",VERBS)+
-    sec("idea","what it shows about "+t.name,t.quotes.map(q=>q.idea))+
-    sec("eff","effect on the reader",t.quotes.map(q=>q[W.eff]));
+  const KS=["quote","verb","idea","eff"];
+  const tabs=`<div class="tabs">`+KS.map(k=>`<span class="tab k-${k} ${k===bankTab?'on':''}" data-tab="${k}">${LABEL[k]}</span>`).join("")+`</div>`;
+  const k=bankTab;
+  const sec=`<h3 class="k-${k}">${TITLE[k]}</h3><button class="k-${k} empty" data-k="${k}" data-empty="1">＋ ${LABEL[k]}</button>`+
+    BANK[k].map(x=>`<button class="k-${k}" data-k="${k}">${k==="quote"?"“"+x+"”":x}</button>`).join("");
+  $("bank").innerHTML=tabs+sec;
+  [...$("bank").querySelectorAll(".tab")].forEach(t=>t.addEventListener("click",()=>{bankTab=t.dataset.tab;drawBank();}));
 }
-/* a bank item goes into the focused box of its kind, else the first empty one */
+/* drag from the bank: a filled item drops into a box of its colour; an
+   empty one drops into a line as a new box to type in. A click still fills
+   the first empty box of that colour. */
+let bd=null;
+$("bank").addEventListener("pointerdown",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  e.preventDefault();
+  bd={b,k:b.dataset.k,empty:!!b.dataset.empty,id:e.pointerId,moved:false,x:e.clientX,y:e.clientY,ghost:null,over:null};
+  b.setPointerCapture(e.pointerId);
+});
+$("bank").addEventListener("pointermove",e=>{
+  if(!bd||e.pointerId!==bd.id) return;
+  if(!bd.moved){ if(Math.hypot(e.clientX-bd.x,e.clientY-bd.y)<6) return; bd.moved=true;
+    bd.ghost=bd.b.cloneNode(true); bd.ghost.className="ghost k-"+bd.k; document.body.appendChild(bd.ghost);
+    document.body.classList.add("bank-drag"); }
+  bd.ghost.style.left=(e.clientX+10)+"px"; bd.ghost.style.top=(e.clientY+10)+"px";
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  let over=null;
+  if(el){ const ct=el.closest?el.closest(".chip."+bd.k+" .ct"):null; const line=el.closest?el.closest(".line"):null;
+    over=bd.empty?line:(ct||null); }
+  if(over!==bd.over){ if(bd.over) bd.over.classList.remove("target"); bd.over=over; if(over) over.classList.add("target"); }
+});
+const bankEnd=e=>{
+  if(!bd||e.pointerId!==bd.id) return;
+  const {b,k,empty,moved,over,ghost}=bd; bd=null;
+  if(ghost) ghost.remove(); document.body.classList.remove("bank-drag");
+  if(over) over.classList.remove("target");
+  if(e.type==="pointercancel") return;
+  if(!moved){ if(!empty) fillFirst(k,b.textContent); return; }
+  if(!over) return;
+  if(empty){ /* a new box at the end of that line, or after the box under the pointer */
+    const line=over, ri=+line.dataset.r, row=D().rows[ri];
+    const el=document.elementFromPoint(e.clientX,e.clientY); const ch=el&&el.closest?el.closest(".chip"):null;
+    const at=ch&&ch.closest(".line")===line?+ch.dataset.i+1:row.chips.length;
+    row.chips.splice(at,0,{k,t:""}); row.joins.splice(at+1,0,"");
+    line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
+    const ct=line.querySelector(`.chip[data-i="${at}"] .ct`); if(ct) ct.focus();
+  } else setCt(over,b.textContent);
+};
+$("bank").addEventListener("pointerup",bankEnd);
+$("bank").addEventListener("pointercancel",bankEnd);
+function setCt(ct,text){
+  ct.textContent=text;
+  const ch=ct.closest(".chip"); D().rows[+ch.dataset.r].chips[+ch.dataset.i].t=text;
+  save(); syncSkelA(); ct.classList.add("reveal"); setTimeout(()=>ct.classList.remove("reveal"),400);
+}
 let lastCt=null;
 $("frame").addEventListener("focusin",e=>{ if(e.target.classList.contains("ct")) lastCt=e.target; });
-$("bank").addEventListener("mousedown",e=>e.preventDefault());
-$("bank").addEventListener("click",e=>{
-  const b=e.target.closest("button"); if(!b) return;
-  const k=b.dataset.k;
+function fillFirst(k,text){
   let ct=(lastCt&&lastCt.isConnected&&lastCt.closest(".chip").classList.contains(k))?lastCt:null;
   if(!ct) ct=[...$("frame").querySelectorAll(".chip."+k+" .ct")].find(x=>!x.textContent.trim());
   if(!ct) ct=$("frame").querySelector(".chip."+k+" .ct");
-  if(!ct) return;
-  ct.textContent=b.textContent;
-  const ch=ct.closest(".chip"); D().rows[+ch.dataset.r].chips[+ch.dataset.i].t=ct.textContent;
-  save(); syncSkelA(); ct.classList.add("reveal"); setTimeout(()=>ct.classList.remove("reveal"),400);
+  if(ct) setCt(ct,text);
+}
+/* the small × on a box takes it out of the line */
+$("frame").addEventListener("click",e=>{
+  const x=e.target.closest(".rm"); if(!x) return;
+  const ch=x.closest(".chip"), line=ch.closest(".line"), ri=+line.dataset.r, i=+ch.dataset.i, row=D().rows[ri];
+  row.chips.splice(i,1); row.joins.splice(i+1,1);
+  line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
 });
 function drawAll(){ drawThemes(); drawModes(); drawSkel(); drawFrame(); drawBank(); drawBranch(); }
 
