@@ -34,10 +34,10 @@ const key=()=>new Paragraph({spacing:{after:160},children:[swatch("idea","idea")
 
 /* the paragraph in bars: each row is the shape of one sentence */
 const BARC={idea:"7FB3E6",verb:"F2B27A",ev:"F5D75A",eff:"8FD39A",plain:"D8CFBB"};
-const bars=(rows)=>{const BW=W-900;
-  return new Table({columnWidths:[900,BW],width:{size:W,type:WidthType.DXA},
+const bars=(rows)=>{const LW=rows.some(r=>r[2])?4200:0, BW=W-900-LW;
+  return new Table({columnWidths:LW?[900,BW,LW]:[900,BW],width:{size:W,type:WidthType.DXA},
     borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:NONE},
-    rows:rows.map(([l,segs])=>{const tot=segs.reduce((a,x)=>a+x[1],0);
+    rows:rows.map(([l,segs,lab])=>{const tot=segs.reduce((a,x)=>a+x[1],0);
       const cw=segs.map(x=>Math.floor(BW*x[1]/tot));
       return new TableRow({height:{value:420,rule:HeightRule.ATLEAST},children:[
         new TableCell({width:{size:900,type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:60},
@@ -47,7 +47,9 @@ const bars=(rows)=>{const BW=W-900;
             borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:{style:BorderStyle.SINGLE,size:24,color:"FFFFFF"}},
             rows:[new TableRow({height:{value:260,rule:HeightRule.EXACT},children:segs.map((x,i)=>new TableCell({width:{size:cw[i],type:WidthType.DXA},
               shading:{type:ShadingType.CLEAR,fill:BARC[x[0]],color:"auto"},margins:{top:0,bottom:0,left:0,right:0},
-              children:[new Paragraph({spacing:{after:0,line:200,lineRule:LineRuleType.EXACT},children:[new TextRun({text:"",size:8})]})]}))})]})]})]});})});};
+              children:[new Paragraph({spacing:{after:0,line:200,lineRule:LineRuleType.EXACT},children:[new TextRun({text:"",size:8})]})]}))})]})]}),
+        ...(LW?[new TableCell({width:{size:LW,type:WidthType.DXA},margins:{top:60,bottom:60,left:160,right:60},
+          children:[new Paragraph({children:[new TextRun({text:lab||"",size:17,color:MUTED,font:"Calibri"})]})]})]:[])]});})});};
 const T_BAR=[["idea",1]], E_BAR=[["ev",3],["verb",1],["idea",3],["eff",3]], L_BAR=[["idea",2],["idea",2],["eff",3]];
 
 /* TEEL rows: letter, what goes there, a box to write in */
@@ -86,20 +88,20 @@ const kids=[
   H("What a text response essay is"),
   bullet("Your thinking about a novel, written in formal language for people who have already read it. Not the story again. What you make of it."),
   bullet("It answers a prompt or question, uses the big ideas, the events and the characters, and looks at how the author has written about them."),
-  bullet("Two to four body paragraphs, one for each group of ideas."),
+  bullet("It usually has an introduction, two to four body paragraphs, and a conclusion. Every body paragraph takes one part of your argument, gives evidence from the novel, and explains what that evidence shows and why the author wrote it that way."),
   H("The argument"),
   box([P([R("The Bone Sparrow shows us that "),R("imagination",{bold:true,color:C.idea,shading:{type:ShadingType.CLEAR,fill:SH.idea}}),
      R(" and "),R("friendship",{bold:true,color:C.idea,shading:{type:ShadingType.CLEAR,fill:SH.idea}}),R(" are essential for survival.")],{after:0})]),
 
   H("The shape of a paragraph"),
   key(),
-  bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
-  P([R("T  the idea, and why it matters.   E  a quote, what it shows, what it does to the reader.   L  link the ideas together and back to the prompt.",{size:18,color:MUTED,font:"Calibri"})],{before:120}),
+  bars([["T",T_BAR,"the idea, and why it matters"],["E",E_BAR,"a quote, what it shows, what it does to the reader"],
+        ["E",E_BAR,"a quote, what it shows, what it does to the reader"],["L",L_BAR,"link the ideas together and back to the prompt"]]),
 
   br(),
   H("Colour the worked paragraph"),
-  P([R("Colour each word or phrase to match its bar: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
-  P([R("No colours? Underline the ideas, circle the purpose and draw a box around the evidence.",{size:19,color:MUTED,font:"Calibri"})]),
+  P([R("Colour each word or phrase using the colour scheme: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
+  P("OR if you don’t have the colours, underline the ideas, circle the purpose and draw a box around the evidence."),
   bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
   box(WORKED.map((t,i)=>new Paragraph({spacing:{after:i<3?140:0,line:520,lineRule:LineRuleType.EXACT},children:[R(t,{size:23})]})),"FBF7EE"),
 
@@ -111,8 +113,8 @@ const kids=[
     ["T",["Friendship is essential to Subhi's survival because A and B."],1100],
     ["E",["When …, “…”.","This shows that A, which …"],1800],
     ["E",["Later, “…”.","This shows that B, which …"],1800],
-    ["E",["A third piece of evidence, if you have one."],1600],
-    ["L",["So friendship gives Subhi A and B, and that is what …"],1300]])
+    ["E",["Later, “…”.","This shows that B, which …"],1600],
+    ["L",["So, because A and B, friendship is what …"],1300]])
 ];
 
 const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
