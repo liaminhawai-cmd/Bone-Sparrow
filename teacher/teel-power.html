@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>TEEL · power — The Bone Sparrow</title>
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --accent:#a83232; --deep:#1d3c34;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);overflow:hidden}
+main{height:100vh}
+.slide{display:none;height:100vh;padding:48px 56px 64px;flex-direction:column}
+.slide.on{display:flex}
+h2{font-family:Georgia,serif;font-size:26px;color:var(--deep);margin:0 0 16px;border-bottom:2px solid var(--deep);padding-bottom:6px}
+em{font-style:normal;border-radius:4px;padding:1px 4px;font-weight:600}
+em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
+em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
+em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
+em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
+
+/* 1 · the thesis */
+#s1{position:relative}
+.thesis{position:absolute;inset:48px 56px 64px;display:flex;align-items:center;justify-content:center;text-align:center;z-index:6;pointer-events:none}
+.thesis p{pointer-events:auto}
+#s1 .etitle,#s1 .essaywrap{opacity:0;transition:opacity .8s}
+#s1.show .etitle,#s1.show .essaywrap{opacity:1}
+#s1.show .explain{display:none}
+#s1 .essaywrap{pointer-events:none}#s1.show .essaywrap{pointer-events:auto}
+.card .what.land{font-family:Georgia,serif;font-size:22px;font-weight:700;color:var(--idea-tx);background:var(--idea-bg);padding:3px 10px;margin-left:-10px;transition:opacity .3s}
+.essayv.landing #introWhat{opacity:0}
+.thesis p{font-family:Georgia,serif;font-size:clamp(30px,4.4vw,64px);line-height:1.3;max-width:1100px;margin:0}
+.thesis .key{border-radius:10px;padding:2px 10px;transition:background .5s,color .5s}
+.thesis.lit .key{background:var(--idea-bg);color:var(--idea-tx)}
+.thesis .w{transition:opacity .7s}
+.thesis .key{display:inline-block;position:relative;transition:background .5s,color .5s,transform .8s ease,opacity .8s}
+.thesis .note{display:block;font-family:'Segoe UI',sans-serif;font-size:22px;font-weight:normal;color:var(--muted);
+  opacity:0;transition:opacity .6s .5s;white-space:nowrap;line-height:1.2;margin-top:2px}
+.thesis.split .w{opacity:0}
+.thesis.split .key{transform:translate(var(--dx,0px),var(--dy,0px)) scale(var(--s,1));transition:transform 1s ease,opacity .3s .9s}
+.thesis.landed .key{opacity:0}
+.explain{font-size:15.5px;color:var(--muted);max-width:900px;line-height:1.5;border-top:1px solid var(--line);padding-top:12px;margin-bottom:8px}
+
+/* the essay in bars */
+.bar{display:flex;height:11px;border-radius:6px;overflow:hidden;gap:2px;margin:6px 0}
+.bar i{display:block;border-radius:6px}
+.bar .idea{background:#7fb3e6}.bar .verb{background:#f2b27a}.bar .ev{background:#f5d75a}.bar .eff{background:#8fd39a}.bar .plain{background:#d8cfbb}
+.essaywrap{display:grid;grid-template-columns:3fr 2fr;gap:36px;flex:1;min-height:0;align-items:center}
+.essayv{display:flex;flex-direction:column;gap:10px;position:relative}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:12px 18px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:center;transition:opacity .6s,transform .8s ease;transform-origin:center}
+.card h3{font-family:Georgia,serif;font-size:22px;margin:0;color:var(--ink)}
+.card .what{font-size:14px;color:var(--muted);transition:font-size .7s,color .5s;display:inline-block;border-radius:10px;padding:2px 6px;margin-left:-6px}
+.card .bars .bar{margin:5px 0}
+.card .row{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:center}
+.card .row b{font-family:'Segoe UI',sans-serif;font-size:13px;color:var(--accent)}
+.essayv.zoom .card:not(.p1){opacity:0;transform:scale(.9)}
+.essayv.zoom .legend{opacity:0}
+.essayv.zoom .card.p1{transform:translateY(var(--dy,0px)) scale(1.12);box-shadow:0 10px 30px rgba(0,0,0,.12);border-color:var(--idea-tx);
+  grid-template-columns:auto 1fr;z-index:3;position:relative}
+.essayv.zoom .card.p1 .what{font-size:32px;padding:4px 12px}
+.notes{font-size:17px;line-height:1.55;color:var(--ink);transition:opacity .6s}
+.notes p{margin:0 0 14px}
+.notes ol{margin:0 0 14px;padding-left:24px}
+.notes li{margin-bottom:6px}
+.notes b{color:var(--deep)}
+.essaywrap.zoom .notes{opacity:.15}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:14px;color:var(--muted);transition:opacity .5s}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:22px;height:11px;border-radius:6px}
+body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.hide-eff .bar .eff{background:#d8cfbb}
+.slot .bar{margin:8px 0 0;height:9px}
+.build{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0;transition:grid-template-columns .7s ease}
+.build.typing{grid-template-columns:240px 1fr}
+.anchor{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:20px 22px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:10px;transition:padding .7s;align-self:start}
+.anchor h3{font-family:Georgia,serif;font-size:24px;margin:0 0 6px}
+.anchor .row{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:center}
+.anchor .row b{font-family:'Segoe UI',sans-serif;font-size:15px;color:var(--accent)}
+.anchor .bar{height:34px;margin:0}
+.anchor .bar i{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1f1f1f;padding:0 6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size .5s}
+.build.typing .anchor{padding:14px}
+.build.typing .anchor h3{font-size:16px}
+.build.typing .anchor .bar{height:12px}
+.build.typing .anchor .bar i{font-size:0}
+
+/* 2 · 4 · the cloud */
+.cloudwrap{flex:1;position:relative;overflow:hidden;border-radius:16px;background:var(--paper);border:1px solid var(--line)}
+.centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;
+  background:var(--idea-bg);color:var(--idea-tx);border:3px solid var(--idea-tx);border-radius:16px;
+  padding:16px 26px;text-align:center;pointer-events:none}
+.centre b{display:block;font-family:Georgia,serif;font-size:40px}
+.centre span{display:block;font-size:15px;margin-top:4px;color:var(--idea-tx);opacity:.85}
+.node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none;
+  border-radius:14px;padding:10px 16px;font-weight:600;text-align:center;
+  font-size:clamp(15px,1.5vw,22px);max-width:24vw;line-height:1.3;
+  background:#fff;color:var(--ink);border:2px solid var(--line);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);animation:pop .35s ease;z-index:5}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.4);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.node.pick{border-color:var(--idea-tx);background:var(--idea-bg);color:var(--idea-tx);border-width:3px}
+.node .tag{position:absolute;top:-12px;left:-10px;width:26px;height:26px;border-radius:50%;background:var(--idea-tx);color:#fff;
+  font-size:14px;line-height:26px;text-align:center;font-family:'Segoe UI',sans-serif}
+.node.empty{border-style:dashed;cursor:text;min-width:180px;color:var(--ink);font-weight:500;background:var(--paper)}
+.node.empty .t{outline:none;min-width:120px;display:inline-block}
+.node.empty .t:empty:before{content:"type an idea, then Enter";color:#b8ae9d;font-style:italic}
+.node .x{position:absolute;top:-10px;right:-10px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--line);
+  color:var(--muted);font-size:14px;line-height:20px;text-align:center;opacity:0}
+.node:hover .x{opacity:1}
+.cloudfoot{display:flex;gap:10px;align-items:center;margin-top:10px;color:var(--muted);font-size:14px}
+.cloudfoot .sp{flex:1}
+.cloudfoot button{border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:8px 14px;font-family:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+
+/* 3 · 5 · TEEL */
+.keyrow{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.keyrow .k{border-radius:8px;padding:6px 12px;font-weight:700;font-size:14px}
+.k.idea{background:var(--idea-bg);color:var(--idea-tx)}.k.verb{background:var(--verb-bg);color:var(--verb-tx)}
+.k.ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}.k.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.k.plain{background:#fff;color:var(--muted);border:1px solid var(--line);font-weight:500}
+.keyrow .sp{flex:1}
+.ideas{display:flex;gap:8px;flex-wrap:wrap}
+.ideas span{background:var(--idea-bg);color:var(--idea-tx);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600}
+.ideas span b{display:inline-block;background:var(--idea-tx);color:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:11px;margin-right:6px}
+.ideas span .unpick{text-decoration:none;margin-left:8px;opacity:.45;cursor:pointer;font-weight:400}
+.ideas span .unpick:hover{opacity:1}
+.frame{border:2px solid var(--deep);border-radius:14px;background:var(--paper);padding:4px 0;flex:1;overflow:auto}
+.slot{display:grid;grid-template-columns:150px 1fr 44px;gap:12px;padding:12px 16px;align-items:start}
+.slot+.slot{border-top:1px dashed var(--line)}
+.slot .l{font-family:Georgia,serif;font-size:30px;font-weight:700;color:var(--deep);line-height:1.1}
+.slot .d{font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:4px}
+.slot .d i{font-style:normal;border-radius:3px;padding:0 3px;font-weight:700}
+.slot .d i.idea{background:var(--idea-bg);color:var(--idea-tx)}.slot .d i.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.slot .d i.ev{background:var(--ev-bg);color:var(--ev-tx)}.slot .d i.verb{background:var(--verb-bg);color:var(--verb-tx)}
+.slot .box{font-family:Georgia,serif;font-size:21px;line-height:1.7;min-height:58px;
+  border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 14px;outline:none}
+.slot .box:focus{border-color:var(--deep)}
+.slot .box:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
+.slot .box.reveal{animation:rise .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.slot .sug{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:18px;margin-top:8px}
+.slot .sug:hover{border-color:var(--deep)}
+.slot .sug.lit{background:var(--ev-bg);border-color:var(--ev-tx)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0}
+.two>div{display:flex;flex-direction:column;min-height:0}
+.two h3{font-family:Georgia,serif;font-size:20px;color:var(--deep);margin:0 0 8px}
+.worked{border:2px solid var(--deep);border-radius:14px;background:var(--paper);padding:14px 18px;flex:1;overflow:auto}
+.worked p{font-family:Georgia,serif;font-size:19px;line-height:1.75;margin:0 0 10px}
+.worked p b{font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);letter-spacing:.08em;display:block}
+.two .slot{grid-template-columns:120px 1fr;padding:10px 12px}
+.two .slot .l{font-size:24px}
+.two .slot .box{font-size:18px}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;padding:10px;z-index:20}
+.nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;font-size:18px;color:var(--ink);cursor:pointer}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav .dots{display:flex;gap:7px}
+.nav .dots span{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer}
+.nav .dots span.on{background:var(--deep)}
+.nav .now{font-size:13px;color:var(--muted);min-width:200px}
+.sub{position:fixed;top:12px;left:16px;font-size:12.5px;color:var(--muted);z-index:20}
+.sub a{color:var(--muted)}
+
+/* toggles */
+.keyrow .k{cursor:pointer;user-select:none}
+.keyrow .k.off{background:#fff;color:var(--muted);border:1px solid var(--line);font-style:normal;text-decoration:line-through;text-decoration-color:var(--line)}
+body.hide-idea em.hl-idea,body.hide-verb em.hl-verb,body.hide-ev em.hl-ev,body.hide-eff em.hl-eff{background:transparent;color:inherit;font-weight:inherit;padding:0}
+body.hide-idea .slot .d i.idea,body.hide-verb .slot .d i.verb,body.hide-ev .slot .d i.ev,body.hide-eff .slot .d i.eff{background:transparent;color:inherit}
+body.hide-idea .ideas span{background:#fff;color:var(--ink);border:1px solid var(--line)}
+[data-sub]{cursor:pointer}
+body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3px solid var(--idea-tx);outline-offset:2px;border-radius:4px}
+/* display: plain / full */
+</style>
+</head>
+<body>
+<p class="sub">The Bone Sparrow — <a href="teel-essay.html">the first session</a></p>
+<main>
+
+<section class="slide on" id="s1">
+  <h2 class="etitle">The whole essay</h2>
+  <div class="thesis" id="thesis">
+    <p><span class="w"><i>The Bone Sparrow</i> shows us that</span> <span class="key im">power</span> <span class="w">comes in</span>
+    <span class="key fr">many forms</span><span class="w">.</span></p>
+  </div>
+  <div class="explain">An essay is an argument. It starts with a prompt like this one. You decide what you think about it, then you make the case, one reason at a time, one paragraph for each reason.</div>
+  <div class="essaywrap">
+    <div class="essayv" id="essayv">
+      <div class="card"><div class="ct"><h3>Intro</h3><div class="what land" id="introWhat">power</div></div><div class="bars">
+        <div class="bar"><i class="plain" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div></div></div>
+      <div class="card p1"><div class="ct"><h3>P1</h3><div class="what land" id="p1What">?</div></div><div class="bars">
+        <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div></div>
+      <div class="card p2"><div class="ct"><h3>P2</h3><div class="what land" id="p2What">?</div></div><div class="bars">
+        <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div></div>
+      <div class="card"><div class="ct"><h3>C</h3><div class="what">What the kinds of power together suggest.</div></div><div class="bars">
+        <div class="bar"><i class="idea" style="flex:1"></i><i class="idea" style="flex:1"></i></div><div class="bar"><i class="eff" style="flex:1"></i></div></div></div>
+      <div class="legend"><span><i style="background:#7fb3e6"></i>idea</span><span><i style="background:#f2b27a"></i>verb</span><span><i style="background:#f5d75a"></i>evidence</span><span><i style="background:#8fd39a"></i>purpose</span></div>
+    </div>
+    <div class="notes" id="notes">
+      <p><b>An essay is a way of organising your thinking</b> so that someone else can follow it. It is for working out what you think, and showing that thinking to a reader who cannot see inside your head.</p>
+      <ol>
+        <li>You get a <b>question</b> about the text.</li>
+        <li>You <b>explore</b> it. Think, talk, argue.</li>
+        <li>You sort your ideas into <b>groups</b>.</li>
+        <li>You <b>collect evidence</b> from the novel for each group.</li>
+        <li>You <b>write</b>: an introduction that says what you think, a paragraph for each group, a conclusion that says what it all adds up to.</li>
+      </ol>
+      <p>A text response essay is written for people who have already read the novel. Not the story again. What you make of it, and how the author wrote it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s2">
+  <h2>What kinds of power are there in the novel?</h2>
+  <div class="cloudwrap" data-cloud="power">
+    <div class="centre"><b>power</b><span>many forms</span></div>
+  </div>
+  <div class="cloudfoot"><span>Tap a bubble to make it a paragraph. Tap the space for another. Double-tap a bubble to drop it.</span><span class="sp"></span><button class="reset">Start again</button></div>
+</section>
+
+<section class="slide" id="s3">
+  <h2 id="h3">TEEL · P1</h2>
+  <div class="keyrow">
+    <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="none">unhighlight</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
+    <span class="sp"></span><div class="ideas" id="ideasIm"></div>
+  </div>
+  <div class="build" id="buildIm">
+    <div class="anchor" id="anchorIm"></div>
+    <div class="frame" id="frameIm"></div>
+  </div>
+</section>
+
+<section class="slide" id="s5">
+  <h2 id="h5">Your turn · P2</h2>
+  <div class="keyrow">
+    <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="none">unhighlight</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
+    <span class="sp"></span><div class="ideas" id="ideasFr"></div>
+  </div>
+  <div class="two">
+    <div><h3 id="wh">P1</h3><div class="worked" id="worked"></div></div>
+    <div><h3 id="th">P2</h3><div class="frame" id="frameFr"></div></div>
+  </div>
+</section>
+
+</main>
+<div class="nav" id="nav">
+  <button id="prev">‹</button><div class="dots" id="dots"></div><button id="next">›</button><div class="now" id="now"></div>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ---------------- kinds of power the class can pull into the cloud ----
+   t: the bubble. name: the short name. c: the kind, as a topic-sentence clause.
+   e: two pieces of evidence, each with what it shows and what it does to the
+   reader. A bubble with no e does not belong. */
+const POOL={power:[
+ {t:"the Jackets have physical power",name:"physical power",c:"the physical power the Jackets hold over everyone in the camp",e:[
+   {lead:"When Beaver catches Subhi at the fence",q:"He shoves me backward so hard that my feet leave the ground.",shows:"the Jackets' power is in their bodies",eff:"makes the reader feel how small and breakable Subhi is next to them"},
+   {lead:"In the same scene",q:"I can't talk. I can't say a single thing.",shows:"physical power also takes away Subhi's voice",eff:"makes the reader understand that fear can silence a person before a word is said"}]},
+ {t:"a piece of paper has more power than a person",name:"the power of paper",c:"the power a piece of paper has over a person's life",e:[
+   {lead:"When Eli is moved",q:"That's not what his paper says. He was meant to move last week. And writing doesn't lie.",shows:"a form counts for more than what everyone can see",eff:"makes the reader feel how helpless the people in the camp are"},
+   {lead:"When Eli reads the wrappers",q:"I guess they don't want us getting any ideas, hey?",shows:"even the word freedom is something the camp controls",eff:"lets the reader see the camp's power through a joke"}]},
+ {t:"imagination gives Subhi power to deal with things",name:"the power of imagination",c:"the power imagination gives Subhi to deal with the camp",e:[
+   {lead:"When the novel opens",q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.",shows:"Subhi can change the camp in his own mind",eff:"shows the reader a power the Jackets cannot touch"},
+   {lead:"When Subhi explains the Night Sea",q:"A bit like my Night Sea that goes straight into my eyes that no one else can see.",shows:"his imagination is private and his own",eff:"makes the reader feel that this is the one place Subhi is free"}]},
+ {t:"knowledge is power",name:"knowledge",c:"the power that comes from knowing things",e:[
+   {lead:"When Subhi gives Eli the rock",q:"Harvey taught me all about space and rocks.",shows:"what Harvey teaches him is something Subhi gets to keep",eff:"shows the reader that knowledge is a gift nobody can confiscate"},
+   {lead:"At home in her kitchen",q:"Jimmie wonders if her dad even remembers that she can't read.",shows:"not being able to read shuts Jimmie out of her own mother's story",eff:"makes the reader feel how much is lost without knowledge"}]},
+ {t:"a name is power",name:"the power of a name",c:"the power of being called by your name instead of a number",e:[
+   {lead:"When Subhi describes Harvey",q:"…learn their names so that he can talk with us for real, instead of talking to us by our numbers.",shows:"a name makes a person real",eff:"shows the reader how the camp takes people's power away one number at a time"},
+   {lead:"After Nasir dies",q:"…I whisper the few words of Rohingya that I know, just so my brain doesn't turn to thinking that they are right and that I am only Aussie Boy.",shows:"Subhi's own language is a way of holding on to who he is",eff:"makes the reader feel the fight to stay yourself"}]},
+ {t:"getting the truth out is power",name:"the power of the truth",c:"the power of getting the truth out to the world",e:[
+   {lead:"When Jimmie remembers what Subhi told her",q:"…about Queeny and Eli sneaking in the camera to get their pictures out into the world.",shows:"a photo can leave the camp when a person cannot",eff:"shows the reader that being seen is a kind of power"},
+   {lead:"When the protest grows",q:"There are twenty-four people with their lips sewn shut now, and eighty-seven on hunger strike.",shows:"the body can speak when words are not heard",eff:"makes the reader feel the cost of being ignored"}]},
+ {t:"kindness is a kind of power",name:"kindness",c:"the quiet power of kindness",e:[
+   {lead:"After Nasir dies",q:"Tonight, you look up at that sky, and there will be a new star there.",shows:"Harvey gives Subhi something to hold on to",eff:"shows the reader that one kind adult can change how a child survives"},
+   {lead:"When Subhi describes Harvey",q:"…learn their names so that he can talk with us for real, instead of talking to us by our numbers.",shows:"treating people as people is a choice a Jacket can make",eff:"makes the reader see the difference one person makes"}]},
+ {t:"friends give each other power",name:"friendship",c:"the power friends give each other",e:[
+   {lead:"After Jimmie leaves",q:"I know for sure that Jimmie is the kind of person that keeps a promise.",shows:"a promise kept gives Subhi something to count on",eff:"makes the reader understand how rare that is in his life"},
+   {lead:"When Subhi shows Eli the shell",q:"Eli, he's the only one I show all my treasures to.",shows:"trust is something the camp cannot ration",eff:"shows the reader where Subhi's power comes from"}]},
+ {t:"Subhi is the most powerful person in the camp"},{t:"the ducks are in charge"},{t:"power means being the tallest"},{t:"Jimmie's dad runs the camp"},{t:"the Jackets are always kind"}
+]};
+const FALLBACK={power:[POOL.power[0],POOL.power[2]]};
+const A_=t=>`<em class="hl-idea" data-sub="A">${t}</em>`, B_=t=>`<em class="hl-idea" data-sub="B">${t}</em>`;
+const KIND=o=>esc(o.c||o.t), NM=o=>esc(o.name||o.t);
+const ev=(o,i)=>o.e?o.e[i]:null;
+/* the four sentences, from one kind of power */
+const SENT={
+  T:(o)=>`One kind of <em class="hl-idea">power</em> in The Bone Sparrow is <em class="hl-idea">${KIND(o)}</em>.`,
+  E:(o,i)=>{const x=ev(o,i), tag=i?B_:A_; return x
+    ? `${esc(x.lead)}, <em class="hl-ev">“${esc(x.q)}”</em> This <em class="hl-verb">shows</em> that ${tag(esc(x.shows))}, which <em class="hl-eff">${esc(x.eff)}</em>.`
+    : `When …, <em class="hl-ev">“…”</em> This <em class="hl-verb">shows</em> that ${tag("…")}, which …`;},
+  L:(o)=>{const a=ev(o,0),b=ev(o,1); return `So <em class="hl-idea">${NM(o)}</em> is one kind of power in the camp: ${A_(a?esc(a.shows):"…")}, and ${B_(b?esc(b.shows):"…")}.`;},
+  Lseed:(o)=>`So <em class="hl-idea">${NM(o)}</em> is one kind of power in the camp: … , and … .`
+};
+function seed(which,o){
+  S.seeded=S.seeded||{};
+  const B=S.boxes[which], sd=S.seeded[which]||{};
+  const T=SENT.T(o), L=SENT.Lseed(o);
+  if(!B[0].trim()||B[0]===sd.T) B[0]=T;
+  if(!B[3].trim()||B[3]===sd.L) B[3]=L;
+  S.seeded[which]={T,L}; save();
+}
+
+/* ---------------- state ---------------- */
+const KEY="bonesparrow.teelPower.v1";
+let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
+try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
+S.stage=0;   /* the first slide always opens on the prompt */
+Object.keys(S.clouds).forEach(k=>S.clouds[k].nodes.forEach(n=>{ if(n.i==null){ const i=POOL[k]?POOL[k].findIndex(o=>o.t===n.t):-1; n.i=i; } }));
+function stage(){
+  const t=$("thesis"), sl=$("s1"), v=$("essayv");
+  t.classList.toggle("lit",S.stage>=1);
+  const fly=S.stage>=2;
+  if(fly&&!t.classList.contains("split")){
+    /* the essay appears, then each word travels to its own card */
+    sl.classList.add("show"); v.classList.add("landing"); labelCards();
+    t.querySelector(".key.fr").style.opacity=0;
+    [["im","#introWhat"]].forEach(([k,sel])=>{
+      const w=t.querySelector(".key."+k), a=w.getBoundingClientRect(), b=v.querySelector(sel).getBoundingClientRect();
+      w.style.setProperty("--dx",(b.left+b.width/2-(a.left+a.width/2))+"px");
+      w.style.setProperty("--dy",(b.top+b.height/2-(a.top+a.height/2))+"px");
+      w.style.setProperty("--s",(b.height/a.height).toFixed(3));
+    });
+    t.classList.add("split");
+    setTimeout(()=>{ v.classList.remove("landing"); t.classList.add("landed"); },1000);
+  } else if(!fly){ sl.classList.remove("show"); t.classList.remove("split","landed"); v.classList.remove("landing"); t.querySelector(".key.fr").style.opacity=""; }
+  else { sl.classList.add("show"); t.classList.add("split","landed"); labelCards(); }
+  /* stage 3: zoom to P1 */
+  const zoom=S.stage>=3, p1=v.querySelector(".card.p1");
+  if(zoom&&!v.classList.contains("zoom")){ const vr=v.getBoundingClientRect(), pr=p1.getBoundingClientRect();
+    p1.style.setProperty("--dy",(vr.top+vr.height/2-(pr.top+pr.height/2))+"px"); }
+  v.classList.toggle("zoom",zoom); v.parentElement.classList.toggle("zoom",zoom);
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+function cloudState(name){
+  if(!S.clouds[name]) S.clouds[name]={nodes:[],used:[],order:POOL[name].map((_,i)=>i).sort(()=>Math.random()-.5)};
+  return S.clouds[name];
+}
+const obj=(name,n)=>n.i>=0?POOL[name][n.i]:{t:n.t};
+const picks=name=>cloudState(name).nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick).map(n=>obj(name,n));
+const AB=name=>{const p=picks(name),f=FALLBACK[name];const a=p[0]||f[0];return [a,p[1]||(a===f[1]?f[0]:f[1])];};
+const P12=()=>AB("power");
+
+/* ---------------- the cloud ---------------- */
+let live=null;   /* {name,wrap,nodes,anim} */
+function openCloud(wrap){
+  closeCloud();
+  const name=wrap.dataset.cloud, st=cloudState(name);
+  wrap.querySelectorAll(".node").forEach(n=>n.remove());
+  live={name,wrap,nodes:[],anim:null};
+  const W=wrap.clientWidth,H=wrap.clientHeight;
+  st.nodes.forEach((o,i)=>{ const ang=i/Math.max(1,st.nodes.length)*Math.PI*2;
+    addNode(o,W/2+Math.cos(ang)*Math.min(W,H)*0.33,H/2+Math.sin(ang)*Math.min(W,H)*0.33); });
+  addEmpty();
+  physics();
+}
+function closeCloud(){ if(live&&live.anim) cancelAnimationFrame(live.anim); live=null; }
+function nodeEl(o){
+  const el=document.createElement("div"); el.className="node"+(o.pick?" pick":"");
+  el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"P"+o.pick:""}</span>${esc(o.t)}<span class="x">×</span>`;
+  return el;
+}
+function addNode(o,x,y,vx,vy){
+  const el=nodeEl(o); live.wrap.appendChild(el);
+  const n={el,o,x,y,vx:vx||0,vy:vy||0,ph:Math.random()*Math.PI*2};
+  el.addEventListener("click",e=>{ e.stopPropagation(); if(e.target.classList.contains("x")){ drop(n); return; } togglePick(n); });
+  el.addEventListener("dblclick",e=>{ e.stopPropagation(); drop(n); });
+  live.nodes.push(n); return n;
+}
+function addEmpty(){
+  const el=document.createElement("div"); el.className="node empty";
+  el.innerHTML=`<span class="t" contenteditable="true" spellcheck="false"></span>`;
+  live.wrap.appendChild(el);
+  const W=live.wrap.clientWidth,H=live.wrap.clientHeight;
+  const n={el,o:null,empty:true,x:W*0.5+(Math.random()-.5)*W*.5,y:H*0.82,vx:0,vy:0,ph:Math.random()*6};
+  const t=el.querySelector(".t");
+  el.addEventListener("click",e=>{e.stopPropagation(); t.focus();});
+  t.addEventListener("keydown",e=>{
+    if(e.key!=="Enter") return; e.preventDefault();
+    const txt=t.textContent.trim(); if(!txt) return;
+    const o={t:txt,pick:0,i:-1}; cloudState(live.name).nodes.push(o); save();
+    el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
+    addNode(o,n.x,n.y,(Math.random()-.5)*6,-4);
+    addEmpty();
+  });
+  live.nodes.push(n);
+}
+function spawnFromPool(x,y){
+  const st=cloudState(live.name);
+  const i=st.order.find(i=>!st.used.includes(i)); if(i==null) return;
+  st.used.push(i); const o={t:POOL[live.name][i].t,pick:0,i}; st.nodes.push(o); save();
+  addNode(o,x,y,(Math.random()-.5)*4,(Math.random()-.5)*4);
+}
+function togglePick(n){
+  const st=cloudState(live.name), o=n.o;
+  if(o.pick){ o.pick=0; }
+  else { const cur=st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick);
+    if(cur.length>=2) cur[0].pick=0;
+    o.pick=Math.max(0,...st.nodes.map(x=>x.pick))+1; }
+  /* renumber 1,2 */
+  st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick).forEach((x,i)=>x.pick=i+1);
+  save();
+  live.nodes.forEach(m=>{ if(m.empty) return; m.el.classList.toggle("pick",!!m.o.pick);
+    const tag=m.el.querySelector(".tag"); tag.hidden=!m.o.pick; tag.textContent=m.o.pick?"P"+m.o.pick:""; });
+}
+function drop(n){
+  const st=cloudState(live.name); st.nodes=st.nodes.filter(x=>x!==n.o); save();
+  n.el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
+}
+function physics(){
+  /* bubbles are boxes, not circles: pairs push apart along whichever axis
+     overlaps least, a soft pull keeps them near the middle, and the centre
+     card shoves them off. No ring, so they settle where there is room. */
+  const step=(t)=>{
+    if(!live) return;
+    const wrap=live.wrap, W=wrap.clientWidth, H=wrap.clientHeight, cx=W/2, cy=H/2;
+    const cb=wrap.querySelector(".centre").getBoundingClientRect(), wb=wrap.getBoundingClientRect();
+    const ccx=cb.left-wb.left+cb.width/2, ccy=cb.top-wb.top+cb.height/2;
+    const PAD=26;
+    for(const n of live.nodes){
+      n.w=n.el.offsetWidth||120; n.h=n.el.offsetHeight||40;
+      /* gentle pull to the middle */
+      n.vx+=(cx-n.x)*0.00025; n.vy+=(cy-n.y)*0.00025;
+      /* off the centre card */
+      const ox=(cb.width/2+n.w/2+PAD)-Math.abs(n.x-ccx), oy=(cb.height/2+n.h/2+PAD)-Math.abs(n.y-ccy);
+      if(ox>0&&oy>0){ if(ox<oy) n.vx+=Math.sign(n.x-ccx||1)*Math.min(ox,12)*0.12; else n.vy+=Math.sign(n.y-ccy||1)*Math.min(oy,12)*0.12; }
+      n.vx+=Math.sin(t/900+n.ph)*0.01; n.vy+=Math.cos(t/1100+n.ph)*0.01;
+    }
+    for(let pass=0;pass<2;pass++)
+    for(let i=0;i<live.nodes.length;i++)for(let j=i+1;j<live.nodes.length;j++){
+      const a=live.nodes[i],b=live.nodes[j];
+      const dx=b.x-a.x, dy=b.y-a.y;
+      /* a soft radial push keeps them fanned out rather than stacked */
+      if(pass===0){ const d=Math.hypot(dx,dy)||1, R0=(a.w+b.w)/2+140;
+        if(d<R0){ const f=(R0-d)/R0*0.35; a.vx-=dx/d*f; a.vy-=dy/d*f; b.vx+=dx/d*f; b.vy+=dy/d*f; } }
+      const ox=(a.w+b.w)/2+PAD-Math.abs(dx), oy=(a.h+b.h)/2+PAD-Math.abs(dy);
+      if(ox>0&&oy>0){
+        /* overlapping: move apart directly along the easier axis, plus a nudge */
+        if(ox<oy){ const d=(Math.sign(dx)||(i%2?1:-1)); const m=Math.min(ox,24)/2; a.x-=m*d; b.x+=m*d; a.vx-=0.6*d; b.vx+=0.6*d; }
+        else     { const d=(Math.sign(dy)||(i%2?1:-1)); const m=Math.min(oy,24)/2; a.y-=m*d; b.y+=m*d; a.vy-=0.6*d; b.vy+=0.6*d; }
+      }
+    }
+    for(const n of live.nodes){
+      const k=(n.empty&&document.activeElement===n.el.querySelector(".t"))?0.6:0.9;
+      n.vx*=k; n.vy*=k; n.x+=n.vx; n.y+=n.vy;
+      const mW=n.w/2+8, mH=n.h/2+8;
+      n.x=Math.max(mW,Math.min(W-mW,n.x)); n.y=Math.max(mH,Math.min(H-mH,n.y));
+      n.el.style.left=n.x+"px"; n.el.style.top=n.y+"px";
+    }
+    live.anim=requestAnimationFrame(step);
+  };
+  live.anim=requestAnimationFrame(step);
+}
+document.querySelectorAll(".cloudwrap").forEach(w=>{
+  w.addEventListener("click",e=>{ if(!live||live.wrap!==w) return; if(e.target!==w) return;
+    const r=w.getBoundingClientRect(); spawnFromPool(e.clientX-r.left,e.clientY-r.top); });
+});
+document.querySelectorAll(".reset").forEach(b=>b.addEventListener("click",()=>{
+  const w=b.closest(".slide").querySelector(".cloudwrap"); delete S.clouds[w.dataset.cloud]; save(); openCloud(w); }));
+
+/* ---------------- TEEL frames ---------------- */
+const BAR={
+  T:'<div class="bar"><i class="idea" style="flex:1"></i></div>',
+  E:'<div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div>',
+  L:'<div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div>'};
+const ROWS=[
+  {l:"T",d:'the idea, and why it matters'+BAR.T},
+  {l:"E",d:'evidence, what it shows, why'+BAR.E},
+  {l:"E",d:'evidence, what it shows, why'+BAR.E},
+  {l:"L",d:'A and B, back to the main idea'+BAR.L}
+];
+const STEMS={
+  im:["One kind of power in The Bone Sparrow is …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So … is one kind of power in the camp: …, and …"],
+  fr:["One kind of power in The Bone Sparrow is …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So … is one kind of power in the camp: …, and …"]
+};
+function drawFrame(id,which,sug){
+  $(id).innerHTML=ROWS.map((r,i)=>`<div class="slot">
+    <div><div class="l">${r.l}</div><div class="d">${r.d}</div></div>
+    <div class="box" contenteditable="true" spellcheck="false" data-w="${which}" data-i="${i}" data-stem="${esc(STEMS[which][i])}">${S.boxes[which][i]}</div>
+    ${sug?`<button class="sug" data-i="${i}" title="a suggestion">💡</button>`:"<span></span>"}</div>`).join("");
+}
+function drawAnchor(id,o){
+  const a=ev(o,0),b=ev(o,1), sa=a?esc(a.shows):"what it shows", sb=b?esc(b.shows):"what it shows";
+  const seg=(k,f,txt)=>`<i class="${k}" style="flex:${f}">${txt||""}</i>`;
+  $(id).innerHTML=`<h3>${NM(o)}</h3>
+    <div class="row"><b>T</b><div class="bar">${seg("idea",2,"power")}${seg("idea",5,KIND(o))}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,sa)}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,sb)}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>L</b><div class="bar">${seg("idea",2,NM(o))}${seg("idea",2,sa)}${seg("idea",2,sb)}</div></div>`;
+}
+function typingIm(){ $("buildIm").classList.toggle("typing",S.boxes.im.some((h,i)=>i!==0&&i!==3&&h.trim())||!!S.typedIm); }
+function drawIdeas(id,name){
+  const p=picks(name);
+  $(id).innerHTML=p.length?p.map((o,i)=>`<span><b>P${i+1}</b>${esc(o.name||o.t)}<u class="unpick" data-name="${name}" data-i="${i}" title="take this out">×</u></span>`).join(""):"";
+}
+function drawWorked(){
+  const b=S.boxes.im, L=["T","E","E","L"];
+  $("worked").innerHTML=b.map((h,i)=>`<p><b>${L[i]}</b>${h||'<span style="color:#b8ae9d">…</span>'}</p>`).join("");
+}
+document.addEventListener("input",e=>{
+  const t=e.target; if(!t.classList.contains("box")) return;
+  S.boxes[t.dataset.w][+t.dataset.i]=t.innerHTML; if(t.dataset.w==="im") S.typedIm=true; save(); typingIm();
+});
+$("frameIm").addEventListener("click",e=>{
+  const b=e.target.closest(".sug"); if(!b) return;
+  const o=P12()[0], i=+b.dataset.i;
+  const h=[SENT.T(o),SENT.E(o,0),SENT.E(o,1),SENT.L(o)][i];
+  const box=$("frameIm").querySelector(`.box[data-i="${i}"]`);
+  /* the bulb is a toggle: the suggestion in, or the box cleared */
+  const out=box.innerHTML===h?"":h;
+  box.innerHTML=out; S.boxes.im[i]=out; S.typedIm=true; save(); typingIm();
+  b.classList.toggle("lit",!!out);
+  box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal");
+});
+/* a chip with text selected colours the selection; with nothing selected it
+   turns that colour on or off everywhere. plain and full are all or nothing. */
+const ROLES=["idea","verb","ev","eff"];
+let ON={idea:true,verb:true,ev:true,eff:true};
+try{ const j=JSON.parse(localStorage.getItem("bonesparrow.teelDeck.on")); if(j) ON=j; }catch(e){}
+function applyOn(){
+  ROLES.forEach(r=>document.body.classList.toggle("hide-"+r,!ON[r]));
+  document.querySelectorAll(".keyrow .k").forEach(k=>{ if(ROLES.includes(k.dataset.c)) k.classList.toggle("off",!ON[k.dataset.c]); });
+  try{ localStorage.setItem("bonesparrow.teelDeck.on",JSON.stringify(ON)); }catch(e){}
+}
+document.querySelectorAll(".keyrow .k").forEach(k=>{
+  k.addEventListener("mousedown",e=>e.preventDefault());
+  k.addEventListener("click",()=>{
+    const c=k.dataset.c, sel=getSelection();
+    const inBox=sel.rangeCount&&sel.anchorNode&&(sel.anchorNode.nodeType===1?sel.anchorNode:sel.anchorNode.parentElement).closest(".box");
+    const hasSel=inBox&&!sel.getRangeAt(0).collapsed;
+    if(c==="none"){ /* the selection, or the coloured word under the caret */
+      if(hasSel){ colour("plain"); return; }
+      if(inBox){ const em=(sel.anchorNode.nodeType===1?sel.anchorNode:sel.anchorNode.parentElement).closest("em");
+        if(em){ const box=em.closest(".box"); em.replaceWith(...em.childNodes); box.normalize();
+          S.boxes[box.dataset.w][+box.dataset.i]=box.innerHTML; save(); } }
+      return; }
+    if(hasSel){ colour(c); return; }
+    if(c==="plain") ROLES.forEach(r=>ON[r]=false);
+    else if(c==="full") ROLES.forEach(r=>ON[r]=true);
+    else ON[c]=!ON[c];
+    applyOn();
+  });
+});
+applyOn();
+/* × on a pill takes that idea out of the paragraph's A and B */
+document.addEventListener("click",e=>{
+  const u=e.target.closest(".unpick"); if(!u) return;
+  e.stopPropagation();
+  const name=u.dataset.name, st=cloudState(name);
+  const chosen=st.nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick);
+  const n=chosen[+u.dataset.i]; if(n) n.pick=0;
+  st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick).forEach((x,i)=>x.pick=i+1);
+  document.body.dataset.glow=""; save(); enter(cur);
+},true);
+/* click a sub-idea anywhere and it lights up everywhere */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-sub]"); if(!el) return;
+  const sub=el.dataset.sub;
+  document.body.dataset.glow=document.body.dataset.glow===sub?"":sub;
+});
+function colour(cls){
+  const sel=getSelection(); if(!sel.rangeCount) return;
+  const r=sel.getRangeAt(0); if(r.collapsed) return;
+  const node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
+  const box=node.closest(".box"); if(!box) return;
+  if(cls==="plain"){ /* take the colour off every span the selection touches */
+    [...box.querySelectorAll("em")].filter(em=>r.intersectsNode(em)).forEach(em=>em.replaceWith(...em.childNodes));
+  } else {
+    const txt=r.toString(); r.deleteContents();
+    const em=document.createElement("em"); em.className="hl-"+cls; em.textContent=txt; r.insertNode(em); }
+  box.querySelectorAll("em em").forEach(inner=>{ const outer=inner.parentElement; outer.replaceWith(...outer.childNodes); });
+  box.normalize(); S.boxes[box.dataset.w][+box.dataset.i]=box.innerHTML; save(); sel.removeAllRanges();
+}
+
+/* ---------------- slides ---------------- */
+const SLIDES=[...document.querySelectorAll(".slide")];
+const NAMES=["The big idea","Kinds of power","P1 · TEEL","P2 · your turn"];
+let cur=Math.min(SLIDES.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
+$("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
+function enter(i){
+  closeCloud();
+  const sl=SLIDES[i];
+  if(i===0){ stage(); labelCards(); }
+  const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
+  const [p1,p2]=P12();
+  if(i===2){ $("h3").textContent="TEEL · "+(p1.name||p1.t); seed("im",p1); drawIdeas("ideasIm","power"); drawAnchor("anchorIm",p1); drawFrame("frameIm","im",true); typingIm(); }
+  if(i===3){ $("h5").textContent="Your turn · "+(p2.name||p2.t); $("wh").textContent=p1.name||p1.t; $("th").textContent=p2.name||p2.t;
+    seed("fr",p2); drawIdeas("ideasFr","power"); drawWorked(); drawFrame("frameFr","fr",false); }
+}
+function go(i){
+  cur=Math.min(SLIDES.length-1,Math.max(0,i));
+  SLIDES.forEach((el,j)=>el.classList.toggle("on",j===cur));
+  [...$("dots").children].forEach((d,j)=>d.classList.toggle("on",j===cur));
+  $("prev").disabled=cur===0; $("next").disabled=cur===SLIDES.length-1;
+  $("now").textContent=(cur+1)+" / "+SLIDES.length+"  ·  "+NAMES[cur];
+  history.replaceState(null,"","#"+(cur+1));
+  enter(cur);
+}
+function next(){ if(cur===0&&S.stage<2){ S.stage++; save(); stage(); return; } go(cur+1); }
+$("prev").addEventListener("click",()=>go(cur-1));
+$("next").addEventListener("click",next);
+$("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%3; save(); stage(); });
+function labelCards(){ const p=picks("power"); $("p1What").textContent=p[0]?p[0].name||p[0].t:"?"; $("p2What").textContent=p[1]?p[1].name||p[1].t:"?"; }
+[...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
+addEventListener("keydown",e=>{
+  if(e.target.isContentEditable) return;
+  if(e.key==="1"){ROLES.forEach(r=>ON[r]=false);applyOn();} if(e.key==="3"){ROLES.forEach(r=>ON[r]=true);applyOn();}
+  if(e.target.tagName==="BUTTON"&&e.key===" ") return;
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}
+  if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1);}
+});
+go(cur);
+</script>
+</body>
+</html>
