@@ -46,13 +46,24 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .bar{display:flex;height:11px;border-radius:6px;overflow:hidden;gap:2px;margin:6px 0}
 .bar i{display:block;border-radius:6px}
 .bar .idea{background:#7fb3e6}.bar .verb{background:#f2b27a}.bar .ev{background:#f5d75a}.bar .eff{background:#8fd39a}.bar .plain{background:#d8cfbb}
-.essay{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:18px;flex:1;align-content:center}
-.card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.card h3{font-family:Georgia,serif;font-size:22px;margin:0 0 4px;color:var(--ink)}
-.card .what{font-size:14px;color:var(--muted);margin-bottom:14px;min-height:20px}
+.essaywrap{display:grid;grid-template-columns:3fr 2fr;gap:36px;flex:1;min-height:0;align-items:center}
+.essayv{display:flex;flex-direction:column;gap:10px;position:relative}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:12px 18px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:center;transition:opacity .6s,transform .8s ease;transform-origin:center}
+.card h3{font-family:Georgia,serif;font-size:22px;margin:0;color:var(--ink)}
+.card .what{font-size:14px;color:var(--muted);transition:font-size .7s,color .5s;display:inline-block;border-radius:10px;padding:2px 6px;margin-left:-6px}
+.card .bars .bar{margin:5px 0}
 .card .row{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:center}
 .card .row b{font-family:'Segoe UI',sans-serif;font-size:13px;color:var(--accent)}
-.legend{display:flex;gap:16px;justify-content:center;margin-top:22px;font-size:14px;color:var(--muted)}
+.essayv.zoom .card:not(.p1){opacity:0;transform:scale(.9)}
+.essayv.zoom .legend{opacity:0}
+.essayv.zoom .card.p1{transform:translateY(var(--dy,0px)) scale(1.28);box-shadow:0 10px 30px rgba(0,0,0,.12);border-color:var(--idea-tx)}
+.essayv.zoom .card.p1 .what{font-family:Georgia,serif;font-size:34px;color:var(--idea-tx);background:var(--idea-bg);font-weight:700}
+.notes{font-size:17px;line-height:1.55;color:var(--ink);transition:opacity .6s}
+.notes p{margin:0 0 14px}
+.notes b{color:var(--deep)}
+.essaywrap.zoom .notes{opacity:.15}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:14px;color:var(--muted);transition:opacity .5s}
 .legend span{display:flex;align-items:center;gap:6px}
 .legend i{display:inline-block;width:22px;height:11px;border-radius:6px}
 body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.hide-eff .bar .eff{background:#d8cfbb}
@@ -170,26 +181,32 @@ body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3p
 
 <section class="slide" id="sE">
   <h2>The whole essay</h2>
-  <div class="essay">
-    <div class="card"><h3>Intro</h3><div class="what">Names both ideas.</div>
-      <div class="bar"><i class="plain" style="flex:1"></i></div>
-      <div class="bar"><i class="idea" style="flex:1"></i></div>
-      <div class="bar"><i class="idea" style="flex:1"></i></div></div>
-    <div class="card"><h3>P1</h3><div class="what">Imagination</div>
-      <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
-      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
-      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
-      <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div>
-    <div class="card"><h3>P2</h3><div class="what">Friendship</div>
-      <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
-      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
-      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
-      <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div>
-    <div class="card"><h3>C</h3><div class="what">What both ideas together suggest.</div>
-      <div class="bar"><i class="idea" style="flex:1"></i><i class="idea" style="flex:1"></i></div>
-      <div class="bar"><i class="eff" style="flex:1"></i></div></div>
+  <div class="essaywrap">
+    <div class="essayv" id="essayv">
+      <div class="card"><div class="ct"><h3>Intro</h3><div class="what">Names both ideas.</div></div><div class="bars">
+        <div class="bar"><i class="plain" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div></div></div>
+      <div class="card p1"><div class="ct"><h3>P1</h3><div class="what">Imagination</div></div><div class="bars">
+        <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div></div>
+      <div class="card"><div class="ct"><h3>P2</h3><div class="what">Friendship</div></div><div class="bars">
+        <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+        <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div></div>
+      <div class="card"><div class="ct"><h3>C</h3><div class="what">What both ideas together suggest.</div></div><div class="bars">
+        <div class="bar"><i class="idea" style="flex:1"></i><i class="idea" style="flex:1"></i></div><div class="bar"><i class="eff" style="flex:1"></i></div></div></div>
+      <div class="legend"><span><i style="background:#7fb3e6"></i>idea</span><span><i style="background:#f2b27a"></i>verb</span><span><i style="background:#f5d75a"></i>evidence</span><span><i style="background:#8fd39a"></i>purpose</span></div>
+    </div>
+    <div class="notes" id="notes">
+      <p><b>An essay</b> is a long piece of writing about one idea, in proper sentences and paragraphs.</p>
+      <p>It can show what you understand, explain an idea, or argue for a point of view. This one <b>argues</b>.</p>
+      <p><b>A text response essay</b> explains a novel to people who have already read it. It does not retell the story.</p>
+      <p>It answers a prompt, shows what you know about the big ideas, the events and the characters, and looks at <b>how the author wrote them</b>.</p>
+      <p>An introduction, a paragraph for each reason, a conclusion.</p>
+    </div>
   </div>
-  <div class="legend"><span><i class="idea" style="background:#7fb3e6"></i>idea</span><span><i style="background:#f2b27a"></i>verb</span><span><i style="background:#f5d75a"></i>evidence</span><span><i style="background:#8fd39a"></i>purpose</span></div>
 </section>
 
 <section class="slide" id="s2">
@@ -304,6 +321,12 @@ let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
 if(S.stage==null) S.stage=S.lit?1:0;
 Object.keys(S.clouds).forEach(k=>S.clouds[k].nodes.forEach(n=>{ if(n.i==null){ const i=POOL[k]?POOL[k].findIndex(o=>o.t===n.t):-1; n.i=i; } }));
+function stage2(){
+  const v=$("essayv"), p1=v.querySelector(".card.p1");
+  if(S.stage2&&!v.classList.contains("zoom")){ const vr=v.getBoundingClientRect(), pr=p1.getBoundingClientRect();
+    p1.style.setProperty("--dy",(vr.top+vr.height/2-(pr.top+pr.height/2))+"px"); }
+  v.classList.toggle("zoom",!!S.stage2); v.parentElement.classList.toggle("zoom",!!S.stage2);
+}
 function stage(){ const t=$("thesis"); t.classList.toggle("lit",S.stage>=1);
   const im=t.querySelector(".key.im"); const tr=t.getBoundingClientRect(), ir=im.getBoundingClientRect();
   if(S.stage>=2&&!t.classList.contains("split")){
@@ -526,6 +549,7 @@ function enter(i){
   closeCloud();
   const sl=SLIDES[i];
   if(i===0) stage();
+  if(i===1) stage2();
   const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
   if(i===3){ seed("im","imagination","Imagination"); drawIdeas("ideasIm","imagination"); drawAnchor("anchorIm","imagination","Imagination"); drawFrame("frameIm","im",true); typingIm(); }
   if(i===5){ seed("fr","friendship","Friendship"); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
@@ -539,10 +563,12 @@ function go(i){
   history.replaceState(null,"","#"+(cur+1));
   enter(cur);
 }
-function next(){ if(cur===0&&S.stage<2){ S.stage++; save(); stage(); return; } go(cur+1); }
+function next(){ if(cur===0&&S.stage<2){ S.stage++; save(); stage(); return; }
+  if(cur===1&&!S.stage2){ S.stage2=1; save(); stage2(); return; } go(cur+1); }
 $("prev").addEventListener("click",()=>go(cur-1));
 $("next").addEventListener("click",next);
 $("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%3; save(); stage(); });
+$("essayv").addEventListener("click",()=>{ S.stage2=S.stage2?0:1; save(); stage2(); });
 [...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
