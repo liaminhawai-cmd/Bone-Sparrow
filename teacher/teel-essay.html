@@ -336,7 +336,7 @@ function seed(which,name,word){
 const KEY="bonesparrow.teelDeck.v1";
 let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
-if(S.stage==null) S.stage=S.lit?1:0;
+S.stage=0;   /* the first slide always opens on the prompt */
 Object.keys(S.clouds).forEach(k=>S.clouds[k].nodes.forEach(n=>{ if(n.i==null){ const i=POOL[k]?POOL[k].findIndex(o=>o.t===n.t):-1; n.i=i; } }));
 function stage(){
   const t=$("thesis"), sl=$("s1"), v=$("essayv");
