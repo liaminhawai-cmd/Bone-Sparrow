@@ -63,10 +63,10 @@ const teel=(rows)=>new Table({columnWidths:[700,2600,W-3300],width:{size:W,type:
       children:[new Paragraph({children:[]})]})]}))});
 
 const WORKED=[
- "Imagination is essential to Subhi's survival because it gives him somewhere to go when he cannot leave and it keeps his hope alive.",
- "When the novel opens, “Sometimes, at night, the dirt outside turns into a beautiful ocean.” This shows that imagination gives Subhi somewhere to go, which lets the reader see the camp the way Subhi sees it.",
- "Later, “…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.” This shows that imagination keeps his hope alive, which makes the reader understand where Subhi's courage comes from.",
- "So, because it gives him somewhere to go and it keeps his hope alive, imagination is what keeps Subhi alive inside the fence."
+ "Imagination is essential to Subhi's survival because it gives him somewhere to go when he cannot leave and stories make him brave.",
+ "When Subhi explains the Night Sea, “A bit like my Night Sea that goes straight into my eyes that no one else can see.” This shows that imagination gives him somewhere to go when he cannot leave, which makes the reader feel how private and how precious that escape is.",
+ "When Jimmie brings her mother's book, “…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.” This shows that stories make him brave, which makes the reader understand where Subhi's courage comes from.",
+ "So imagination gives Subhi somewhere to go and courage, and that is what keeps him alive inside the fence."
 ];
 
 const kids=[
@@ -77,8 +77,14 @@ const kids=[
     tabStops:[{type:"right",position:W}]}),
 
   H("What an essay is"),
-  P("An essay is an argument. It says one thing about the novel and then proves it, one paragraph at a time. It is written in full sentences and paragraphs, in formal language, for a reader who has already read the book. That reader does not need the story retold. They need to be shown why your idea is true."),
-  P("A text response essay has an introduction, three body paragraphs, and a conclusion. Every body paragraph does the same job: it takes one part of your argument, gives evidence from the novel, and explains what that evidence shows and why the author wrote it that way."),
+  bullet("A long piece of non-fiction writing about one idea, in proper sentences and paragraphs."),
+  bullet("It can show what you understand, explain an idea, or argue for a point of view. This one argues: it says one thing about the novel and then proves it, one paragraph at a time."),
+  H("What a text response essay is"),
+  bullet("It explains a novel to people who have already read it, in formal language. It does not retell the story."),
+  bullet("It answers a prompt or question."),
+  bullet("It shows what you know about the big ideas, the events and the characters."),
+  bullet("It looks at how the author has written about those things."),
+  bullet("It has an introduction, two to four body paragraphs (one for each reason), and a conclusion. Every body paragraph gives evidence from the novel and explains what that evidence shows and why the author wrote it that way."),
 
   H("The argument"),
   box([P([R("The Bone Sparrow shows us that "),R("imagination",{bold:true,color:C.idea,shading:{type:ShadingType.CLEAR,fill:SH.idea}}),
@@ -87,11 +93,12 @@ const kids=[
   H("The shape of a paragraph"),
   key(),
   bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
-  P([R("T  the idea, and why it matters.   E  a quote, what it shows, what it does to the reader.   L  A and B, back to the main idea.",{size:18,color:MUTED,font:"Calibri"})],{before:120}),
+  P([R("T  the idea, and why it matters.   E  a quote, what it shows, what it does to the reader.   L  link the ideas together and back to the prompt.",{size:18,color:MUTED,font:"Calibri"})],{before:120}),
 
   br(),
   H("Colour the worked paragraph"),
-  P([R("Colour each sentence to match its bar: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
+  P([R("Colour each word or phrase to match its bar: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
+  P([R("No colours? Underline the ideas, circle the purpose and draw a box around the evidence.",{size:19,color:MUTED,font:"Calibri"})]),
   bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
   box(WORKED.map((t,i)=>new Paragraph({spacing:{after:i<3?140:0,line:520,lineRule:LineRuleType.EXACT},children:[R(t,{size:23})]})),"FBF7EE"),
 
@@ -100,10 +107,11 @@ const kids=[
   P([R("A  "),R("______________________________________________________",{color:LINE})]),
   P([R("B  "),R("______________________________________________________",{color:LINE})]),
   teel([
-    ["T",["Friendship is essential to Subhi's survival because A and B."],1300],
-    ["E",["When …, “…”.","This shows that A, which …"],2000],
-    ["E",["Later, “…”.","This shows that B, which …"],2000],
-    ["L",["So, because A and B, friendship is what …"],1300]])
+    ["T",["Friendship is essential to Subhi's survival because A and B."],1100],
+    ["E",["When …, “…”.","This shows that A, which …"],1800],
+    ["E",["Later, “…”.","This shows that B, which …"],1800],
+    ["E",["A third piece of evidence, if you have one."],1600],
+    ["L",["So friendship gives Subhi A and B, and that is what …"],1300]])
 ];
 
 const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
