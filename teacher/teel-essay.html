@@ -28,7 +28,15 @@ em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
 em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 
 /* 1 · the thesis */
-.thesis{flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+#s1{position:relative}
+.thesis{position:absolute;inset:48px 56px 64px;display:flex;align-items:center;justify-content:center;text-align:center;z-index:6;pointer-events:none}
+.thesis p{pointer-events:auto}
+#s1 .etitle,#s1 .essaywrap{opacity:0;transition:opacity .8s}
+#s1.show .etitle,#s1.show .essaywrap{opacity:1}
+#s1.show .explain{display:none}
+#s1 .essaywrap{pointer-events:none}#s1.show .essaywrap{pointer-events:auto}
+.card .what.land{font-family:Georgia,serif;font-size:22px;font-weight:700;color:var(--idea-tx);background:var(--idea-bg);padding:3px 10px;margin-left:-10px;transition:opacity .3s}
+.essayv.landing .what.land{opacity:0}
 .thesis p{font-family:Georgia,serif;font-size:clamp(30px,4.4vw,64px);line-height:1.3;max-width:1100px;margin:0}
 .thesis .key{border-radius:10px;padding:2px 10px;transition:background .5s,color .5s}
 .thesis.lit .key{background:var(--idea-bg);color:var(--idea-tx)}
@@ -37,9 +45,8 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .thesis .note{display:block;font-family:'Segoe UI',sans-serif;font-size:22px;font-weight:normal;color:var(--muted);
   opacity:0;transition:opacity .6s .5s;white-space:nowrap;line-height:1.2;margin-top:2px}
 .thesis.split .w{opacity:0}
-.thesis.split .key.im{transform:translate(var(--dx,0px),var(--dy,0px)) scale(1.5)}
-.thesis.split .key.fr{transform:translate(28vw,18vh) scale(.6);opacity:.75}
-.thesis.split .key.fr .note{opacity:1}
+.thesis.split .key{transform:translate(var(--dx,0px),var(--dy,0px)) scale(var(--s,1));transition:transform 1s ease,opacity .3s .9s}
+.thesis.landed .key{opacity:0}
 .explain{font-size:15.5px;color:var(--muted);max-width:900px;line-height:1.5;border-top:1px solid var(--line);padding-top:12px;margin-bottom:8px}
 
 /* the essay in bars */
@@ -59,7 +66,7 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .essayv.zoom .legend{opacity:0}
 .essayv.zoom .card.p1{transform:translateY(var(--dy,0px)) scale(1.12);box-shadow:0 10px 30px rgba(0,0,0,.12);border-color:var(--idea-tx);
   grid-template-columns:auto 1fr;z-index:3;position:relative}
-.essayv.zoom .card.p1 .what{font-family:Georgia,serif;font-size:32px;color:var(--idea-tx);background:var(--idea-bg);font-weight:700;padding:4px 12px}
+.essayv.zoom .card.p1 .what{font-size:32px;padding:4px 12px}
 .notes{font-size:17px;line-height:1.55;color:var(--ink);transition:opacity .6s}
 .notes p{margin:0 0 14px}
 .notes ol{margin:0 0 14px;padding-left:24px}
@@ -122,6 +129,8 @@ body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.h
 .ideas{display:flex;gap:8px;flex-wrap:wrap}
 .ideas span{background:var(--idea-bg);color:var(--idea-tx);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600}
 .ideas span b{display:inline-block;background:var(--idea-tx);color:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:11px;margin-right:6px}
+.ideas span .unpick{text-decoration:none;margin-left:8px;opacity:.45;cursor:pointer;font-weight:400}
+.ideas span .unpick:hover{opacity:1}
 .frame{border:2px solid var(--deep);border-radius:14px;background:var(--paper);padding:4px 0;flex:1;overflow:auto}
 .slot{display:grid;grid-template-columns:150px 1fr 44px;gap:12px;padding:12px 16px;align-items:start}
 .slot+.slot{border-top:1px dashed var(--line)}
@@ -175,25 +184,22 @@ body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3p
 <main>
 
 <section class="slide on" id="s1">
+  <h2 class="etitle">The whole essay</h2>
   <div class="thesis" id="thesis">
     <p><span class="w"><i>The Bone Sparrow</i> shows us that</span> <span class="key im">imagination</span> <span class="w">and</span>
-    <span class="key fr">friendship<small class="note">we will come back to this</small></span> <span class="w">are essential for survival.</span></p>
+    <span class="key fr">friendship</span> <span class="w">are essential for survival.</span></p>
   </div>
   <div class="explain">An essay is an argument. It starts with a prompt like this one. You decide what you think about it, then you make the case, one reason at a time, one paragraph for each reason.</div>
-</section>
-
-<section class="slide" id="sE">
-  <h2>The whole essay</h2>
   <div class="essaywrap">
     <div class="essayv" id="essayv">
       <div class="card"><div class="ct"><h3>Intro</h3><div class="what">Names both ideas.</div></div><div class="bars">
         <div class="bar"><i class="plain" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div><div class="bar"><i class="idea" style="flex:1"></i></div></div></div>
-      <div class="card p1"><div class="ct"><h3>P1</h3><div class="what">Imagination</div></div><div class="bars">
+      <div class="card p1"><div class="ct"><h3>P1</h3><div class="what land">imagination</div></div><div class="bars">
         <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
         <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
         <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
         <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div></div>
-      <div class="card"><div class="ct"><h3>P2</h3><div class="what">Friendship</div></div><div class="bars">
+      <div class="card p2"><div class="ct"><h3>P2</h3><div class="what land">friendship</div></div><div class="bars">
         <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
         <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
         <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
@@ -315,11 +321,15 @@ const SENT={
   L:(w,a,b)=>`So <em class="hl-idea">${w}</em> gives Subhi ${A_(nn(a))} and ${B_(nn(b))}, and that is what <em class="hl-eff">keeps him alive inside the fence</em>.`,
   Lseed:(w,a,b)=>`So <em class="hl-idea">${w}</em> gives Subhi ${A_(nn(a))} and ${B_(nn(b))}, and that is what …`
 };
+/* the T and the first half of the L come from the brainstorm; a box that
+   still holds what was seeded follows the picks when they change */
+S.seeded=S.seeded||{};
 function seed(which,name,word){
-  const [a,b]=AB(name), B=S.boxes[which];
-  if(!B[0].trim()) B[0]=SENT.T(word,a,b);
-  if(!B[3].trim()) B[3]=SENT.Lseed(word.toLowerCase(),a,b);
-  save();
+  const [a,b]=AB(name), B=S.boxes[which], sd=S.seeded[which]||{};
+  const T=SENT.T(word,a,b), L=SENT.Lseed(word.toLowerCase(),a,b);
+  if(!B[0].trim()||B[0]===sd.T) B[0]=T;
+  if(!B[3].trim()||B[3]===sd.L) B[3]=L;
+  S.seeded[which]={T,L}; save();
 }
 
 /* ---------------- state ---------------- */
@@ -328,19 +338,29 @@ let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
 if(S.stage==null) S.stage=S.lit?1:0;
 Object.keys(S.clouds).forEach(k=>S.clouds[k].nodes.forEach(n=>{ if(n.i==null){ const i=POOL[k]?POOL[k].findIndex(o=>o.t===n.t):-1; n.i=i; } }));
-function stage2(){
-  const v=$("essayv"), p1=v.querySelector(".card.p1");
-  if(S.stage2&&!v.classList.contains("zoom")){ const vr=v.getBoundingClientRect(), pr=p1.getBoundingClientRect();
+function stage(){
+  const t=$("thesis"), sl=$("s1"), v=$("essayv");
+  t.classList.toggle("lit",S.stage>=1);
+  const fly=S.stage>=2;
+  if(fly&&!t.classList.contains("split")){
+    /* the essay appears, then each word travels to its own card */
+    sl.classList.add("show"); v.classList.add("landing");
+    [["im",".card.p1 .what"],["fr",".card.p2 .what"]].forEach(([k,sel])=>{
+      const w=t.querySelector(".key."+k), a=w.getBoundingClientRect(), b=v.querySelector(sel).getBoundingClientRect();
+      w.style.setProperty("--dx",(b.left+b.width/2-(a.left+a.width/2))+"px");
+      w.style.setProperty("--dy",(b.top+b.height/2-(a.top+a.height/2))+"px");
+      w.style.setProperty("--s",(b.height/a.height).toFixed(3));
+    });
+    t.classList.add("split");
+    setTimeout(()=>{ v.classList.remove("landing"); t.classList.add("landed"); },1000);
+  } else if(!fly){ sl.classList.remove("show"); t.classList.remove("split","landed"); v.classList.remove("landing"); }
+  else { sl.classList.add("show"); t.classList.add("split","landed"); }
+  /* stage 3: zoom to P1 */
+  const zoom=S.stage>=3, p1=v.querySelector(".card.p1");
+  if(zoom&&!v.classList.contains("zoom")){ const vr=v.getBoundingClientRect(), pr=p1.getBoundingClientRect();
     p1.style.setProperty("--dy",(vr.top+vr.height/2-(pr.top+pr.height/2))+"px"); }
-  v.classList.toggle("zoom",!!S.stage2); v.parentElement.classList.toggle("zoom",!!S.stage2);
+  v.classList.toggle("zoom",zoom); v.parentElement.classList.toggle("zoom",zoom);
 }
-function stage(){ const t=$("thesis"); t.classList.toggle("lit",S.stage>=1);
-  const im=t.querySelector(".key.im"); const tr=t.getBoundingClientRect(), ir=im.getBoundingClientRect();
-  if(S.stage>=2&&!t.classList.contains("split")){
-    /* measured before the move: the word's own place to the middle of the slide */
-    im.style.setProperty("--dx",(tr.left+tr.width/2-(ir.left+ir.width/2))+"px");
-    im.style.setProperty("--dy",(tr.top+tr.height/2-(ir.top+ir.height/2))+"px"); }
-  t.classList.toggle("split",S.stage>=2); }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 function cloudState(name){
   if(!S.clouds[name]) S.clouds[name]={nodes:[],used:[],order:POOL[name].map((_,i)=>i).sort(()=>Math.random()-.5)};
@@ -488,7 +508,7 @@ function drawAnchor(id,name,word){
 function typingIm(){ $("buildIm").classList.toggle("typing",S.boxes.im.some((h,i)=>i!==0&&i!==3&&h.trim())||!!S.typedIm); }
 function drawIdeas(id,name){
   const p=picks(name);
-  $(id).innerHTML=p.length?p.map((o,i)=>`<span data-sub="${"AB"[i]}"><b>${"AB"[i]}</b>${esc(o.t)}</span>`).join(""):"";
+  $(id).innerHTML=p.length?p.map((o,i)=>`<span data-sub="${"AB"[i]}"><b>${"AB"[i]}</b>${esc(o.t)}<u class="unpick" data-name="${name}" data-i="${i}" title="take this idea out">×</u></span>`).join(""):"";
 }
 function drawWorked(){
   const b=S.boxes.im, L=["T","E","E","L"];
@@ -529,6 +549,16 @@ document.querySelectorAll(".keyrow .k").forEach(k=>{
   });
 });
 applyOn();
+/* × on a pill takes that idea out of the paragraph's A and B */
+document.addEventListener("click",e=>{
+  const u=e.target.closest(".unpick"); if(!u) return;
+  e.stopPropagation();
+  const name=u.dataset.name, st=cloudState(name);
+  const chosen=st.nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick);
+  const n=chosen[+u.dataset.i]; if(n) n.pick=0;
+  st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick).forEach((x,i)=>x.pick=i+1);
+  document.body.dataset.glow=""; save(); enter(cur);
+},true);
 /* click a sub-idea anywhere and it lights up everywhere */
 document.addEventListener("click",e=>{
   const el=e.target.closest("[data-sub]"); if(!el) return;
@@ -549,17 +579,16 @@ function colour(cls){
 
 /* ---------------- slides ---------------- */
 const SLIDES=[...document.querySelectorAll(".slide")];
-const NAMES=["The big idea","The whole essay","Imagination · brainstorm","Imagination · TEEL","Friendship · brainstorm","Friendship · your turn"];
+const NAMES=["The big idea","Imagination · brainstorm","Imagination · TEEL","Friendship · brainstorm","Friendship · your turn"];
 let cur=Math.min(SLIDES.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
 $("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
 function enter(i){
   closeCloud();
   const sl=SLIDES[i];
   if(i===0) stage();
-  if(i===1) stage2();
   const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
-  if(i===3){ seed("im","imagination","Imagination"); drawIdeas("ideasIm","imagination"); drawAnchor("anchorIm","imagination","Imagination"); drawFrame("frameIm","im",true); typingIm(); }
-  if(i===5){ seed("fr","friendship","Friendship"); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
+  if(i===2){ seed("im","imagination","Imagination"); drawIdeas("ideasIm","imagination"); drawAnchor("anchorIm","imagination","Imagination"); drawFrame("frameIm","im",true); typingIm(); }
+  if(i===4){ seed("fr","friendship","Friendship"); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
 }
 function go(i){
   cur=Math.min(SLIDES.length-1,Math.max(0,i));
@@ -570,12 +599,11 @@ function go(i){
   history.replaceState(null,"","#"+(cur+1));
   enter(cur);
 }
-function next(){ if(cur===0&&S.stage<2){ S.stage++; save(); stage(); return; }
-  if(cur===1&&!S.stage2){ S.stage2=1; save(); stage2(); return; } go(cur+1); }
+function next(){ if(cur===0&&S.stage<3){ S.stage++; save(); stage(); return; } go(cur+1); }
 $("prev").addEventListener("click",()=>go(cur-1));
 $("next").addEventListener("click",next);
-$("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%3; save(); stage(); });
-$("essayv").addEventListener("click",()=>{ S.stage2=S.stage2?0:1; save(); stage2(); });
+$("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%4; save(); stage(); });
+$("essayv").addEventListener("click",()=>{ S.stage=S.stage>=3?2:3; save(); stage(); });
 [...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
