@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>TEEL essay — The Bone Sparrow</title>
+<title>TEEL — The Bone Sparrow</title>
 <style>
 :root{
   --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
@@ -15,683 +15,356 @@
   --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink)}
-main{max-width:1000px;margin:0 auto;padding:18px 22px 90px}
-h1{font-family:Georgia,serif;font-size:24px;margin:6px 0 4px}
-.sub{color:var(--muted);font-size:13px;margin:0 0 18px}
-.sub a{color:var(--muted)}
-h2{font-family:Georgia,serif;font-size:19px;color:var(--deep);margin:40px 0 14px;
-   border-bottom:2px solid var(--deep);padding-bottom:6px}
-
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);overflow:hidden}
+main{height:100vh}
+.slide{display:none;height:100vh;padding:48px 56px 64px;flex-direction:column}
+.slide.on{display:flex}
+h2{font-family:Georgia,serif;font-size:26px;color:var(--deep);margin:0 0 16px;border-bottom:2px solid var(--deep);padding-bottom:6px}
 em{font-style:normal;border-radius:4px;padding:1px 4px;font-weight:600}
 em.hl-idea{background:var(--idea-bg);color:var(--idea-tx)}
 em.hl-verb{background:var(--verb-bg);color:var(--verb-tx)}
 em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
 em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 
-/* theme picker */
-.themes{display:flex;gap:8px;flex-wrap:wrap}
-.themes button{border:1px solid var(--line);border-radius:999px;background:var(--paper);
-  padding:9px 16px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer}
-.themes button.on{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-tx);font-weight:700}
-.themes button[data-t="imagination"]{cursor:default}
-.themes button b{display:inline-block;font-size:12px;background:var(--idea-tx);color:#fff;border-radius:50%;
-  width:20px;height:20px;line-height:20px;text-align:center;margin-right:8px;vertical-align:1px}
-body.v-plain .themes button b,body.v-spot .themes button b{background:var(--ink)}
+/* 1 · the thesis */
+.thesis{flex:1;display:flex;align-items:center;justify-content:center;text-align:center}
+.thesis p{font-family:Georgia,serif;font-size:clamp(30px,4.4vw,64px);line-height:1.3;max-width:1100px;margin:0}
+.thesis .key{border-radius:10px;padding:2px 10px;transition:background .5s,color .5s}
+.thesis.lit .key{background:var(--idea-bg);color:var(--idea-tx)}
+.thesis .sub{display:block;font-family:'Segoe UI',sans-serif;font-size:16px;color:var(--muted);margin-top:28px}
 
-.modes{display:flex;gap:8px;margin-top:10px}
-.modes button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
-  padding:7px 14px;font-family:inherit;font-size:14px;color:var(--muted);cursor:pointer;letter-spacing:.04em}
-.modes button.on{color:var(--ink);border-color:var(--ink);font-weight:700}
-.palette{display:flex;gap:6px;align-items:center;margin:14px 0 0;flex-wrap:wrap}
-.palette button{border:1px solid var(--line);border-radius:8px;padding:7px 12px;font-family:inherit;
-  font-size:13.5px;cursor:pointer;font-weight:700}
-.palette .p-idea{background:var(--idea-bg);color:var(--idea-tx)}
-.palette .p-verb{background:var(--verb-bg);color:var(--verb-tx)}
-.palette .p-ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
-.palette .p-eff{background:var(--eff-bg);color:var(--eff-tx)}
-.palette .p-plain{background:#fff;color:var(--muted);font-weight:500}
+/* 2 · 4 · the cloud */
+.cloudwrap{flex:1;position:relative;overflow:hidden;border-radius:16px;background:var(--paper);border:1px solid var(--line)}
+.centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;
+  background:var(--idea-bg);color:var(--idea-tx);border:3px solid var(--idea-tx);border-radius:16px;
+  padding:16px 26px;text-align:center;pointer-events:none}
+.centre b{display:block;font-family:Georgia,serif;font-size:40px}
+.centre span{display:block;font-size:15px;margin-top:4px;color:var(--idea-tx);opacity:.85}
+.node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;user-select:none;
+  border-radius:14px;padding:10px 16px;font-weight:600;text-align:center;
+  font-size:clamp(15px,1.5vw,22px);max-width:24vw;line-height:1.3;
+  background:#fff;color:var(--ink);border:2px solid var(--line);
+  box-shadow:0 2px 8px rgba(0,0,0,.08);animation:pop .35s ease;z-index:5}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.4);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.node.pick{border-color:var(--idea-tx);background:var(--idea-bg);color:var(--idea-tx);border-width:3px}
+.node .tag{position:absolute;top:-12px;left:-10px;width:26px;height:26px;border-radius:50%;background:var(--idea-tx);color:#fff;
+  font-size:14px;line-height:26px;text-align:center;font-family:'Segoe UI',sans-serif}
+.node.empty{border-style:dashed;cursor:text;min-width:180px;color:var(--ink);font-weight:500;background:var(--paper)}
+.node.empty .t{outline:none;min-width:120px;display:inline-block}
+.node.empty .t:empty:before{content:"type an idea, then Enter";color:#b8ae9d;font-style:italic}
+.node .x{position:absolute;top:-10px;right:-10px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--line);
+  color:var(--muted);font-size:14px;line-height:20px;text-align:center;opacity:0}
+.node:hover .x{opacity:1}
+.cloudfoot{display:flex;gap:10px;align-items:center;margin-top:10px;color:var(--muted);font-size:14px}
+.cloudfoot .sp{flex:1}
+.cloudfoot button{border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:8px 14px;font-family:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
 
-/* skeleton */
-.skel{display:grid;gap:10px}
-.part{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:12px 16px}
-.part .pn{font-size:11.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
-.part .txt{font-family:Georgia,serif;font-size:16.5px;line-height:1.75}
-.gap{display:inline-block;min-width:110px;border-bottom:2px solid var(--ink);margin:0 3px;vertical-align:-2px}
-.gap.long{min-width:320px}
-.part.onday{border-style:dashed;color:var(--muted);background:transparent}
-.part.onday .txt{font-family:inherit;font-size:14px;color:var(--muted)}
-.part.onday .ts{font-family:Georgia,serif;font-size:20px;color:var(--ink);display:block;margin-bottom:4px}
-.part.A{border-color:var(--deep);border-width:2px}
-
-/* co-construct frame */
-.frame{border:2px solid var(--deep);border-radius:12px;background:var(--paper);padding:6px 0;margin-top:12px}
-.slot{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 14px;align-items:start}
+/* 3 · 5 · TEEL */
+.keyrow{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.keyrow .k{border-radius:8px;padding:6px 12px;font-weight:700;font-size:14px}
+.k.idea{background:var(--idea-bg);color:var(--idea-tx)}.k.verb{background:var(--verb-bg);color:var(--verb-tx)}
+.k.ev{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}.k.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.k.plain{background:#fff;color:var(--muted);border:1px solid var(--line);font-weight:500}
+.keyrow .sp{flex:1}
+.ideas{display:flex;gap:8px;flex-wrap:wrap}
+.ideas span{background:var(--idea-bg);color:var(--idea-tx);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600}
+.ideas span b{display:inline-block;background:var(--idea-tx);color:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;font-size:11px;margin-right:6px}
+.frame{border:2px solid var(--deep);border-radius:14px;background:var(--paper);padding:4px 0;flex:1;overflow:auto}
+.slot{display:grid;grid-template-columns:150px 1fr 44px;gap:12px;padding:12px 16px;align-items:start}
 .slot+.slot{border-top:1px dashed var(--line)}
-.slot .l{font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--deep);line-height:1.2}
-.slot .dots{font-size:11.5px;color:var(--muted);margin-top:2px}
-.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:2px;vertical-align:-1px}
-.dot.idea{background:var(--idea-bg);border:1.5px solid var(--idea-tx)}
-.dot.ev{background:var(--ev-bg);border:1.5px solid var(--ev-tx)}
-.dot.verb{background:var(--verb-bg);border:1.5px solid var(--verb-tx)}
-.dot.eff{background:var(--eff-bg);border:1.5px solid var(--eff-tx)}
-.slot .box{font-family:Georgia,serif;font-size:19px;line-height:1.7;min-height:52px;
-  border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;outline:none}
+.slot .l{font-family:Georgia,serif;font-size:30px;font-weight:700;color:var(--deep);line-height:1.1}
+.slot .d{font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:4px}
+.slot .d i{font-style:normal;border-radius:3px;padding:0 3px;font-weight:700}
+.slot .d i.idea{background:var(--idea-bg);color:var(--idea-tx)}.slot .d i.eff{background:var(--eff-bg);color:var(--eff-tx)}
+.slot .d i.ev{background:var(--ev-bg);color:var(--ev-tx)}.slot .d i.verb{background:var(--verb-bg);color:var(--verb-tx)}
+.slot .box{font-family:Georgia,serif;font-size:21px;line-height:1.7;min-height:58px;
+  border:1px solid var(--line);border-radius:8px;background:#fff;padding:10px 14px;outline:none}
 .slot .box:focus{border-color:var(--deep)}
 .slot .box:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
-.slot .box.reveal,.ct.reveal{animation:rise .35s ease}
+.slot .box.reveal{animation:rise .35s ease}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.btns button{border:1px solid var(--line);border-radius:8px;background:var(--paper);
-  padding:10px 16px;font-family:inherit;font-size:14.5px;color:var(--ink);cursor:pointer}
-.btns button.primary{background:var(--deep);color:#f6f1e6;border-color:var(--deep)}
+.slot .sug{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:18px;margin-top:8px}
+.slot .sug:hover{border-color:var(--deep)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0}
+.two>div{display:flex;flex-direction:column;min-height:0}
+.two h3{font-family:Georgia,serif;font-size:20px;color:var(--deep);margin:0 0 8px}
+.worked{border:2px solid var(--deep);border-radius:14px;background:var(--paper);padding:14px 18px;flex:1;overflow:auto}
+.worked p{font-family:Georgia,serif;font-size:19px;line-height:1.75;margin:0 0 10px}
+.worked p b{font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);letter-spacing:.08em;display:block}
+.two .slot{grid-template-columns:120px 1fr;padding:10px 12px}
+.two .slot .l{font-size:24px}
+.two .slot .box{font-size:18px}
 
-/* the middle: a line of chips with joiners between */
-.modes .sp{flex:1}
-.modes button.way{border-radius:999px}
-.slot .line{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;
-  font-family:Georgia,serif;font-size:19px;line-height:1.6;min-height:52px;display:grid;gap:6px}
-.row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.row .chip .ct{min-height:34px;padding:4px 10px}
-.row .chip{flex:1;display:flex;align-items:center;gap:8px;min-width:72%;padding:4px 6px;cursor:default}
-.row .chip .ct{flex:1;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:6px;padding:5px 10px;min-height:36px;font-weight:600}
-.row .chip .ct:focus{border-color:var(--ink)}
-.row .chip .lb{font-family:'Segoe UI',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  font-style:normal;min-width:52px;opacity:.85}
-.join{display:inline;min-width:14px;padding:2px 3px;border-bottom:1.5px dashed #c9bfae;color:var(--ink);outline:none;white-space:pre-wrap}
-.join:empty{padding:2px 8px}
-.join:empty:before{content:attr(data-stem);color:#b8ae9d;font-style:italic}
-.join:focus{border-bottom-color:var(--ink)}
-.chip{display:inline-block;border-radius:8px;padding:3px 10px 3px 6px;margin:2px 1px;font-weight:600;cursor:grab;
-  vertical-align:baseline;line-height:1.6;max-width:100%}
-.chip.idea{background:var(--idea-bg);color:var(--idea-tx)}
-.chip.verb{background:var(--verb-bg);color:var(--verb-tx)}
-.chip.quote{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
-.chip.eff{background:var(--eff-bg);color:var(--eff-tx)}
-.chip .grab{opacity:.45;margin-right:5px;font-size:12px;letter-spacing:-2px;cursor:grab}
-.chip .ct{outline:none;cursor:text}
-.chip .ct:empty:before{content:attr(data-stem);opacity:.55;font-style:italic;font-weight:500}
-.chip.dragging{opacity:.4}
-body.v-plain .row .chip .lb,body.v-spot .row .chip .lb{color:var(--muted)}
-
-/* bank */
-.build{display:grid;grid-template-columns:1fr 290px;gap:18px;align-items:start}
-@media screen and (max-width:900px){.build{grid-template-columns:1fr}}
-.bank{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px 12px;position:sticky;top:60px}
-.bank h3{font-family:'Segoe UI',sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;margin:10px 0 6px;font-weight:700}
-.bank h3:first-child{margin-top:2px}
-.bank h3.k-quote{color:var(--ev-tx)}.bank h3.k-verb{color:var(--verb-tx)}.bank h3.k-idea{color:var(--idea-tx)}.bank h3.k-eff{color:var(--eff-tx)}
-.bank button{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:8px;background:#fff;
-  padding:6px 10px;margin-bottom:5px;font-family:Georgia,serif;font-size:14.5px;color:var(--ink);cursor:pointer;line-height:1.35}
-.bank button.k-quote{font-style:italic;color:var(--ev-tx);background:var(--ev-bg)}
-.bank button.k-verb{display:inline-block;width:auto;margin-right:4px;color:var(--verb-tx);background:var(--verb-bg);font-weight:700}
-.bank button.k-idea{color:var(--idea-tx);background:var(--idea-bg)}
-.bank button.k-eff{color:var(--eff-tx);background:var(--eff-bg)}
-.bank button:hover{border-color:var(--ink)}
-body.v-plain .bank button,body.v-spot .bank button{background:#fff;color:var(--ink);font-weight:500}
-.bank{max-height:calc(100vh - 140px);overflow:auto;touch-action:none}
-.bank .tabs{display:flex;gap:4px;margin-bottom:8px}
-.bank .tab{flex:1;text-align:center;font-family:'Segoe UI',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  padding:6px 2px;border-radius:6px;cursor:pointer;color:var(--muted);border:1px solid transparent}
-.bank .tab.k-quote.on{background:var(--ev-bg);color:var(--ev-tx)}.bank .tab.k-verb.on{background:var(--verb-bg);color:var(--verb-tx)}
-.bank .tab.k-idea.on{background:var(--idea-bg);color:var(--idea-tx)}.bank .tab.k-eff.on{background:var(--eff-bg);color:var(--eff-tx)}
-body.v-plain .bank .tab.on,body.v-spot .bank .tab.on{background:var(--paper);color:var(--ink);border-color:var(--ink)}
-.bank button{cursor:grab;user-select:none}
-.bank button.empty{background:#fff;border-style:dashed;font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-style:normal}
-.bank button.empty.k-quote{color:var(--ev-tx);border-color:var(--ev-tx)}
-.bank button.empty.k-verb{color:var(--verb-tx);border-color:var(--verb-tx);display:block;width:100%}
-.bank button.empty.k-idea{color:var(--idea-tx);border-color:var(--idea-tx)}
-.bank button.empty.k-eff{color:var(--eff-tx);border-color:var(--eff-tx)}
-.ghost{position:fixed;z-index:50;pointer-events:none;max-width:320px;border-radius:8px;padding:6px 10px;
-  font-family:Georgia,serif;font-size:14.5px;box-shadow:0 6px 18px rgba(0,0,0,.18);border:1px solid var(--line)}
-.ghost.k-quote{background:var(--ev-bg);color:var(--ev-tx);font-style:italic}
-.ghost.k-verb{background:var(--verb-bg);color:var(--verb-tx);font-weight:700}
-.ghost.k-idea{background:var(--idea-bg);color:var(--idea-tx)}
-.ghost.k-eff{background:var(--eff-bg);color:var(--eff-tx)}
-body.bank-drag .ct.target{outline:3px solid var(--ink);outline-offset:1px}
-body.bank-drag .line.target{outline:3px solid var(--ink);outline-offset:2px}
-.chip .rm{opacity:0;color:var(--muted);cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
-.chip:hover .rm{opacity:.6}.chip .rm:hover{opacity:1}
-body.v-plain .bank h3,body.v-spot .bank h3{color:var(--muted)}
-.chip.over{box-shadow:0 0 0 2px var(--ink)}
-
-/* branch */
-.branch{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
-.qcard{border:1px solid var(--line);border-radius:10px;background:#fff;padding:12px 14px;
-  display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
-@media screen and (max-width:700px){.qcard{grid-template-columns:1fr}}
-.qcard .q{font-family:Georgia,serif;font-size:16.5px;color:var(--ev-tx);font-style:italic;
-  background:var(--ev-bg);border-radius:8px;padding:8px 12px}
-.qcard .q small{display:block;font-style:normal;font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);margin-top:4px}
-.qcard .e{font-size:15px;color:var(--eff-tx);background:var(--eff-bg);border-radius:8px;padding:8px 12px}
-.arrow{color:var(--muted);text-align:center;font-size:20px;line-height:1}
-
-/* ---- display: plain / spotlight / full ---- */
-.view{position:fixed;top:12px;right:14px;display:flex;gap:4px;z-index:20;
-  background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px}
-.view button{border:0;border-radius:999px;background:transparent;padding:6px 12px;
-  font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
-.view button.on{background:var(--deep);color:#f6f1e6}
-.spot{display:none;gap:6px;margin:12px 0 0;align-items:center}
-.spot button{border:1px solid var(--line);border-radius:999px;background:#fff;padding:6px 12px;
-  font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
-.spot button.on{color:var(--ink);border-color:var(--ink);font-weight:700}
-body.v-spot .spot{display:flex}
-body.v-spot .palette,body.v-plain .palette{display:none}
-
-/* plain: every role reads as ink; the letters carry the structure */
-body.v-plain em[class^="hl-"],body.v-spot em[class^="hl-"]{background:transparent;color:inherit;font-weight:inherit;padding:0;font-style:inherit}
-body.v-plain .chip,body.v-spot .chip{background:#fff;color:var(--ink);border:1px solid var(--line);font-style:normal;font-weight:500}
-body.v-plain .dots,body.v-spot .dots{display:none}
-body.v-plain .qcard .q,body.v-spot .qcard .q{background:transparent;color:var(--ink);padding:0}
-body.v-plain .qcard .e,body.v-spot .qcard .e{background:transparent;color:var(--muted);padding:0}
-body.v-plain .themes button.on,body.v-spot .themes button.on{background:var(--paper);color:var(--ink);border-color:var(--ink)}
-body.v-plain .skel em,body.v-spot .skel em{background:transparent;color:inherit;font-weight:inherit;padding:0}
-body.v-plain .branch>div:first-child,body.v-spot .branch>div:first-child{background:transparent!important;color:var(--ink)!important;padding:0!important}
-
-/* spotlight: one role lit */
-body.v-spot[data-spot="idea"] em.hl-idea,body.v-spot[data-spot="idea"] .skel em.hl-idea{background:var(--idea-bg);color:var(--idea-tx);font-weight:600;padding:1px 4px}
-body.v-spot[data-spot="idea"] .chip.idea{background:var(--idea-bg);color:var(--idea-tx);border-color:var(--idea-bg);font-weight:600}
-body.v-spot[data-spot="verb"] em.hl-verb,body.v-spot[data-spot="verb"] .skel em.hl-verb{background:var(--verb-bg);color:var(--verb-tx);font-weight:600;padding:1px 4px}
-body.v-spot[data-spot="verb"] .chip.verb{background:var(--verb-bg);color:var(--verb-tx);border-color:var(--verb-bg);font-weight:600}
-body.v-spot[data-spot="ev"] em.hl-ev,body.v-spot[data-spot="ev"] .skel em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-weight:600;font-style:italic;padding:1px 4px}
-body.v-spot[data-spot="ev"] .chip.quote{background:var(--ev-bg);color:var(--ev-tx);border-color:var(--ev-bg);font-weight:600;font-style:italic}
-body.v-spot[data-spot="ev"] .qcard .q{background:var(--ev-bg);color:var(--ev-tx);padding:8px 12px}
-body.v-spot[data-spot="eff"] em.hl-eff,body.v-spot[data-spot="eff"] .skel em.hl-eff{background:var(--eff-bg);color:var(--eff-tx);font-weight:600;padding:1px 4px}
-body.v-spot[data-spot="eff"] .chip.eff{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-bg);font-weight:600}
-body.v-spot[data-spot="eff"] .qcard .e{background:var(--eff-bg);color:var(--eff-tx);padding:8px 12px}
-
-/* ---- slides ---- */
-main{max-width:1500px;padding:0 40px 80px;min-height:100vh}
-.slide{display:none;min-height:100vh;flex-direction:column;justify-content:center;padding:56px 0 70px}
-.slide.on{display:flex}
-.slide h2{margin:0 0 22px;font-size:26px}
-.slide.title{align-items:flex-start}
-.slide.title h1{font-size:44px;margin:0 0 6px}
-.slide.title .sub{font-size:16px;margin-bottom:34px}
-.slide.title .lab{font-size:12.5px;letter-spacing:.1em;color:var(--muted);font-weight:700;margin:26px 0 8px}
-.slide.title .themes button{font-size:19px;padding:12px 22px}
-.slide.title .modes{margin-top:0}
-.slide.title .modes button{font-size:16px;padding:9px 16px}
-.slide.title .modes .sp{display:none}
-.part .txt{font-size:20px;line-height:1.8}
-.slot .box{font-size:22px}
-.slot .line{font-size:21px}
-.slot .l{font-size:30px}
-.qcard .q{font-size:20px}
-.qcard .e{font-size:18px}
-.rule{font-size:16.5px}
-.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;
-  padding:10px;background:linear-gradient(transparent,var(--bg) 40%);z-index:20}
-.nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;
-  font-size:18px;color:var(--ink);cursor:pointer}
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;padding:10px;z-index:20}
+.nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;font-size:18px;color:var(--ink);cursor:pointer}
 .nav button:disabled{opacity:.3;cursor:default}
 .nav .dots{display:flex;gap:7px}
 .nav .dots span{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer}
 .nav .dots span.on{background:var(--deep)}
-.nav .now{font-size:13px;color:var(--muted);min-width:170px}
-.here{font-size:13px;color:var(--muted);letter-spacing:.06em;margin:0 0 6px}
+.nav .now{font-size:13px;color:var(--muted);min-width:200px}
+.sub{position:fixed;top:12px;left:16px;font-size:12.5px;color:var(--muted);z-index:20}
+.sub a{color:var(--muted)}
 
-/* rule */
-.rule{border-left:4px solid var(--accent);background:var(--paper);border-radius:0 10px 10px 0;
-  padding:12px 16px;margin:14px 0 0;font-size:15.5px}
+/* display: plain / full */
+.view{position:fixed;top:12px;right:14px;display:flex;gap:4px;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px}
+.view button{border:0;border-radius:999px;background:transparent;padding:5px 11px;font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
+.view button.on{background:var(--deep);color:#f6f1e6}
+body.v-plain em[class^="hl-"],body.v-plain .slot .d i{background:transparent;color:inherit;font-weight:inherit;padding:0;font-style:inherit}
+body.v-plain .keyrow .k{background:#fff;color:var(--ink);border:1px solid var(--line);font-style:normal}
+body.v-plain .thesis.lit .key{background:transparent;color:inherit;text-decoration:underline}
+body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(--line)}
 </style>
 </head>
 <body>
-<div class="view" id="view">
-  <button data-v="plain">plain</button>
-  <button data-v="spot">spotlight</button>
-  <button data-v="full">full</button>
-</div>
+<p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
+<div class="view" id="view"><button data-v="plain">plain</button><button data-v="full">full</button></div>
 <main>
-<section class="slide title on" id="s1">
-  <h1>A TEEL essay</h1>
-  <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
-  <div class="lab">PARAGRAPHS A, B, C</div>
-  <div class="themes" id="themes"></div>
-  <div class="lab">SHAPE</div>
-  <div class="modes" id="modes"></div>
-  <div class="lab">WAY IN</div>
-  <div class="modes" id="ways"></div>
+
+<section class="slide on" id="s1">
+  <div class="thesis" id="thesis">
+    <p><i>The Bone Sparrow</i> shows us that <span class="key">imagination</span> and <span class="key">friendship</span> are essential for survival.
+    <span class="sub"></span></p>
+  </div>
 </section>
 
 <section class="slide" id="s2">
-  <h2>The essay</h2>
-  <div class="skel"></div>
+  <h2>Why does imagination matter for Subhi?</h2>
+  <div class="cloudwrap" data-cloud="imagination">
+    <div class="centre"><b>imagination</b><span>essential for survival</span></div>
+  </div>
+  <div class="cloudfoot"><span>Tap a bubble to make it a main idea. Tap the space for another. Double-tap a bubble to drop it.</span><span class="sp"></span><button class="reset">Start again</button></div>
 </section>
 
 <section class="slide" id="s3">
-  <h2>Where paragraph A comes from</h2>
-  <div class="branch" id="branch"></div>
+  <h2>TEEL · imagination</h2>
+  <div class="keyrow">
+    <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span>
+    <span class="sp"></span><div class="ideas" id="ideasIm"></div>
+  </div>
+  <div class="frame" id="frameIm"></div>
 </section>
 
 <section class="slide" id="s4">
-  <h2 id="buildH">Paragraph A, built with the class</h2>
-  <div class="palette" id="palette">
-    <button class="p-idea" data-c="idea">idea</button>
-    <button class="p-verb" data-c="verb">verb</button>
-    <button class="p-ev" data-c="ev">evidence</button>
-    <button class="p-eff" data-c="eff">effect</button>
-    <button class="p-plain" data-c="plain">plain</button>
+  <h2>Why does friendship matter for Subhi?</h2>
+  <div class="cloudwrap" data-cloud="friendship">
+    <div class="centre"><b>friendship</b><span>essential for survival</span></div>
   </div>
-  <div class="spot" id="spot">
-    <button data-s="idea">idea</button>
-    <button data-s="verb">verb</button>
-    <button data-s="ev">evidence</button>
-    <button data-s="eff">effect</button>
-  </div>
-  <div class="build">
-    <div>
-      <div class="frame" id="frame"></div>
-    </div>
-    <div class="bank" id="bank"></div>
-  </div>
-  <div class="btns">
-    <button class="primary" id="prepared">Here's one we prepared earlier</button>
-    <button id="clear">Clear</button>
-  </div>
-  <div class="rule">Two pieces of evidence, one line each. No new quote in the L — if one is needed, it is another line.</div>
+  <div class="cloudfoot"><span>Tap a bubble to make it a main idea. Tap the space for another. Double-tap a bubble to drop it.</span><span class="sp"></span><button class="reset">Start again</button></div>
 </section>
 
 <section class="slide" id="s5">
-  <h2>Paragraph A in the essay</h2>
-  <div class="skel"></div>
+  <h2>Your turn · friendship</h2>
+  <div class="keyrow">
+    <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span>
+    <span class="sp"></span><div class="ideas" id="ideasFr"></div>
+  </div>
+  <div class="two">
+    <div><h3>Imagination</h3><div class="worked" id="worked"></div></div>
+    <div><h3>Friendship</h3><div class="frame" id="frameFr"></div></div>
+  </div>
 </section>
+
 </main>
 <div class="nav" id="nav">
-  <button id="prev">‹</button>
-  <div class="dots" id="dots"></div>
-  <button id="next">›</button>
-  <div class="now" id="now"></div>
+  <button id="prev">‹</button><div class="dots" id="dots"></div><button id="next">›</button><div class="now" id="now"></div>
 </div>
 <script>
 "use strict";
-/* ---------------- data: six themes, all quotes from the novel ---------------- */
-const THEMES=[
- {id:"imprisonment", name:"imprisonment", link:"This shows that <em class=\"hl-idea\">imprisonment</em> takes away the outside world and even the shoes on people's feet, and in doing so <em class=\"hl-eff\">shrinks Subhi's whole world to the fence</em>.",
-  quotes:[
-   {q:"None of us knows what it is like just on the other side of the fences.", ch:"Chapter 14",
-    e:"makes the reader feel how small Subhi's whole world is", lead:"Subhi thinks about the world past the fence", verb:"reveals", idea:"how small imprisonment makes Subhi's world", e2:"makes the reader feel how close and how final the fence is", eInf:"make the reader feel how close and how final the fence is"},
-   {q:"There are only fourteen pairs of real shoes in this whole entire camp.", ch:"Chapter 4",
-    e:"makes the reader see how little the camp gives people", lead:"Subhi counts the camp's shoes", verb:"shows", idea:"how little imprisonment leaves people", e2:"makes the reader see the shortage without an adjective", eInf:"make the reader see the shortage without an adjective"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imprisonment</em> as something that shapes every part of Subhi's life.",
-   "Subhi has never seen the outside world: <em class=\"hl-ev\">\"None of us knows what it is like just on the other side of the fences.\"</em>",
-   "The fence is so close and so final, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel how small Subhi's whole world is</em>.",
-   "Even the camp's shoes tell the same story: <em class=\"hl-ev\">\"There are only fourteen pairs of real shoes in this whole entire camp.\"</em>",
-   "Fraillon lets two numbers do the arguing, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">see how little the camp gives people</em>.",
-   "By making the outside so near and so unknown, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the camp imprisons the mind</em> <em class=\"hl-eff\">as much as the body</em>."]},
- {id:"imagination", name:"imagination", link:"This shows that <em class=\"hl-idea\">imagination is the most precious thing in the camp</em> and that <em class=\"hl-idea\">it can never be stolen</em>, and in doing so Fraillon <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">the fences hold Subhi's body but not his mind</em>.",
-  quotes:[
-   {q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.", ch:"Chapter 1",
-    e:"lets the reader see the camp the way Subhi sees it", lead:"the novel opens at night", verb:"shows", idea:"that imagination is the most precious thing in the camp", e2:"lets the reader see the camp the way Subhi sees it", eInf:"let the reader see the camp the way Subhi sees it"},
-   {q:"…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.", ch:"Chapter 10",
-    e:"shows the reader what a story is worth in the camp", lead:"Jimmie brings her mother's book", verb:"shows", idea:"that imagination can never be taken away, even when people are", e2:"makes the reader understand where Subhi's courage comes from", eInf:"make the reader understand where Subhi's courage comes from"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">imagination</em> as the most precious thing Subhi has, because it is the one thing the camp cannot take from him.",
-   "The novel opens at night, when the dirt outside turns into <em class=\"hl-ev\">\"a beautiful ocean\"</em>, <em class=\"hl-ev\">\"as red as the sun and as deep as the sky\"</em>.",
-   "The camp's own dirt becomes something beautiful, which <em class=\"hl-verb\">lets</em> the reader <em class=\"hl-eff\">see the camp the way Subhi sees it</em>.",
-   "Later, knowing that Jimmie <em class=\"hl-ev\">\"has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.\"</em>",
-   "A story is enough to make Subhi brave, which <em class=\"hl-verb\">shows</em> the reader <em class=\"hl-eff\">what imagination is worth in the camp</em>.",
-   "By starting the novel inside <em class=\"hl-idea\">Subhi's imagination</em>, Fraillon <em class=\"hl-verb\">shows</em> the reader <em class=\"hl-eff\">the person before the prisoner</em>."]},
- {id:"friendship", name:"friendship", link:"This shows that <em class=\"hl-idea\">friendship</em> means a promise kept and a face that lights up, and in doing so <em class=\"hl-eff\">gives Subhi something the adults' promises never have</em>.",
-  quotes:[
-   {q:"I know for sure that Jimmie is the kind of person that keeps a promise.", ch:"Chapter 14",
-    e:"makes the reader understand how rare a kept promise is in Subhi's life", lead:"Jimmie promises to come back", verb:"reveals", idea:"friendship built out of promises kept", e2:"makes the reader understand how rare a kept promise is in Subhi's life", eInf:"make the reader understand how rare a kept promise is in Subhi's life"},
-   {q:"her whole face shines like someone's lit a candle in her cheeks", ch:"Chapter 14",
-    e:"lets the reader feel the happiness the friendship brings", lead:"Jimmie laughs", verb:"shows", idea:"how fragile and how warm this friendship is", e2:"lets the reader feel the happiness the friendship brings", eInf:"let the reader feel the happiness the friendship brings"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">friendship</em> as something built out of promises kept.",
-   "After Jimmie promises to come back, Subhi decides: <em class=\"hl-ev\">\"I know for sure that Jimmie is the kind of person that keeps a promise.\"</em>",
-   "\"For sure\" <em class=\"hl-verb\">shows</em> how much Subhi is staking on her, which makes the reader <em class=\"hl-eff\">understand how rare a kept promise is in his life</em>.",
-   "When Jimmie laughs, <em class=\"hl-ev\">\"her whole face shines like someone's lit a candle in her cheeks.\"</em>",
-   "A candle is small and easily put out, which <em class=\"hl-verb\">lets</em> the reader <em class=\"hl-eff\">feel how fragile and how warm this friendship is</em>.",
-   "By making trust the heart of the friendship, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">Jimmie gives Subhi something</em> <em class=\"hl-eff\">the adults' promises never have</em>."]},
- {id:"power", name:"power", link:"This shows that <em class=\"hl-idea\">power</em> lives in Beaver's hands and in a piece of paper, and in doing so <em class=\"hl-eff\">decides even what a child can say</em>.",
-  quotes:[
-   {q:"My throat is as dry as the dirt.", ch:"Chapter 5",
-    e:"makes the reader feel the danger before Subhi names it", lead:"Beaver catches Subhi at the fence", verb:"reveals", idea:"how little power a child has in the camp", e2:"makes the reader feel the danger before Subhi names it", eInf:"make the reader feel the danger before Subhi names it"},
-   {q:"That's not what his paper says. He was meant to move last week. And writing doesn't lie.", ch:"Chapter 8",
-    e:"shows the reader that a paper counts for more than a person", lead:"Eli is moved to Alpha", verb:"shows", idea:"that power in the camp belongs to a piece of paper, not a person", e2:"makes the reader see that the paper wins even when everyone knows it is wrong", eInf:"make the reader see that the paper wins even when everyone knows it is wrong"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> the camp as a place where <em class=\"hl-idea\">a child has no power over his own life</em>.",
-   "When Beaver catches Subhi at the fence, Subhi's throat goes <em class=\"hl-ev\">\"as dry as the dirt\"</em> before Beaver has even touched him.",
-   "The fear arrives in his body first, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">Beaver's power does not need words or violence to work</em>.",
-   "When Eli is moved to Alpha, the Jacket says: <em class=\"hl-ev\">\"That's not what his paper says. He was meant to move last week. And writing doesn't lie.\"</em>",
-   "Everyone can see the paper is wrong and it wins anyway, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">in the camp a piece of paper counts for more than a person</em>.",
-   "By putting the fear in Subhi's body, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">power in the camp</em> decides <em class=\"hl-eff\">even what a child can say</em>."]},
- {id:"loneliness", name:"loneliness", link:"This shows that <em class=\"hl-idea\">loneliness</em> lives in Jimmie's kitchen as much as in the camp, and in doing so <em class=\"hl-eff\">proves the fence is not the only thing that shuts people away</em>.",
-  quotes:[
-   {q:"Jimmie wonders if her dad even remembers that she can't read.", ch:"Chapter 6",
-    e:"makes the reader feel that Jimmie has become invisible in her own house", lead:"Jimmie sits in her own kitchen", verb:"reveals", idea:"how lonely Jimmie is even at home", e2:"makes the reader feel that she is as unseen as Subhi", eInf:"make the reader feel that she is as unseen as Subhi"},
-   {q:"Jimmie has never felt so alone.", ch:"Chapter 20",
-    e:"shows the reader that loneliness reaches the free side of the fence too", lead:"her father turns to the sports pages", verb:"shows", idea:"loneliness on the free side of the fence", e2:"makes the reader feel that the fence is not the only thing that shuts people away", eInf:"make the reader feel that the fence is not the only thing that shuts people away"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">loneliness</em> as something that reaches both sides of the fence.",
-   "Inside her own house, <em class=\"hl-ev\">\"Jimmie wonders if her dad even remembers that she can't read.\"</em>",
-   "The people meant to notice Jimmie have stopped looking, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel that she is as unseen as Subhi</em>.",
-   "By the end of the chapter, <em class=\"hl-ev\">\"Jimmie has never felt so alone.\"</em>",
-   "Fraillon gives the free girl the plainest sentence in the chapter, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">feel that loneliness reaches the free side of the fence too</em>.",
-   "By giving the free girl the same loneliness as the boy in the camp, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the fence</em> <em class=\"hl-eff\">is not the only thing that shuts people away</em>."]},
- {id:"hope", name:"hope", link:"This shows that <em class=\"hl-idea\">hope</em> is a camera smuggled in and a star pointed out, and in doing so <em class=\"hl-eff\">makes hope something people do for each other</em>.",
-  quotes:[
-   {q:"…about Queeny and Eli sneaking in the camera to get their pictures out into the world.", ch:"Chapter 20",
-    e:"shows the reader that hope here means being seen by someone outside", lead:"Queeny and Eli smuggle in a camera", verb:"reveals", idea:"hope as something you have to make", e2:"shows the reader that hope here means being seen by someone outside", eInf:"show the reader that hope here means being seen by someone outside"},
-   {q:"Tonight, you look up at that sky, and there will be a new star there.", ch:"Chapter 17",
-    e:"makes the reader feel Harvey giving Subhi something to hold on to", lead:"Nasir dies", verb:"shows", idea:"hope handed from one person to another", e2:"makes the reader see Harvey giving Subhi something to hold on to", eInf:"make the reader see Harvey giving Subhi something to hold on to"}],
-  para:[
-   "Fraillon <em class=\"hl-verb\">presents</em> <em class=\"hl-idea\">hope</em> as something people in the camp have to make for themselves.",
-   "Queeny and Eli smuggle a camera in <em class=\"hl-ev\">\"to get their pictures out into the world.\"</em>",
-   "The photos are the only thing that can leave the camp, which <em class=\"hl-verb\">shows</em> the reader that <em class=\"hl-eff\">hope here means being seen by someone outside</em>.",
-   "When Nasir dies, Harvey tells Subhi: <em class=\"hl-ev\">\"Tonight, you look up at that sky, and there will be a new star there.\"</em>",
-   "Harvey gives Subhi something to look at instead of nothing, which <em class=\"hl-verb\">makes</em> the reader <em class=\"hl-eff\">see that hope in the camp is handed from person to person</em>.",
-   "By making hope an action rather than a feeling, Fraillon <em class=\"hl-verb\">shows</em> that <em class=\"hl-idea\">the people inside the fence</em> <em class=\"hl-eff\">are not waiting to be rescued</em>."]}
-];
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 
-/* Paragraph shape: T, then the middle (one line per piece of evidence, four
-   chips each), then A in TEEAL, then L. The chips are the unit's four colours:
-   idea, verb, quote, effect. Their order is dragged; the joiners between
-   them are typed. */
-const OUTER={
- TEEL: [{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"L",dots:["idea","eff"],stem:"LINK"}],
- TEEAL:[{l:"T",dots:["idea"],stem:"Fraillon presents … as …"},"MID",{l:"A",dots:["idea","eff"],stem:"By … , Fraillon shows that …"},{l:"L",dots:["idea","eff"],stem:"LINK"}]
+/* ---------------- what the class can pull into the cloud ---------------- */
+const POOL={
+ imagination:[
+  "it turns the dirt into an ocean","it gives Subhi somewhere to go when he cannot leave","it keeps his father's stories alive",
+  "it makes the camp bearable","stories make him brave","it is the one thing the Jackets cannot take","it lets him still be a kid",
+  "the Night Sea brings him treasures to wait for",
+  "it gets him more food","it makes Beaver kind","it lets him leave the camp for real","it makes Queeny happy","it teaches him to read"],
+ friendship:[
+  "Jimmie keeps her promise to come back","Eli looks after Subhi and shares what he has","Harvey learns their names",
+  "Jimmie's story gives Subhi a job to do","a friend on the outside makes the fence feel smaller","a friend notices you when no one else does",
+  "Subhi risks trouble to help Jimmie","friends are how news gets in and out",
+  "friends get you out of the camp","Beaver is Subhi's friend","Jimmie's dad is a good friend","friendship stops Nasir dying"]
 };
-/* the three ways in: chip order and the joiners around them */
-const WAYS={
- evidence:{name:"Evidence first", order:["quote","verb","idea","eff"],
-   joins:q=>["When "+q.lead+", ", " ", " ", ", which ", "."], hints:["When …, ","","",", which ","."], eff:"e2"},
- idea:    {name:"Idea first",     order:["verb","idea","quote","eff"],
-   joins:q=>["Fraillon ", " ", " when "+q.lead+": ", ", which ", "."], hints:["Fraillon ",""," when …: ",", which ","."], eff:"e2"},
- effect:  {name:"Effect first",   order:["eff","verb","idea","quote"],
-   joins:q=>["To ", ", Fraillon ", " ", " when "+q.lead+": ", "."], hints:["To ",", Fraillon ",""," when …: ","."], eff:"eInf"}
+/* the sentences a lightbulb hands over on slide 3 */
+const IM={
+  T:(a,b)=>`<em class="hl-idea">Imagination</em> is essential to Subhi's survival because <em class="hl-idea">${a}</em> and <em class="hl-idea">${b}</em>.`,
+  E1:(a)=>`When the novel opens, <em class="hl-ev">“Sometimes, at night, the dirt outside turns into a beautiful ocean.”</em> This <em class="hl-verb">shows</em> that <em class="hl-idea">${a}</em>, which <em class="hl-eff">lets the reader see the camp the way Subhi sees it</em>.`,
+  E2:(b)=>`Later, <em class="hl-ev">“…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.”</em> This <em class="hl-verb">shows</em> that <em class="hl-idea">${b}</em>, which <em class="hl-eff">makes the reader understand where Subhi's courage comes from</em>.`,
+  L:(a,b)=>`So, because <em class="hl-idea">${a}</em> and <em class="hl-idea">${b}</em>, <em class="hl-idea">imagination</em> is what <em class="hl-eff">keeps Subhi alive inside the fence</em>.`
 };
-const CHIPTEXT=(q,k,way)=>k==="quote"?"“"+q.q.replace(/\.$/,"")+"”":k==="eff"?q[WAYS[way].eff]:q[k];
-const STEM=k=>({idea:"what this shows about "+T().name,verb:"reveals, shows, suggests …",quote:"the words from the book",eff:"what it does to the reader"})[k];
-const dkey=()=>S.theme+"."+S.mode;
+const FALLBACK={imagination:["it gives Subhi somewhere to go","it keeps his hope alive"],
+                friendship:["Jimmie keeps her promise","Eli looks after him"]};
 
 /* ---------------- state ---------------- */
-const $=id=>document.getElementById(id);
-const KEY="bonesparrow.teel.v2";
-let S={theme:"imagination", picks:["imagination"], mode:"TEEL", way:"evidence", drafts:{}};
-try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.theme) S=j; }catch(e){}
-S.mode=S.mode||"TEEL"; S.way=S.way||"evidence"; S.drafts=S.drafts||{};
-S.picks=["imagination",...(S.picks||[]).filter(x=>x!=="imagination")].slice(0,3); S.theme="imagination";
-const NAME=id=>{const t=THEMES.find(t=>t.id===id); return t?t.name:"";};
+const KEY="bonesparrow.teelDeck.v1";
+let S={lit:false, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
+try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
-const T=()=>THEMES.find(t=>t.id===S.theme);
-/* a draft: outer boxes by letter index, and two rows of chips + joiners */
-function blank(){ return {outer:{0:`Fraillon <em class="hl-verb">presents</em> <em class="hl-idea">${T().name}</em> in the novel.`}, rows:T().quotes.map(q=>({
-  chips:WAYS[S.way].order.map(k=>({k,t:""})), joins:["","","","",""]}))}; }
-function D(){ if(!S.drafts[dkey()]) S.drafts[dkey()]=blank(); return S.drafts[dkey()]; }
+function cloudState(name){
+  if(!S.clouds[name]) S.clouds[name]={nodes:[],used:[],order:POOL[name].map((_,i)=>i).sort(()=>Math.random()-.5)};
+  return S.clouds[name];
+}
+const picks=name=>cloudState(name).nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick).map(n=>n.t);
+const AB=name=>{const p=picks(name),f=FALLBACK[name];return [p[0]||f[0],p[1]||f[1]];};
 
-/* ---------------- draw ---------------- */
-function drawThemes(){
-  $("themes").innerHTML=THEMES.map(t=>{
-    const i=S.picks.indexOf(t.id);
-    return `<button class="${i>=0?'on':''}" data-t="${t.id}">${i>=0?'<b>'+"ABC"[i]+'</b>':''}${t.name}</button>`;}).join("");
-  [...$("themes").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{
-    const id=b.dataset.t, i=S.picks.indexOf(id); if(id==="imagination") return;
-    if(i>=0) S.picks.splice(i,1);
-    else { if(S.picks.length>=3) S.picks.pop(); S.picks.push(id); }
-    save(); drawAll();
-  }));
+/* ---------------- the cloud ---------------- */
+let live=null;   /* {name,wrap,nodes,anim} */
+function openCloud(wrap){
+  closeCloud();
+  const name=wrap.dataset.cloud, st=cloudState(name);
+  wrap.querySelectorAll(".node").forEach(n=>n.remove());
+  live={name,wrap,nodes:[],anim:null};
+  const W=wrap.clientWidth,H=wrap.clientHeight;
+  st.nodes.forEach((o,i)=>{ const ang=i/Math.max(1,st.nodes.length)*Math.PI*2;
+    addNode(o,W/2+Math.cos(ang)*Math.min(W,H)*0.33,H/2+Math.sin(ang)*Math.min(W,H)*0.33); });
+  addEmpty();
+  physics();
 }
-function drawModes(){
-  $("modes").innerHTML=Object.keys(OUTER).map(m=>
-    `<button class="${m===S.mode?'on':''}" data-m="${m}">${m.split("").join(" · ")}</button>`).join("");
-  $("ways").innerHTML=Object.keys(WAYS).map(w=>`<button class="way ${w===S.way?'on':''}" data-w="${w}">${WAYS[w].name}</button>`).join("");
-  [...$("modes").querySelectorAll("button[data-m]")].forEach(b=>b.addEventListener("click",()=>{
-    S.mode=b.dataset.m; save(); drawAll();
-  }));
-  [...$("ways").querySelectorAll("button[data-w]")].forEach(b=>b.addEventListener("click",()=>{
-    S.way=b.dataset.w; applyWay(); save(); drawAll();
-  }));
+function closeCloud(){ if(live&&live.anim) cancelAnimationFrame(live.anim); live=null; }
+function nodeEl(o){
+  const el=document.createElement("div"); el.className="node"+(o.pick?" pick":"");
+  el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"AB"[o.pick-1]:""}</span>${esc(o.t)}<span class="x">×</span>`;
+  return el;
 }
-/* a way sets the order and the joiners; chip text stays, except the effect
-   chip, whose form depends on where it sits */
-function applyWay(){
-  const d=D(), W=WAYS[S.way];
-  d.rows.forEach((row,ri)=>{
-    const q=T().quotes[ri];
-    const by={}; row.chips.forEach(c=>by[c.k]=c.t);
-    row.chips=W.order.map(k=>({k,t:by[k]||""}));
-    if(row.chips.some(c=>c.t.trim())) row.joins=W.joins(q); else row.joins=["","","","",""];
-    const eff=row.chips.find(c=>c.k==="eff");
-    if(eff.t===q.e2||eff.t===q.eInf) eff.t=q[W.eff];
+function addNode(o,x,y,vx,vy){
+  const el=nodeEl(o); live.wrap.appendChild(el);
+  const n={el,o,x,y,vx:vx||0,vy:vy||0,ph:Math.random()*Math.PI*2};
+  el.addEventListener("click",e=>{ e.stopPropagation(); if(e.target.classList.contains("x")){ drop(n); return; } togglePick(n); });
+  el.addEventListener("dblclick",e=>{ e.stopPropagation(); drop(n); });
+  live.nodes.push(n); return n;
+}
+function addEmpty(){
+  const el=document.createElement("div"); el.className="node empty";
+  el.innerHTML=`<span class="t" contenteditable="true" spellcheck="false"></span>`;
+  live.wrap.appendChild(el);
+  const W=live.wrap.clientWidth,H=live.wrap.clientHeight;
+  const n={el,o:null,empty:true,x:W*0.5+(Math.random()-.5)*W*.5,y:H*0.82,vx:0,vy:0,ph:Math.random()*6};
+  const t=el.querySelector(".t");
+  el.addEventListener("click",e=>{e.stopPropagation(); t.focus();});
+  t.addEventListener("keydown",e=>{
+    if(e.key!=="Enter") return; e.preventDefault();
+    const txt=t.textContent.trim(); if(!txt) return;
+    const o={t:txt,pick:0}; cloudState(live.name).nodes.push(o); save();
+    el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
+    addNode(o,n.x,n.y,(Math.random()-.5)*6,-4);
+    addEmpty();
   });
+  live.nodes.push(n);
 }
-function drawSkel(){
-  const [a,b,c]=S.picks.map(NAME);
-  const I=n=>n?`<em class="hl-idea">${n}</em>`:`<span class="gap"></span>`;
-  const list=`${I(a)}, ${I(b)} and ${I(c)}`;
-  const para=(L,n)=>`<div class="part onday"><div class="pn">PARAGRAPH ${L}${n?' · '+n.toUpperCase():''}</div><div class="txt">
-    ${n?`<span class="ts">Fraillon also presents ${I(n)}.</span> `:''}on the day</div></div>`;
-  document.querySelectorAll(".skel").forEach(el=>el.innerHTML=`
-  <div class="part"><div class="pn">INTRODUCTION</div><div class="txt">
-    In <i>The Bone Sparrow</i>, Zana Fraillon tells the story of Subhi, a boy born inside a detention camp, and Jimmie, the girl who finds a way in.
-    Through these two children, Fraillon presents ${list}.</div></div>
-  <div class="part A"><div class="pn">PARAGRAPH A · ${a.toUpperCase()}</div><div class="txt skelA"></div></div>
-  ${para("B",b)}${para("C",c)}
-  <div class="part"><div class="pn">CONCLUSION</div><div class="txt">
-    Fraillon uses Subhi and Jimmie to show the reader ${list}.
-    Together, these ideas suggest that <span class="gap long"></span>.</div></div>`);
-  syncSkelA();
+function spawnFromPool(x,y){
+  const st=cloudState(live.name);
+  const i=st.order.find(i=>!st.used.includes(i)); if(i==null) return;
+  st.used.push(i); const o={t:POOL[live.name][i],pick:0}; st.nodes.push(o); save();
+  addNode(o,x,y,(Math.random()-.5)*4,(Math.random()-.5)*4);
 }
-const CL={idea:"hl-idea",verb:"hl-verb",quote:"hl-ev",eff:"hl-eff"};
-function rowHtml(row){ /* the row as coloured prose */
-  let h="";
-  row.chips.forEach((c,i)=>{ h+=esc(row.joins[i]||""); if(c.t) h+=`<em class="${CL[c.k]}">${c.t}</em>`; });
-  h+=esc(row.joins[row.chips.length]||"");
-  return h;
+function togglePick(n){
+  const st=cloudState(live.name), o=n.o;
+  if(o.pick){ o.pick=0; }
+  else { const cur=st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick);
+    if(cur.length>=2) cur[0].pick=0;
+    o.pick=Math.max(0,...st.nodes.map(x=>x.pick))+1; }
+  /* renumber 1,2 */
+  st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick).forEach((x,i)=>x.pick=i+1);
+  save();
+  live.nodes.forEach(m=>{ if(m.empty) return; m.el.classList.toggle("pick",!!m.o.pick);
+    const tag=m.el.querySelector(".tag"); tag.hidden=!m.o.pick; tag.textContent=m.o.pick?"AB"[m.o.pick-1]:""; });
 }
-function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
-function syncSkelA(){
-  const d=D(), shape=OUTER[S.mode];
-  let out=[]; let oi=0;
-  shape.forEach(part=>{
-    if(part==="MID") d.rows.forEach(r=>{ if(r.chips.some(c=>c.t.trim())) out.push(rowHtml(r)); });
-    else { const t=d.outer[oi++]||""; if(t.replace(/<[^>]+>/g,"").trim()) out.push(t); }
-  });
-  document.querySelectorAll(".skelA").forEach(el=>el.innerHTML=out.length?out.join(" "):'<span style="color:#b8ae9d">T · E · E · L</span>');
+function drop(n){
+  const st=cloudState(live.name); st.nodes=st.nodes.filter(x=>x!==n.o); save();
+  n.el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
 }
-function outerBox(part,oi){
-  const d=D();
-  return `<div class="slot">
-    <div><div class="l">${part.l}</div><div class="dots">${part.dots.map(k=>`<span class="dot ${k}"></span>`).join("")}</div></div>
-    <div class="box" contenteditable="true" spellcheck="false" data-o="${oi}" data-stem="${part.stem==="LINK"?"This shows that "+T().name+" … and … , and in doing so …":part.stem}">${d.outer[oi]||""}</div></div>`;
+function physics(){
+  const step=(t)=>{
+    if(!live) return;
+    const wrap=live.wrap, W=wrap.clientWidth, H=wrap.clientHeight, cx=W/2, cy=H/2;
+    const R=Math.min(W,H)*0.36;
+    const cb=wrap.querySelector(".centre").getBoundingClientRect(), wb=wrap.getBoundingClientRect();
+    const ccx=cb.left-wb.left+cb.width/2, ccy=cb.top-wb.top+cb.height/2;
+    for(const n of live.nodes){
+      const dx=n.x-cx, dy=n.y-cy, d=Math.hypot(dx,dy)||1;
+      const pull=(d-R)*-0.004; n.vx+=dx/d*pull*d*0.02; n.vy+=dy/d*pull*d*0.02;
+      const cw=(n.el.offsetWidth||120)/2, ch=(n.el.offsetHeight||40)/2;
+      const ox=Math.max(0,(cb.width/2+cw+26)-Math.abs(n.x-ccx)), oy=Math.max(0,(cb.height/2+ch+26)-Math.abs(n.y-ccy));
+      if(ox>0&&oy>0){ n.vx+=Math.sign(n.x-ccx||1)*0.5; n.vy+=Math.sign(n.y-ccy||1)*0.5; }
+      n.vx+=Math.sin(t/900+n.ph)*0.012; n.vy+=Math.cos(t/1100+n.ph)*0.012;
+    }
+    for(let i=0;i<live.nodes.length;i++)for(let j=i+1;j<live.nodes.length;j++){
+      const a=live.nodes[i],b=live.nodes[j];
+      const need=(a.el.offsetWidth+b.el.offsetWidth)/2*0.72+26;
+      const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1;
+      if(d<need){const f=(need-d)/need*0.9; a.vx-=dx/d*f; a.vy-=dy/d*f; b.vx+=dx/d*f; b.vy+=dy/d*f;}
+    }
+    for(const n of live.nodes){
+      const k=(n.empty&&document.activeElement===n.el.querySelector(".t"))?0.6:0.92;
+      n.vx*=k; n.vy*=k; n.x+=n.vx; n.y+=n.vy;
+      const mW=n.el.offsetWidth/2+8, mH=n.el.offsetHeight/2+8;
+      n.x=Math.max(mW,Math.min(W-mW,n.x)); n.y=Math.max(mH,Math.min(H-mH,n.y));
+      n.el.style.left=n.x+"px"; n.el.style.top=n.y+"px";
+    }
+    live.anim=requestAnimationFrame(step);
+  };
+  live.anim=requestAnimationFrame(step);
 }
-const LABEL={idea:"idea",verb:"verb",quote:"quote",eff:"effect"};
-function lineHtml(row,ri){
-  const H=WAYS[S.way].hints, n=row.chips.length;
-  const join=i=>`<span class="join" contenteditable="true" spellcheck="false" data-r="${ri}" data-j="${i}" data-stem="${esc(H[i]||"")}">${esc(row.joins[i]||"")}</span>`;
-  return row.chips.map((c,i)=>
-      `<div class="row">${join(i)}<span class="chip ${c.k}" data-r="${ri}" data-i="${i}"><span class="grab">⋮⋮</span><span class="lb">${LABEL[c.k]}</span><span class="ct" contenteditable="true" spellcheck="false" data-stem="${STEM(c.k)}">${c.t}</span><span class="rm" title="remove">×</span></span>${i===n-1?join(n):""}</div>`
-    ).join("");
-}
-function midRows(){
-  return D().rows.map((row,ri)=>`<div class="slot"><div><div class="l">E</div><div class="dots">
-      <span class="dot idea"></span><span class="dot verb"></span><span class="dot ev"></span><span class="dot eff"></span></div></div>
-    <div class="line" data-r="${ri}">${lineHtml(row,ri)}</div></div>`).join("");
-}
-function drawFrame(){
-  $("buildH").textContent="Paragraph A, built with the class — "+T().name;
-  let oi=0;
-  $("frame").innerHTML=OUTER[S.mode].map(part=>part==="MID"?midRows():outerBox(part,oi++)).join("");
-}
-/* typing anywhere in the frame: one delegated listener, so a redrawn line
-   needs no re-wiring */
-$("frame").addEventListener("input",e=>{
-  const t=e.target;
-  if(t.classList.contains("box")) D().outer[+t.dataset.o]=t.innerHTML;
-  else if(t.classList.contains("join")) D().rows[+t.dataset.r].joins[+t.dataset.j]=t.textContent;
-  else if(t.classList.contains("ct")){ const ch=t.closest(".chip"); D().rows[+ch.dataset.r].chips[+ch.dataset.i].t=t.textContent; }
-  else return;
-  save(); syncSkelA();
+document.querySelectorAll(".cloudwrap").forEach(w=>{
+  w.addEventListener("click",e=>{ if(!live||live.wrap!==w) return; if(e.target!==w) return;
+    const r=w.getBoundingClientRect(); spawnFromPool(e.clientX-r.left,e.clientY-r.top); });
 });
-/* drag a chip by its handle: the line re-sorts live under the pointer.
-   The joiners are the slots between positions and stay where they are. */
-let drag=null;
-$("frame").addEventListener("pointerdown",e=>{
-  const g=e.target.closest(".grab"); if(!g) return;
-  e.preventDefault();
-  const chip=g.closest(".chip"), line=chip.closest(".line");
-  drag={line, r:+chip.dataset.r, i:+chip.dataset.i, id:e.pointerId};
-  line.setPointerCapture(e.pointerId);
-  chip.classList.add("dragging");
-});
-$("frame").addEventListener("pointermove",e=>{
-  if(!drag||e.pointerId!==drag.id) return;
-  const line=drag.line;
-  const el=document.elementFromPoint(e.clientX,e.clientY);
-  const over=el&&el.closest?el.closest(".chip"):null;
-  if(!over||over.closest(".line")!==line) return;
-  const to=+over.dataset.i; if(to===drag.i) return;
-  const b=over.getBoundingClientRect();
-  const before=e.clientY<b.top+b.height/2;
-  const target=before?(drag.i<to?to-1:to):(drag.i<to?to:to+1);
-  if(target===drag.i) return;
-  const row=D().rows[drag.r]; const [c]=row.chips.splice(drag.i,1); row.chips.splice(target,0,c);
-  drag.i=target;
-  line.innerHTML=lineHtml(row,drag.r);
-  line.querySelector(`.chip[data-i="${target}"]`).classList.add("dragging");
-});
-const endDrag=e=>{
-  if(!drag||e.pointerId!==drag.id) return;
-  drag.line.querySelectorAll(".chip.dragging").forEach(c=>c.classList.remove("dragging"));
-  drag=null; save(); syncSkelA();
-};
-$("frame").addEventListener("pointerup",endDrag);
-$("frame").addEventListener("pointercancel",endDrag);
-function drawBranch(){
-  const t=T();
-  $("branch").innerHTML=
-    `<div style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:var(--idea-tx);background:var(--idea-bg);border-radius:10px;padding:10px 16px;display:inline-block">${t.name}</div>`+
-    `<div class="arrow">↓</div>`+
-    t.quotes.map(q=>`<div class="qcard"><div class="q">“${q.q}”<small>${q.ch}</small></div><div class="e">${q.e}</div></div>`).join("");
-}
-/* the bank: more than the paragraph needs, and some that do not belong */
-const BANK={
- quote:["Sometimes, at night, the dirt outside turns into a beautiful ocean",
-        "…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken",
-        "as red as the sun and as deep as the sky",
-        "My throat is as dry as the dirt",
-        "There are only fourteen pairs of real shoes in this whole entire camp",
-        "None of us knows what it is like just on the other side of the fences",
-        "Jimmie has never felt so alone",
-        "Tonight, you look up at that sky, and there will be a new star there"],
- verb:["shows","reveals","suggests","highlights","presents","emphasises","demonstrates","makes the reader","lets the reader","helps the reader","positions the reader"],
- idea:["that imagination is the most precious thing in the camp",
-       "that imagination can never be taken away, even when people are",
-       "that imagination turns the camp into somewhere else",
-       "that a story is worth more than food in the camp",
-       "that Subhi is afraid of Beaver",
-       "that the camp is dirty and hot",
-       "that the guards hold all the power",
-       "that Subhi misses Eli",
-       "that Jimmie cannot read"],
- eff:["lets the reader see the camp the way Subhi sees it",
-      "makes the reader understand where Subhi's courage comes from",
-      "makes the reader see something beautiful inside the fence",
-      "makes the reader feel what a story is worth",
-      "makes the reader feel the danger before Subhi names it",
-      "makes the reader see how little the camp gives people",
-      "makes the reader feel sorry for Subhi",
-      "makes the reader want to know what happens next"]
-};
-const TITLE={quote:"quote",verb:"verb",idea:"what it shows about imagination",eff:"effect on the reader"};
-let bankTab="quote";
-function drawBank(){
-  const KS=["quote","verb","idea","eff"];
-  const tabs=`<div class="tabs">`+KS.map(k=>`<span class="tab k-${k} ${k===bankTab?'on':''}" data-tab="${k}">${LABEL[k]}</span>`).join("")+`</div>`;
-  const k=bankTab;
-  const sec=`<h3 class="k-${k}">${TITLE[k]}</h3><button class="k-${k} empty" data-k="${k}" data-empty="1">＋ ${LABEL[k]}</button>`+
-    BANK[k].map(x=>`<button class="k-${k}" data-k="${k}">${k==="quote"?"“"+x+"”":x}</button>`).join("");
-  $("bank").innerHTML=tabs+sec;
-  [...$("bank").querySelectorAll(".tab")].forEach(t=>t.addEventListener("click",()=>{bankTab=t.dataset.tab;drawBank();}));
-}
-/* drag from the bank: a filled item drops into a box of its colour; an
-   empty one drops into a line as a new box to type in. A click still fills
-   the first empty box of that colour. */
-let bd=null;
-$("bank").addEventListener("pointerdown",e=>{
-  const b=e.target.closest("button"); if(!b) return;
-  e.preventDefault();
-  bd={b,k:b.dataset.k,empty:!!b.dataset.empty,id:e.pointerId,moved:false,x:e.clientX,y:e.clientY,ghost:null,over:null};
-  b.setPointerCapture(e.pointerId);
-});
-$("bank").addEventListener("pointermove",e=>{
-  if(!bd||e.pointerId!==bd.id) return;
-  if(!bd.moved){ if(Math.hypot(e.clientX-bd.x,e.clientY-bd.y)<6) return; bd.moved=true;
-    bd.ghost=bd.b.cloneNode(true); bd.ghost.className="ghost k-"+bd.k; document.body.appendChild(bd.ghost);
-    document.body.classList.add("bank-drag"); }
-  bd.ghost.style.left=(e.clientX+10)+"px"; bd.ghost.style.top=(e.clientY+10)+"px";
-  const el=document.elementFromPoint(e.clientX,e.clientY);
-  let over=null;
-  if(el){ const ct=el.closest?el.closest(".chip."+bd.k+" .ct"):null; const line=el.closest?el.closest(".line"):null;
-    over=bd.empty?line:(ct||null); }
-  if(over!==bd.over){ if(bd.over) bd.over.classList.remove("target"); bd.over=over; if(over) over.classList.add("target"); }
-});
-const bankEnd=e=>{
-  if(!bd||e.pointerId!==bd.id) return;
-  const {b,k,empty,moved,over,ghost}=bd; bd=null;
-  if(ghost) ghost.remove(); document.body.classList.remove("bank-drag");
-  if(over) over.classList.remove("target");
-  if(e.type==="pointercancel") return;
-  if(!moved){ if(!empty) fillFirst(k,b.textContent); return; }
-  if(!over) return;
-  if(empty){ /* a new box at the end of that line, or after the box under the pointer */
-    const line=over, ri=+line.dataset.r, row=D().rows[ri];
-    const el=document.elementFromPoint(e.clientX,e.clientY); const ch=el&&el.closest?el.closest(".chip"):null;
-    const at=ch&&ch.closest(".line")===line?+ch.dataset.i+1:row.chips.length;
-    row.chips.splice(at,0,{k,t:""}); row.joins.splice(at,0,"");
-    line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
-    const ct=line.querySelector(`.chip[data-i="${at}"] .ct`); if(ct) ct.focus();
-  } else setCt(over,b.textContent);
-};
-$("bank").addEventListener("pointerup",bankEnd);
-$("bank").addEventListener("pointercancel",bankEnd);
-function setCt(ct,text){
-  ct.textContent=text;
-  const ch=ct.closest(".chip"); D().rows[+ch.dataset.r].chips[+ch.dataset.i].t=text;
-  save(); syncSkelA(); ct.classList.add("reveal"); setTimeout(()=>ct.classList.remove("reveal"),400);
-}
-let lastCt=null;
-$("frame").addEventListener("focusin",e=>{ if(e.target.classList.contains("ct")) lastCt=e.target; });
-function fillFirst(k,text){
-  let ct=(lastCt&&lastCt.isConnected&&lastCt.closest(".chip").classList.contains(k))?lastCt:null;
-  if(!ct) ct=[...$("frame").querySelectorAll(".chip."+k+" .ct")].find(x=>!x.textContent.trim());
-  if(!ct) ct=$("frame").querySelector(".chip."+k+" .ct");
-  if(ct) setCt(ct,text);
-}
-/* the small × on a box takes it out of the line */
-$("frame").addEventListener("click",e=>{
-  const x=e.target.closest(".rm"); if(!x) return;
-  const ch=x.closest(".chip"), line=ch.closest(".line"), ri=+line.dataset.r, i=+ch.dataset.i, row=D().rows[ri];
-  row.chips.splice(i,1); row.joins.splice(i,1);
-  line.innerHTML=lineHtml(row,ri); save(); syncSkelA();
-});
-function drawAll(){ drawThemes(); drawModes(); drawSkel(); drawFrame(); drawBank(); drawBranch(); }
+document.querySelectorAll(".reset").forEach(b=>b.addEventListener("click",()=>{
+  const w=b.closest(".slide").querySelector(".cloudwrap"); delete S.clouds[w.dataset.cloud]; save(); openCloud(w); }));
 
-/* ---------------- buttons ---------------- */
-$("prepared").addEventListener("click",()=>{
-  const d=blank(); const t=T(), W=WAYS[S.way];
-  /* outer: T, (A), L from the prepared paragraph */
-  const outerParts=OUTER[S.mode].filter(p=>p!=="MID");
-  const texts=S.mode==="TEEAL"?[t.para[0],t.para[t.para.length-1],t.link]:[t.para[0],t.link];
-  outerParts.forEach((p,i)=>d.outer[i]=texts[i]);
-  d.rows=t.quotes.map(q=>({chips:W.order.map(k=>({k,t:CHIPTEXT(q,k,S.way)})),joins:W.joins(q)}));
-  S.drafts[dkey()]=d; save(); drawFrame();
-  /* reveal a line at a time */
-  [...$("frame").querySelectorAll(".slot")].forEach((el,i)=>{ el.style.opacity=0; setTimeout(()=>{ el.style.transition="opacity .35s"; el.style.opacity=1; },420*i); });
-  syncSkelA();
+/* ---------------- TEEL frames ---------------- */
+const ROWS=[
+  {l:"T",d:'<i class="idea">idea</i> and why it matters'},
+  {l:"E",d:'<i class="ev">example</i> + <i class="verb">what it</i> <i class="idea">shows</i> + <i class="eff">why</i>'},
+  {l:"E",d:'<i class="ev">example</i> + <i class="verb">what it</i> <i class="idea">shows</i> + <i class="eff">why</i>'},
+  {l:"L",d:'tie <i class="idea">A</i> and <i class="idea">B</i> back to the <i class="idea">main idea</i>'}
+];
+const STEMS={
+  im:["Imagination is essential to Subhi's survival because … and …","When …, “…”. This shows that …, which …","Later, “…”. This shows that …, which …","So, because … and …, imagination is what …"],
+  fr:["Friendship is essential to Subhi's survival because … and …","When …, “…”. This shows that …, which …","Later, “…”. This shows that …, which …","So, because … and …, friendship is what …"]
+};
+function drawFrame(id,which,sug){
+  $(id).innerHTML=ROWS.map((r,i)=>`<div class="slot">
+    <div><div class="l">${r.l}</div><div class="d">${r.d}</div></div>
+    <div class="box" contenteditable="true" spellcheck="false" data-w="${which}" data-i="${i}" data-stem="${esc(STEMS[which][i])}">${S.boxes[which][i]}</div>
+    ${sug?`<button class="sug" data-i="${i}" title="a suggestion">💡</button>`:"<span></span>"}</div>`).join("");
+}
+function drawIdeas(id,name){
+  const p=picks(name);
+  $(id).innerHTML=p.length?p.map((t,i)=>`<span><b>${"AB"[i]}</b>${esc(t)}</span>`).join(""):"";
+}
+function drawWorked(){
+  const b=S.boxes.im, L=["T","E","E","L"];
+  $("worked").innerHTML=b.map((h,i)=>`<p><b>${L[i]}</b>${h||'<span style="color:#b8ae9d">…</span>'}</p>`).join("");
+}
+document.addEventListener("input",e=>{
+  const t=e.target; if(!t.classList.contains("box")) return;
+  S.boxes[t.dataset.w][+t.dataset.i]=t.innerHTML; save();
 });
-$("clear").addEventListener("click",()=>{ S.drafts[dkey()]=blank(); save(); drawFrame(); syncSkelA(); });
-
-/* ---------------- colour the selection (outer boxes) ---------------- */
-[...$("palette").querySelectorAll("button")].forEach(b=>{
-  b.addEventListener("mousedown",e=>e.preventDefault());
-  b.addEventListener("click",()=>colour(b.dataset.c));
+$("frameIm").addEventListener("click",e=>{
+  const b=e.target.closest(".sug"); if(!b) return;
+  const [a,c]=AB("imagination"), i=+b.dataset.i;
+  const h=[IM.T(a,c),IM.E1(a),IM.E2(c),IM.L(a,c)][i];
+  const box=$("frameIm").querySelector(`.box[data-i="${i}"]`);
+  box.innerHTML=h; S.boxes.im[i]=h; save();
+  box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal");
+});
+/* the friendship T starts from the brainstorm, once, if the box is empty */
+function seedFriendship(){
+  if(S.boxes.fr[0].trim()) return;
+  const [a,b]=AB("friendship");
+  S.boxes.fr[0]=`<em class="hl-idea">Friendship</em> is essential to Subhi's survival because <em class="hl-idea">${esc(a)}</em> and <em class="hl-idea">${esc(b)}</em>.`;
+  save();
+}
+/* colour the selection */
+document.querySelectorAll(".keyrow .k").forEach(k=>{
+  k.addEventListener("mousedown",e=>e.preventDefault());
+  k.addEventListener("click",()=>colour(k.dataset.c));
 });
 function colour(cls){
   const sel=getSelection(); if(!sel.rangeCount) return;
@@ -699,32 +372,25 @@ function colour(cls){
   const node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
   const box=node.closest(".box"); if(!box) return;
   const txt=r.toString(); r.deleteContents();
-  if(cls==="plain"){ r.insertNode(document.createTextNode(txt)); }
+  if(cls==="plain") r.insertNode(document.createTextNode(txt));
   else { const em=document.createElement("em"); em.className="hl-"+cls; em.textContent=txt; r.insertNode(em); }
   box.querySelectorAll("em em").forEach(inner=>{ const outer=inner.parentElement; outer.replaceWith(...outer.childNodes); });
-  box.normalize();
-  D().outer[+box.dataset.o]=box.innerHTML; save(); syncSkelA(); sel.removeAllRanges();
+  box.normalize(); S.boxes[box.dataset.w][+box.dataset.i]=box.innerHTML; save(); sel.removeAllRanges();
 }
 
-/* ---------------- display ---------------- */
-const VKEY="bonesparrow.view.v1";
-let V={view:"full",spot:"ev"};
-try{ const j=JSON.parse(localStorage.getItem(VKEY)); if(j&&j.view) V=j; }catch(e){}
-function applyView(){
-  document.body.classList.remove("v-plain","v-spot","v-full");
-  document.body.classList.add("v-"+V.view);
-  document.body.dataset.spot=V.spot;
-  [...$("view").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.v===V.view));
-  [...$("spot").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.s===V.spot));
-  try{ localStorage.setItem(VKEY,JSON.stringify(V)); }catch(e){}
-}
-[...$("view").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.view=b.dataset.v;applyView();}));
-[...$("spot").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V.spot=b.dataset.s;applyView();}));
 /* ---------------- slides ---------------- */
 const SLIDES=[...document.querySelectorAll(".slide")];
-const NAMES=["Paragraph A","The essay","Where A comes from","Built with the class","A in the essay"];
+const NAMES=["The big idea","Imagination · brainstorm","Imagination · TEEL","Friendship · brainstorm","Friendship · your turn"];
 let cur=Math.min(SLIDES.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
 $("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
+function enter(i){
+  closeCloud();
+  const sl=SLIDES[i];
+  if(i===0) $("thesis").classList.toggle("lit",!!S.lit);
+  const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
+  if(i===2){ drawIdeas("ideasIm","imagination"); drawFrame("frameIm","im",true); }
+  if(i===4){ seedFriendship(); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
+}
 function go(i){
   cur=Math.min(SLIDES.length-1,Math.max(0,i));
   SLIDES.forEach((el,j)=>el.classList.toggle("on",j===cur));
@@ -732,23 +398,30 @@ function go(i){
   $("prev").disabled=cur===0; $("next").disabled=cur===SLIDES.length-1;
   $("now").textContent=(cur+1)+" / "+SLIDES.length+"  ·  "+NAMES[cur];
   history.replaceState(null,"","#"+(cur+1));
-  scrollTo(0,0);
+  enter(cur);
 }
+function next(){ if(cur===0&&!S.lit){ S.lit=true; save(); $("thesis").classList.add("lit"); return; } go(cur+1); }
 $("prev").addEventListener("click",()=>go(cur-1));
-$("next").addEventListener("click",()=>go(cur+1));
+$("next").addEventListener("click",next);
+$("thesis").addEventListener("click",()=>{ S.lit=!S.lit; save(); $("thesis").classList.toggle("lit",S.lit); });
 [...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
-  if(e.key==="1"){V.view="plain";applyView();}
-  if(e.key==="2"){V.view="spot";applyView();}
-  if(e.key==="3"){V.view="full";applyView();}
+  if(e.key==="1"){V="plain";applyView();} if(e.key==="3"){V="full";applyView();}
   if(e.target.tagName==="BUTTON"&&e.key===" ") return;
-  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(cur+1);}
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}
   if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1);}
-  if(e.key==="Home"){go(0);} if(e.key==="End"){go(SLIDES.length-1);}
 });
+/* ---------------- display ---------------- */
+const VKEY="bonesparrow.view.v1";
+let V="full"; try{ const j=JSON.parse(localStorage.getItem(VKEY)); if(j&&j.view) V=j.view==="plain"?"plain":"full"; }catch(e){}
+function applyView(){
+  document.body.classList.toggle("v-plain",V==="plain");
+  [...$("view").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.v===V));
+  try{ localStorage.setItem(VKEY,JSON.stringify({view:V,spot:"ev"})); }catch(e){}
+}
+[...$("view").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V=b.dataset.v;applyView();}));
 applyView();
-drawAll();
 go(cur);
 </script>
 </body>
