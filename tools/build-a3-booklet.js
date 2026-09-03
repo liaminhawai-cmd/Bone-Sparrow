@@ -8,7 +8,10 @@ const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,Bord
    The student is given a chapter and page, not a quote: the evidence is the
    thing they go and find. */
 const HUB=process.argv[2]||'BoneSparrowReadingHub.html';
-const OUT=process.argv[3]||'BoneSparrow-A3-booklet.docx';
+/* SUPPORT=1: a plainer front page and a coloured sentence frame on each
+   cycle, with the fixed parts printed and the rest left as coloured gaps. */
+const SUPPORT=!!process.env.SUPPORT;
+const OUT=process.argv[3]||(SUPPORT?'BoneSparrow-A3-booklet-support.docx':'BoneSparrow-A3-booklet.docx');
 const LIMIT=+(process.argv[4]||0);
 const src=fs.readFileSync(HUB,'utf8');
 const cut=(a,b)=>src.slice(src.indexOf(a),src.indexOf(b,src.indexOf(a)));
@@ -250,24 +253,24 @@ const strip=()=>{const LW=Math.floor(PANW/WALL.length);
    and the sentence that came out. The three maps are the same passage worked
    three ways, so the difference between them is the route, not the material. */
 const mapRow=(k,label,text,bk,blabel,branches,sentence)=>{
-  const A=3050,B=3350,D=PANW-A-B;
+  const A=3050,B=3350,D=PANW-A-B; const Z=SUPPORT?4:0;
   return new Table({columnWidths:[A,B,D],width:{size:PANW,type:WidthType.DXA},
     rows:[new TableRow({children:[
       cell([new Paragraph({spacing:{after:16},children:[
               new TextRun({text:label,bold:true,size:14,color:C[k],font:"Calibri"})]}),
-            new Paragraph({spacing:{line:280,lineRule:LineRuleType.EXACT},children:[
-              new TextRun({text:text,size:17,bold:true,color:C[k],italics:k==="ev"})]})],A,SH[k]),
+            new Paragraph({spacing:{line:280+Z*20,lineRule:LineRuleType.EXACT},children:[
+              new TextRun({text:text,size:17+Z,bold:true,color:C[k],italics:k==="ev"})]})],A,SH[k]),
       cell([new Paragraph({spacing:{after:16},children:[
               new TextRun({text:blabel,bold:true,size:14,color:C[bk],font:"Calibri"})]})]
            .concat(branches.map(b=>new Paragraph({spacing:{after:12},children:[
               new TextRun({text:"⤷  ",size:15,color:MUTED}),
-              new TextRun({text:b,size:16,bold:true,color:C[bk],
+              new TextRun({text:b,size:16+Z,bold:true,color:C[bk],
                 shading:{type:ShadingType.CLEAR,fill:SH[bk]}})]}))),B,"FFFFFF"),
       cell([new Paragraph({spacing:{after:10},children:[
               new TextRun({text:"THE SENTENCE",bold:true,size:14,color:DEEP,
                 characterSpacing:14,font:"Calibri"})]}),
-            new Paragraph({spacing:{line:300,lineRule:LineRuleType.EXACT},
-              children:tagged(sentence,17)})],D,"FFFFFF")]})]});
+            new Paragraph({spacing:{line:300+Z*20,lineRule:LineRuleType.EXACT},
+              children:tagged(sentence,17+Z)})],D,"FFFFFF")]})]});
 };
 
 const P1=()=>[
@@ -280,6 +283,7 @@ const P1=()=>[
     children:[new TextRun({text:"Writing an analytical sentence from three starting points",bold:true,size:22,color:DEEP}),
     new TextRun({text:"\u2003Chapter 5",size:15,color:MUTED,font:"Calibri"})]}),
 
+  ...(SUPPORT?[new Paragraph({spacing:{after:200},children:[]})]:[]),
   lab("1  START FROM THE EVIDENCE",C.ev),
   mapRow("ev","THE LINE",'"My throat is as dry as the dirt"',
     "idea","related ideas",
@@ -298,7 +302,7 @@ const P1=()=>[
     ["the shove","the questions with no right answer","the dry‑throat image","the dog comparison"],
     'To {eff|make the reader feel how little control a child has}, Fraillon {verb|writes} Beaver shoving Subhi until {ev|"my feet leave the ground"}.'),
 
-  wallTable(),
+  ...(SUPPORT?[]:[wallTable(),
 
   lab("TYPES OF LANGUAGE TO DISCUSS"),
   ...[["Descriptive writing","writing that uses the senses (sights, feelings, sounds, smells) to describe settings, characters and events.",
@@ -315,7 +319,7 @@ const P1=()=>[
          new TextRun({text:d,size:16,color:INK,font:"Calibri"})]}),
        new Paragraph({spacing:{after:26},indent:{left:(ind?340:0)+280},children:[
          new TextRun({text:stem,size:16,color:MUTED,italics:true})]})
-     ])
+     ])])
 ];
 
 const head=(t)=>new Paragraph({spacing:{after:14},
@@ -323,6 +327,23 @@ const head=(t)=>new Paragraph({spacing:{after:14},
   children:[new TextRun({text:t,bold:true,size:22,color:DEEP})]});
 const note=(t)=>new Paragraph({spacing:{after:22},children:[
   new TextRun({text:t,size:14,color:MUTED,font:"Calibri"})]});
+
+/* The support frame: the fixed parts of the sentence printed in their
+   colour, the rest a coloured gap. One frame per starting point. */
+const gapR=(k,n)=>new TextRun({text:"\u00A0".repeat(n),size:22,
+  shading:{type:ShadingType.CLEAR,fill:SH[k]},underline:{type:"single",color:C[k]}});
+const fixR=(k,t)=>new TextRun({text:t,size:22,bold:true,color:C[k],italics:k==="ev",
+  shading:{type:ShadingType.CLEAR,fill:SH[k]}});
+const plR=t=>new TextRun({text:t,size:22});
+const frame=(focus,quote,theme)=>{
+  const r= focus==="ev"   ? [fixR("ev","\u201C"+quote.t+"\u201D"),plR(" "),gapR("verb",10),plR(" "),gapR("idea",30),
+                             plR(", which makes the reader "),gapR("eff",28),plR(".")]
+         : focus==="idea" ? [fixR("idea","Fraillon presents "+theme),plR(" "),gapR("verb",10),plR(" when "),
+                             fixR("ev","\u201C"),gapR("ev",36),fixR("ev","\u201D"),plR(", which makes the reader "),gapR("eff",28),plR(".")]
+         :                  [plR("To "),fixR("eff",PUR[theme]),plR(", Fraillon "),gapR("verb",10),plR(" "),
+                             fixR("ev","\u201C"),gapR("ev",36),fixR("ev","\u201D"),plR(", showing that "),gapR("idea",26),plR(".")];
+  return new Paragraph({spacing:{after:60,line:600,lineRule:LineRuleType.EXACT},children:r});
+};
 
 /* A page carries what a student writes on and nothing that talks to them:
    the starting point, the boxes, the draft, the wall strip, the rewrite. */
@@ -334,11 +355,11 @@ const panel=(title,startRuns,ref,ideaOpts,purposeOpts,quote,ideaText,focus)=>[
   ...(startRuns.length?[new Paragraph({spacing:{after:24},children:startRuns})]:[]),
   grid(ideaOpts,purposeOpts,quote,ideaText,focus),
   lab("DRAFT"),
-  ...lines(7),
+  ...(SUPPORT?[frame(focus,quote,ideaText),...lines(3)]:lines(7)),
   lab("THE WALL"),
   strip(),
   lab("REWRITE"),
-  ...lines(7)
+  ...lines(SUPPORT?6:7)
 ];
 
 const P2=(L)=>panel("1 · Start from the evidence",
