@@ -42,6 +42,36 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .thesis.split .key.fr .note{opacity:1}
 .explain{font-size:15.5px;color:var(--muted);max-width:900px;line-height:1.5;border-top:1px solid var(--line);padding-top:12px;margin-bottom:8px}
 
+/* the essay in bars */
+.bar{display:flex;height:11px;border-radius:6px;overflow:hidden;gap:2px;margin:6px 0}
+.bar i{display:block;border-radius:6px}
+.bar .idea{background:#7fb3e6}.bar .verb{background:#f2b27a}.bar .ev{background:#f5d75a}.bar .eff{background:#8fd39a}.bar .plain{background:#d8cfbb}
+.essay{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:18px;flex:1;align-content:center}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.card h3{font-family:Georgia,serif;font-size:22px;margin:0 0 4px;color:var(--ink)}
+.card .what{font-size:14px;color:var(--muted);margin-bottom:14px;min-height:20px}
+.card .row{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:center}
+.card .row b{font-family:'Segoe UI',sans-serif;font-size:13px;color:var(--accent)}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:22px;font-size:14px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:22px;height:11px;border-radius:6px}
+body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.hide-eff .bar .eff{background:#d8cfbb}
+.slot .bar{margin:8px 0 0;height:9px}
+.build{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0;transition:grid-template-columns .7s ease}
+.build.typing{grid-template-columns:240px 1fr}
+.anchor{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:20px 22px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;gap:10px;transition:padding .7s}
+.anchor h3{font-family:Georgia,serif;font-size:24px;margin:0 0 6px}
+.anchor .row{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:center}
+.anchor .row b{font-family:'Segoe UI',sans-serif;font-size:15px;color:var(--accent)}
+.anchor .bar{height:34px;margin:0}
+.anchor .bar i{display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#1f1f1f;padding:0 6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size .5s}
+.build.typing .anchor{padding:14px}
+.build.typing .anchor h3{font-size:16px}
+.build.typing .anchor .bar{height:12px}
+.build.typing .anchor .bar i{font-size:0}
+
 /* 2 · 4 · the cloud */
 .cloudwrap{flex:1;position:relative;overflow:hidden;border-radius:16px;background:var(--paper);border:1px solid var(--line)}
 .centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;
@@ -115,19 +145,19 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .sub{position:fixed;top:12px;left:16px;font-size:12.5px;color:var(--muted);z-index:20}
 .sub a{color:var(--muted)}
 
+/* toggles */
+.keyrow .k{cursor:pointer;user-select:none}
+.keyrow .k.off{background:#fff;color:var(--muted);border:1px solid var(--line);font-style:normal;text-decoration:line-through;text-decoration-color:var(--line)}
+body.hide-idea em.hl-idea,body.hide-verb em.hl-verb,body.hide-ev em.hl-ev,body.hide-eff em.hl-eff{background:transparent;color:inherit;font-weight:inherit;padding:0}
+body.hide-idea .slot .d i.idea,body.hide-verb .slot .d i.verb,body.hide-ev .slot .d i.ev,body.hide-eff .slot .d i.eff{background:transparent;color:inherit}
+body.hide-idea .ideas span{background:#fff;color:var(--ink);border:1px solid var(--line)}
+[data-sub]{cursor:pointer}
+body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3px solid var(--idea-tx);outline-offset:2px;border-radius:4px}
 /* display: plain / full */
-.view{position:fixed;top:12px;right:14px;display:flex;gap:4px;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px}
-.view button{border:0;border-radius:999px;background:transparent;padding:5px 11px;font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
-.view button.on{background:var(--deep);color:#f6f1e6}
-body.v-plain em[class^="hl-"],body.v-plain .slot .d i{background:transparent;color:inherit;font-weight:inherit;padding:0;font-style:inherit}
-body.v-plain .keyrow .k{background:#fff;color:var(--ink);border:1px solid var(--line);font-style:normal}
-body.v-plain .thesis.lit .key{background:transparent;color:inherit;text-decoration:underline}
-body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(--line)}
 </style>
 </head>
 <body>
 <p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>
-<div class="view" id="view"><button data-v="plain">plain</button><button data-v="full">full</button></div>
 <main>
 
 <section class="slide on" id="s1">
@@ -136,6 +166,30 @@ body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(-
     <span class="key fr">friendship<small class="note">we will come back to this</small></span> <span class="w">are essential for survival.</span></p>
   </div>
   <div class="explain">An essay is an argument. It starts with a prompt like this one. You decide what you think about it, then you make the case, one reason at a time, one paragraph for each reason.</div>
+</section>
+
+<section class="slide" id="sE">
+  <h2>The whole essay</h2>
+  <div class="essay">
+    <div class="card"><h3>Intro</h3><div class="what">Names both ideas.</div>
+      <div class="bar"><i class="plain" style="flex:1"></i></div>
+      <div class="bar"><i class="idea" style="flex:1"></i></div>
+      <div class="bar"><i class="idea" style="flex:1"></i></div></div>
+    <div class="card"><h3>P1</h3><div class="what">Imagination</div>
+      <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+      <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div>
+    <div class="card"><h3>P2</h3><div class="what">Friendship</div>
+      <div class="row"><b>T</b><div class="bar"><i class="idea" style="flex:1"></i></div></div>
+      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+      <div class="row"><b>E</b><div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div></div>
+      <div class="row"><b>L</b><div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div></div></div>
+    <div class="card"><h3>C</h3><div class="what">What both ideas together suggest.</div>
+      <div class="bar"><i class="idea" style="flex:1"></i><i class="idea" style="flex:1"></i></div>
+      <div class="bar"><i class="eff" style="flex:1"></i></div></div>
+  </div>
+  <div class="legend"><span><i class="idea" style="background:#7fb3e6"></i>idea</span><span><i style="background:#f2b27a"></i>verb</span><span><i style="background:#f5d75a"></i>evidence</span><span><i style="background:#8fd39a"></i>purpose</span></div>
 </section>
 
 <section class="slide" id="s2">
@@ -150,10 +204,13 @@ body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(-
   <h2>TEEL · imagination</h2>
   <div class="keyrow">
     <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
-    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
     <span class="sp"></span><div class="ideas" id="ideasIm"></div>
   </div>
-  <div class="frame" id="frameIm"></div>
+  <div class="build" id="buildIm">
+    <div class="anchor" id="anchorIm"></div>
+    <div class="frame" id="frameIm"></div>
+  </div>
 </section>
 
 <section class="slide" id="s4">
@@ -168,7 +225,7 @@ body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(-
   <h2>Your turn · friendship</h2>
   <div class="keyrow">
     <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
-    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
     <span class="sp"></span><div class="ideas" id="ideasFr"></div>
   </div>
   <div class="two">
@@ -186,34 +243,67 @@ body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(-
 const $=id=>document.getElementById(id);
 const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
 
-/* ---------------- what the class can pull into the cloud ---------------- */
+/* ---------------- what the class can pull into the cloud ----------------
+   t: the bubble. c: the clause after "because". n: what it gives Subhi, for
+   the link. q, lead, eff: the evidence sentence. A bubble with no q does not
+   belong, and its evidence sentence stays open. */
 const POOL={
  imagination:[
-  "it turns the dirt into an ocean","it gives Subhi somewhere to go when he cannot leave","it keeps his father's stories alive",
-  "it makes the camp bearable","stories make him brave","it is the one thing the Jackets cannot take","it lets him still be a kid",
-  "the Night Sea brings him treasures to wait for",
-  "it gets him more food","it makes Beaver kind","it lets him leave the camp for real","it makes Queeny happy","it teaches him to read"],
+  {t:"it turns the dirt into an ocean",c:"it turns the dirt into an ocean",n:"an ocean where there is only dirt",
+   q:"Sometimes, at night, the dirt outside turns into a beautiful ocean.",lead:"When the novel opens",eff:"shows the reader that Subhi's mind can make the camp beautiful when nothing else can"},
+  {t:"it gives him somewhere to go when he cannot leave",c:"it gives him somewhere to go when he cannot leave",n:"somewhere to go",
+   q:"A bit like my Night Sea that goes straight into my eyes that no one else can see.",lead:"When Subhi explains the Night Sea",eff:"makes the reader feel how private and how precious that escape is"},
+  {t:"stories make him brave",c:"stories make him brave",n:"courage",
+   q:"…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.",lead:"When Jimmie brings her mother's book",eff:"makes the reader understand where Subhi's courage comes from"},
+  {t:"it is the one thing the Jackets cannot take",c:"it is the one thing the Jackets cannot take",n:"something that cannot be taken",
+   q:"Every one of those treasures washed up here on a tide that no one but me sees.",lead:"When Subhi lists his treasures",eff:"shows the reader a part of Subhi the camp cannot reach"},
+  {t:"it keeps his father close",c:"it keeps his father close",n:"his father",
+   q:"I keep on thinking of the girl and my ba sending me his treasures until my brain stops and drifts me to sleep.",lead:"When Subhi cannot sleep",eff:"makes the reader feel how imagination stands in for the family he has lost"},
+  {t:"the treasures bring him stories",c:"the treasures bring him stories and memories",n:"stories and memories",
+   q:"Good treasures bring stories and memories and imaginings.",lead:"When Subhi finds the knife",eff:"shows the reader that a good imagining is worth as much to Subhi as a real thing"},
+  {t:"losing it is what breaks him",c:"losing it is the thing that breaks him",n:"the thing he cannot live without",
+   q:"I want to think on a story, but even my stories are gone.",lead:"After the knife",eff:"makes the reader feel that losing his stories hurts Subhi more than the camp ever has"},
+  {t:"it gets him more food"},{t:"it makes Beaver kind"},{t:"it lets him leave the camp for real"},{t:"it teaches him to read"},{t:"it makes Queeny happy"}],
  friendship:[
-  "Jimmie keeps her promise to come back","Eli looks after Subhi and shares what he has","Harvey learns their names",
-  "Jimmie's story gives Subhi a job to do","a friend on the outside makes the fence feel smaller","a friend notices you when no one else does",
-  "Subhi risks trouble to help Jimmie","friends are how news gets in and out",
-  "friends get you out of the camp","Beaver is Subhi's friend","Jimmie's dad is a good friend","friendship stops Nasir dying"]
+  {t:"Jimmie keeps her promise to come back",c:"Jimmie keeps her promise to come back",n:"someone who keeps a promise",
+   q:"I know for sure that Jimmie is the kind of person that keeps a promise.",lead:"After Jimmie leaves",eff:"makes the reader understand how rare a kept promise is in Subhi's life"},
+  {t:"Eli is the one person he trusts",c:"Eli is the one person he trusts",n:"someone to trust",
+   q:"Eli, he's the only one I show all my treasures to.",lead:"When Subhi shows Eli the shell",eff:"shows the reader who Subhi trusts with the things that matter"},
+  {t:"Harvey learns their names",c:"Harvey treats him like a person",n:"a name instead of a number",
+   q:"…learn their names so that he can talk with us for real, instead of talking to us by our numbers.",lead:"When Subhi describes Harvey",eff:"shows the reader that being called by your name is a kind of care"},
+  {t:"a friend's happiness lights him up",c:"a friend's happiness lights him up",n:"joy",
+   q:"her whole face shines like someone's lit a candle in her cheeks",lead:"When Jimmie laughs",eff:"lets the reader feel the warmth the friendship brings"},
+  {t:"he gives away what he loves for a friend",c:"he will give away what he loves for a friend",n:"a reason to give",
+   q:"He doesn't smile, but he takes the book and holds it in his hands, just the way I do with my ba's treasures sent on the Night Sea.",lead:"When Subhi gives the book away",eff:"shows the reader that a friend is worth more to Subhi than his treasures"},
+  {t:"losing a friend leaves a hole",c:"losing a friend leaves a hole",n:"someone who is missed",
+   q:"Then Harvey went and led a new boy over to Nasir's bed.",lead:"After Nasir dies",eff:"makes the reader feel how quickly the camp closes over a loss"},
+  {t:"friends get you out of the camp"},{t:"Beaver is Subhi's friend"},{t:"Jimmie's dad is a good friend"},{t:"friendship stops Nasir dying"}]
 };
-/* the sentences a lightbulb hands over on slide 3 */
-const IM={
-  T:(a,b)=>`<em class="hl-idea">Imagination</em> is essential to Subhi's survival because <em class="hl-idea">${a}</em> and <em class="hl-idea">${b}</em>.`,
-  E1:(a)=>`When the novel opens, <em class="hl-ev">“Sometimes, at night, the dirt outside turns into a beautiful ocean.”</em> This <em class="hl-verb">shows</em> that <em class="hl-idea">${a}</em>, which <em class="hl-eff">lets the reader see the camp the way Subhi sees it</em>.`,
-  E2:(b)=>`Later, <em class="hl-ev">“…knowing that Jimmie has a whole real book in her hands gives me a sort of brave that I haven't felt since Eli got taken.”</em> This <em class="hl-verb">shows</em> that <em class="hl-idea">${b}</em>, which <em class="hl-eff">makes the reader understand where Subhi's courage comes from</em>.`,
-  L:(a,b)=>`So, because <em class="hl-idea">${a}</em> and <em class="hl-idea">${b}</em>, <em class="hl-idea">imagination</em> is what <em class="hl-eff">keeps Subhi alive inside the fence</em>.`
+const FALLBACK={imagination:[POOL.imagination[1],POOL.imagination[2]],friendship:[POOL.friendship[0],POOL.friendship[1]]};
+const A_=t=>`<em class="hl-idea" data-sub="A">${t}</em>`, B_=t=>`<em class="hl-idea" data-sub="B">${t}</em>`;
+const cl=o=>esc(o.c||o.t), nn=o=>esc(o.n||o.t), sub=(o,w)=>cl(o).replace(/^it /,w+" ");
+/* the four sentences, from the two chosen bubbles */
+const SENT={
+  T:(w,a,b)=>`<em class="hl-idea">${w}</em> is essential to Subhi's survival because ${A_(cl(a))} and ${B_(cl(b))}.`,
+  E:(o,tag,w)=>o.q
+    ? `${esc(o.lead)}, <em class="hl-ev">“${esc(o.q)}”</em> This <em class="hl-verb">shows</em> that ${tag(sub(o,w))}, which <em class="hl-eff">${esc(o.eff)}</em>.`
+    : `When …, <em class="hl-ev">“…”</em> This <em class="hl-verb">shows</em> that ${tag(sub(o,w))}, which …`,
+  L:(w,a,b)=>`So <em class="hl-idea">${w}</em> gives Subhi ${A_(nn(a))} and ${B_(nn(b))}, and that is what <em class="hl-eff">keeps him alive inside the fence</em>.`,
+  Lseed:(w,a,b)=>`So <em class="hl-idea">${w}</em> gives Subhi ${A_(nn(a))} and ${B_(nn(b))}, and that is what …`
 };
-const FALLBACK={imagination:["it gives Subhi somewhere to go","it keeps his hope alive"],
-                friendship:["Jimmie keeps her promise","Eli looks after him"]};
+function seed(which,name,word){
+  const [a,b]=AB(name), B=S.boxes[which];
+  if(!B[0].trim()) B[0]=SENT.T(word,a,b);
+  if(!B[3].trim()) B[3]=SENT.Lseed(word.toLowerCase(),a,b);
+  save();
+}
 
 /* ---------------- state ---------------- */
 const KEY="bonesparrow.teelDeck.v1";
 let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
 if(S.stage==null) S.stage=S.lit?1:0;
+Object.keys(S.clouds).forEach(k=>S.clouds[k].nodes.forEach(n=>{ if(n.i==null){ const i=POOL[k]?POOL[k].findIndex(o=>o.t===n.t):-1; n.i=i; } }));
 function stage(){ const t=$("thesis"); t.classList.toggle("lit",S.stage>=1);
   const im=t.querySelector(".key.im"); const tr=t.getBoundingClientRect(), ir=im.getBoundingClientRect();
   if(S.stage>=2&&!t.classList.contains("split")){
@@ -226,7 +316,8 @@ function cloudState(name){
   if(!S.clouds[name]) S.clouds[name]={nodes:[],used:[],order:POOL[name].map((_,i)=>i).sort(()=>Math.random()-.5)};
   return S.clouds[name];
 }
-const picks=name=>cloudState(name).nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick).map(n=>n.t);
+const obj=(name,n)=>n.i>=0?POOL[name][n.i]:{t:n.t};
+const picks=name=>cloudState(name).nodes.filter(n=>n.pick).sort((a,b)=>a.pick-b.pick).map(n=>obj(name,n));
 const AB=name=>{const p=picks(name),f=FALLBACK[name];return [p[0]||f[0],p[1]||f[1]];};
 
 /* ---------------- the cloud ---------------- */
@@ -266,7 +357,7 @@ function addEmpty(){
   t.addEventListener("keydown",e=>{
     if(e.key!=="Enter") return; e.preventDefault();
     const txt=t.textContent.trim(); if(!txt) return;
-    const o={t:txt,pick:0}; cloudState(live.name).nodes.push(o); save();
+    const o={t:txt,pick:0,i:-1}; cloudState(live.name).nodes.push(o); save();
     el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
     addNode(o,n.x,n.y,(Math.random()-.5)*6,-4);
     addEmpty();
@@ -276,7 +367,7 @@ function addEmpty(){
 function spawnFromPool(x,y){
   const st=cloudState(live.name);
   const i=st.order.find(i=>!st.used.includes(i)); if(i==null) return;
-  st.used.push(i); const o={t:POOL[live.name][i],pick:0}; st.nodes.push(o); save();
+  st.used.push(i); const o={t:POOL[live.name][i].t,pick:0,i}; st.nodes.push(o); save();
   addNode(o,x,y,(Math.random()-.5)*4,(Math.random()-.5)*4);
 }
 function togglePick(n){
@@ -335,15 +426,19 @@ document.querySelectorAll(".reset").forEach(b=>b.addEventListener("click",()=>{
   const w=b.closest(".slide").querySelector(".cloudwrap"); delete S.clouds[w.dataset.cloud]; save(); openCloud(w); }));
 
 /* ---------------- TEEL frames ---------------- */
+const BAR={
+  T:'<div class="bar"><i class="idea" style="flex:1"></i></div>',
+  E:'<div class="bar"><i class="ev" style="flex:3"></i><i class="verb" style="flex:1"></i><i class="idea" style="flex:3"></i><i class="eff" style="flex:3"></i></div>',
+  L:'<div class="bar"><i class="idea" style="flex:2"></i><i class="idea" style="flex:2"></i><i class="eff" style="flex:3"></i></div>'};
 const ROWS=[
-  {l:"T",d:'<i class="idea">idea</i> and why it matters'},
-  {l:"E",d:'<i class="ev">example</i> + <i class="verb">what it</i> <i class="idea">shows</i> + <i class="eff">why</i>'},
-  {l:"E",d:'<i class="ev">example</i> + <i class="verb">what it</i> <i class="idea">shows</i> + <i class="eff">why</i>'},
-  {l:"L",d:'tie <i class="idea">A</i> and <i class="idea">B</i> back to the <i class="idea">main idea</i>'}
+  {l:"T",d:'the idea, and why it matters'+BAR.T},
+  {l:"E",d:'evidence, what it shows, why'+BAR.E},
+  {l:"E",d:'evidence, what it shows, why'+BAR.E},
+  {l:"L",d:'A and B, back to the main idea'+BAR.L}
 ];
 const STEMS={
-  im:["Imagination is essential to Subhi's survival because … and …","When …, “…”. This shows that …, which …","Later, “…”. This shows that …, which …","So, because … and …, imagination is what …"],
-  fr:["Friendship is essential to Subhi's survival because … and …","When …, “…”. This shows that …, which …","Later, “…”. This shows that …, which …","So, because … and …, friendship is what …"]
+  im:["Imagination is essential to Subhi's survival because … and …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So imagination gives Subhi … and …, and that is what …"],
+  fr:["Friendship is essential to Subhi's survival because … and …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So friendship gives Subhi … and …, and that is what …"]
 };
 function drawFrame(id,which,sug){
   $(id).innerHTML=ROWS.map((r,i)=>`<div class="slot">
@@ -351,9 +446,19 @@ function drawFrame(id,which,sug){
     <div class="box" contenteditable="true" spellcheck="false" data-w="${which}" data-i="${i}" data-stem="${esc(STEMS[which][i])}">${S.boxes[which][i]}</div>
     ${sug?`<button class="sug" data-i="${i}" title="a suggestion">💡</button>`:"<span></span>"}</div>`).join("");
 }
+function drawAnchor(id,name,word){
+  const [a,b]=AB(name), t=o=>esc(o.t);
+  const seg=(k,f,txt)=>`<i class="${k}" style="flex:${f}">${txt||""}</i>`;
+  $(id).innerHTML=`<h3>${word}</h3>
+    <div class="row"><b>T</b><div class="bar">${seg("idea",2,word)}${seg("idea",3,t(a))}${seg("idea",3,t(b))}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,t(a))}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,t(b))}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>L</b><div class="bar">${seg("idea",2,t(a))}${seg("idea",2,t(b))}${seg("eff",3,"the main idea")}</div></div>`;
+}
+function typingIm(){ $("buildIm").classList.toggle("typing",S.boxes.im.some((h,i)=>i!==0&&i!==3&&h.trim())||!!S.typedIm); }
 function drawIdeas(id,name){
   const p=picks(name);
-  $(id).innerHTML=p.length?p.map((t,i)=>`<span><b>${"AB"[i]}</b>${esc(t)}</span>`).join(""):"";
+  $(id).innerHTML=p.length?p.map((o,i)=>`<span data-sub="${"AB"[i]}"><b>${"AB"[i]}</b>${esc(o.t)}</span>`).join(""):"";
 }
 function drawWorked(){
   const b=S.boxes.im, L=["T","E","E","L"];
@@ -361,27 +466,44 @@ function drawWorked(){
 }
 document.addEventListener("input",e=>{
   const t=e.target; if(!t.classList.contains("box")) return;
-  S.boxes[t.dataset.w][+t.dataset.i]=t.innerHTML; save();
+  S.boxes[t.dataset.w][+t.dataset.i]=t.innerHTML; if(t.dataset.w==="im") S.typedIm=true; save(); typingIm();
 });
 $("frameIm").addEventListener("click",e=>{
   const b=e.target.closest(".sug"); if(!b) return;
   const [a,c]=AB("imagination"), i=+b.dataset.i;
-  const h=[IM.T(a,c),IM.E1(a),IM.E2(c),IM.L(a,c)][i];
+  const h=[SENT.T("Imagination",a,c),SENT.E(a,A_,"imagination"),SENT.E(c,B_,"imagination"),SENT.L("imagination",a,c)][i];
   const box=$("frameIm").querySelector(`.box[data-i="${i}"]`);
-  box.innerHTML=h; S.boxes.im[i]=h; save();
+  box.innerHTML=h; S.boxes.im[i]=h; S.typedIm=true; save(); typingIm();
   box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal");
 });
-/* the friendship T starts from the brainstorm, once, if the box is empty */
-function seedFriendship(){
-  if(S.boxes.fr[0].trim()) return;
-  const [a,b]=AB("friendship");
-  S.boxes.fr[0]=`<em class="hl-idea">Friendship</em> is essential to Subhi's survival because <em class="hl-idea">${esc(a)}</em> and <em class="hl-idea">${esc(b)}</em>.`;
-  save();
+/* a chip with text selected colours the selection; with nothing selected it
+   turns that colour on or off everywhere. plain and full are all or nothing. */
+const ROLES=["idea","verb","ev","eff"];
+let ON={idea:true,verb:true,ev:true,eff:true};
+try{ const j=JSON.parse(localStorage.getItem("bonesparrow.teelDeck.on")); if(j) ON=j; }catch(e){}
+function applyOn(){
+  ROLES.forEach(r=>document.body.classList.toggle("hide-"+r,!ON[r]));
+  document.querySelectorAll(".keyrow .k").forEach(k=>{ if(ROLES.includes(k.dataset.c)) k.classList.toggle("off",!ON[k.dataset.c]); });
+  try{ localStorage.setItem("bonesparrow.teelDeck.on",JSON.stringify(ON)); }catch(e){}
 }
-/* colour the selection */
 document.querySelectorAll(".keyrow .k").forEach(k=>{
   k.addEventListener("mousedown",e=>e.preventDefault());
-  k.addEventListener("click",()=>colour(k.dataset.c));
+  k.addEventListener("click",()=>{
+    const c=k.dataset.c, sel=getSelection();
+    const hasSel=sel.rangeCount&&!sel.getRangeAt(0).collapsed&&sel.anchorNode&&sel.anchorNode.parentElement.closest(".box");
+    if(hasSel){ colour(c); return; }
+    if(c==="plain") ROLES.forEach(r=>ON[r]=false);
+    else if(c==="full") ROLES.forEach(r=>ON[r]=true);
+    else ON[c]=!ON[c];
+    applyOn();
+  });
+});
+applyOn();
+/* click a sub-idea anywhere and it lights up everywhere */
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-sub]"); if(!el) return;
+  const sub=el.dataset.sub;
+  document.body.dataset.glow=document.body.dataset.glow===sub?"":sub;
 });
 function colour(cls){
   const sel=getSelection(); if(!sel.rangeCount) return;
@@ -397,7 +519,7 @@ function colour(cls){
 
 /* ---------------- slides ---------------- */
 const SLIDES=[...document.querySelectorAll(".slide")];
-const NAMES=["The big idea","Imagination · brainstorm","Imagination · TEEL","Friendship · brainstorm","Friendship · your turn"];
+const NAMES=["The big idea","The whole essay","Imagination · brainstorm","Imagination · TEEL","Friendship · brainstorm","Friendship · your turn"];
 let cur=Math.min(SLIDES.length-1,Math.max(0,(parseInt(location.hash.slice(1),10)||1)-1));
 $("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
 function enter(i){
@@ -405,8 +527,8 @@ function enter(i){
   const sl=SLIDES[i];
   if(i===0) stage();
   const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
-  if(i===2){ drawIdeas("ideasIm","imagination"); drawFrame("frameIm","im",true); }
-  if(i===4){ seedFriendship(); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
+  if(i===3){ seed("im","imagination","Imagination"); drawIdeas("ideasIm","imagination"); drawAnchor("anchorIm","imagination","Imagination"); drawFrame("frameIm","im",true); typingIm(); }
+  if(i===5){ seed("fr","friendship","Friendship"); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
 }
 function go(i){
   cur=Math.min(SLIDES.length-1,Math.max(0,i));
@@ -424,21 +546,11 @@ $("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%3; save(); stage(
 [...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
-  if(e.key==="1"){V="plain";applyView();} if(e.key==="3"){V="full";applyView();}
+  if(e.key==="1"){ROLES.forEach(r=>ON[r]=false);applyOn();} if(e.key==="3"){ROLES.forEach(r=>ON[r]=true);applyOn();}
   if(e.target.tagName==="BUTTON"&&e.key===" ") return;
   if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}
   if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1);}
 });
-/* ---------------- display ---------------- */
-const VKEY="bonesparrow.view.v1";
-let V="full"; try{ const j=JSON.parse(localStorage.getItem(VKEY)); if(j&&j.view) V=j.view==="plain"?"plain":"full"; }catch(e){}
-function applyView(){
-  document.body.classList.toggle("v-plain",V==="plain");
-  [...$("view").querySelectorAll("button")].forEach(b=>b.classList.toggle("on",b.dataset.v===V));
-  try{ localStorage.setItem(VKEY,JSON.stringify({view:V,spot:"ev"})); }catch(e){}
-}
-[...$("view").querySelectorAll("button")].forEach(b=>b.addEventListener("click",()=>{V=b.dataset.v;applyView();}));
-applyView();
 go(cur);
 </script>
 </body>
