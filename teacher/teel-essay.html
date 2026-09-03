@@ -32,7 +32,15 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .thesis p{font-family:Georgia,serif;font-size:clamp(30px,4.4vw,64px);line-height:1.3;max-width:1100px;margin:0}
 .thesis .key{border-radius:10px;padding:2px 10px;transition:background .5s,color .5s}
 .thesis.lit .key{background:var(--idea-bg);color:var(--idea-tx)}
-.thesis .sub{display:block;font-family:'Segoe UI',sans-serif;font-size:16px;color:var(--muted);margin-top:28px}
+.thesis .w{transition:opacity .7s}
+.thesis .key{display:inline-block;position:relative;transition:background .5s,color .5s,transform .8s ease,opacity .8s}
+.thesis .note{display:block;font-family:'Segoe UI',sans-serif;font-size:22px;font-weight:normal;color:var(--muted);
+  opacity:0;transition:opacity .6s .5s;white-space:nowrap;line-height:1.2;margin-top:2px}
+.thesis.split .w{opacity:0}
+.thesis.split .key.im{transform:translate(var(--dx,0px),var(--dy,0px)) scale(1.5)}
+.thesis.split .key.fr{transform:translate(28vw,18vh) scale(.6);opacity:.75}
+.thesis.split .key.fr .note{opacity:1}
+.explain{font-size:15.5px;color:var(--muted);max-width:900px;line-height:1.5;border-top:1px solid var(--line);padding-top:12px;margin-bottom:8px}
 
 /* 2 · 4 · the cloud */
 .cloudwrap{flex:1;position:relative;overflow:hidden;border-radius:16px;background:var(--paper);border:1px solid var(--line)}
@@ -124,9 +132,10 @@ body.v-plain .ideas span{background:#fff;color:var(--ink);border:1px solid var(-
 
 <section class="slide on" id="s1">
   <div class="thesis" id="thesis">
-    <p><i>The Bone Sparrow</i> shows us that <span class="key">imagination</span> and <span class="key">friendship</span> are essential for survival.
-    <span class="sub"></span></p>
+    <p><span class="w"><i>The Bone Sparrow</i> shows us that</span> <span class="key im">imagination</span> <span class="w">and</span>
+    <span class="key fr">friendship<small class="note">we will come back to this</small></span> <span class="w">are essential for survival.</span></p>
   </div>
+  <div class="explain">An essay is an argument. It starts with a prompt like this one. You decide what you think about it, then you make the case, one reason at a time, one paragraph for each reason.</div>
 </section>
 
 <section class="slide" id="s2">
@@ -202,8 +211,16 @@ const FALLBACK={imagination:["it gives Subhi somewhere to go","it keeps his hope
 
 /* ---------------- state ---------------- */
 const KEY="bonesparrow.teelDeck.v1";
-let S={lit:false, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
+let S={stage:0, clouds:{}, boxes:{im:["","","",""],fr:["","","",""]}};
 try{ const j=JSON.parse(localStorage.getItem(KEY)); if(j&&j.clouds) S=j; }catch(e){}
+if(S.stage==null) S.stage=S.lit?1:0;
+function stage(){ const t=$("thesis"); t.classList.toggle("lit",S.stage>=1);
+  const im=t.querySelector(".key.im"); const tr=t.getBoundingClientRect(), ir=im.getBoundingClientRect();
+  if(S.stage>=2&&!t.classList.contains("split")){
+    /* measured before the move: the word's own place to the middle of the slide */
+    im.style.setProperty("--dx",(tr.left+tr.width/2-(ir.left+ir.width/2))+"px");
+    im.style.setProperty("--dy",(tr.top+tr.height/2-(ir.top+ir.height/2))+"px"); }
+  t.classList.toggle("split",S.stage>=2); }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 function cloudState(name){
   if(!S.clouds[name]) S.clouds[name]={nodes:[],used:[],order:POOL[name].map((_,i)=>i).sort(()=>Math.random()-.5)};
@@ -386,7 +403,7 @@ $("dots").innerHTML=SLIDES.map((_,i)=>`<span data-i="${i}"></span>`).join("");
 function enter(i){
   closeCloud();
   const sl=SLIDES[i];
-  if(i===0) $("thesis").classList.toggle("lit",!!S.lit);
+  if(i===0) stage();
   const w=sl.querySelector(".cloudwrap"); if(w) requestAnimationFrame(()=>openCloud(w));
   if(i===2){ drawIdeas("ideasIm","imagination"); drawFrame("frameIm","im",true); }
   if(i===4){ seedFriendship(); drawIdeas("ideasFr","friendship"); drawWorked(); drawFrame("frameFr","fr",false); }
@@ -400,10 +417,10 @@ function go(i){
   history.replaceState(null,"","#"+(cur+1));
   enter(cur);
 }
-function next(){ if(cur===0&&!S.lit){ S.lit=true; save(); $("thesis").classList.add("lit"); return; } go(cur+1); }
+function next(){ if(cur===0&&S.stage<2){ S.stage++; save(); stage(); return; } go(cur+1); }
 $("prev").addEventListener("click",()=>go(cur-1));
 $("next").addEventListener("click",next);
-$("thesis").addEventListener("click",()=>{ S.lit=!S.lit; save(); $("thesis").classList.toggle("lit",S.lit); });
+$("thesis").addEventListener("click",()=>{ S.stage=(S.stage+1)%3; save(); stage(); });
 [...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
 addEventListener("keydown",e=>{
   if(e.target.isContentEditable) return;
