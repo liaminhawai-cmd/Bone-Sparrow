@@ -323,8 +323,8 @@ const SENT={
 };
 /* the T and the first half of the L come from the brainstorm; a box that
    still holds what was seeded follows the picks when they change */
-S.seeded=S.seeded||{};
 function seed(which,name,word){
+  S.seeded=S.seeded||{};
   const [a,b]=AB(name), B=S.boxes[which], sd=S.seeded[which]||{};
   const T=SENT.T(word,a,b), L=SENT.Lseed(word.toLowerCase(),a,b);
   if(!B[0].trim()||B[0]===sd.T) B[0]=T;
