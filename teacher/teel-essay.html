@@ -57,8 +57,9 @@ em.hl-eff{background:var(--eff-bg);color:var(--eff-tx)}
 .card .row b{font-family:'Segoe UI',sans-serif;font-size:13px;color:var(--accent)}
 .essayv.zoom .card:not(.p1){opacity:0;transform:scale(.9)}
 .essayv.zoom .legend{opacity:0}
-.essayv.zoom .card.p1{transform:translateY(var(--dy,0px)) scale(1.28);box-shadow:0 10px 30px rgba(0,0,0,.12);border-color:var(--idea-tx)}
-.essayv.zoom .card.p1 .what{font-family:Georgia,serif;font-size:34px;color:var(--idea-tx);background:var(--idea-bg);font-weight:700}
+.essayv.zoom .card.p1{transform:translateY(var(--dy,0px)) scale(1.12);box-shadow:0 10px 30px rgba(0,0,0,.12);border-color:var(--idea-tx);
+  grid-template-columns:auto 1fr;z-index:3;position:relative}
+.essayv.zoom .card.p1 .what{font-family:Georgia,serif;font-size:32px;color:var(--idea-tx);background:var(--idea-bg);font-weight:700;padding:4px 12px}
 .notes{font-size:17px;line-height:1.55;color:var(--ink);transition:opacity .6s}
 .notes p{margin:0 0 14px}
 .notes b{color:var(--deep)}
