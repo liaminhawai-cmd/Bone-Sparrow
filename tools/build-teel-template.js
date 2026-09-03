@@ -32,6 +32,24 @@ const br=()=>new Paragraph({children:[new PageBreak()]});
 const swatch=(k,t)=>new TextRun({text:"  "+t+"  ",size:20,bold:true,color:C[k],font:"Calibri",shading:{type:ShadingType.CLEAR,fill:SH[k]}});
 const key=()=>new Paragraph({spacing:{after:160},children:[swatch("idea","idea"),R("   "),swatch("verb","verb"),R("   "),swatch("ev","evidence"),R("   "),swatch("eff","purpose")]});
 
+/* the paragraph in bars: each row is the shape of one sentence */
+const BARC={idea:"7FB3E6",verb:"F2B27A",ev:"F5D75A",eff:"8FD39A",plain:"D8CFBB"};
+const bars=(rows)=>{const BW=W-900;
+  return new Table({columnWidths:[900,BW],width:{size:W,type:WidthType.DXA},
+    borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:NONE},
+    rows:rows.map(([l,segs])=>{const tot=segs.reduce((a,x)=>a+x[1],0);
+      const cw=segs.map(x=>Math.floor(BW*x[1]/tot));
+      return new TableRow({height:{value:420,rule:HeightRule.ATLEAST},children:[
+        new TableCell({width:{size:900,type:WidthType.DXA},margins:{top:60,bottom:60,left:120,right:60},
+          children:[new Paragraph({children:[new TextRun({text:l,bold:true,size:26,color:"A83232",font:"Calibri"})]})]}),
+        new TableCell({width:{size:BW,type:WidthType.DXA},margins:{top:80,bottom:80,left:0,right:0},children:[
+          new Table({columnWidths:cw,width:{size:cw.reduce((a,b)=>a+b,0),type:WidthType.DXA},
+            borders:{top:NONE,bottom:NONE,left:NONE,right:NONE,insideH:NONE,insideV:{style:BorderStyle.SINGLE,size:24,color:"FFFFFF"}},
+            rows:[new TableRow({height:{value:260,rule:HeightRule.EXACT},children:segs.map((x,i)=>new TableCell({width:{size:cw[i],type:WidthType.DXA},
+              shading:{type:ShadingType.CLEAR,fill:BARC[x[0]],color:"auto"},margins:{top:0,bottom:0,left:0,right:0},
+              children:[new Paragraph({spacing:{after:0,line:200,lineRule:LineRuleType.EXACT},children:[new TextRun({text:"",size:8})]})]}))})]})]})]});})});};
+const T_BAR=[["idea",1]], E_BAR=[["ev",3],["verb",1],["idea",3],["eff",3]], L_BAR=[["idea",2],["idea",2],["eff",3]];
+
 /* TEEL rows: letter, what goes there, a box to write in */
 const teel=(rows)=>new Table({columnWidths:[700,2600,W-3300],width:{size:W,type:WidthType.DXA},
   borders:{top:BOX,bottom:BOX,left:BOX,right:BOX,insideH:RULE,insideV:RULE},
@@ -66,17 +84,15 @@ const kids=[
   box([P([R("The Bone Sparrow shows us that "),R("imagination",{bold:true,color:C.idea,shading:{type:ShadingType.CLEAR,fill:SH.idea}}),
      R(" and "),R("friendship",{bold:true,color:C.idea,shading:{type:ShadingType.CLEAR,fill:SH.idea}}),R(" are essential for survival.")],{after:0})]),
 
-  H("How a TEEL paragraph is built"),
+  H("The shape of a paragraph"),
   key(),
-  teel([
-    ["T",["Topic sentence.","The idea, and why it matters.","Name the two reasons, A and B."],900],
-    ["E",["Evidence and explanation.","A quote from the novel.","What it shows about reason A.","What it does to the reader."],900],
-    ["E",["Evidence and explanation.","A second quote.","What it shows about reason B.","What it does to the reader."],900],
-    ["L",["Link.","Tie A and B back to the main idea."],900]]),
+  bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
+  P([R("T  the idea, and why it matters.   E  a quote, what it shows, what it does to the reader.   L  A and B, back to the main idea.",{size:18,color:MUTED,font:"Calibri"})],{before:120}),
 
   br(),
   H("Colour the worked paragraph"),
-  P([R("Colour each part of the sentence: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
+  P([R("Colour each sentence to match its bar: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
+  bars([["T",T_BAR],["E",E_BAR],["E",E_BAR],["L",L_BAR]]),
   box(WORKED.map((t,i)=>new Paragraph({spacing:{after:i<3?140:0,line:520,lineRule:LineRuleType.EXACT},children:[R(t,{size:23})]})),"FBF7EE"),
 
   H("Friendship"),
