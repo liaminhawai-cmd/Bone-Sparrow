@@ -234,7 +234,7 @@ body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3p
   <h2>TEEL · imagination</h2>
   <div class="keyrow">
     <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
-    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="none">unhighlight</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
     <span class="sp"></span><div class="ideas" id="ideasIm"></div>
   </div>
   <div class="build" id="buildIm">
@@ -255,7 +255,7 @@ body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3p
   <h2>Your turn · friendship</h2>
   <div class="keyrow">
     <span class="k idea" data-c="idea">idea</span><span class="k verb" data-c="verb">verb</span>
-    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
+    <span class="k ev" data-c="ev">evidence</span><span class="k eff" data-c="eff">purpose</span><span class="k plain" data-c="none">unhighlight</span><span class="k plain" data-c="plain">plain</span><span class="k plain" data-c="full">full</span>
     <span class="sp"></span><div class="ideas" id="ideasFr"></div>
   </div>
   <div class="two">
@@ -437,30 +437,37 @@ function drop(n){
   n.el.remove(); live.nodes=live.nodes.filter(x=>x!==n);
 }
 function physics(){
+  /* bubbles are boxes, not circles: pairs push apart along whichever axis
+     overlaps least, a soft pull keeps them near the middle, and the centre
+     card shoves them off. No ring, so they settle where there is room. */
   const step=(t)=>{
     if(!live) return;
     const wrap=live.wrap, W=wrap.clientWidth, H=wrap.clientHeight, cx=W/2, cy=H/2;
-    const R=Math.min(W,H)*0.36;
     const cb=wrap.querySelector(".centre").getBoundingClientRect(), wb=wrap.getBoundingClientRect();
     const ccx=cb.left-wb.left+cb.width/2, ccy=cb.top-wb.top+cb.height/2;
+    const PAD=18;
     for(const n of live.nodes){
-      const dx=n.x-cx, dy=n.y-cy, d=Math.hypot(dx,dy)||1;
-      const pull=(d-R)*-0.004; n.vx+=dx/d*pull*d*0.02; n.vy+=dy/d*pull*d*0.02;
-      const cw=(n.el.offsetWidth||120)/2, ch=(n.el.offsetHeight||40)/2;
-      const ox=Math.max(0,(cb.width/2+cw+26)-Math.abs(n.x-ccx)), oy=Math.max(0,(cb.height/2+ch+26)-Math.abs(n.y-ccy));
-      if(ox>0&&oy>0){ n.vx+=Math.sign(n.x-ccx||1)*0.5; n.vy+=Math.sign(n.y-ccy||1)*0.5; }
-      n.vx+=Math.sin(t/900+n.ph)*0.012; n.vy+=Math.cos(t/1100+n.ph)*0.012;
+      n.w=n.el.offsetWidth||120; n.h=n.el.offsetHeight||40;
+      /* gentle pull to the middle */
+      n.vx+=(cx-n.x)*0.0006; n.vy+=(cy-n.y)*0.0006;
+      /* off the centre card */
+      const ox=(cb.width/2+n.w/2+PAD)-Math.abs(n.x-ccx), oy=(cb.height/2+n.h/2+PAD)-Math.abs(n.y-ccy);
+      if(ox>0&&oy>0){ if(ox<oy) n.vx+=Math.sign(n.x-ccx||1)*Math.min(ox,12)*0.12; else n.vy+=Math.sign(n.y-ccy||1)*Math.min(oy,12)*0.12; }
+      n.vx+=Math.sin(t/900+n.ph)*0.01; n.vy+=Math.cos(t/1100+n.ph)*0.01;
     }
     for(let i=0;i<live.nodes.length;i++)for(let j=i+1;j<live.nodes.length;j++){
       const a=live.nodes[i],b=live.nodes[j];
-      const need=(a.el.offsetWidth+b.el.offsetWidth)/2*0.72+26;
-      const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1;
-      if(d<need){const f=(need-d)/need*0.9; a.vx-=dx/d*f; a.vy-=dy/d*f; b.vx+=dx/d*f; b.vy+=dy/d*f;}
+      const dx=b.x-a.x, dy=b.y-a.y;
+      const ox=(a.w+b.w)/2+PAD-Math.abs(dx), oy=(a.h+b.h)/2+PAD-Math.abs(dy);
+      if(ox>0&&oy>0){
+        if(ox<oy){ const f=Math.min(ox,14)*0.08*(Math.sign(dx)||1); a.vx-=f; b.vx+=f; }
+        else     { const f=Math.min(oy,14)*0.08*(Math.sign(dy)||1); a.vy-=f; b.vy+=f; }
+      }
     }
     for(const n of live.nodes){
-      const k=(n.empty&&document.activeElement===n.el.querySelector(".t"))?0.6:0.92;
+      const k=(n.empty&&document.activeElement===n.el.querySelector(".t"))?0.6:0.9;
       n.vx*=k; n.vy*=k; n.x+=n.vx; n.y+=n.vy;
-      const mW=n.el.offsetWidth/2+8, mH=n.el.offsetHeight/2+8;
+      const mW=n.w/2+8, mH=n.h/2+8;
       n.x=Math.max(mW,Math.min(W-mW,n.x)); n.y=Math.max(mH,Math.min(H-mH,n.y));
       n.el.style.left=n.x+"px"; n.el.style.top=n.y+"px";
     }
@@ -540,7 +547,14 @@ document.querySelectorAll(".keyrow .k").forEach(k=>{
   k.addEventListener("mousedown",e=>e.preventDefault());
   k.addEventListener("click",()=>{
     const c=k.dataset.c, sel=getSelection();
-    const hasSel=sel.rangeCount&&!sel.getRangeAt(0).collapsed&&sel.anchorNode&&sel.anchorNode.parentElement.closest(".box");
+    const inBox=sel.rangeCount&&sel.anchorNode&&(sel.anchorNode.nodeType===1?sel.anchorNode:sel.anchorNode.parentElement).closest(".box");
+    const hasSel=inBox&&!sel.getRangeAt(0).collapsed;
+    if(c==="none"){ /* the selection, or the coloured word under the caret */
+      if(hasSel){ colour("plain"); return; }
+      if(inBox){ const em=(sel.anchorNode.nodeType===1?sel.anchorNode:sel.anchorNode.parentElement).closest("em");
+        if(em){ const box=em.closest(".box"); em.replaceWith(...em.childNodes); box.normalize();
+          S.boxes[box.dataset.w][+box.dataset.i]=box.innerHTML; save(); } }
+      return; }
     if(hasSel){ colour(c); return; }
     if(c==="plain") ROLES.forEach(r=>ON[r]=false);
     else if(c==="full") ROLES.forEach(r=>ON[r]=true);
@@ -570,9 +584,11 @@ function colour(cls){
   const r=sel.getRangeAt(0); if(r.collapsed) return;
   const node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
   const box=node.closest(".box"); if(!box) return;
-  const txt=r.toString(); r.deleteContents();
-  if(cls==="plain") r.insertNode(document.createTextNode(txt));
-  else { const em=document.createElement("em"); em.className="hl-"+cls; em.textContent=txt; r.insertNode(em); }
+  if(cls==="plain"){ /* take the colour off every span the selection touches */
+    [...box.querySelectorAll("em")].filter(em=>r.intersectsNode(em)).forEach(em=>em.replaceWith(...em.childNodes));
+  } else {
+    const txt=r.toString(); r.deleteContents();
+    const em=document.createElement("em"); em.className="hl-"+cls; em.textContent=txt; r.insertNode(em); }
   box.querySelectorAll("em em").forEach(inner=>{ const outer=inner.parentElement; outer.replaceWith(...outer.childNodes); });
   box.normalize(); S.boxes[box.dataset.w][+box.dataset.i]=box.innerHTML; save(); sel.removeAllRanges();
 }
