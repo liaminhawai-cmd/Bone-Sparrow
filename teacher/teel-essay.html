@@ -147,6 +147,7 @@ body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.h
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .slot .sug{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:18px;margin-top:8px}
 .slot .sug:hover{border-color:var(--deep)}
+.slot .sug.lit{background:var(--ev-bg);border-color:var(--ev-tx)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0}
 .two>div{display:flex;flex-direction:column;min-height:0}
 .two h3{font-family:Georgia,serif;font-size:20px;color:var(--deep);margin:0 0 8px}
@@ -530,7 +531,10 @@ $("frameIm").addEventListener("click",e=>{
   const [a,c]=AB("imagination"), i=+b.dataset.i;
   const h=[SENT.T("Imagination",a,c),SENT.E(a,A_,"imagination"),SENT.E(c,B_,"imagination"),SENT.L("imagination",a,c)][i];
   const box=$("frameIm").querySelector(`.box[data-i="${i}"]`);
-  box.innerHTML=h; S.boxes.im[i]=h; S.typedIm=true; save(); typingIm();
+  /* the bulb is a toggle: the suggestion in, or the box cleared */
+  const out=box.innerHTML===h?"":h;
+  box.innerHTML=out; S.boxes.im[i]=out; S.typedIm=true; save(); typingIm();
+  b.classList.toggle("lit",!!out);
   box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal");
 });
 /* a chip with text selected colours the selection; with nothing selected it
