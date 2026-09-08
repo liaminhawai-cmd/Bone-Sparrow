@@ -7,7 +7,7 @@
   "centreSub": "how does Fraillon do it?",
   "cloud": "purpose",
   "brainH2": "How does Fraillon make us see the people behind the numbers?",
-  "footHint": "Tap a bubble to agree, again to disagree, again to clear. The first two you agree with become the paragraphs.",
+  "footHint": "Tap to agree, again to disagree, again to clear. The first two ideas you agree with become the paragraphs; the yellow ones are evidence.",
   "key": "bonesparrow.teelPurpose.v1",
   "names": [
     "The prompt",
@@ -18,5 +18,5 @@
   "concWhat": "What the two ways together suggest.",
   "pool": "tools/kits/purpose-pool.js",
   "stance": true,
-  "css": "/* this prompt is a purpose, not an idea, so it wears the purpose colour */\n.thesis.lit .key{background:var(--eff-bg);color:var(--eff-tx)}\n.centre{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-tx)}\n.centre span{color:var(--eff-tx)}\n.card .what.land{color:var(--eff-tx);background:var(--eff-bg)}\n/* agreeing is not a role, so it takes a tick rather than a colour */\n.node.agree{border-color:var(--ink);background:#fff;color:var(--ink)}"
+  "css": "/* this prompt is a purpose, not an idea, so it wears the purpose colour */\n.thesis.lit .key{background:var(--eff-bg);color:var(--eff-tx)}\n.centre{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-tx)}\n.centre span{color:var(--eff-tx)}\n.card .what.land{color:var(--eff-tx);background:var(--eff-bg)}\n/* agreeing is not a role, so it takes a tick rather than a colour */\n.node.agree{border-color:var(--ink);background:#fff;color:var(--ink)}\n/* a line from the book is evidence, so it wears the evidence colour */\n.node.ev{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx);font-family:Georgia,serif;font-style:italic}\n.node.ev.agree{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx)}"
 }

@@ -130,9 +130,10 @@ if cfg.get("stance"):
 /* nav */''')
     rep('\ngo(cur);\n</script>','''\n/* Tap a bubble to agree, again to disagree, again to clear. The first two
    the class agrees with are the two paragraphs. */
+const kindOf=o=>(o&&o.i>=0&&POOL[live.name]&&POOL[live.name][o.i])?POOL[live.name][o.i].kind:null;
 function nodeEl(o){
   const el=document.createElement("div");
-  el.className="node"+(o.pick?" pick":"")+(o.st===1?" agree":o.st===-1?" disagree":"");
+  el.className="node"+(o.pick?" pick":"")+(o.st===1?" agree":o.st===-1?" disagree":"")+(kindOf(o)==="ev"?" ev":"");
   el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"P"+o.pick:""}</span>`+
     `<span class="stance">${o.st===1?"\\u2713":o.st===-1?"\\u2717":""}</span>${esc(o.t)}<span class="x">\\u00d7</span>`;
   return el;
@@ -140,7 +141,8 @@ function nodeEl(o){
 function togglePick(n){
   const st=cloudState(live.name), o=n.o;
   o.st = o.st===1 ? -1 : o.st===-1 ? 0 : 1;
-  if(o.st!==1) o.pick=0;
+  /* a quote is evidence, never a paragraph of its own */
+  if(o.st!==1 || kindOf(o)==="ev") o.pick=0;
   else { const cur=st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick);
     if(cur.length>=2) cur[0].pick=0;
     o.pick=Math.max(0,...st.nodes.map(x=>x.pick))+1; }
