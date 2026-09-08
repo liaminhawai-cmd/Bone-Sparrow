@@ -499,7 +499,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
 .passage .seg.spent{opacity:.4;cursor:default}
 /* The teacher button lives in the top bar, on every screen, because it was a
    line of small red text in a breadcrumb before and nobody could find it. */
-.teachbtn{font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
+.teachbtn{font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-block;text-decoration:none;
   background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:99px;
   padding:4px 12px;letter-spacing:.02em}
 .teachbtn:hover{background:#000}
@@ -599,7 +599,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
     <span class="where" id="whereLbl">Year 7 English · The Bone Sparrow · Units 5–6</span>
     <span style="display:flex;gap:16px;align-items:center;margin-left:auto">
       <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← all activities</button>
-      <button class="teachbtn" id="teachBtn" onclick="go('teach')" title="Slides for the front of the room, then the builder demo">▶ Teacher mode</button>
+      <a class="teachbtn" id="teachBtn" href="teacher/" title="Printables, slides and the front-of-the-room tools">▶ Teacher mode</a>
       <button class="linkbtn menulink" onclick="go('rpt')">My report</button>
       <a class="linkbtn menulink" href="index.html">⌂ Main menu</a>
     </span>
@@ -2261,7 +2261,7 @@ function go(s, arg){
      reading column. */
   document.body.classList.toggle("wide", s==="wk" || s==="teach");
   $("homeBtn").style.display = (s==="home"||s==="id"||s==="teach") ? "none" : "inline";
-  const tb=$("teachBtn"); if(tb) tb.style.display = (s==="teach"||s==="id") ? "none" : "inline";
+  const tb=$("teachBtn"); if(tb) tb.style.display = (s==="teach"||s==="id") ? "none" : "inline-block";
   window.scrollTo({top:0,behavior:"smooth"});
   if(s==="id") renderIdentity();
   else if(s==="home") renderHome();
