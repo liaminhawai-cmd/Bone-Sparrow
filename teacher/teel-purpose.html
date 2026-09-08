@@ -171,6 +171,9 @@ body.hide-idea .bar .idea,body.hide-verb .bar .verb,body.hide-ev .bar .ev,body.h
 .card .what.land{color:var(--eff-tx);background:var(--eff-bg)}
 /* agreeing is not a role, so it takes a tick rather than a colour */
 .node.agree{border-color:var(--ink);background:#fff;color:var(--ink)}
+/* a line from the book is evidence, so it wears the evidence colour */
+.node.ev{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx);font-family:Georgia,serif;font-style:italic}
+.node.ev.agree{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx)}
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;padding:10px;z-index:20}
 .nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;font-size:18px;color:var(--ink);cursor:pointer}
@@ -240,7 +243,7 @@ body[data-glow="A"] [data-sub="A"],body[data-glow="B"] [data-sub="B"]{outline:3p
   <div class="cloudwrap" data-cloud="purpose">
     <div class="centre"><b>the people behind the numbers</b><span>how does Fraillon do it?</span></div>
   </div>
-  <div class="cloudfoot"><span>Tap a bubble to agree, again to disagree, again to clear. The first two you agree with become the paragraphs.</span><span class="sp"></span><button class="reset">Start again</button></div>
+  <div class="cloudfoot"><span>Tap to agree, again to disagree, again to clear. The first two ideas you agree with become the paragraphs; the yellow ones are evidence.</span><span class="sp"></span><button class="reset">Start again</button></div>
 </section>
 
 <section class="slide" id="s3">
@@ -309,6 +312,11 @@ const POOL={purpose:[
  {t:"she never lets someday arrive",name:"someday",by:"never letting someday arrive",e:[
    {lead:"When Maá talks about the future",q:"Someday, Subhi, someday they see we belong.",shows:"belonging is always being put off until later",eff:"makes the reader notice how long someday has already lasted"},
    {lead:"When Jimmie comes back",q:"Like maybe it really will be okay. Someday.",shows:"Subhi borrows his mother's word for his own hope",eff:"leaves the reader hopeful and uneasy at the same time"}]},
+ {kind:"ev",t:"“Sometimes, at night, the dirt outside turns into a beautiful ocean.”"},
+ {kind:"ev",t:"“…learn their names so that he can talk with us for real, instead of talking to us by our numbers.”"},
+ {kind:"ev",t:"“There are only fourteen pairs of real shoes in this whole entire camp.”"},
+ {kind:"ev",t:"“I can’t talk. I can’t say a single thing.”"},
+ {kind:"ev",t:"“Jimmie has never felt so alone.”"},
  {t:"she explains how detention centres are run"},
  {t:"she makes the reader laugh at Subhi"},
  {t:"she wants the reader to feel sorry for the Jackets"},
@@ -475,10 +483,6 @@ function physics(){
       /* gentle pull to the middle */
       n.vx+=(cx-n.x)*0.00025; n.vy+=(cy-n.y)*0.00025;
       /* off the centre card */
-      const ox=(cb.width/2+n.w/2+PAD)-Math.abs(n.x-ccx), oy=(cb.height/2+n.h/2+PAD)-Math.abs(n.y-ccy);
-      if(ox>0&&oy>0){
-        if(ox<oy){ const d=Math.sign(n.x-ccx)||1; n.x+=Math.min(ox,20)*d; n.vx+=0.5*d; }
-        else     { const d=Math.sign(n.y-ccy)||1; n.y+=Math.min(oy,20)*d; n.vy+=0.5*d; } }
       n.vx+=Math.sin(t/900+n.ph)*0.01; n.vy+=Math.cos(t/1100+n.ph)*0.01;
     }
     for(let pass=0;pass<2;pass++)
@@ -494,6 +498,12 @@ function physics(){
         if(ox<oy){ const d=(Math.sign(dx)||(i%2?1:-1)); const m=Math.min(ox,24)/2; a.x-=m*d; b.x+=m*d; a.vx-=0.6*d; b.vx+=0.6*d; }
         else     { const d=(Math.sign(dy)||(i%2?1:-1)); const m=Math.min(oy,24)/2; a.y-=m*d; b.y+=m*d; a.vy-=0.6*d; b.vy+=0.6*d; }
       }
+    }
+    for(let pass=0;pass<2;pass++) for(const n of live.nodes){
+      const ox=(cb.width/2+n.w/2+PAD)-Math.abs(n.x-ccx), oy=(cb.height/2+n.h/2+PAD)-Math.abs(n.y-ccy);
+      if(ox>0&&oy>0){
+        if(ox<oy){ const d=Math.sign(n.x-ccx)||1; n.x+=Math.min(ox,20)*d; n.vx+=0.5*d; }
+        else     { const d=Math.sign(n.y-ccy)||1; n.y+=Math.min(oy,20)*d; n.vy+=0.5*d; } }
     }
     for(const n of live.nodes){
       const k=(n.empty&&document.activeElement===n.el.querySelector(".t"))?0.6:0.9;
@@ -653,9 +663,10 @@ addEventListener("keydown",e=>{
 });
 /* Tap a bubble to agree, again to disagree, again to clear. The first two
    the class agrees with are the two paragraphs. */
+const kindOf=o=>(o&&o.i>=0&&POOL[live.name]&&POOL[live.name][o.i])?POOL[live.name][o.i].kind:null;
 function nodeEl(o){
   const el=document.createElement("div");
-  el.className="node"+(o.pick?" pick":"")+(o.st===1?" agree":o.st===-1?" disagree":"");
+  el.className="node"+(o.pick?" pick":"")+(o.st===1?" agree":o.st===-1?" disagree":"")+(kindOf(o)==="ev"?" ev":"");
   el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"P"+o.pick:""}</span>`+
     `<span class="stance">${o.st===1?"\u2713":o.st===-1?"\u2717":""}</span>${esc(o.t)}<span class="x">\u00d7</span>`;
   return el;
@@ -663,7 +674,8 @@ function nodeEl(o){
 function togglePick(n){
   const st=cloudState(live.name), o=n.o;
   o.st = o.st===1 ? -1 : o.st===-1 ? 0 : 1;
-  if(o.st!==1) o.pick=0;
+  /* a quote is evidence, never a paragraph of its own */
+  if(o.st!==1 || kindOf(o)==="ev") o.pick=0;
   else { const cur=st.nodes.filter(x=>x.pick).sort((a,b)=>a.pick-b.pick);
     if(cur.length>=2) cur[0].pick=0;
     o.pick=Math.max(0,...st.nodes.map(x=>x.pick))+1; }

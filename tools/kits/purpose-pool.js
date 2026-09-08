@@ -29,6 +29,11 @@ const POOL={purpose:[
  {t:"she never lets someday arrive",name:"someday",by:"never letting someday arrive",e:[
    {lead:"When Maá talks about the future",q:"Someday, Subhi, someday they see we belong.",shows:"belonging is always being put off until later",eff:"makes the reader notice how long someday has already lasted"},
    {lead:"When Jimmie comes back",q:"Like maybe it really will be okay. Someday.",shows:"Subhi borrows his mother's word for his own hope",eff:"leaves the reader hopeful and uneasy at the same time"}]},
+ {kind:"ev",t:"“Sometimes, at night, the dirt outside turns into a beautiful ocean.”"},
+ {kind:"ev",t:"“…learn their names so that he can talk with us for real, instead of talking to us by our numbers.”"},
+ {kind:"ev",t:"“There are only fourteen pairs of real shoes in this whole entire camp.”"},
+ {kind:"ev",t:"“I can’t talk. I can’t say a single thing.”"},
+ {kind:"ev",t:"“Jimmie has never felt so alone.”"},
  {t:"she explains how detention centres are run"},
  {t:"she makes the reader laugh at Subhi"},
  {t:"she wants the reader to feel sorry for the Jackets"},
