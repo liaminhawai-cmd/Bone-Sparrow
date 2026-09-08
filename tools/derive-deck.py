@@ -157,5 +157,8 @@ function togglePick(n){
 go(cur);
 </script>''')
 
+if cfg.get("css"):
+    rep('/* nav */', cfg["css"]+"\n/* nav */")
+
 open(cfg["out"],'w').write(s)
 print("written "+cfg["out"])
