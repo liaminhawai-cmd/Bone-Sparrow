@@ -17,5 +17,6 @@
   ],
   "concWhat": "What the two ways together suggest.",
   "pool": "tools/kits/purpose-pool.js",
-  "stance": true
+  "stance": true,
+  "css": "/* this prompt is a purpose, not an idea, so it wears the purpose colour */\n.thesis.lit .key{background:var(--eff-bg);color:var(--eff-tx)}\n.centre{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-tx)}\n.centre span{color:var(--eff-tx)}\n.card .what.land{color:var(--eff-tx);background:var(--eff-bg)}\n/* agreeing is not a role, so it takes a tick rather than a colour */\n.node.agree{border-color:var(--ink);background:#fff;color:var(--ink)}"
 }
