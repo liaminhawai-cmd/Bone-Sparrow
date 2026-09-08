@@ -1,0 +1,16 @@
+{
+  "out": "teacher/teel-power.html",
+  "title": "TEEL · power — The Bone Sparrow",
+  "thesis": "<span class=\"w\"><i>The Bone Sparrow</i> shows us that</span> <span class=\"key im\">power</span> <span class=\"w\">comes in</span>\n    <span class=\"key fr\">many forms</span><span class=\"w\">.</span>",
+  "introWhat": "power",
+  "centreWord": "power",
+  "centreSub": "many forms",
+  "cloud": "power",
+  "brainH2": "What kinds of power are there in the novel?",
+  "footHint": "Tap a bubble to make it a paragraph. Tap the space for another. Double-tap a bubble to drop it.",
+  "key": "bonesparrow.teelPower.v1",
+  "names": ["The big idea", "Kinds of power", "P1 · TEEL", "P2 · your turn"],
+  "concWhat": "What the kinds of power together suggest.",
+  "pool": "tools/kits/power-pool.js",
+  "stance": false
+}
