@@ -1,0 +1,21 @@
+{
+  "out": "teacher/teel-purpose.html",
+  "title": "TEEL · purpose — The Bone Sparrow",
+  "thesis": "<span class=\"w\">Fraillon makes the reader</span> <span class=\"key im\">see</span> <span class=\"w\">the</span> <span class=\"key fr\">people behind the numbers</span><span class=\"w\">.</span>",
+  "introWhat": "the people behind the numbers",
+  "centreWord": "the people behind the numbers",
+  "centreSub": "how does Fraillon do it?",
+  "cloud": "purpose",
+  "brainH2": "How does Fraillon make us see the people behind the numbers?",
+  "footHint": "Tap a bubble to agree, again to disagree, again to clear. The first two you agree with become the paragraphs.",
+  "key": "bonesparrow.teelPurpose.v1",
+  "names": [
+    "The prompt",
+    "How does she do it?",
+    "P1 · TEEL",
+    "P2 · your turn"
+  ],
+  "concWhat": "What the two ways together suggest.",
+  "pool": "tools/kits/purpose-pool.js",
+  "stance": true
+}

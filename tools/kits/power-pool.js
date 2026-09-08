@@ -51,3 +51,16 @@ function seed(which,o){
   S.seeded[which]={T,L}; save();
 }
 
+const STEMS={
+  im:["One kind of power in The Bone Sparrow is …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So … is one kind of power in the camp: …, and …"],
+  fr:["One kind of power in The Bone Sparrow is …","When …, “…” This shows that …, which …","When …, “…” This shows that …, which …","So … is one kind of power in the camp: …, and …"]
+};
+function drawAnchor(id,o){
+  const a=ev(o,0),b=ev(o,1), sa=a?esc(a.shows):"what it shows", sb=b?esc(b.shows):"what it shows";
+  const seg=(k,f,txt)=>`<i class="${k}" style="flex:${f}">${txt||""}</i>`;
+  $(id).innerHTML=`<h3>${NM(o)}</h3>
+    <div class="row"><b>T</b><div class="bar">${seg("idea",2,"power")}${seg("idea",5,KIND(o))}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,sa)}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>E</b><div class="bar">${seg("ev",3,"quote")}${seg("verb",1,"shows")}${seg("idea",3,sb)}${seg("eff",3,"why")}</div></div>
+    <div class="row"><b>L</b><div class="bar">${seg("idea",2,NM(o))}${seg("idea",2,sa)}${seg("idea",2,sb)}</div></div>`;
+}
