@@ -138,12 +138,12 @@ is for, because you explain that to the class. Cutting it is what leaves the
 example at 26pt and up on A3 and the explanation at 16pt, which is the size an
 anchor chart has to be to work from a desk.
 
-- **Eight rungs.** Foundation to Level 2 and Levels 3 and 4 are the Victorian
-  Curriculum's own two-year bands, then Levels 5 to 10 singly. Level 7 carries
+- **Eight rungs.** Levels 3 to 10, one year at a time, matching the school's
+  Learning Continuum, which runs in single years. Level 7 carries
   the "expected at Year 7" badge, and the EAL band (C2 to VCE 1) sits beside it.
 - **Five colours, arriving one at a time.** Blue idea, purple language feature,
   orange analytical verb, yellow embedded evidence, green effect on the reader,
-  exactly as the workshop uses them. The Foundation sheet names two of the five
+  exactly as the workshop uses them. The Level 3 sheet names two of the five
   in its key, because two is what that rung is doing.
 - **The rubric underneath**, one coloured row per criterion, wording quoted from
   the school's Learning Continuum master sheet, English tab. `Use of evidence`

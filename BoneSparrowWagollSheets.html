@@ -203,27 +203,29 @@ const CRITERIA = [
   { key:"eff",  name:"Effect on the reader",glyph:"✦",blurb:"what it does to the person reading" }
 ];
 
-/* Rungs below the continuum's Level 5, in the Victorian Curriculum's own
-   two-year bands. Criteria arrive one at a time on the way up: a sheet that
-   names three of the five is the ladder working, not a hole to fill. */
-/* The colour is constant, the NAME grows up. A Foundation student copies two
+/* Rungs below the continuum's Level 5. The continuum runs in single years, so
+   these do too rather than in the Victorian Curriculum's two-year bands, and a
+   student's rung on the wall is the same number as their rung on the continuum.
+   Criteria arrive one at a time on the way up: a sheet that names three of the
+   five is the ladder working, not a hole to fill. */
+/* The colour is constant, the NAME grows up. A Level 3 student copies two
    words out of the book; they are not embedding evidence, and calling it that
    on their sheet is the wrong word over the right colour. The school's own
    continuum agrees: "embed quotes into sentences" is Level 8, so the label
    only becomes "Embedded evidence" where the rubric says it does. */
 const NAME_AT = {
-  ev:{ "Foundation to Level 2":"Words from the book", "Levels 3 and 4":"Words from the book",
+  ev:{ "Level 3":"Words from the book", "Level 4":"Words from the book",
        "Level 5":"Words from the book", "Level 6":"Evidence", "Level 7":"Evidence" },
-  eff:{ "Foundation to Level 2":"How it makes you feel", "Levels 3 and 4":"How it makes you feel" }
+  eff:{ "Level 3":"How it makes you feel", "Level 4":"How it makes you feel" }
 };
 const nameFor = (c,lv) => (NAME_AT[c.key] && NAME_AT[c.key][lv]) || c.name;
 
-const EARLY_LEVELS = ["Foundation to Level 2", "Levels 3 and 4"];
+const EARLY_LEVELS = ["Level 3", "Level 4"];
 const LEVELS = ["Level 5","Level 6","Level 7","Level 8","Level 9","Level 10"];
 
 const FOCUS = {
- "Foundation to Level 2":"Say what happens, and point at the words",
- "Levels 3 and 4":"Say what happens, and how it makes you feel",
+ "Level 3":"Say what happens, and point at the words",
+ "Level 4":"Say what happens, and how it makes you feel",
  "Level 5":"Identify · say what happens",
  "Level 6":"Describe with detail · the quote goes inside the sentence",
  "Level 7":"Explain the effect · the idea becomes an issue",
@@ -240,10 +242,10 @@ const EAL = { "Level 5":"C2 — Describe", "Level 6":"C2/C3 — Describe in deta
 
 
 const EXAMPLES = {
- "Foundation to Level 2":
+ "Level 3":
 `Subhi lives in a camp. At night he thinks {idea|the dirt is the sea}. He says it is {ev|"a beautiful ocean"}. The sea is not really there.`,
 
- "Levels 3 and 4":
+ "Level 4":
 `In this part, Subhi {idea|imagines that the dirt outside the tent turns into an ocean}. He says {ev|"the dirt outside turns into a beautiful ocean"}. This makes me {eff|feel that Subhi is happier at night than in the day}, even though nothing has changed in the camp.`,
 
  "Level 5":
@@ -266,10 +268,10 @@ const EXAMPLES = {
 };
 
 const EXPLANATIONS = {
- "Foundation to Level 2": {
+ "Level 3": {
   idea:"One thing that happens in the story, said in your own words.",
   ev:"Two or three words copied straight out of the book, with quote marks around them." },
- "Levels 3 and 4": {
+ "Level 4": {
   idea:"A whole sentence now, and it says what Subhi does rather than what the camp looks like.",
   ev:"A whole line copied from the book, in a sentence of its own next to your point.",
   eff:"What the writing does to you as you read it." },
