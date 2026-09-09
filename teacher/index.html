@@ -8,145 +8,212 @@
 <style>
 :root{
   --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
-  --line:#d8cfbb; --accent:#a83232;
+  --line:#d8cfbb; --accent:#a83232; --deep:#1f5c33;
+  --idea:#0B447C; --ev:#c9a227; --eff:#1F5C33; --verb:#8A4B12;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink)}
-main{max-width:640px;margin:0 auto;padding:40px 20px 60px}
+main{max-width:1120px;margin:0 auto;padding:32px 20px 60px}
 h1{font-family:Georgia,'Times New Roman',serif;font-size:22px;margin:0 0 4px}
-.sub{color:var(--muted);font-size:13px;margin:0 0 28px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 22px}
 .sub a{color:var(--muted)}
 h2{font-family:Georgia,serif;font-size:15px;color:var(--muted);font-weight:normal;
-   margin:26px 0 10px;border-bottom:1px solid var(--line);padding-bottom:4px}
-ul{list-style:none;margin:0;padding:0}
+   margin:22px 0 9px;border-bottom:1px solid var(--line);padding-bottom:4px}
+h2 span{font-size:12.5px;font-family:'Segoe UI',sans-serif}
+.start{font-size:12px;color:var(--muted);margin:-4px 0 8px}
+.start a{color:var(--muted)}
+.start b{font-weight:600;color:var(--deep)}
+
+ul{list-style:none;margin:0;padding:0;
+   display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px}
 li{border:1px solid var(--line);background:var(--paper);border-radius:8px;
-   margin-bottom:10px;overflow:hidden}
-a.res{display:block;padding:14px 16px 10px;color:var(--ink);text-decoration:none}
-.pair{padding:0 16px 11px;font-size:12.5px;color:var(--muted)}
+   display:flex;flex-direction:column}
+li:hover{border-color:var(--accent)}
+a.res{display:flex;gap:10px;padding:11px 12px 8px;color:var(--ink);text-decoration:none}
+.ico{flex:none;width:34px;height:42px}
+.txt{min-width:0}
+.name{display:block;font-family:Georgia,serif;font-size:14.5px;line-height:1.25}
+.meta{display:block;color:var(--muted);font-size:11.5px;line-height:1.4;margin-top:3px}
+.pair{margin-top:auto;padding:0 12px 9px 56px;font-size:11.5px;color:var(--muted)}
 .pair a{color:var(--muted)}
 .pair b{font-weight:600;color:var(--deep);font-style:normal}
-li:hover{border-color:var(--accent)}
-.name{font-family:Georgia,serif;font-size:16px}
-.meta{color:var(--muted);font-size:12.5px;margin-top:3px}
+@media (max-width:560px){.ico{display:none} .pair{padding-left:12px}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- what each thing is, at a glance: a sheet to print, a deck to run,
+       a page on the site, a master to cut up -->
+  <symbol id="i-doc" viewBox="0 0 34 42">
+    <rect x="3.5" y="2.5" width="27" height="37" rx="2" fill="#fff" stroke="#c3b7a0"/>
+    <rect x="8" y="9" width="18" height="4" rx="1" fill="#D6EAFC" stroke="#0B447C" stroke-width=".8"/>
+    <path d="M8 19h18M8 24h18M8 29h12" stroke="#c3b7a0" stroke-width="1.4" stroke-linecap="round"/>
+    <rect x="8" y="32.5" width="9" height="3.5" rx="1" fill="#FFF3B0" stroke="#c9a227" stroke-width=".8"/>
+  </symbol>
+  <symbol id="i-deck" viewBox="0 0 34 42">
+    <rect x="2.5" y="7.5" width="29" height="20" rx="2" fill="#fff" stroke="#c3b7a0"/>
+    <circle cx="10" cy="14" r="2.6" fill="#D6EAFC" stroke="#0B447C" stroke-width=".8"/>
+    <circle cx="20.5" cy="12.5" r="2" fill="#DFF0E2" stroke="#1F5C33" stroke-width=".8"/>
+    <circle cx="16" cy="21" r="3.2" fill="#FFF3B0" stroke="#c9a227" stroke-width=".8"/>
+    <path d="M17 27.5v5M11 34h12" stroke="#c3b7a0" stroke-width="1.6" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="i-screen" viewBox="0 0 34 42">
+    <rect x="2.5" y="6.5" width="29" height="22" rx="2" fill="#fff" stroke="#c3b7a0"/>
+    <path d="M2.5 12.5h29" stroke="#c3b7a0"/>
+    <path d="M7 18h13M7 23h9" stroke="#c3b7a0" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M21.5 21.5l7 6-3 .6 1.6 3.2-1.8.9-1.7-3.3-2.1 2.2z" fill="#1f1f1f"/>
+  </symbol>
+  <symbol id="i-print" viewBox="0 0 34 42">
+    <rect x="3.5" y="2.5" width="27" height="37" rx="2" fill="#fff" stroke="#c3b7a0"/>
+    <path d="M8 9h18M8 14h18" stroke="#c3b7a0" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M3.5 21h27" stroke="#a83232" stroke-width="1" stroke-dasharray="3 3"/>
+    <path d="M8 27h18M8 32h11" stroke="#c3b7a0" stroke-width="1.4" stroke-linecap="round"/>
+  </symbol>
+</defs></svg>
+
 <main>
 <h1>Teacher</h1>
 <p class="sub">The Bone Sparrow — <a href="../">student site</a></p>
 
-<h2>Print and hand out</h2>
+<h2>Evidence <span>· finding it, and what it shows</span></h2>
+<p class="start">Starts with <a href="../BoneSparrowReadingHub.html"><b>a quickread or two</b></a></p>
 <ul>
-  <li><a class="res" href="../BoneSparrow-A3-booklet.docx">
-    <div class="name">A3 writing booklet</div>
-    <div class="meta">One sheet per student, double-sided, folded once. Three cycles into a sentence, each on a different thread, plus the wall and the language glossary.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-A3-booklet-support.docx">
-    <div class="name">A3 writing booklet · support</div>
-    <div class="meta">Same sheets. Plain front page with the three examples only. Each cycle's draft is a coloured sentence frame with the fixed parts printed.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-stations.docx">
-    <div class="name">Rotation stations</div>
-    <div class="meta">Nine A3 station posters — three quotes, three ideas, three effects — plus a map sheet per student for drawing the links.</div>
+  <li><a class="res" href="../BoneSparrowThreeWaysDeck.html">
+    <svg class="ico"><use href="#i-deck"/></svg>
+    <span class="txt"><span class="name">Three ways in — the mind map</span>
+    <span class="meta">Quote, idea and purpose floating in. Space bar starts it.</span></span>
   </a>
   <div class="pair">Goes with <a href="../BoneSparrowThreeWays.html"><b>the three ways into a sentence</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-template.docx">
-    <div class="name">TEEL sheet · imagination</div>
-    <div class="meta">What an essay is, the paragraph in bars, a worked paragraph to colour, a frame for friendship on the back.</div>
+  <li><a class="res" href="../BoneSparrow-stations.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Rotation stations</span>
+    <span class="meta">Nine A3 posters — three quotes, three ideas, three effects — and a map sheet each.</span></span>
   </a>
-  <div class="pair">Goes with <a href="teel-essay.html"><b>TEEL · imagination and friendship</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-power.docx">
-    <div class="name">TEEL sheet · power</div>
-    <div class="meta">The same sheet for kinds of power. A worked paragraph on the Jackets to colour, a frame for another kind on the back.</div>
-  </a>
-  <div class="pair">Goes with <a href="teel-power.html"><b>TEEL · kinds of power</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-purpose.docx">
-    <div class="name">TEEL sheet · purpose</div>
-    <div class="meta">One purpose as the prompt. A worked paragraph on learning their names to colour, a frame for another way on the back.</div>
-  </a>
-  <div class="pair">Goes with <a href="teel-purpose.html"><b>TEEL · how Fraillon does it</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-essay-planner.docx">
-    <div class="name">Planning three paragraphs</div>
-    <div class="meta">Six prompts, three a side. For each one, what the three paragraphs could be about and one piece of evidence each.</div>
-  </a>
-  <div class="pair">Goes with <a href="teel-essay.html"><b>TEEL · imagination and friendship</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-worksheet.docx">
-    <div class="name">Essay sheet</div>
-    <div class="meta">Intro and conclusion with gaps, paragraph A printed to copy, frames for B and C.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowTeel.html"><b>the letters and the ladder</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-eal.docx">
-    <div class="name">Essay sheet · EAL</div>
-    <div class="meta">Word list first, shorter sentences, one sentence per line in the frames.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowTeel.html"><b>the letters and the ladder</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-low.docx">
-    <div class="name">Essay sheet · low literacy</div>
-    <div class="meta">Bigger print, paragraph B only, a theme and a quote to pick from on the page.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowTeel.html"><b>the letters and the ladder</b></a></div></li>
-  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-ext.docx">
-    <div class="name">Essay sheet · extension</div>
-    <div class="meta">TEEAL. Paragraph A gives only the T and L, the evidence sentences are theirs. B and C from the letters alone.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowTeel.html"><b>the letters and the ladder</b></a></div></li>
+  <div class="pair">Goes with <a href="../BoneSparrowThreeWays.html"><b>the three ways into a sentence</b></a></div></li>
 </ul>
 
-<h2>Front of the room</h2>
+<h2>Explanation <span>· the analysis workshop</span></h2>
+<p class="start">Starts with <a href="../BoneSparrowReadingHub.html#ev"><b>the evidence builder</b></a></p>
 <ul>
   <li><a class="res" href="../BoneSparrowReadingHub.html#teach">
-    <div class="name">Analytical writing — the slides</div>
-    <div class="meta">The WAGOLL wall walked through, then the builder demo on rails.</div>
+    <svg class="ico"><use href="#i-deck"/></svg>
+    <span class="txt"><span class="name">Analytical writing — the slides</span>
+    <span class="meta">The wall walked through, then the builder demo on rails.</span></span>
   </a>
   <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
   <li><a class="res" href="../BoneSparrowWagollWall.html">
-    <div class="name">The full WAGOLL wall</div>
-    <div class="meta">Every level's model response on one page.</div>
+    <svg class="ico"><use href="#i-screen"/></svg>
+    <span class="txt"><span class="name">The full WAGOLL wall</span>
+    <span class="meta">Every level's model response on one page.</span></span>
   </a>
   <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
-  <li><a class="res" href="../BoneSparrowTeel.html">
-    <div class="name">A TEEL paragraph — the letters and the ladder</div>
-    <div class="meta">The four letters, two worked paragraphs, then the last sentence built a rung at a time.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrow-TEEL-worksheet.docx"><b>the TEEL worksheet</b></a></div></li>
-  <li><a class="res" href="teel-essay.html">
-    <div class="name">TEEL · imagination and friendship</div>
-    <div class="meta">The big idea, the essay in bars, a bubble brainstorm, a paragraph built a sentence at a time, then their turn.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrow-TEEL-template.docx"><b>the TEEL sheet · imagination</b></a></div></li>
-  <li><a class="res" href="teel-power.html">
-    <div class="name">TEEL · kinds of power</div>
-    <div class="meta">Same shape. The brainstorm is open: the class picks which two kinds of power become the paragraphs.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrow-TEEL-power.docx"><b>the TEEL sheet · power</b></a></div></li>
-  <li><a class="res" href="teel-purpose.html">
-    <div class="name">TEEL · how Fraillon does it</div>
-    <div class="meta">The prompt is one purpose. The class agrees or disagrees with the ways she achieves it, and the two they back become the paragraphs.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrow-TEEL-purpose.docx"><b>the TEEL sheet · purpose</b></a></div></li>
-  <li><a class="res" href="../BoneSparrowThreeWaysDeck.html">
-    <div class="name">Three ways in — the mind map</div>
-    <div class="meta">Quote, idea and purpose floating in. Space bar starts it.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowThreeWays.html"><b>the three ways into a sentence</b></a></div></li>
-</ul>
-
-<h2>Print masters on the site</h2>
-<ul>
   <li><a class="res" href="../BoneSparrowWagollSheets.html">
-    <div class="name">WAGOLL sheets</div>
-    <div class="meta">Print from the browser.</div>
-  </a>
-  <div class="pair">Goes with <a href="../BoneSparrowWagollWall.html"><b>the full WAGOLL wall</b></a></div></li>
+    <svg class="ico"><use href="#i-print"/></svg>
+    <span class="txt"><span class="name">WAGOLL sheets</span>
+    <span class="meta">A3 portrait, Foundation to Level 10. Print from the browser.</span></span>
+  </a></li>
   <li><a class="res" href="../BoneSparrowClimbCards.html">
-    <div class="name">Climb cards</div>
-    <div class="meta">Print and cut.</div>
+    <svg class="ico"><use href="#i-print"/></svg>
+    <span class="txt"><span class="name">Climb cards</span>
+    <span class="meta">Four sets a sheet. Print, cut the columns, one set each.</span></span>
   </a>
   <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the climb</b></a></div></li>
 </ul>
+
+<h2>The booklet <span>· three cycles into a sentence</span></h2>
+<p class="start">Starts with <a href="../BoneSparrowReadingHub.html#ev"><b>the evidence builder</b></a></p>
+<ul>
+  <li><a class="res" href="../BoneSparrow-A3-booklet.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">A3 writing booklet</span>
+    <span class="meta">One sheet each, folded once. Three cycles into a sentence, plus the wall and the glossary.</span></span>
+  </a>
+  <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
+  <li><a class="res" href="../BoneSparrow-A3-booklet-support.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">A3 writing booklet · support</span>
+    <span class="meta">Plain front page. Each draft is a coloured frame with the fixed parts printed.</span></span>
+  </a>
+  <div class="pair">Goes with <a href="../BoneSparrowReadingHub.html#wk"><b>the analysis workshop</b></a></div></li>
+</ul>
+
+<h2>A paragraph <span>· T, E, E, L</span></h2>
+<ul>
+  <li><a class="res" href="../BoneSparrowTeel.html">
+    <svg class="ico"><use href="#i-screen"/></svg>
+    <span class="txt"><span class="name">The letters and the ladder</span>
+    <span class="meta">The four letters, two worked paragraphs, the last sentence a rung at a time.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-worksheet.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Essay sheet</span>
+    <span class="meta">Intro and conclusion with gaps, paragraph A printed to copy, frames for B and C.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-eal.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Essay sheet · EAL</span>
+    <span class="meta">Word list first, shorter sentences, one sentence per line in the frames.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-low.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Essay sheet · low literacy</span>
+    <span class="meta">Bigger print, paragraph B only, a theme and a quote to pick from on the page.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-worksheet-ext.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Essay sheet · extension</span>
+    <span class="meta">TEEAL. Paragraph A gives the T and L only; B and C from the letters alone.</span></span>
+  </a></li>
+</ul>
+
+<h2>An essay · imagination and friendship <span>· the first session</span></h2>
+<ul>
+  <li><a class="res" href="teel-essay.html">
+    <svg class="ico"><use href="#i-deck"/></svg>
+    <span class="txt"><span class="name">TEEL · imagination and friendship</span>
+    <span class="meta">The big idea, the essay in bars, a brainstorm, a paragraph a sentence at a time.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-template.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">TEEL sheet · imagination</span>
+    <span class="meta">What an essay is, the paragraph in bars, a worked paragraph to colour, a frame on the back.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-essay-planner.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">Planning three paragraphs</span>
+    <span class="meta">Six prompts, three a side. What the paragraphs could be, and one piece of evidence each.</span></span>
+  </a></li>
+</ul>
+
+<h2>An essay · kinds of power <span>· the brainstorm is open</span></h2>
+<ul>
+  <li><a class="res" href="teel-power.html">
+    <svg class="ico"><use href="#i-deck"/></svg>
+    <span class="txt"><span class="name">TEEL · kinds of power</span>
+    <span class="meta">Same shape. The brainstorm is open: the class picks which two kinds become the paragraphs.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-power.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">TEEL sheet · power</span>
+    <span class="meta">A worked paragraph on the Jackets to colour, a frame for another kind on the back.</span></span>
+  </a></li>
+</ul>
+
+<h2>An essay · how Fraillon does it <span>· one purpose, agreed or not</span></h2>
+<ul>
+  <li><a class="res" href="teel-purpose.html">
+    <svg class="ico"><use href="#i-deck"/></svg>
+    <span class="txt"><span class="name">TEEL · how Fraillon does it</span>
+    <span class="meta">The prompt is one purpose. The class agrees or disagrees with the ways she achieves it.</span></span>
+  </a></li>
+  <li><a class="res" href="../BoneSparrow-TEEL-purpose.docx">
+    <svg class="ico"><use href="#i-doc"/></svg>
+    <span class="txt"><span class="name">TEEL sheet · purpose</span>
+    <span class="meta">A worked paragraph on learning their names to colour, a frame for another way on the back.</span></span>
+  </a></li>
+</ul>
+
 </main>
 </body>
 </html>
