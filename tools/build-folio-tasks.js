@@ -44,26 +44,33 @@ const mini=(segs)=>{const BW=560, tot=segs.reduce((a,x)=>a+x[1],0), cw=segs.map(
       children:[new Paragraph({spacing:{after:0,line:120,lineRule:LineRuleType.EXACT},children:[new TextRun({text:"",size:6})]})]}))})]});};
 const T_BAR=[["idea",1]], E_BAR=[["ev",3],["verb",1],["idea",3],["eff",3]], L_BAR=[["idea",2],["idea",2],["eff",3]];
 
-/* the frame they write in: letter, what goes there, room */
-const teel=(rows)=>new Table({columnWidths:[700,2600,W-3300],width:{size:W,type:WidthType.DXA},
+/* ruled lines to write on */
+const ruled=n=>Array.from({length:n},()=>new Paragraph({spacing:{before:180,after:0},
+  border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE}},children:[new TextRun({text:"",size:22})]}));
+
+/* the frame: the letter with its bar, then the lines */
+const frame=(rows)=>new Table({columnWidths:[760,W-760],width:{size:W,type:WidthType.DXA},
   borders:{top:BOX,bottom:BOX,left:BOX,right:BOX,insideH:RULE,insideV:RULE},
-  rows:rows.map(([l,d,h,bar,soft])=>new TableRow({height:{value:h,rule:HeightRule.ATLEAST},children:[
-    new TableCell({width:{size:700,type:WidthType.DXA},margins:{top:100,bottom:100,left:100,right:40},
+  rows:rows.map(([l,n,bar,soft,label])=>new TableRow({children:[
+    new TableCell({width:{size:760,type:WidthType.DXA},margins:{top:120,bottom:120,left:120,right:40},
       children:[new Paragraph({spacing:{after:40},children:[new TextRun({text:l,bold:true,size:40,
         color:soft?MUTED:DEEP,font:"Georgia"})]}),...(bar?[mini(bar)]:[])]}),
-    new TableCell({width:{size:2600,type:WidthType.DXA},margins:{top:100,bottom:100,left:100,right:100},
-      shading:{type:ShadingType.CLEAR,fill:soft?"F1EDE3":"F6F1E6",color:"auto"},
-      children:d.map(x=>new Paragraph({spacing:{after:40},children:[new TextRun({text:x,size:17,color:MUTED,font:"Calibri"})]}))}),
-    new TableCell({width:{size:W-3300,type:WidthType.DXA},margins:{top:100,bottom:100,left:120,right:120},
-      children:[new Paragraph({children:[]})]})]}))});
+    new TableCell({width:{size:W-760,type:WidthType.DXA},margins:{top:100,bottom:140,left:160,right:160},
+      children:[...(label?[new Paragraph({spacing:{after:0},children:[new TextRun({text:label,size:17,
+        color:MUTED,font:"Calibri"})]})]:[]),...ruled(n)]})]}))});
 
-const paraRows=()=>[
-  ["T",["Your idea, in one sentence."],1300,T_BAR],
-  ["E",["When …, “…”","This shows that …, which …"],2000,E_BAR],
-  ["E",["Later, “…”","This shows that …, which …"],2000,E_BAR],
-  ["E",["Another quote, if you get there.",""],1400,E_BAR,true],
-  ["L",["So, because … and …, …"],1700,L_BAR]
-];
+/* the same frame with the model already coloured in it */
+const worked=(rows)=>new Table({columnWidths:[760,W-760],width:{size:W,type:WidthType.DXA},
+  borders:{top:BOX,bottom:BOX,left:BOX,right:BOX,insideH:RULE,insideV:RULE},
+  rows:rows.map(([l,segs,bar])=>new TableRow({children:[
+    new TableCell({width:{size:760,type:WidthType.DXA},margins:{top:140,bottom:140,left:120,right:40},
+      children:[new Paragraph({spacing:{after:40},children:[new TextRun({text:l,bold:true,size:40,color:DEEP,font:"Georgia"})]}),
+        ...(bar?[mini(bar)]:[])]}),
+    new TableCell({width:{size:W-760,type:WidthType.DXA},margins:{top:160,bottom:160,left:160,right:160},
+      children:[new Paragraph({spacing:{after:0,line:400},children:segs.map(([k,t])=>
+        k==="plain"?R(t,{size:23}):R(t,{size:23,bold:true,color:C[k],shading:{type:ShadingType.CLEAR,fill:SH[k]}}))})]})]}))});
+
+const PARA=[["T",2,T_BAR],["E",3,E_BAR],["E",3,E_BAR],["E",2,E_BAR,true,"if you get there"],["L",3,L_BAR]];
 
 /* self assessment, same colours */
 const SELF=[
@@ -101,37 +108,46 @@ const TASKS=[
 { n:1, file:"BoneSparrow-folio-1-stories.docx",
   prompt:[["‘But reading is important.’ (p39) Discuss how "],["hl","stories"],[" and "],["hl","imagination"],
           [" are important for characters in The Bone Sparrow."]],
-  big:[["Stories and imagination are what the characters in The Bone Sparrow use to survive a place that gives them nothing else."]],
+  big:"Stories and imagination are what the characters in The Bone Sparrow use to survive a place that gives them nothing else.",
   idea1:"the way imagination gives Subhi somewhere to go when he cannot leave",
-  a:"imagination gives Subhi somewhere to go", b:"stories make him brave",
-  worked:[
-   "Imagination gives Subhi somewhere to go when he cannot leave the camp.",
-   "On the first page the ground outside the tent changes: at night “the dirt outside turns into a beautiful ocean”.",
-   "Fraillon writes the Night Sea as a fact rather than as a daydream, which reveals that Subhi’s way of seeing is not a mistake about where he is, but the one part of the camp that belongs to him.",
-   "This makes the reader understand that imagination is not an escape from the camp so much as a way of getting through it."] },
+  model:[
+   ["T",[["idea","Imagination gives Subhi somewhere to go when he cannot leave the camp."]],T_BAR],
+   ["E",[["plain","On the first page the ground outside the tent changes: at night "],
+         ["ev","“the dirt outside turns into a beautiful ocean”"],["plain","."]],E_BAR],
+   ["E",[["plain","Fraillon writes the Night Sea as a fact rather than as a daydream, which "],["verb","reveals"],
+         ["plain"," that "],["idea","Subhi’s way of seeing is not a mistake about where he is, but the one part of the camp that belongs to him"],
+         ["plain","."]],E_BAR],
+   ["L",[["plain","This "],["eff","makes the reader understand that imagination is not an escape from the camp so much as a way of getting through it"],
+         ["plain","."]],L_BAR]] },
 
 { n:2, file:"BoneSparrow-folio-2-conditions.docx",
-  prompt:[["‘Soon they’ll see that living in here isn’t living at all. We just need to show them who we are, that we’re people, and then they’ll remember.’ (p108) Discuss the "],["hl","living conditions"],
-          [" for characters "],["hl","inside and outside"],[" the centre."]],
-  big:[["Life inside the centre is measured out in numbers, while life outside it goes on without noticing."]],
+  prompt:[["‘Soon they’ll see that living in here isn’t living at all. We just need to show them who we are, that we’re people, and then they’ll remember.’ (p108) Discuss the "],
+          ["hl","living conditions"],[" for characters "],["hl","inside and outside"],[" the centre."]],
+  big:"Life inside the centre is measured out in numbers, while life outside it goes on without noticing.",
   idea1:"the way ordinary life inside the centre is controlled until protest is all that is left",
-  a:"the centre controls what an ordinary day can hold", b:"the people outside are not shown what is happening",
-  worked:[
-   "Inside the centre, ordinary life is controlled until protest is all that people have left.",
-   "Subhi counts what is happening around him: “There are twenty-four people with their lips sewn shut now, and eighty-seven on hunger strike.”",
-   "Fraillon gives the reader numbers instead of descriptions, which demonstrates that a place which counts people rather than naming them has taught a child to count them too.",
-   "This makes the reader feel how ordinary the desperation has become, and that is worse than being told it is terrible."] },
+  model:[
+   ["T",[["idea","Inside the centre, ordinary life is controlled until protest is all that people have left."]],T_BAR],
+   ["E",[["plain","Subhi counts what is happening around him: "],
+         ["ev","“There are twenty-four people with their lips sewn shut now, and eighty-seven on hunger strike.”"]],E_BAR],
+   ["E",[["plain","Fraillon gives the reader numbers instead of descriptions, which "],["verb","demonstrates"],
+         ["plain"," that "],["idea","a place which counts people rather than naming them has taught a child to count them too"],
+         ["plain","."]],E_BAR],
+   ["L",[["plain","This "],["eff","makes the reader feel how ordinary the desperation has become"],
+         ["plain",", and that is worse than being told it is terrible."]],L_BAR]] },
 
 { n:3, file:"BoneSparrow-folio-3-family.docx",
   prompt:[["The Bone Sparrow explores themes of "],["hl","family"],[" and "],["hl","friendship"],[". Discuss."]],
-  big:[["In the centre, friendship does the work that family cannot always do."]],
+  big:"In the centre, friendship does the work that family cannot always do.",
   idea1:"the way a friend who keeps a promise gives Subhi something the camp cannot take away",
-  a:"a friend who keeps a promise gives him something to count on", b:"what he shares with Eli is his to give",
-  worked:[
-   "A friend who keeps a promise gives Subhi something the camp cannot take away.",
-   "After Jimmie stops coming, Subhi holds on to what she has already proved: he knows “for sure that Jimmie is the kind of person that keeps a promise”.",
-   "Fraillon puts the certainty in Subhi’s own voice, and “for sure” suggests that what matters to him is not what Jimmie brings but the fact that she comes back.",
-   "This shows the reader that in a place where everything is temporary, somebody keeping their word is what safety looks like."] }
+  model:[
+   ["T",[["idea","A friend who keeps a promise gives Subhi something the camp cannot take away."]],T_BAR],
+   ["E",[["plain","After Jimmie stops coming, Subhi holds on to what she has already proved: he knows "],
+         ["ev","“for sure that Jimmie is the kind of person that keeps a promise”"],["plain","."]],E_BAR],
+   ["E",[["plain","Fraillon puts the certainty in Subhi’s own voice, and “for sure” "],["verb","suggests"],
+         ["plain"," that "],["idea","what matters to him is not what Jimmie brings but the fact that she comes back"],
+         ["plain","."]],E_BAR],
+   ["L",[["plain","This "],["eff","shows the reader that in a place where everything is temporary, somebody keeping their word is what safety looks like"],
+         ["plain","."]],L_BAR]] }
 ];
 
 function runs(spec){ return spec.map(x=>x[0]==="hl"?hl("idea",x[1]):R(x[0])); }
@@ -148,43 +164,40 @@ function doc(t){
     H("The prompt"),
     box([P(runs(t.prompt),{after:0})]),
 
-    H("Colour the worked paragraph"),
-    P([R("Colour each word or phrase: "),swatch("idea","idea"),R(", "),swatch("verb","verb"),R(", "),
-       swatch("ev","evidence"),R(", "),swatch("eff","purpose"),R(".")]),
-    box(t.worked.map((x,i)=>new Paragraph({spacing:{after:i<3?140:0,line:520,lineRule:LineRuleType.EXACT},
-      children:[R(x,{size:23})]})),"FBF7EE"),
-    br(),
-
     H("Introduction"),
+    key(),
     box([
-      P(t.big.map(x=>R(x[0])),{after:120}),
-      P([R("Fraillon shows this first through "),hl("idea",t.idea1),R(".")],{after:120}),
-      P([R("She also shows it through "),R("______________________________________________",{color:LINE})],{after:60}),
-      P([R("_______________________________________________________________________",{color:LINE})],{after:120}),
-      P([R("and through "),R("____________________________________________________",{color:LINE})],{after:60}),
-      P([R("_______________________________________________________________________",{color:LINE})],{after:0})]),
+      P([R(t.big)],{after:140}),
+      P([R("Fraillon shows this first through "),hl("idea",t.idea1),R(".")],{after:140}),
+      P([R("She also shows it through")],{after:0}),
+      ...ruled(2),
+      P([R("and through")],{before:160,after:0}),
+      ...ruled(2)]),
     note("The third idea is for whoever gets that far."),
-
-    H("Paragraph 2"),
-    teel(paraRows()),
     br(),
 
-    H("Paragraph 3"),
+    H("The model"),
+    worked(t.model),
+    br(),
+
+    H("Your paragraph"),
+    frame(PARA),
+    br(),
+
+    H("Another paragraph"),
     note("If you get there."),
-    teel(paraRows()),
+    frame(PARA),
+    br(),
 
     H("Conclusion"),
-    teel([
-      ["L",["So The Bone Sparrow shows that …","No new quotes."],1700,L_BAR]]),
-    br(),
+    frame([["L",3,L_BAR,false,"So The Bone Sparrow shows that … — no new quotes"]]),
 
     H("How did it go?"),
-    P("Tick one box in each row for the paragraphs you wrote today."),
     selfTable(),
     new Paragraph({spacing:{after:160},children:[R("")]}),
-    openBox("One thing I will do better next time",900),
+    openBox("One thing I will do better next time",800),
     new Paragraph({spacing:{after:160},children:[R("")]}),
-    openBox("Teacher feedback",1500)
+    openBox("Teacher feedback",1300)
   ];
   return new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
     sections:[{properties:{page:{size:{width:PW,height:PH},
