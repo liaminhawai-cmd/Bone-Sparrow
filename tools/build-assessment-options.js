@@ -2,11 +2,12 @@ const fs=require('fs');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,BorderStyle,
        ShadingType,PageBreak,HeightRule,AlignmentType}=require('docx');
 
-/* Two ways to assess the same skill, written on the department's own CAT
-   pattern: task sheet (Task / Purpose / Audience / Time / You must / Options)
-   then the rubric in landscape, five bands from Emerging to Well Above.
-   The rubric rows are the school's Learning Continuum substrands, in its own
-   single-year levels; the grade is the average across the rows. */
+/* Two ways to assess the same skill, on the shape the 2025 and 2026 tasks
+   use: a title, the task in a paragraph, name and date, the structure to
+   help you, then the rubric at the end of the same document. The rubric
+   rows are the school's Learning Continuum substrands in its own single-year
+   levels; the grade is the average across the rows. The EAL rubric is the
+   ELC analytical writing one, C2 to C4. */
 
 const A4W=11906, A4H=16838, MARG=720;
 const PW=A4W-MARG*2, LW=A4H-MARG*2;
@@ -90,34 +91,30 @@ function rubric(){
           {shading:{type:ShadingType.CLEAR,fill:PALE[r[0]],color:"auto"}}))]}))]});
 }
 
-/* the EAL rubric: the skill focus from the EAL analytical writing WAGOLL, then
-   the school's EAL reading rubric, C bands, both quoted as they stand */
-const EAL_BANDS=["C2","C3","C4","VCE 1"];
+/* the EAL rubric: the ELC analytical writing rubric, C2 to C4, the way the
+   2026 tasks carry theirs \u2014 a plain table at the end of the same document */
+const EAL_BANDS=["C2","C3","C4"];
 const EAL_ROWS=[
  ["idea","Ideas & Themes",
   "Recognises what happens in the text. Retells key details with little interpretation.",
   "Explains basic feelings or ideas suggested by the text. Begins linking choices to simple themes.",
-  "Connects specific language choices to themes or concepts. Explains what the creator might be saying.",
-  "Analyses how choices express messages, values, or perspectives. Analyses the creator\u2019s purpose in representing social or cultural issues."],
+  "Connects specific language choices to themes or concepts. Explains what the creator might be saying."],
  ["ev","Evidence & Metalanguage",
   "Gives a simple quote or description from the text.",
   "Names a language feature and begins linking it to meaning.",
-  "Uses terminology accurately with short, embedded evidence.",
-  "Integrates evidence and metalanguage fluently to build interpretation."],
+  "Uses terminology accurately with short, embedded evidence."],
  ["plain","Language & Structure",
   "Writes short, simple sentences using mostly literal verbs (\u201cshows\u201d, \u201cuses\u201d).",
   "Expands sentences with connectives such as because, so, or to. Uses basic evaluative words.",
-  "Uses more complex sentences and analytical verbs (\u201csuggests\u201d, \u201chighlights\u201d).",
-  "Writes fluently in a cohesive formal style, varying sentence structures to show cause, effect, and interpretation."],
+  "Uses more complex sentences and analytical verbs (\u201csuggests\u201d, \u201chighlights\u201d)."],
  ["eff","Purpose & Interpretation",
   "Identifies the basic meaning or message.",
   "Explains the effect on the reader.",
-  "Makes inferences about the creator\u2019s intent or perspective.",
-  "Discusses deeper social, moral, or ethical ideas, linking choices to broader context."]
+  "Makes inferences about the creator\u2019s intent or perspective."]
 ];
 function ealRubric(){
-  const BW=Math.floor((LW-CRITW)/4);
-  return new Table({columnWidths:[CRITW,BW,BW,BW,BW],width:{size:LW,type:WidthType.DXA},
+  const BW=Math.floor((PW-CRITW)/3);
+  return new Table({columnWidths:[CRITW,BW,BW,BW],width:{size:PW,type:WidthType.DXA},
     borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
     rows:[
       new TableRow({tableHeader:true,children:[
@@ -140,54 +137,43 @@ const rubricPage=(name)=>[
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
 ];
-const ealPage=(name)=>[
-  new Paragraph({spacing:{after:60},children:[T(name,{bold:true,size:28})]}),
-  new Paragraph({spacing:{after:160},children:[T("RUBRIC \u00b7 EAL",{bold:true,size:24,color:"595959"}),
+const ealPage=()=>[
+  new Paragraph({spacing:{after:160},children:[T("Rubric \u00b7 EAL",{bold:true,size:28}),
     T("        "),...line("Name:",30)]}),
   ealRubric(),
-  new Paragraph({spacing:{before:140},children:[
-    T("For students on the EAL pathway, in place of the continuum rubric. ",{size:18}),
-    T("The EAL analytical writing rubric, with its film wording taken out.",{size:18,italics:true,color:"595959"})]}),
+  new Paragraph({spacing:{before:120},children:[
+    T("For students on the EAL pathway, in place of the continuum rubric.",{size:18,color:"595959"})]}),
   new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
-  new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
-  new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
+  new Paragraph({spacing:{before:120},children:[T("_".repeat(96),{size:20,color:"808080"})]}),
+  new Paragraph({spacing:{before:120},children:[T("_".repeat(96),{size:20,color:"808080"})]})
 ];
 
-const RUBRIC_LINE=P("Use the attached rubric to ensure that you are meeting the expected criteria.",{italics:true});
-const COMMON_MUST=[
- ["Use the TEEL structure.","Topic sentence, evidence, explanation, link. Your last sentence must say more than your first one did."],
- ["Embed your evidence.","The quote goes inside a sentence of your own. Do not leave it sitting on its own line."],
- ["Write about the writing, not the story.","Your reader has read the novel. Explain what Fraillon’s writing does to them."],
- ["Check your paragraph before you hand it in.","Colour the parts: idea, evidence, analytical verb, effect. If a part is missing, write it in."]
+/* the shape the 2025 and 2026 tasks use: a title, the task in a paragraph,
+   name and date, the structure to help you, and the rubric at the end */
+const title=(t)=>new Paragraph({spacing:{after:160},children:[T(t,{bold:true,size:32})]});
+const nameLine=()=>new Paragraph({spacing:{before:120,after:240},children:[...line("Name:",30),...line("Due date:",16)]});
+const STRUCTURE=[
+  HEAD("You can use this structure to help you:"),
+  new Paragraph({spacing:{after:40},children:[T("Introduction",{bold:true})]}),
+  dot("The big idea sentence is written for you"),
+  dot("Add the ideas your paragraphs will be about"),
+  new Paragraph({spacing:{before:80,after:40},children:[T("Body paragraphs",{bold:true})]}),
+  dot("Each paragraph is about one idea"),
+  dot("Use TEEL — topic sentence, evidence, explanation, link"),
+  dot("Put the quote inside a sentence of your own"),
+  dot("Explain what Fraillon’s writing does to the reader, not what happens in the story"),
+  new Paragraph({spacing:{before:80,after:40},children:[T("Conclusion",{bold:true})]}),
+  dot("Put your ideas back together — no new quotes")
 ];
+const NEED=(items)=>[HEAD("You will need:"),...items.map(dot)];
 
 /* ---------------------------------------------------------------- A */
-const A_PROMPTS=[
- ["Task 1","‘But reading is important.’ (p39) Discuss how stories and imagination are important for characters in The Bone Sparrow."],
- ["Task 2","‘Soon they’ll see that living in here isn’t living at all. We just need to show them who we are, that we’re people, and then they’ll remember.’ (p108) Discuss the living conditions for characters inside and outside the centre."],
- ["Task 3","The Bone Sparrow explores themes of family and friendship. Discuss."]
-];
 const A_SHEET=[
-  ...titleBlock("Analytical Paragraph Writing — Folio","Reading and Viewing","CAT 2 · Option A"),
-  HEAD("Task:"),
-  P("You will write three folio pieces about The Bone Sparrow. Each one is written in class in 30 minutes, and each one has its own prompt, which you are given at the start of the sitting. The booklet gives you the model paragraph and starts the introduction. You write one paragraph of your own, and a second one if you get there."),
-  HEAD("Purpose:"),
-  P("To explain an idea in the novel, and show how Fraillon’s writing puts that idea in front of the reader."),
-  HEAD("Audience:"),
-  P("Your teacher, and a reader who has already read the novel. You do not need to retell the story."),
-  HEAD("Time:"),
-  dot("Three sittings of 30 minutes, one for each task, on separate days."),
-  dot("Between the tasks your teacher gives you feedback on what you wrote, and you set yourself one thing to do better."),
-  HEAD("Conditions:"),
-  dot("Written in class under test conditions. You work on your own and your teacher does not help you draft."),
-  dot("On your desk: your copy of the novel, your own notes, and the analytical writing wall."),
-  dot("The first paragraph is printed in the booklet. Read it before you start."),
-  HEAD("You must:"),
-  num(1,"Finish the introduction.","The first idea is written in. Add the two ideas your paragraphs will be about."),
-  num(2,"Write your paragraph.","One idea. The model shows you the shape. Write a second paragraph if you get there."),
-  ...COMMON_MUST.map((m,i)=>num(i+3,m[0],m[1])),
-  num(7,"Fill in the self assessment at the back.","Tick a box in each row, and write the one thing you will do better next time."),
-  gap(80), RUBRIC_LINE,
+  title("The Bone Sparrow — Analytical Paragraph Writing (folio)"),
+  P("Write three folio pieces about The Bone Sparrow, one in each of three lessons. Each one is written in 30 minutes, under test conditions, on a prompt you are given at the start. The booklet gives you the model paragraph and starts the introduction for you. You write one paragraph of your own, and a second if you get there. Your teacher gives you feedback between the tasks, and you choose which task is marked."),
+  nameLine(),
+  ...NEED(["Your copy of the novel","Your own notes","The analytical writing wall"]),
+  ...STRUCTURE,
   new Paragraph({spacing:{after:0},children:[new PageBreak()]}),
   HEAD("Folio cover sheet"),
   P("Staple this page to the front of the three booklets."),
@@ -201,46 +187,19 @@ const A_SHEET=[
       ...["Task 1","Task 2","Task 3"]
         .map(t=>new TableRow({height:{value:620,rule:HeightRule.ATLEAST},children:[
           rc([gap()],900), rc([new Paragraph({spacing:{after:0},children:[T(t)]})],PW-900-2600), rc([gap()],2600)]}))]}),
-  HEAD("Before you hand it in"),
+  HEAD("Before you hand it in:"),
   dot("Read your paragraphs out loud. Does every sentence say something about the idea?"),
-  dot("Colour the parts: idea, language feature, evidence, effect on the reader."),
   dot("Check each last sentence links back to the idea and says more than the first one did.")
 ];
 /* ---------------------------------------------------------------- B */
-const B_PROMPTS=[
- "‘But reading is important.’ (p39) Discuss how stories and imagination are important for characters in The Bone Sparrow.",
- "‘Soon they’ll see that living in here isn’t living at all…’ (p108) Discuss the living conditions for characters inside and outside the centre.",
- "The Bone Sparrow explores themes of family and friendship. Discuss."
-];
 const B_SHEET=[
-  ...titleBlock("Analytical Paragraph Writing — Text Response","Reading and Viewing","CAT 2 · Option B"),
-  HEAD("Task:"),
-  P("In one period you write a response to a prompt about The Bone Sparrow. The model paragraph is printed for you and the introduction and conclusion are started. You write two paragraphs of your own."),
-  HEAD("Purpose:"),
-  P("To explain an idea in the novel, and show how Fraillon’s writing puts that idea in front of the reader."),
-  HEAD("Audience:"),
-  P("Your teacher, and a reader who has already read the novel. You do not need to retell the story."),
-  HEAD("Time:"),
-  dot("One period to prepare: your notes on the ideas in the novel, and the quotes you might use."),
-  dot("One period to write. You will be told when there are ten minutes left."),
-  HEAD("Conditions:"),
-  dot("Written in class under test conditions. Your teacher does not help you draft."),
-  dot("On your desk: your copy of the novel, one page of your own notes, and the analytical writing wall."),
-  dot("The prompt is given at the start of the period. You have not seen it before."),
-  HEAD("What is on the paper:"),
-  dot("An introduction with the big idea sentence written and the ideas left blank."),
-  dot("The model paragraph, written in full and colour coded."),
-  dot("Frames for your two paragraphs — topic sentence, evidence, explanation, link."),
-  dot("A conclusion with the first words of each sentence given."),
-  HEAD("You must:"),
-  num(1,"Finish the introduction.","Name the two ideas your paragraphs will be about."),
-  num(2,"Write two paragraphs.","One idea each. The model shows you the shape."),
-  ...COMMON_MUST.map((m,i)=>num(i+3,m[0],m[1])),
-  num(7,"Finish the conclusion.","Put your two ideas back together. No new quotes."),
-  gap(80), RUBRIC_LINE,
-  HEAD("Before you hand it in"),
+  title("The Bone Sparrow — Analytical Paragraph Writing"),
+  P("In one period, write a response to a prompt about The Bone Sparrow. The prompt is given at the start of the period. The model paragraph is printed for you and the introduction and conclusion are started. You write two paragraphs of your own, under test conditions, and finish the introduction and conclusion."),
+  nameLine(),
+  ...NEED(["Your copy of the novel","One page of your own notes, prepared in the lesson before","The analytical writing wall"]),
+  ...STRUCTURE,
+  HEAD("Before you hand it in:"),
   dot("Read your paragraphs out loud. Does every sentence say something about the idea?"),
-  dot("Colour the parts: idea, language feature, evidence, effect on the reader."),
   dot("Check each last sentence links back to the idea and says more than the first one did.")
 ];
 /* ---------------------------------------------------------------- build */
@@ -253,10 +212,10 @@ function build(sheet,name,out){
     sections:[
       {properties:portrait,children:sheet},
       {properties:landscape,children:rubricPage(name)},
-      {properties:landscape,children:ealPage(name)}]});
+      {properties:portrait,children:ealPage()}]});
   return Packer.toBuffer(doc).then(b=>{fs.writeFileSync(out,b);console.log('written '+out);});
 }
-build(A_SHEET,"The Bone Sparrow — Analytical Paragraph Writing · Option A (folio)",
+build(A_SHEET,"The Bone Sparrow — Analytical Paragraph Writing (folio)",
       'BoneSparrow-assessment-folio.docx')
- .then(()=>build(B_SHEET,"The Bone Sparrow — Analytical Paragraph Writing · Option B (text response)",
+ .then(()=>build(B_SHEET,"The Bone Sparrow — Analytical Paragraph Writing",
       'BoneSparrow-assessment-response.docx'));
