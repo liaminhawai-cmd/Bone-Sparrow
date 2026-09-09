@@ -5,7 +5,8 @@ const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,Bord
 /* Two ways to assess the same skill, written on the department's own CAT
    pattern: task sheet (Task / Purpose / Audience / Time / You must / Options)
    then the rubric in landscape, five bands from Emerging to Well Above.
-   The At the Standard column is the school's Learning Continuum at Level 7. */
+   The rubric rows are the school's Learning Continuum substrands, in its own
+   single-year levels; the grade is the average across the rows. */
 
 const A4W=11906, A4H=16838, MARG=720;
 const PW=A4W-MARG*2, LW=A4H-MARG*2;
@@ -34,45 +35,61 @@ function titleBlock(task,strand,cat){
   ];
 }
 
-/* ---------------------------------------------------------------- rubric */
-const BANDS=["Emerging\n(6.0)","Working Towards the Standard\n(6.5)","At the Standard\n(7.0)",
-             "Above the Standard\n(7.5)","Well Above the Standard\n(8.0)"];
+/* ---------------------------------------------------------------- rubric
+   Rows are the school's Learning Continuum substrands, English tab; the
+   cells are its wording, verbatim, in the continuum's own single-year
+   levels. Each row is marked at a level and the levels are averaged, which
+   is where the half levels on a report come from. */
+const BANDS=[["Level 5","Emerging"],["Level 6","Working towards"],["Level 7","At the standard"],
+             ["Level 8","Above"],["Level 9","Well above"]];
 const ROWS=[
- ["Content – the idea about the novel, explored beyond the events of the story.",
-  "Retold what happens in the novel, with little sense of an idea behind it.",
-  "Named an idea from the novel, but drifted into retelling the story.",
-  "Stated a clear idea about the novel in a topic sentence and stayed with that idea for the whole paragraph.",
-  "Stated a precise idea and developed it, showing how the novel builds that idea across more than one moment.",
-  "Stated a precise and original idea and sustained it, treating the idea as an issue the novel raises rather than a theme it contains."],
- ["Evidence – quotations chosen from the text and embedded in the writing.",
-  "Included little evidence from the novel, or quoted without connecting the quote to an idea.",
-  "Included a quotation, sometimes placed in the paragraph on its own without explanation.",
-  "Chose a relevant quotation and explained its relevance to the idea.",
-  "Chose well-suited quotations and embedded them inside sentences of their own writing.",
-  "Embedded several well-chosen quotations fluently, selecting the words that carry the writing rather than the plot."],
- ["Explanation – what the writing does to the reader, expressed with analytical verbs.",
-  "Explained what happened in the story rather than what the writing does.",
-  "Described how the writing made the reader feel, in general terms.",
-  "Used an analytical verb to explain the effect of Fraillon’s writing on the reader.",
-  "Explained the effect precisely, naming the language feature that creates it.",
-  "Explained how the writer’s choice works on the reader, including what the writing implies or withholds."],
- ["Structure – the shape of the paragraph: topic sentence, evidence, explanation, link.",
-  "The paragraph lacked a clear topic sentence, or ran several ideas together.",
-  "Some elements of TEEL were used; the link sentence was missing, or repeated the topic sentence.",
-  "Used the TEEL structure, finishing with a link sentence that returns to the idea.",
-  "Used TEEL fluently, with a link sentence that said more than the topic sentence did.",
-  "Controlled the structure so that each sentence built on the one before, and the link drew both halves of the paragraph together."],
- ["Expression – formal register, and control of grammar, spelling and punctuation.",
-  "Frequent errors in grammar, spelling and punctuation impeded the meaning.",
-  "Some persistent errors, and expression was informal in places.",
-  "Wrote in a formal register, with mostly correct grammar, spelling and punctuation.",
-  "Wrote fluently and formally, varying sentence length to keep the writing clear.",
-  "Wrote with control and style; word choice was precise and the register was consistently formal."]
+ ["Interpreting texts","the idea about the novel","Reading and Viewing",
+  "I can describe the purpose of different text types",
+  "I can describe the way authors try to influence their audience",
+  "I can explain how the structure and language used in a text helps influence the audience",
+  "I can find the author\u2019s point of view in a text and evaluate how credible the text is",
+  "I can compare the way people and issues are represented in different texts"],
+ ["Using evidence","choosing the quote","Reading and Viewing",
+  "I can describe the depiction of events, characters and settings in texts and explain my responses to them",
+  "I can select specific details from texts to develop and explain my own responses",
+  "I can select and use evidence from texts to explain my response to it, recognising that texts reflect different viewpoints",
+  "I can select evidence from texts to describe how authors depict events, situations, and people from different viewpoints",
+  "I can select evidence from texts to explain how language choices influence an audience"],
+ ["Use of evidence","putting the quote in the sentence","Writing",
+  "Not on the continuum at this level",
+  "I can include quotes in an explanation with teacher guidance",
+  "I can explain the relevance of a quote",
+  "I can embed quotes into sentences",
+  "I can correctly embed quotes within an explanation sentence"],
+ ["Evaluating texts","the effect on the reader","Reading and Viewing",
+  "I can use metalanguage to discuss the effect of texts on the reader",
+  "I can describe how repetition, emphasis and metaphor can influence the way a reader feels",
+  "I can use examples from the text to discuss how language helps to create character",
+  "I can explain how different types of evidence can add authority to a text",
+  "I can explain how a text explores issues that relate to our own lives"],
+ ["Text structure and organisation","the shape of the paragraph","Writing",
+  "I can change the focus of a sentence by modifying the subject",
+  "I can avoid repetition by changing the participants in a follow-on idea",
+  "I can write a paragraph for informative and narrative texts",
+  "I can sequence ideas relating to a topic within a given structure",
+  "I can sequence ideas to present a clear argument"],
+ ["Voice and register","the analytical verb, and how formal it sounds","Writing",
+  "I can write using the correct relevant tense",
+  "I can use different types of verbs in my writing (existing, doing, thinking, feeling)",
+  "I can change my choice of words to be appropriate for spoken and written texts",
+  "I can change my word choice to alter the tone of written and spoken texts",
+  "I can write using a formal register"],
+ ["Spelling and punctuation","control of the writing","Writing",
+  "I can correctly spell common homophones. I can use apostrophes to show possession",
+  "I can use common prefixes, suffixes and base words to spell new words. I can correctly use commas and full stops between clauses",
+  "I can use spelling rules and word origins to spell new words. I can correctly punctuate complex sentences and circumstantial phrases",
+  "I can remember and use the correct spelling of new subject-related words. I can use colons, semicolons, dashes and brackets in my writing",
+  "I can develop precise and persuasive texts with accurate spelling. I can use punctuation, layout and font for different audience and purpose"]
 ];
-const CRITW=3400, BANDW=Math.floor((LW-CRITW)/5);
+const CRITW=3000, BANDW=Math.floor((LW-CRITW)/5);
 const rc=(kids,w,o)=>new TableCell({width:{size:w,type:WidthType.DXA},
   margins:{top:60,bottom:60,left:90,right:90},...(o||{}),children:kids});
-const small=(t,o={})=>new Paragraph({spacing:{after:0},children:[T(t,{size:17,...o})]});
+const small=(t,o={})=>new Paragraph({spacing:{after:0},children:[T(t,{size:16,...o})]});
 function rubric(){
   return new Table({columnWidths:[CRITW,BANDW,BANDW,BANDW,BANDW,BANDW],
     width:{size:LW,type:WidthType.DXA},
@@ -80,11 +97,13 @@ function rubric(){
     rows:[
       new TableRow({tableHeader:true,children:[
         rc([small("Criteria",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
-        ...BANDS.map((b,i)=>rc(b.split("\n").map(l=>small(l,{bold:true,size:18})),BANDW,
+        ...BANDS.map(([lv,band],i)=>rc([small(lv+(i===2?" \u00b7 expected at Year 7":""),{bold:true,size:18}),
+          small(band,{size:15,color:"595959"})],BANDW,
           {shading:{type:ShadingType.CLEAR,fill:i===2?MID:GREY,color:"auto"}}))]}),
       ...ROWS.map(r=>new TableRow({children:[
-        rc([small(r[0],{bold:true})],CRITW),
-        ...r.slice(1).map((d,i)=>rc([small(d)],BANDW,
+        rc([small(r[0],{bold:true,size:17}),small(r[1],{size:15,color:"595959"}),
+            small(r[2],{size:14,color:"808080"})],CRITW),
+        ...r.slice(3).map((d,i)=>rc([small(d)],BANDW,
           i===2?{shading:{type:ShadingType.CLEAR,fill:"F2F2F2",color:"auto"}}:{}))]}))]});
 }
 const rubricPage=(name)=>[
@@ -92,7 +111,10 @@ const rubricPage=(name)=>[
   new Paragraph({spacing:{after:160},children:[T("RUBRIC",{bold:true,size:24,color:"595959"}),
     T("        "),...line("Name:",30)]}),
   rubric(),
-  new Paragraph({spacing:{before:200},children:[T("Comment:",{bold:true,size:22})]}),
+  new Paragraph({spacing:{before:140},children:[
+    T("Mark each row at the level the writing shows. The grade is the average across the rows, which is where the half levels come from. ",{size:18}),
+    T("Wording quoted from the Learning Continuum master sheet, English tab.",{size:18,italics:true,color:"595959"})]}),
+  new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
 ];
@@ -165,7 +187,7 @@ const A_NOTES=[
   dot("EAL — word list first, shorter sentences, one sentence per line in the frame."),
   dot("Extension — TEEAL, two evidence sentences, and a second paragraph on a different idea."),
   HEAD("Where the criteria come from"),
-  P("The At the Standard column is the school’s Learning Continuum, English tab, at Level 7: explain how the structure and language used in a text helps influence the audience; explain the relevance of a quote; use examples from the text to discuss how language helps to create character."),
+  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Six of the seven rows are what the analytical writing wall already teaches; Text structure and organisation is the row the wall does not cover, because the wall is a ladder of sentences and this task asks for a paragraph."),
   HEAD("What this task does not assess"),
   P("Building an essay argument — a contention, three claims and a conclusion that follows from them. That has not been taught this unit.")
 ];
@@ -219,7 +241,7 @@ const B_NOTES=[
   dot("EAL — word list first, shorter sentences, one sentence per line in the frame."),
   dot("Extension — the printed paragraph gives only the topic and link sentences; the evidence sentences are theirs, and they write a second paragraph."),
   HEAD("Where the criteria come from"),
-  P("The At the Standard column is the school’s Learning Continuum, English tab, at Level 7: explain how the structure and language used in a text helps influence the audience; explain the relevance of a quote; use examples from the text to discuss how language helps to create character."),
+  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Six of the seven rows are what the analytical writing wall already teaches; Text structure and organisation is the row the wall does not cover, because the wall is a ladder of sentences and this task asks for a paragraph."),
   HEAD("What this task does not assess"),
   P("Building an essay argument — a contention, three claims and a conclusion that follows from them. That has not been taught this unit, which is why the introduction and conclusion are started for the students and are not marked against the rubric.")
 ];
