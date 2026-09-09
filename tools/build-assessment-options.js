@@ -40,8 +40,7 @@ function titleBlock(task,strand,cat){
    cells are its wording, verbatim, in the continuum's own single-year
    levels. Each row is marked at a level and the levels are averaged, which
    is where the half levels on a report come from. */
-const BANDS=[["Level 5","Emerging"],["Level 6","Working towards"],["Level 7","At the standard"],
-             ["Level 8","Above"],["Level 9","Well above"]];
+const BANDS=["Level 5","Level 6","Level 7","Level 8","Level 9"];
 const ROWS=[
  ["Interpreting texts","the idea about the novel","Reading and Viewing",
   "I can describe the purpose of different text types",
@@ -85,8 +84,7 @@ function rubric(){
     rows:[
       new TableRow({tableHeader:true,children:[
         rc([small("Criteria",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
-        ...BANDS.map(([lv,band],i)=>rc([small(lv+(i===2?" \u00b7 expected at Year 7":""),{bold:true,size:18}),
-          small(band,{size:15,color:"595959"})],BANDW,
+        ...BANDS.map((lv,i)=>rc([small(lv,{bold:true,size:18})],BANDW,
           {shading:{type:ShadingType.CLEAR,fill:i===2?MID:GREY,color:"auto"}}))]}),
       ...ROWS.map(r=>new TableRow({children:[
         rc([small(r[0],{bold:true,size:18}),small(r[1],{size:16,color:"595959"}),
@@ -97,28 +95,28 @@ function rubric(){
 
 /* the EAL rubric: the skill focus from the EAL analytical writing WAGOLL, then
    the school's EAL reading rubric, C bands, both quoted as they stand */
-const EAL_BANDS=[["C2","Describe"],["C3","Explain"],["C4","Analyse"],["VCE 1","Interpret"]];
+const EAL_BANDS=["C2","C3","C4","VCE 1"];
 const EAL_ROWS=[
- ["Skill focus","what the writing is doing","EAL analytical writing WAGOLL",
-  "Say what happens",
-  "Explain effect or meaning",
-  "Link language choices to ideas or themes",
-  "Link literary, structural and stylistic features, to messages, values, and creator\u2019s intents"],
- ["Summary","the ideas in the novel","EAL reading rubric",
-  "Extract main ideas from texts",
-  "Explain main ideas and plot developments",
-  "Use appropriate language to identify and infer ideas, themes, and plot details",
-  "Uses precise and appropriate language to explore interconnected ideas and values presented in the text, including discussion of character, setting and other aspects of the text"],
- ["Evidence","the quote, and what it is doing there","EAL reading rubric",
-  "Use quotes to link to ideas",
-  "Use metalanguage, and quotes to support ideas",
-  "Embed evidence and use appropriate metalanguage to discuss. Make clear links to themes and ideas",
-  "Embeds relevant textual evidence to explain how the author has conveyed ideas in the text presented in response to the topic"],
- ["Text purpose","what Fraillon is doing to the reader","EAL reading rubric",
-  "Identify common text types and features",
-  "Identify the main purpose of the text and describe text features",
-  "Discuss how specific text features relate to the purpose. Make inferences about the author\u2019s intent",
-  "Discuss and examine how structures, language features and vocabulary choices relate to the purpose. Make inferences about the author\u2019s complex and nuanced ideas"]
+ ["Ideas & Themes",
+  "Recognises what happens in the text or scene. Retells key details with little interpretation.",
+  "Explains basic feelings or ideas suggested by the text. Begins linking choices to simple themes.",
+  "Connects specific language or film techniques to themes or concepts. Explains what the creator might be saying.",
+  "Analyses how choices express messages, values, or perspectives. Analyses the creator\u2019s purpose in representing social or cultural issues."],
+ ["Evidence & Metalanguage",
+  "Gives a simple quote or description from the text or scene.",
+  "Names a language or film feature and begins linking it to meaning.",
+  "Uses terminology accurately with short, embedded evidence.",
+  "Integrates evidence and metalanguage fluently to build interpretation."],
+ ["Language & Structure",
+  "Writes short, simple sentences using mostly literal verbs (\u201cshows\u201d, \u201cuses\u201d).",
+  "Expands sentences with connectives such as because, so, or to. Uses basic evaluative words.",
+  "Uses more complex sentences and analytical verbs (\u201csuggests\u201d, \u201chighlights\u201d).",
+  "Writes fluently in a cohesive formal style, varying sentence structures to show cause, effect, and interpretation."],
+ ["Purpose & Interpretation",
+  "Identifies the basic meaning or message.",
+  "Explains the effect on the reader or viewer.",
+  "Makes inferences about the creator\u2019s intent or perspective.",
+  "Discusses deeper social, moral, or ethical ideas, linking choices to broader context."]
 ];
 function ealRubric(){
   const BW=Math.floor((LW-CRITW)/4);
@@ -126,15 +124,12 @@ function ealRubric(){
     borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
     rows:[
       new TableRow({tableHeader:true,children:[
-        rc([small("Criteria",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
-        ...EAL_BANDS.map(([b,n],i)=>rc([small(b+(i===1?" \u00b7 expected at Year 7":""),{bold:true,size:18}),
-          small(n,{size:15,color:"595959"})],BW,
-          {shading:{type:ShadingType.CLEAR,fill:i===1?MID:GREY,color:"auto"}}))]}),
+        rc([small("",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
+        ...EAL_BANDS.map(b=>rc([small(b,{bold:true,size:18})],BW,
+          {shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}))]}),
       ...EAL_ROWS.map(r=>new TableRow({children:[
-        rc([small(r[0],{bold:true,size:18}),small(r[1],{size:16,color:"595959"}),
-            small(r[2],{size:14,color:"808080"})],CRITW),
-        ...r.slice(3).map((d,i)=>rc([small(d)],BW,
-          i===1?{shading:{type:ShadingType.CLEAR,fill:"F2F2F2",color:"auto"}}:{}))]}))]});
+        rc([small(r[0],{bold:true,size:18})],CRITW),
+        ...r.slice(1).map(d=>rc([small(d)],BW))]}))]});
 }
 const rubricPage=(name)=>[
   new Paragraph({spacing:{after:60},children:[T(name,{bold:true,size:28})]}),
@@ -155,7 +150,7 @@ const ealPage=(name)=>[
   ealRubric(),
   new Paragraph({spacing:{before:140},children:[
     T("For students on the EAL pathway, in place of the continuum rubric. ",{size:18}),
-    T("Skill focus quoted from the EAL analytical writing WAGOLL; the other rows from the EAL reading rubric, C levels.",{size:18,italics:true,color:"595959"})]}),
+    T("The EAL analytical writing rubric, as it stands.",{size:18,italics:true,color:"595959"})]}),
   new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
@@ -178,7 +173,7 @@ const A_PROMPTS=[
 const A_SHEET=[
   ...titleBlock("Analytical Paragraph Writing — Folio","Reading and Viewing","CAT 2 · Option A"),
   HEAD("Task:"),
-  P("You will write three folio pieces about The Bone Sparrow, one for each prompt below. Each one is written in class in 30 minutes. In each booklet the introduction has the first idea written in and the first paragraph is written out for you; you write the second and third paragraphs."),
+  P("You will write three folio pieces about The Bone Sparrow. Each one is written in class in 30 minutes, and each one has its own prompt, which you are given at the start of the sitting. In each booklet the introduction has the first idea written in and the first paragraph is written out for you; you write the second paragraph, and the third if you can."),
   HEAD("Purpose:"),
   P("To explain an idea in the novel, and show how Fraillon’s writing puts that idea in front of the reader."),
   HEAD("Audience:"),
@@ -197,11 +192,6 @@ const A_SHEET=[
   num(7,"Fill in the self assessment at the back.","Tick a box in each row, and write the one thing you will do better next time."),
   gap(80), RUBRIC_LINE,
   new Paragraph({spacing:{after:0},children:[new PageBreak()]}),
-  new Paragraph({spacing:{after:80},children:[T("The three tasks",{bold:true,size:32})]}),
-  P("All three go in the folio. Your teacher marks the one you nominate on the cover of the folio.",{color:"595959",after:200}),
-  ...A_PROMPTS.flatMap(([t,p])=>[
-    new Paragraph({spacing:{after:40},children:[T(t,{bold:true,color:"595959"})]}),
-    new Paragraph({spacing:{after:220},children:[T(p,{size:25})]})]),
   HEAD("Folio cover sheet"),
   P("Staple this page to the front of the three booklets."),
   new Table({columnWidths:[900,PW-900-2600,2600],width:{size:PW,type:WidthType.DXA},
@@ -211,7 +201,7 @@ const A_SHEET=[
         rc([small("IN",{bold:true,size:18})],900,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
         rc([small("TASK",{bold:true,size:18})],PW-900-2600,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
         rc([small("MARK THIS ONE",{bold:true,size:18})],2600,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}})]}),
-      ...["1 · stories and imagination","2 · life inside and outside","3 · family and friendship"]
+      ...["Task 1","Task 2","Task 3"]
         .map(t=>new TableRow({height:{value:620,rule:HeightRule.ATLEAST},children:[
           rc([gap()],900), rc([new Paragraph({spacing:{after:0},children:[T(t)]})],PW-900-2600), rc([gap()],2600)]}))]}),
   HEAD("Before you hand it in"),
@@ -249,12 +239,12 @@ const B_SHEET=[
   HEAD("Audience:"),
   P("Your teacher, and a reader who has already read the novel. You do not need to retell the story."),
   HEAD("Time:"),
-  dot("One period to prepare your notes, in the lesson before."),
+  dot("One period to prepare: your notes on the ideas in the novel, and the quotes you might use."),
   dot("One period to write. You will be told when there are ten minutes left."),
   HEAD("Conditions:"),
   dot("Written in class under test conditions. Your teacher does not help you draft."),
   dot("On your desk: your copy of the novel, one page of your own notes, and the analytical writing wall."),
-  dot("The prompt is given at the start of the period. It is one of the three below."),
+  dot("The prompt is given at the start of the period. You have not seen it before."),
   HEAD("What is on the paper:"),
   dot("An introduction with the big idea sentence written and the ideas left blank."),
   dot("Paragraph 1, written in full."),
@@ -266,11 +256,6 @@ const B_SHEET=[
   ...COMMON_MUST.map((m,i)=>num(i+3,m[0],m[1])),
   num(7,"Finish the conclusion.","Put your two ideas back together. No new quotes."),
   gap(80), RUBRIC_LINE,
-  new Paragraph({spacing:{after:0},children:[new PageBreak()]}),
-  new Paragraph({spacing:{after:80},children:[T("The prompts",{bold:true,size:32})]}),
-  P("Prepare for all three. One of them will be the prompt on the day.",{color:"595959",after:200}),
-  ...B_PROMPTS.map((p,i)=>new Paragraph({spacing:{after:220},indent:{left:400,hanging:400},
-    children:[T((i+1)+".\t",{bold:true}),T(p,{size:25})]})),
   HEAD("Before you hand it in"),
   dot("Read your paragraphs out loud. Does every sentence say something about the idea?"),
   dot("Colour the parts: idea, language feature, evidence, effect on the reader."),
