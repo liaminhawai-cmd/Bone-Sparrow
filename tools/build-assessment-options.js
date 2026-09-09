@@ -95,13 +95,13 @@ function rubric(){
 const EAL_BANDS=["C2","C3","C4","VCE 1"];
 const EAL_ROWS=[
  ["idea","Ideas & Themes",
-  "Recognises what happens in the text or scene. Retells key details with little interpretation.",
+  "Recognises what happens in the text. Retells key details with little interpretation.",
   "Explains basic feelings or ideas suggested by the text. Begins linking choices to simple themes.",
-  "Connects specific language or film techniques to themes or concepts. Explains what the creator might be saying.",
+  "Connects specific language choices to themes or concepts. Explains what the creator might be saying.",
   "Analyses how choices express messages, values, or perspectives. Analyses the creator\u2019s purpose in representing social or cultural issues."],
  ["ev","Evidence & Metalanguage",
-  "Gives a simple quote or description from the text or scene.",
-  "Names a language or film feature and begins linking it to meaning.",
+  "Gives a simple quote or description from the text.",
+  "Names a language feature and begins linking it to meaning.",
   "Uses terminology accurately with short, embedded evidence.",
   "Integrates evidence and metalanguage fluently to build interpretation."],
  ["plain","Language & Structure",
@@ -111,7 +111,7 @@ const EAL_ROWS=[
   "Writes fluently in a cohesive formal style, varying sentence structures to show cause, effect, and interpretation."],
  ["eff","Purpose & Interpretation",
   "Identifies the basic meaning or message.",
-  "Explains the effect on the reader or viewer.",
+  "Explains the effect on the reader.",
   "Makes inferences about the creator\u2019s intent or perspective.",
   "Discusses deeper social, moral, or ethical ideas, linking choices to broader context."]
 ];
@@ -147,7 +147,7 @@ const ealPage=(name)=>[
   ealRubric(),
   new Paragraph({spacing:{before:140},children:[
     T("For students on the EAL pathway, in place of the continuum rubric. ",{size:18}),
-    T("The EAL analytical writing rubric, as it stands.",{size:18,italics:true,color:"595959"})]}),
+    T("The EAL analytical writing rubric, with its film wording taken out.",{size:18,italics:true,color:"595959"})]}),
   new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
