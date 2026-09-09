@@ -1,74 +1,79 @@
 {
- "out": "BoneSparrow-TEEL-purpose.docx",
- "edits": [
-  {
-   "find": "writing about an idea",
-   "texts": [
-    "The Bone Sparrow — how Fraillon does it",
-    "Name  ",
-    "_",
-    "_____________________"
-   ]
+  "out": "BoneSparrow-TEEL-purpose.docx",
+  "edits": [
+    {
+      "find": "writing about an idea",
+      "texts": [
+        "The Bone Sparrow — how Fraillon does it",
+        "Name  ",
+        "_",
+        "_____________________"
+      ]
+    },
+    {
+      "find": "The Bone Sparrow shows us that",
+      "texts": [
+        "Fraillon ",
+        "makes the reader see",
+        " the ",
+        "people behind the numbers",
+        "."
+      ]
+    },
+    {
+      "find": "Imagination is essential to Subhi",
+      "model_row": 0
+    },
+    {
+      "find": "When Subhi explains the Night Sea",
+      "model_row": 1
+    },
+    {
+      "find": "When Jimmie brings her mother",
+      "model_row": 2
+    },
+    {
+      "find": "So imagination gives",
+      "model_row": 3
+    },
+    {
+      "find": "Friendship is essential to Subhi",
+      "texts": [
+        "Fraillon shows that …"
+      ]
+    },
+    {
+      "find": "Two reasons friendship",
+      "texts": [
+        "My idea: ____________________________.  Two points to develop:"
+      ]
+    },
+    {
+      "find": "Friendship",
+      "texts": [
+        "Another idea",
+        ""
+      ]
+    },
+    {
+      "find": "So, because A and B",
+      "texts": [
+        "Through …, Fraillon encourages readers to …"
+      ]
+    }
+  ],
+  "model": {
+    "pool": "tools/kits/purpose-pool.js",
+    "name": "names and identity"
   },
-  {
-   "find": "The Bone Sparrow shows us that",
-   "texts": [
-    "Fraillon ",
-    "makes the reader see",
-    " the ",
-    "people behind the numbers",
-    "."
-   ]
-  },
-  {
-   "find": "Imagination is essential to Subhi",
-   "texts": [
-    "One way Fraillon makes the reader see the people behind the numbers is by having one adult learn their names."
-   ]
-  },
-  {
-   "find": "When Subhi explains the Night Sea",
-   "texts": [
-    "When Subhi describes Harvey, “…learn their names so that he can talk with us for real, instead of talking to us by our numbers.” This shows that using a name is a choice the camp never requires, which shows the reader exactly what a number takes away."
-   ]
-  },
-  {
-   "find": "When Jimmie brings her mother",
-   "texts": [
-    "After Nasir dies, “…I whisper the few words of Rohingya that I know, just so my brain doesn’t turn to thinking that they are right and that I am only Aussie Boy.” This shows that Subhi holds on to his language to hold on to himself, which makes the reader feel the effort of staying a person."
-   ]
-  },
-  {
-   "find": "So imagination gives",
-   "texts": [
-    "So",
-    " using a name is a choice the camp never requires and Subhi holds on to his language to hold on to himself, which is how having one adult learn their names makes the reader see the people behind the numbers."
-   ]
-  },
-  {
-   "find": "Friendship is essential to Subhi",
-   "texts": [
-    "One way Fraillon makes the reader see the people behind the numbers is by …"
-   ]
-  },
-  {
-   "find": "Two reasons friendship",
-   "texts": [
-    "My way: ____________________________.  Two things it shows:"
-   ]
-  },
-  {
-   "find": "Friendship",
-   "texts": [
-    "Another way",
-    ""
-   ]
-  },
-  {
-   "find": "So, because A and B",
-   "texts": [
-    "So A and B, which is how … makes the reader see the people behind the numbers."
-   ]
-  }
- ]
+  "colour_edits": [
+    {
+      "find": "Fraillon makes the reader see",
+      "map": {
+        "D6EAFC": "DFF0E2",
+        "0B447C": "1F5C33"
+      }
+    }
+  ],
+  "model_line_spacing": 360
 }
