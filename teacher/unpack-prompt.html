@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Unpacking a prompt — The Bone Sparrow</title>
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
+  --line:#d8cfbb; --accent:#a83232; --deep:#1d3c34;
+  --idea-bg:#d6eafc; --idea-tx:#0b447c;
+  --verb-bg:#fae3cf; --verb-tx:#8a4b12;
+  --ev-bg:#fff3b0;   --ev-tx:#7a5a00;
+  --eff-bg:#dff0e2;  --eff-tx:#1f5c33;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);overflow:hidden}
+main{height:100vh}
+.slide{display:none;height:100vh;padding:44px 56px 62px;flex-direction:column}
+.slide.on{display:flex}
+h2{font-family:Georgia,serif;font-size:25px;color:var(--deep);margin:0 0 4px;border-bottom:2px solid var(--deep);padding-bottom:6px}
+h2 small{font-family:'Segoe UI',sans-serif;font-size:14px;color:var(--muted);font-weight:normal;margin-left:10px}
+.sub{position:fixed;top:12px;left:16px;font-size:12.5px;color:var(--muted);z-index:20}
+.sub a{color:var(--muted)}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;justify-content:center;padding:10px;z-index:20}
+.nav button{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:40px;height:40px;font-size:18px;color:var(--ink);cursor:pointer}
+.nav button:disabled{opacity:.3;cursor:default}
+.nav .dots{display:flex;gap:7px}
+.nav .dots span{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer}
+.nav .dots span.on{background:var(--deep)}
+.nav .now{font-size:13px;color:var(--muted);min-width:230px}
+
+/* the prompt itself */
+.prompt{font-family:Georgia,serif;line-height:1.45;margin:0}
+.big{font-size:clamp(24px,3.2vw,44px)}
+.mid{font-size:clamp(20px,2.2vw,30px)}
+.w{display:inline-block;border-radius:8px;padding:1px 6px;margin:1px 0;transition:background .35s,color .35s}
+.w.tap{cursor:pointer}
+.w.tap:hover{background:#efe7d6}
+.w.key{background:var(--idea-bg);color:var(--idea-tx);font-weight:600}
+.w.dir{background:var(--verb-bg);color:var(--verb-tx);font-weight:600}
+.legend{display:flex;gap:18px;font-size:14px;color:var(--muted);margin-top:14px;flex-wrap:wrap}
+.legend b{border-radius:6px;padding:2px 8px;font-weight:600}
+.legend .i{background:var(--idea-bg);color:var(--idea-tx)}
+.legend .d{background:var(--verb-bg);color:var(--verb-tx)}
+
+/* slide 1 staging */
+#s1 .prompt{max-width:1150px}
+.parts{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px;max-width:1150px}
+.part{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:16px 18px;opacity:0;transform:translateY(8px);
+  transition:opacity .5s,transform .5s}
+.part.on{opacity:1;transform:none}
+.part h3{font-family:Georgia,serif;font-size:19px;margin:0 0 6px}
+.part.idea h3{color:var(--idea-tx)}
+.part.dir h3{color:var(--verb-tx)}
+.part p{margin:0;font-size:15.5px;line-height:1.55;color:var(--muted)}
+.cue{margin-top:auto;font-size:14px;color:var(--muted)}
+
+/* the board: prompt, word table, reflection */
+.board{display:grid;grid-template-rows:auto 1fr auto;gap:14px;flex:1;min-height:0;margin-top:12px}
+table.words{border-collapse:collapse;width:100%;table-layout:fixed;font-size:15px}
+table.words th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;
+  text-align:left;padding:0 8px 5px;border-bottom:1px solid var(--line)}
+table.words td{border:1px solid var(--line);background:var(--paper);padding:8px 10px;vertical-align:top;line-height:1.4}
+table.words td.k{background:var(--idea-bg);color:var(--idea-tx);font-weight:600;font-family:Georgia,serif;font-size:17px;width:17%}
+table.words td[contenteditable]:focus{outline:2px solid var(--idea-tx);outline-offset:-2px;background:#fff}
+table.words td.empty:before{content:attr(data-ph);color:#b6ab95}
+.tablewrap{overflow:auto;min-height:0}
+.nowords{color:var(--muted);font-size:15.5px;border:1px dashed var(--line);border-radius:12px;padding:18px;background:var(--paper)}
+.refl{border:1px solid var(--line);border-left:5px solid var(--deep);border-radius:0 12px 12px 0;background:var(--paper);
+  padding:12px 16px;font-family:Georgia,serif;font-size:19px;line-height:1.6}
+.refl [contenteditable]{display:inline-block;min-width:150px;border-bottom:2px solid var(--line);padding:0 4px}
+.refl [contenteditable]:focus{outline:none;border-bottom-color:var(--idea-tx);background:#fff}
+.refl [contenteditable].empty:before{content:attr(data-ph);color:#b6ab95}
+
+/* controls */
+.bar2{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);border-radius:999px;background:var(--paper);padding:6px 13px;font-family:inherit;
+  font-size:13.5px;color:var(--muted);cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip.on{border-color:var(--deep);color:var(--deep);font-weight:600}
+.chip.eff{background:var(--eff-bg);color:var(--eff-tx);border-color:#bcd9c3}
+.hint{border:1px solid var(--line);border-radius:999px;background:var(--paper);width:34px;height:34px;font-size:16px;cursor:pointer}
+.hint.on{border-color:var(--ev-tx);background:var(--ev-bg)}
+.tip{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<p class="sub"><a href="./">Teacher</a> · The Bone Sparrow — <a href="teel-essay.html">the first session</a></p>
+<main>
+
+<section class="slide on" id="s1">
+  <h2>What a prompt is made of</h2>
+  <p class="prompt big" id="p1"></p>
+  <div class="legend" id="lg1" style="opacity:0">
+    <span><b class="i">the idea</b> what the essay has to be about</span>
+    <span><b class="d">the instruction</b> what you have to do with it</span>
+  </div>
+  <div class="parts">
+    <div class="part idea" id="pt1">
+      <h3>The idea it hands you</h3>
+      <p>Imagination. Friendship. Survival. Those words are not decoration — every paragraph has to be about them, and about the novel.</p>
+    </div>
+    <div class="part dir" id="pt2">
+      <h3>What it tells you to do</h3>
+      <p>There is no <i>discuss</i> on the end of this one. <i>Shows us that</i> is the instruction hiding inside a statement: your job is to prove it is true, with evidence, one paragraph at a time.</p>
+    </div>
+  </div>
+  <p class="cue" id="c1">Click the prompt.</p>
+</section>
+
+<section class="slide" id="s2">
+  <h2>One done for you <small>the words, what they mean, and what I will write about</small></h2>
+  <p class="prompt mid" id="p2"></p>
+  <div class="board">
+    <div></div>
+    <div class="tablewrap"><table class="words" id="t2"></table></div>
+    <p class="refl" id="r2"></p>
+  </div>
+  <div class="bar2"><span class="tip">Reveal a column at a time: click the table.</span></div>
+</section>
+
+<section class="slide" id="s3">
+  <h2>Together <small>click the words that matter, then fill the table</small></h2>
+  <p class="prompt mid" id="p3"></p>
+  <div class="board">
+    <div class="bar2">
+      <span class="tip">Click a word once for <b style="color:var(--idea-tx)">the idea</b>, twice for <b style="color:var(--verb-tx)">the instruction</b>, three times to clear it.</span>
+      <button class="hint" id="h3" title="Suggested answers">&#128161;</button>
+    </div>
+    <div class="tablewrap" id="tw3"></div>
+    <p class="refl" id="r3"></p>
+  </div>
+</section>
+
+<section class="slide" id="s4">
+  <h2>Your turn <small>pick a prompt and unpack it</small></h2>
+  <div class="bar2" id="pick4"></div>
+  <p class="prompt mid" id="p4"></p>
+  <div class="board">
+    <div class="bar2"><span class="tip">Same job: mark the words, say what they mean, then finish the sentence at the bottom.</span></div>
+    <div class="tablewrap" id="tw4"></div>
+    <p class="refl" id="r4"></p>
+  </div>
+</section>
+
+</main>
+<div class="nav" id="nav">
+  <button id="prev">&lsaquo;</button><div class="dots" id="dots"></div><button id="next">&rsaquo;</button><div class="now" id="now"></div>
+</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+/* ---------------- the prompts ----------------
+   key: the words the essay has to be about. dir: the words that say what to do.
+   Both are given for the worked one and held back as hints for the rest. */
+const PROMPTS=[
+ {id:"p1",kind:"idea",
+  t:"The Bone Sparrow shows us that imagination and friendship are essential for survival.",
+  key:["imagination","friendship","essential","survival"], dir:["shows","us","that"],
+  words:{
+   imagination:["making things up in your head, picturing what is not there",
+                "the Night Sea, dreams, stories, pretending, wondering",
+                "the fences, the facts, the camp as it really is"],
+   friendship:["people who choose each other and stay",
+               "Jimmie, Eli, Queeny, trust, a promise kept, company",
+               "loneliness, being on your own, Alpha"],
+   essential:["something you cannot do without",
+              "necessary, vital, needed, what keeps you going",
+              "extra, nice to have, pointless"],
+   survival:["staying alive — and staying yourself",
+             "getting through, holding on, coping, keeping going",
+             "giving up, breaking, disappearing"]},
+  refl:["show that imagination and friendship are not extras in the camp, they are what keeps Subhi going",
+        "the Night Sea giving him somewhere to go",
+        "Jimmie keeping her promise"]},
+
+ {id:"p2",kind:"idea",
+  t:"In The Bone Sparrow, power comes in many forms. Discuss.",
+  key:["power","many","forms"], dir:["Discuss"],
+  words:{
+   power:["being able to make something happen, or make someone do something",
+          "control, force, authority, strength, a say in things",
+          "helplessness, having no say, being counted"],
+   many:["more than one kind, not just the obvious one",
+         "several, different, all sorts of",
+         "only one, single"],
+   forms:["the shapes a thing takes",
+          "kinds, types, ways it shows up",
+          "one form only"]},
+  refl:["show that power in the camp is not only the Jackets, and prove it with two different kinds",
+        "the Jackets and what their hands can do",
+        "the paper that decides where Eli sleeps"]},
+
+ {id:"p3",kind:"idea",
+  t:"Explore how loneliness and friendship shape the lives of the characters in The Bone Sparrow.",
+  key:["loneliness","friendship","shape","lives"], dir:["Explore","how"]},
+ {id:"p4",kind:"idea",
+  t:"What does The Bone Sparrow show about the importance of stories and family?",
+  key:["importance","stories","family"], dir:["What","show"]},
+ {id:"p5",kind:"eff",
+  t:"How does Fraillon make the reader care about the people in the camp?",
+  key:["care","people","camp"], dir:["How","make","reader"]},
+ {id:"p6",kind:"eff",
+  t:"How does Fraillon show the reader what life in the camp is like?",
+  key:["life","camp","like"], dir:["How","show","reader"]}
+];
+const P=Object.fromEntries(PROMPTS.map(p=>[p.id,p]));
+const COLS=["What it means","Other words for it","Words that mean the opposite"];
+
+/* ---------------- what the class types, kept on the machine ---------------- */
+const KEY="bonesparrow.unpack.v1";
+let S={slide:0,stage:0,marks:{},cells:{},refl:{},pick:"p3",hint:false,rev:0};
+try{ const r=JSON.parse(localStorage.getItem(KEY)); if(r) S=Object.assign(S,r); }catch(e){}
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} };
+
+/* ---------------- a prompt, word by word ---------------- */
+const norm=w=>w.toLowerCase().replace(/[^a-z']/g,"");
+function words(t){ return t.split(/(\s+)/); }
+function drawPrompt(el,p,{tap=false,show=null}={}){
+  el.innerHTML=words(p.t).map(w=>{
+    if(!w.trim()) return w;
+    const n=norm(w); if(!n) return `<span class="w">${esc(w)}</span>`;
+    let cls="w"+(tap?" tap":"");
+    const m=show==="all" ? (p.key.some(k=>norm(k)===n)?"key":p.dir.some(d=>norm(d)===n)?"dir":"")
+          : (S.marks[p.id]||{})[n]||"";
+    if(show==="none") return `<span class="${cls}" data-w="${n}">${esc(w)}</span>`;
+    return `<span class="${cls}${m?" "+m:""}" data-w="${n}">${esc(w)}</span>`;
+  }).join("");
+  if(tap) el.querySelectorAll(".w[data-w]").forEach(s=>s.addEventListener("click",()=>{
+    const m=S.marks[p.id]=S.marks[p.id]||{}, n=s.dataset.w;
+    m[n]= m[n]==="key" ? "dir" : m[n]==="dir" ? "" : "key";
+    if(!m[n]) delete m[n];
+    save(); drawBoard(p,el.dataset.host);
+  }));
+}
+
+/* ---------------- the table, built from the words that got marked ---------- */
+function cellId(pid,w,i){ return pid+"|"+w+"|"+i; }
+function tableFor(p,{filled=false,hint=false}={}){
+  const marked=Object.keys(S.marks[p.id]||{}).filter(w=>(S.marks[p.id][w])==="key");
+  const rows = filled ? p.key.map(k=>norm(k)) : marked;
+  if(!rows.length) return `<p class="nowords">Click the words in the prompt that the essay has to be about. They will drop into the table.</p>`;
+  const src=p.words||{};
+  return `<table class="words"><tr><th>Key word</th>${COLS.map(c=>`<th>${c}</th>`).join("")}</tr>`+
+    rows.map(w=>{
+      const sug=src[w]||[];
+      return `<tr><td class="k">${esc(w)}</td>`+COLS.map((c,i)=>{
+        const id=cellId(p.id,w,i), v=S.cells[id]|| (hint&&sug[i] ? sug[i] : "");
+        return `<td contenteditable data-cell="${id}" data-ph="…" class="${v?"":"empty"}">${esc(v)}</td>`;
+      }).join("")+"</tr>";
+    }).join("")+"</table>";
+}
+function wireCells(root){
+  root.querySelectorAll("[data-cell]").forEach(td=>{
+    td.addEventListener("input",()=>{ td.classList.toggle("empty",!td.textContent.trim());
+      S.cells[td.dataset.cell]=td.textContent.trim(); save(); });
+  });
+}
+
+/* ---------------- the sentence at the bottom ---------------- */
+function reflHtml(p,{filled=false}={}){
+  const r=p.refl||[], g=i=>{
+    const id=p.id+"|r"+i, v=S.refl[id]|| (filled&&r[i]?r[i]:"");
+    return `<span contenteditable data-refl="${id}" data-ph="…" class="${v?"":"empty"}">${esc(v)}</span>`;
+  };
+  return `This prompt is asking me to ${g(0)}. So my paragraphs could be about ${g(1)} and ${g(2)}.`;
+}
+function wireRefl(root){
+  root.querySelectorAll("[data-refl]").forEach(s=>{
+    s.addEventListener("input",()=>{ s.classList.toggle("empty",!s.textContent.trim());
+      S.refl[s.dataset.refl]=s.textContent.trim(); save(); });
+  });
+}
+
+/* ---------------- the three boards ---------------- */
+function drawBoard(p,host){
+  if(host==="3"){ $("tw3").innerHTML=tableFor(p,{hint:S.hint}); wireCells($("tw3"));
+    $("r3").innerHTML=reflHtml(p,{filled:S.hint}); wireRefl($("r3")); }
+  if(host==="4"){ $("tw4").innerHTML=tableFor(p); wireCells($("tw4"));
+    $("r4").innerHTML=reflHtml(p); wireRefl($("r4")); }
+}
+function slide2(){
+  const p=P.p1;
+  drawPrompt($("p2"),p,{show:"all"});
+  const t=$("t2");
+  t.outerHTML=tableFor(p,{filled:true,hint:true}).replace("<table class=\"words\">","<table class=\"words\" id=\"t2\">");
+  const nt=$("t2");
+  nt.querySelectorAll("td").forEach((td,i)=>{ if(!td.classList.contains("k")) td.style.visibility = (i%4)<=S.rev ? "visible":"hidden"; });
+  nt.addEventListener("click",()=>{ S.rev=(S.rev+1)%4; save(); slide2(); });
+  $("r2").innerHTML=reflHtml(p,{filled:true});
+  $("r2").style.visibility = S.rev>=3 ? "visible":"hidden";
+}
+function slide3(){
+  const p=P.p2; $("p3").dataset.host="3";
+  drawPrompt($("p3"),p,{tap:true});
+  drawBoard(p,"3");
+  $("h3").classList.toggle("on",S.hint);
+}
+function slide4(){
+  const p=P[S.pick]; $("p4").dataset.host="4";
+  $("pick4").innerHTML=PROMPTS.slice(2).map(q=>
+    `<button class="chip${q.id===S.pick?" on":""}${q.kind==="eff"?" eff":""}" data-p="${q.id}">${esc(q.t.length>58?q.t.slice(0,55)+"…":q.t)}</button>`).join("");
+  $("pick4").querySelectorAll("[data-p]").forEach(b=>b.addEventListener("click",()=>{ S.pick=b.dataset.p; save(); slide4(); }));
+  drawPrompt($("p4"),p,{tap:true});
+  drawBoard(p,"4");
+}
+
+/* ---------------- slide 1 stages: prompt, the two parts ---------------- */
+function stage(){
+  const p=P.p1, st=S.stage;
+  drawPrompt($("p1"),p,{show: st>=1?"all":"none"});
+  $("lg1").style.opacity = st>=1?1:0;
+  $("pt1").classList.toggle("on",st>=2);
+  $("pt2").classList.toggle("on",st>=3);
+  $("c1").textContent = st>=3 ? "" : "Click the prompt.";
+}
+
+/* ---------------- nav ---------------- */
+const NAMES=["What a prompt is made of","One done for you","Together","Your turn"];
+let cur=Math.min(S.slide,3);
+$("dots").innerHTML=NAMES.map((n,i)=>`<span data-i="${i}"></span>`).join("");
+function go(i){
+  if(i<0||i>3) return;
+  cur=i; S.slide=i; save();
+  [...document.querySelectorAll(".slide")].forEach((s,k)=>s.classList.toggle("on",k===i));
+  [...$("dots").children].forEach((d,k)=>d.classList.toggle("on",k===i));
+  $("prev").disabled=i===0; $("next").disabled=i===3;
+  $("now").textContent=(i+1)+" · "+NAMES[i];
+  if(i===0) stage(); if(i===1) slide2(); if(i===2) slide3(); if(i===3) slide4();
+}
+function next(){ if(cur===0&&S.stage<3){ S.stage++; save(); stage(); return; } go(cur+1); }
+$("prev").addEventListener("click",()=>go(cur-1));
+$("next").addEventListener("click",next);
+$("p1").addEventListener("click",()=>{ S.stage=(S.stage+1)%4; save(); stage(); });
+$("h3").addEventListener("click",()=>{ S.hint=!S.hint; save(); slide3(); });
+[...$("dots").children].forEach(d=>d.addEventListener("click",()=>go(+d.dataset.i)));
+addEventListener("keydown",e=>{
+  if(e.target.isContentEditable) return;
+  if(e.target.tagName==="BUTTON"&&e.key===" ") return;
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}
+  if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(cur-1);}
+});
+go(cur);
+</script>
+</body>
+</html>
