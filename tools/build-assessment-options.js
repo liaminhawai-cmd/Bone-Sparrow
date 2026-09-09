@@ -49,19 +49,19 @@ const ROWS=[
   "I can explain how the structure and language used in a text helps influence the audience",
   "I can find the author\u2019s point of view in a text and evaluate how credible the text is",
   "I can compare the way people and issues are represented in different texts"],
- ["Using evidence","choosing the quote","Reading and Viewing",
+ ["Understanding language devices","what Fraillon has done with the words","Reading and Viewing",
+  "I can describe the meaning of different similes and metaphors",
+  "I can explain how rhymes can add to descriptions in writing",
+  "I can explain the meaning of non-literal language in narrative and poetic texts",
+  "I can explain the effect of descriptions, different sentence types and figurative language",
+  "I can analyse the way writing techniques work together to convey ideas and feelings"],
+ ["Using evidence","choosing the quote, and putting it in the sentence","Reading and Viewing · Writing",
   "I can describe the depiction of events, characters and settings in texts and explain my responses to them",
-  "I can select specific details from texts to develop and explain my own responses",
-  "I can select and use evidence from texts to explain my response to it, recognising that texts reflect different viewpoints",
-  "I can select evidence from texts to describe how authors depict events, situations, and people from different viewpoints",
-  "I can select evidence from texts to explain how language choices influence an audience"],
- ["Use of evidence","putting the quote in the sentence","Writing",
-  "Not on the continuum at this level",
-  "I can include quotes in an explanation with teacher guidance",
-  "I can explain the relevance of a quote",
-  "I can embed quotes into sentences",
-  "I can correctly embed quotes within an explanation sentence"],
- ["Evaluating texts","the effect on the reader","Reading and Viewing",
+  "I can select specific details from texts to develop and explain my own responses. I can include quotes in an explanation with teacher guidance",
+  "I can select and use evidence from texts to explain my response to it. I can explain the relevance of a quote",
+  "I can select evidence from texts to describe how authors depict events, situations, and people from different viewpoints. I can embed quotes into sentences",
+  "I can select evidence from texts to explain how language choices influence an audience. I can correctly embed quotes within an explanation sentence"],
+ ["Evaluating texts","the effect on the reader, and the verb that carries it","Reading and Viewing",
   "I can use metalanguage to discuss the effect of texts on the reader",
   "I can describe how repetition, emphasis and metaphor can influence the way a reader feels",
   "I can use examples from the text to discuss how language helps to create character",
@@ -72,24 +72,12 @@ const ROWS=[
   "I can avoid repetition by changing the participants in a follow-on idea",
   "I can write a paragraph for informative and narrative texts",
   "I can sequence ideas relating to a topic within a given structure",
-  "I can sequence ideas to present a clear argument"],
- ["Voice and register","the analytical verb, and how formal it sounds","Writing",
-  "I can write using the correct relevant tense",
-  "I can use different types of verbs in my writing (existing, doing, thinking, feeling)",
-  "I can change my choice of words to be appropriate for spoken and written texts",
-  "I can change my word choice to alter the tone of written and spoken texts",
-  "I can write using a formal register"],
- ["Spelling and punctuation","control of the writing","Writing",
-  "I can correctly spell common homophones. I can use apostrophes to show possession",
-  "I can use common prefixes, suffixes and base words to spell new words. I can correctly use commas and full stops between clauses",
-  "I can use spelling rules and word origins to spell new words. I can correctly punctuate complex sentences and circumstantial phrases",
-  "I can remember and use the correct spelling of new subject-related words. I can use colons, semicolons, dashes and brackets in my writing",
-  "I can develop precise and persuasive texts with accurate spelling. I can use punctuation, layout and font for different audience and purpose"]
+  "I can sequence ideas to present a clear argument"]
 ];
 const CRITW=3000, BANDW=Math.floor((LW-CRITW)/5);
 const rc=(kids,w,o)=>new TableCell({width:{size:w,type:WidthType.DXA},
-  margins:{top:60,bottom:60,left:90,right:90},...(o||{}),children:kids});
-const small=(t,o={})=>new Paragraph({spacing:{after:0},children:[T(t,{size:16,...o})]});
+  margins:{top:70,bottom:70,left:90,right:90},...(o||{}),children:kids});
+const small=(t,o={})=>new Paragraph({spacing:{after:0},children:[T(t,{size:17,...o})]});
 function rubric(){
   return new Table({columnWidths:[CRITW,BANDW,BANDW,BANDW,BANDW,BANDW],
     width:{size:LW,type:WidthType.DXA},
@@ -101,10 +89,52 @@ function rubric(){
           small(band,{size:15,color:"595959"})],BANDW,
           {shading:{type:ShadingType.CLEAR,fill:i===2?MID:GREY,color:"auto"}}))]}),
       ...ROWS.map(r=>new TableRow({children:[
-        rc([small(r[0],{bold:true,size:17}),small(r[1],{size:15,color:"595959"}),
+        rc([small(r[0],{bold:true,size:18}),small(r[1],{size:16,color:"595959"}),
             small(r[2],{size:14,color:"808080"})],CRITW),
         ...r.slice(3).map((d,i)=>rc([small(d)],BANDW,
           i===2?{shading:{type:ShadingType.CLEAR,fill:"F2F2F2",color:"auto"}}:{}))]}))]});
+}
+
+/* the EAL rubric: the skill focus from the EAL analytical writing WAGOLL, then
+   the school's EAL reading rubric, C bands, both quoted as they stand */
+const EAL_BANDS=[["C2","Describe"],["C3","Explain"],["C4","Analyse"],["VCE 1","Interpret"]];
+const EAL_ROWS=[
+ ["Skill focus","what the writing is doing","EAL analytical writing WAGOLL",
+  "Say what happens",
+  "Explain effect or meaning",
+  "Link language choices to ideas or themes",
+  "Link literary, structural and stylistic features, to messages, values, and creator\u2019s intents"],
+ ["Summary","the ideas in the novel","EAL reading rubric",
+  "Extract main ideas from texts",
+  "Explain main ideas and plot developments",
+  "Use appropriate language to identify and infer ideas, themes, and plot details",
+  "Uses precise and appropriate language to explore interconnected ideas and values presented in the text, including discussion of character, setting and other aspects of the text"],
+ ["Evidence","the quote, and what it is doing there","EAL reading rubric",
+  "Use quotes to link to ideas",
+  "Use metalanguage, and quotes to support ideas",
+  "Embed evidence and use appropriate metalanguage to discuss. Make clear links to themes and ideas",
+  "Embeds relevant textual evidence to explain how the author has conveyed ideas in the text presented in response to the topic"],
+ ["Text purpose","what Fraillon is doing to the reader","EAL reading rubric",
+  "Identify common text types and features",
+  "Identify the main purpose of the text and describe text features",
+  "Discuss how specific text features relate to the purpose. Make inferences about the author\u2019s intent",
+  "Discuss and examine how structures, language features and vocabulary choices relate to the purpose. Make inferences about the author\u2019s complex and nuanced ideas"]
+];
+function ealRubric(){
+  const BW=Math.floor((LW-CRITW)/4);
+  return new Table({columnWidths:[CRITW,BW,BW,BW,BW],width:{size:LW,type:WidthType.DXA},
+    borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
+    rows:[
+      new TableRow({tableHeader:true,children:[
+        rc([small("Criteria",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
+        ...EAL_BANDS.map(([b,n],i)=>rc([small(b+(i===1?" \u00b7 expected at Year 7":""),{bold:true,size:18}),
+          small(n,{size:15,color:"595959"})],BW,
+          {shading:{type:ShadingType.CLEAR,fill:i===1?MID:GREY,color:"auto"}}))]}),
+      ...EAL_ROWS.map(r=>new TableRow({children:[
+        rc([small(r[0],{bold:true,size:18}),small(r[1],{size:16,color:"595959"}),
+            small(r[2],{size:14,color:"808080"})],CRITW),
+        ...r.slice(3).map((d,i)=>rc([small(d)],BW,
+          i===1?{shading:{type:ShadingType.CLEAR,fill:"F2F2F2",color:"auto"}}:{}))]}))]});
 }
 const rubricPage=(name)=>[
   new Paragraph({spacing:{after:60},children:[T(name,{bold:true,size:28})]}),
@@ -114,6 +144,18 @@ const rubricPage=(name)=>[
   new Paragraph({spacing:{before:140},children:[
     T("Mark each row at the level the writing shows. The grade is the average across the rows, which is where the half levels come from. ",{size:18}),
     T("Wording quoted from the Learning Continuum master sheet, English tab.",{size:18,italics:true,color:"595959"})]}),
+  new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
+  new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
+  new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
+];
+const ealPage=(name)=>[
+  new Paragraph({spacing:{after:60},children:[T(name,{bold:true,size:28})]}),
+  new Paragraph({spacing:{after:160},children:[T("RUBRIC \u00b7 EAL",{bold:true,size:24,color:"595959"}),
+    T("        "),...line("Name:",30)]}),
+  ealRubric(),
+  new Paragraph({spacing:{before:140},children:[
+    T("For students on the EAL pathway, in place of the continuum rubric. ",{size:18}),
+    T("Skill focus quoted from the EAL analytical writing WAGOLL; the other rows from the EAL reading rubric, C levels.",{size:18,italics:true,color:"595959"})]}),
   new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
@@ -129,119 +171,121 @@ const COMMON_MUST=[
 
 /* ---------------------------------------------------------------- A */
 const A_PROMPTS=[
- ["Lesson 1","The Bone Sparrow shows us that imagination and friendship are essential for survival.",
-  "The imagination paragraph is written together as a class. You write the friendship paragraph."],
- ["Lesson 2","In The Bone Sparrow, power comes in many forms. Discuss.",
-  "The class brainstorms the kinds of power. The paragraph on the Jackets is modelled. You write about a second kind."],
- ["Lesson 3","How does Fraillon make the reader see the people behind the numbers?",
-  "The class agrees or disagrees with the ways she does it. You write about one you argued for."]
+ ["Task 1","‘But reading is important.’ (p39) Discuss how stories and imagination are important for characters in The Bone Sparrow."],
+ ["Task 2","‘Soon they’ll see that living in here isn’t living at all. We just need to show them who we are, that we’re people, and then they’ll remember.’ (p108) Discuss the living conditions for characters inside and outside the centre."],
+ ["Task 3","The Bone Sparrow explores themes of family and friendship. Discuss."]
 ];
 const A_SHEET=[
   ...titleBlock("Analytical Paragraph Writing — Folio","Reading and Viewing","CAT 2 · Option A"),
   HEAD("Task:"),
-  P("Over three lessons you will write three analytical paragraphs about The Bone Sparrow, one for each of the prompts below. At the end you choose one of them to be marked."),
+  P("You will write three folio pieces about The Bone Sparrow, one for each prompt below. Each one is written in class in 30 minutes. In each booklet the introduction has the first idea written in and the first paragraph is written out for you; you write the second and third paragraphs."),
   HEAD("Purpose:"),
   P("To explain an idea in the novel, and show how Fraillon’s writing puts that idea in front of the reader."),
   HEAD("Audience:"),
   P("Your teacher, and a reader who has already read the novel. You do not need to retell the story."),
-  HEAD("Length:"),
-  P("One paragraph for each prompt. About five to eight sentences each."),
+  HEAD("Time:"),
+  dot("Three sittings of 30 minutes, one for each task, on separate days."),
+  dot("Between the tasks your teacher gives you feedback on what you wrote, and you set yourself one thing to do better."),
   HEAD("Conditions:"),
-  dot("Written in class, one lesson for each paragraph."),
-  dot("You may use your novel, your notes and the analytical writing wall."),
-  dot("A modelled paragraph on the same prompt stays on the page while you write."),
+  dot("Written in class under test conditions. You work on your own and your teacher does not help you draft."),
+  dot("On your desk: your copy of the novel, your own notes, and the analytical writing wall."),
+  dot("The first paragraph is printed in the booklet. Read it before you start."),
   HEAD("You must:"),
-  num(1,"Write a paragraph for each of the three prompts.","Each lesson gives you the model and a frame for your own."),
-  num(2,"Choose the paragraph you want marked.","Tick it on the cover sheet. If you do not choose one, the last paragraph is marked."),
+  num(1,"Finish the introduction.","The first idea is written in. Add the two ideas your paragraphs will be about."),
+  num(2,"Write the second and third paragraphs.","One idea each. The printed paragraph shows you the shape."),
   ...COMMON_MUST.map((m,i)=>num(i+3,m[0],m[1])),
+  num(7,"Fill in the self assessment at the back.","Tick a box in each row, and write the one thing you will do better next time."),
   gap(80), RUBRIC_LINE,
   new Paragraph({spacing:{after:0},children:[new PageBreak()]}),
-  new Paragraph({spacing:{after:200},children:[T("Prompts",{bold:true,size:32})]}),
-  ...A_PROMPTS.flatMap(([lesson,prompt,note])=>[
-    new Paragraph({spacing:{after:40},children:[T(lesson,{bold:true,color:"595959"})]}),
-    new Paragraph({spacing:{after:60},children:[T(prompt,{size:26})]}),
-    P(note,{size:22,color:"595959",after:220})]),
+  new Paragraph({spacing:{after:80},children:[T("The three tasks",{bold:true,size:32})]}),
+  P("All three go in the folio. Your teacher marks the one you nominate on the cover of the folio.",{color:"595959",after:200}),
+  ...A_PROMPTS.flatMap(([t,p])=>[
+    new Paragraph({spacing:{after:40},children:[T(t,{bold:true,color:"595959"})]}),
+    new Paragraph({spacing:{after:220},children:[T(p,{size:25})]})]),
   HEAD("Folio cover sheet"),
-  P("Staple this page to the front of your three paragraphs."),
+  P("Staple this page to the front of the three booklets."),
   new Table({columnWidths:[900,PW-900-2600,2600],width:{size:PW,type:WidthType.DXA},
     borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
     rows:[
       new TableRow({children:[
         rc([small("IN",{bold:true,size:18})],900,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
-        rc([small("PARAGRAPH",{bold:true,size:18})],PW-900-2600,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
+        rc([small("TASK",{bold:true,size:18})],PW-900-2600,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
         rc([small("MARK THIS ONE",{bold:true,size:18})],2600,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}})]}),
-      ...["1 · imagination and friendship","2 · kinds of power","3 · the people behind the numbers"]
+      ...["1 · stories and imagination","2 · life inside and outside","3 · family and friendship"]
         .map(t=>new TableRow({height:{value:620,rule:HeightRule.ATLEAST},children:[
           rc([gap()],900), rc([new Paragraph({spacing:{after:0},children:[T(t)]})],PW-900-2600), rc([gap()],2600)]}))]}),
   HEAD("Before you hand it in"),
-  dot("Read your chosen paragraph out loud. Does every sentence say something about the idea?"),
-  dot("Colour the parts: idea, evidence, analytical verb, effect. Is anything missing?"),
-  dot("Check the last sentence links both halves back to your idea.")
+  dot("Read your paragraphs out loud. Does every sentence say something about the idea?"),
+  dot("Colour the parts: idea, language feature, evidence, effect on the reader."),
+  dot("Check each last sentence links back to the idea and says more than the first one did.")
 ];
 const A_NOTES=[
   new Paragraph({spacing:{after:120},children:[T("Teacher notes — Option A",{bold:true,size:28})]}),
   HEAD("What is marked"),
-  P("The paragraph the student nominates. The other two stay in the folio as evidence of progress and are not marked separately. No nomination: the last paragraph is marked."),
+  P("The task the student nominates on the folio cover. The other two stay in the folio as evidence of progress and are not marked separately. No nomination: the last task is marked. Only the paragraphs the student wrote are marked — not the printed paragraph, and not the introduction."),
   HEAD("Differentiation"),
-  dot("Support — the topic sentence and the analytical verb are printed; the evidence and explanation are theirs."),
+  dot("Support — the topic sentence is printed in the frame; the evidence and explanation are theirs."),
+  dot("Feedback between sittings is the point of the folio: one thing named, and the same thing looked for next time."),
   dot("EAL — word list first, shorter sentences, one sentence per line in the frame."),
-  dot("Extension — TEEAL, two evidence sentences, and a second paragraph on a different idea."),
+  dot("Extension — TEEAL, two evidence sentences in a paragraph, and a third paragraph of their own."),
   HEAD("Where the criteria come from"),
-  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Six of the seven rows are what the analytical writing wall already teaches; Text structure and organisation is the row the wall does not cover, because the wall is a ladder of sentences and this task asks for a paragraph."),
+  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Four of the five rows are Reading and Viewing, and are what the analytical writing wall already teaches. Text structure and organisation is the one Writing row, added because the wall is a ladder of sentences and this task asks for a paragraph. The analytical verb is not a row of its own: it is how the effect gets explained, so it is marked inside Evaluating texts."),
   HEAD("What this task does not assess"),
   P("Building an essay argument — a contention, three claims and a conclusion that follows from them. That has not been taught this unit.")
 ];
 
 /* ---------------------------------------------------------------- B */
 const B_PROMPTS=[
- "The Bone Sparrow shows us that imagination and friendship are essential for survival.",
- "In The Bone Sparrow, power comes in many forms. Discuss.",
- "Explore how loneliness and friendship shape the lives of the characters in The Bone Sparrow.",
- "What does The Bone Sparrow show about the importance of stories and family?",
- "How does Fraillon make the reader care about the people in the camp?",
- "How does Fraillon show the reader what life in the camp is like?"
+ "‘But reading is important.’ (p39) Discuss how stories and imagination are important for characters in The Bone Sparrow.",
+ "‘Soon they’ll see that living in here isn’t living at all…’ (p108) Discuss the living conditions for characters inside and outside the centre.",
+ "The Bone Sparrow explores themes of family and friendship. Discuss."
 ];
 const B_SHEET=[
   ...titleBlock("Analytical Paragraph Writing — Text Response","Reading and Viewing","CAT 2 · Option B"),
   HEAD("Task:"),
-  P("You will be given one prompt on the day and write about The Bone Sparrow: an introduction, one or two body paragraphs, and a conclusion. One body paragraph is printed on your paper. The paragraph you write yourself is the one that is marked."),
+  P("In one period you write a three paragraph response to a prompt about The Bone Sparrow. The first paragraph is already written for you and the introduction and conclusion are started, sentence by sentence. You write the second and third paragraphs."),
   HEAD("Purpose:"),
   P("To explain an idea in the novel, and show how Fraillon’s writing puts that idea in front of the reader."),
   HEAD("Audience:"),
   P("Your teacher, and a reader who has already read the novel. You do not need to retell the story."),
   HEAD("Time:"),
-  dot("One period to prepare your notes."),
+  dot("One period to prepare your notes, in the lesson before."),
   dot("One period to write. You will be told when there are ten minutes left."),
   HEAD("Conditions:"),
-  dot("You may bring one page of notes: ideas and quotes with chapter numbers."),
-  dot("You may use your novel and the analytical writing wall."),
-  dot("The introduction and conclusion are started for you."),
-  dot("Your teacher will not help you draft during the writing period."),
+  dot("Written in class under test conditions. Your teacher does not help you draft."),
+  dot("On your desk: your copy of the novel, one page of your own notes, and the analytical writing wall."),
+  dot("The prompt is given at the start of the period. It is one of the three below."),
+  HEAD("What is on the paper:"),
+  dot("An introduction with the big idea sentence written and the ideas left blank."),
+  dot("Paragraph 1, written in full."),
+  dot("Frames for paragraphs 2 and 3 — topic sentence, evidence, explanation, link."),
+  dot("A conclusion with the first words of each sentence given."),
   HEAD("You must:"),
-  num(1,"Prepare notes on all six prompts.","The prompt you are given will be one of them. Use the planning sheet: what three paragraphs could be about, and one piece of evidence for each."),
-  num(2,"Write your own body paragraph.","Extension: write two, on different ideas."),
+  num(1,"Finish the introduction.","Name the two ideas your paragraphs will be about."),
+  num(2,"Write paragraphs 2 and 3.","One idea each. Paragraph 1 shows you the shape."),
   ...COMMON_MUST.map((m,i)=>num(i+3,m[0],m[1])),
+  num(7,"Finish the conclusion.","Put your two ideas back together. No new quotes."),
   gap(80), RUBRIC_LINE,
   new Paragraph({spacing:{after:0},children:[new PageBreak()]}),
-  new Paragraph({spacing:{after:80},children:[T("Prompts",{bold:true,size:32})]}),
-  P("Prepare for all six. One of them will be the prompt on the day.",{color:"595959",after:200}),
-  ...B_PROMPTS.map((p,i)=>new Paragraph({spacing:{after:180},indent:{left:400,hanging:400},
-    children:[T((i+1)+".\t",{bold:true}),T(p,{size:26})]})),
+  new Paragraph({spacing:{after:80},children:[T("The prompts",{bold:true,size:32})]}),
+  P("Prepare for all three. One of them will be the prompt on the day.",{color:"595959",after:200}),
+  ...B_PROMPTS.map((p,i)=>new Paragraph({spacing:{after:220},indent:{left:400,hanging:400},
+    children:[T((i+1)+".\t",{bold:true}),T(p,{size:25})]})),
   HEAD("Before you hand it in"),
-  dot("Read your paragraph out loud. Does every sentence say something about the idea?"),
-  dot("Colour the parts: idea, evidence, analytical verb, effect. Is anything missing?"),
-  dot("Check the last sentence links both halves back to your idea.")
+  dot("Read your paragraphs out loud. Does every sentence say something about the idea?"),
+  dot("Colour the parts: idea, language feature, evidence, effect on the reader."),
+  dot("Check each last sentence links back to the idea and says more than the first one did.")
 ];
 const B_NOTES=[
   new Paragraph({spacing:{after:120},children:[T("Teacher notes — Option B",{bold:true,size:28})]}),
   HEAD("What is marked"),
-  P("The body paragraph, or paragraphs, the student writes. The introduction and conclusion are read for whether they answer the prompt and are not marked against the rubric."),
+  P("Paragraphs 2 and 3. The printed paragraph, the introduction and the conclusion are read for whether they answer the prompt, and are not marked against the rubric."),
   HEAD("Differentiation"),
   dot("Support — bigger print, one paragraph only, with a theme and a quote to choose from on the page."),
   dot("EAL — word list first, shorter sentences, one sentence per line in the frame."),
   dot("Extension — the printed paragraph gives only the topic and link sentences; the evidence sentences are theirs, and they write a second paragraph."),
   HEAD("Where the criteria come from"),
-  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Six of the seven rows are what the analytical writing wall already teaches; Text structure and organisation is the row the wall does not cover, because the wall is a ladder of sentences and this task asks for a paragraph."),
+  P("Every row is a substrand of the Learning Continuum master sheet, English tab, and every cell is its wording, unaltered, at that level. Four of the five rows are Reading and Viewing, and are what the analytical writing wall already teaches. Text structure and organisation is the one Writing row, added because the wall is a ladder of sentences and this task asks for a paragraph. The analytical verb is not a row of its own: it is how the effect gets explained, so it is marked inside Evaluating texts."),
   HEAD("What this task does not assess"),
   P("Building an essay argument — a contention, three claims and a conclusion that follows from them. That has not been taught this unit, which is why the introduction and conclusion are started for the students and are not marked against the rubric.")
 ];
@@ -256,6 +300,7 @@ function build(sheet,notes,name,out){
     sections:[
       {properties:portrait,children:sheet},
       {properties:landscape,children:rubricPage(name)},
+      {properties:landscape,children:ealPage(name)},
       {properties:portrait,children:notes}]});
   return Packer.toBuffer(doc).then(b=>{fs.writeFileSync(out,b);console.log('written '+out);});
 }
