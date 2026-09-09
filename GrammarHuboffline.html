@@ -450,8 +450,18 @@
     .container{border:none;box-shadow:none;max-width:100%;padding:0;margin:0}
   }
 </style>
+<style>
+/* the way back: every page carries a link to the hub whoever uses it starts from */
+.hublink{position:fixed;left:12px;top:12px;z-index:200;display:inline-block;
+  font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
+  background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
+.hublink:hover{color:#0B447C;border-color:#0B447C}
+@media (max-width:1040px){body{padding-top:56px}}
+@media print{.hublink{display:none !important}}
+</style>
 </head>
 <body translate="no" class="notranslate">
+<a class="hublink" href="index.html">⌂ Main menu</a>
 <!-- EAL translate bar: the engine fills the language list, shows it only in
      EAL mode, and wires tap-to-translate. Suppressed during meaning checks. -->
 <div id="translateBar" class="tbar" hidden>

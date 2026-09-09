@@ -74,8 +74,18 @@ em.hl-feat{background:#e7ddf6;color:#4b2f7a}
   padding:10px 14px;font-family:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
 @media screen and (max-width:520px){ .given .t{font-size:16px} }
 </style>
+<style>
+/* the way back: every page carries a link to the hub whoever uses it starts from */
+.hublink{position:fixed;left:12px;top:12px;z-index:200;display:inline-block;
+  font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
+  background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
+.hublink:hover{color:#0B447C;border-color:#0B447C}
+@media (max-width:1040px){.hublink{position:static;margin:12px 0 0 12px}}
+@media print{.hublink{display:none !important}}
+</style>
 </head>
 <body>
+<a class="hublink" href="index.html">⌂ Main menu</a>
 <main>
 <h1>Three ways into a sentence</h1>
 <p class="where">Chapter 5, page 33 — Beaver at the fence</p>
