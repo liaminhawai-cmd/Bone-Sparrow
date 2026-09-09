@@ -26,14 +26,15 @@ const head=(k,t)=>new Paragraph({spacing:{after:0},children:[
   new TextRun({text:"  "+t+"  ",bold:true,size:17,color:C[k],font:"Calibri",
     shading:{type:ShadingType.CLEAR,fill:SH[k]}})]});
 
-const block=(n,kind,prompt)=>{
+const block=(n,kind,prompt,worked)=>{
   const B={style:BorderStyle.SINGLE,size:8,color:C[kind]};
   return [
     new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
       borders:{top:B,bottom:B,left:B,right:B,insideH:NONE,insideV:NONE},
       rows:[new TableRow({children:[cell([new Paragraph({spacing:{after:0},children:[
         new TextRun({text:n+"   ",bold:true,size:20,color:MUTED,font:"Calibri"}),
-        R(prompt,{size:23,color:C[kind]})]})],W,
+        R(prompt,{size:23,color:C[kind]}),
+        ...(worked?[new TextRun({text:"      worked example",size:17,color:MUTED,font:"Calibri"})]:[])]})],W,
         {shading:{type:ShadingType.CLEAR,fill:SH[kind],color:"auto"},
          margins:{top:110,bottom:110,left:170,right:170}})]})]}),
     new Table({columnWidths:[NUMW,COLW,COLW],width:{size:W,type:WidthType.DXA},
@@ -46,18 +47,26 @@ const block=(n,kind,prompt)=>{
         ...[1,2,3].map(i=>new TableRow({height:{value:ROW,rule:HeightRule.ATLEAST},children:[
           cell([new Paragraph({spacing:{after:0},children:[
             new TextRun({text:String(i),bold:true,size:26,color:DEEP,font:"Georgia"})]})],NUMW),
-          cell([blank()],COLW),
-          cell([blank()],COLW)]}))]}),
+          cell([worked?new Paragraph({spacing:{after:0},children:[R(worked[i-1][0],{size:20})]}):blank()],COLW),
+          cell([worked?new Paragraph({spacing:{after:0},children:[R(worked[i-1][1],{size:20})]}):blank()],COLW)]}))]}),
     new Paragraph({spacing:{after:GAP},children:[]})
   ];
 };
 
+const WORKED=[
+ ["imagination gives him somewhere to go when he cannot leave",
+  "at night the dirt turns into a beautiful ocean (ch 1)"],
+ ["a friend who keeps her promise gives him something to count on",
+  "“the kind of person that keeps a promise” (ch 14)"],
+ ["together they give him what the camp cannot take away",
+  "a real book gives him “a sort of brave” (ch 10)"]
+];
 const PROMPTS=[
- ["idea","The Bone Sparrow shows that imagination helps Subhi survive. Discuss."],
- ["idea","Friendship changes Subhi’s life in The Bone Sparrow. Discuss."],
- ["idea","In The Bone Sparrow, the people with power control everything. Do you agree?"],
- ["eff", "How does Fraillon make the reader care about Subhi?"],
- ["idea","How is hope shown in The Bone Sparrow?"],
+ ["idea","The Bone Sparrow shows us that imagination and friendship are essential for survival.",WORKED],
+ ["idea","In The Bone Sparrow, power comes in many forms. Discuss."],
+ ["idea","Explore how loneliness and friendship shape the lives of the characters in The Bone Sparrow."],
+ ["idea","What does The Bone Sparrow show about the importance of stories and family?"],
+ ["eff", "How does Fraillon make the reader care about the people in the camp?"],
  ["eff", "How does Fraillon show the reader what life in the camp is like?"]
 ];
 
@@ -74,7 +83,7 @@ const kids=[
 ];
 PROMPTS.forEach((p,i)=>{
   if(i===3) kids.push(new Paragraph({spacing:{after:0},children:[new PageBreak()]}));
-  kids.push(...block(i+1,p[0],p[1]));
+  kids.push(...block(i+1,p[0],p[1],p[2]));
 });
 
 const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
