@@ -89,8 +89,18 @@ body.v-spot[data-spot="verb"] em.hl-verb{background:var(--verb-bg);color:var(--v
 body.v-spot[data-spot="ev"]   em.hl-ev{background:var(--ev-bg);color:var(--ev-tx);font-weight:600;font-style:italic;padding:1px 4px}
 body.v-spot[data-spot="eff"]  em.hl-eff{background:var(--eff-bg);color:var(--eff-tx);font-weight:600;padding:1px 4px}
 </style>
+<style>
+/* the way back: every page carries a link to the hub whoever uses it starts from */
+.hublink{position:fixed;left:12px;top:12px;z-index:200;display:inline-block;
+  font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
+  background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
+.hublink:hover{color:#0B447C;border-color:#0B447C}
+@media (max-width:1040px){.hublink{position:static;margin:12px 0 0 12px}}
+@media print{.hublink{display:none !important}}
+</style>
 </head>
 <body>
+<a class="hublink" href="teacher/">⌂ Teacher hub</a>
 <div class="view" id="view">
   <button data-v="plain">plain</button>
   <button data-v="spot">spotlight</button>

@@ -1,9 +1,10 @@
 name: Deploy hubs to GitHub Pages
 
 # Publishes the interactive hubs, a landing page, and the /teacher tab
-# (print resources, unlinked from the student-facing pages) — not the
-# lesson source material otherwise. The Pages site is public even though
-# it deploys from a subset of the repo.
+# (print resources and the slide decks) — not the lesson source material
+# otherwise. Every page links back to the hub its main audience starts
+# from, and the two hubs link to each other. The Pages site is public
+# even though it deploys from a subset of the repo.
 on:
   push:
     branches: [main, claude/bone-sparrow-units-planning-l9ptqq]

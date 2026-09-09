@@ -24,6 +24,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-seri
 #bar button.on{border-color:var(--ink);color:var(--ink);font-weight:600}
 #bar .sp{flex:1}
 #bar #restart{font-size:13px}
+#bar a{font-size:13px;color:var(--muted);text-decoration:none;padding:8px 4px}
+#bar a:hover{color:var(--ink)}
 
 #stagewrap{position:absolute;inset:0}
 #cloud{position:absolute;inset:0}
@@ -191,7 +193,8 @@ const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
 function drawBar(){
   $("bar").innerHTML=ACTS.map((a,i)=>
     `<button class="${i===S.act?'on':''}" data-a="${i}">${i+1} · ${esc(a.name)}</button>`).join("")+
-    `<span class="sp"></span><button id="restart">again</button>`;
+    `<span class="sp"></span><button id="restart">again</button>`+
+    `<a href="teacher/">⌂ Teacher hub</a>`;
   [...$("bar").querySelectorAll("button[data-a]")].forEach(b=>
     b.addEventListener("click",()=>startAct(+b.dataset.a)));
   $("restart").addEventListener("click",()=>startAct(S.act));
