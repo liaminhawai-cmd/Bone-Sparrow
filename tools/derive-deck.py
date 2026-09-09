@@ -113,8 +113,8 @@ rep('''  if(i===2){ seed("im","imagination","Imagination"); drawIdeas("ideasIm",
   if(i===3){ $("h5").textContent="Your turn · "+(p2.name||p2.t); $("wh").textContent=p1.name||p1.t; $("th").textContent=p2.name||p2.t;
     seed("fr",p2); drawIdeas("ideasFr","%(c)s"); drawWorked(); drawFrame("frameFr","fr",false); }'''%{"c":cfg["cloud"]})
 rep('  if(i===0) stage();','  if(i===0){ stage(); labelCards(); }')
-rep('<p class="sub">The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>',
-    '<p class="sub">The Bone Sparrow — <a href="teel-essay.html">the first session</a></p>')
+rep('<p class="sub"><a href="./">Teacher</a> · The Bone Sparrow — <a href="../BoneSparrowTeel.html">the letters and the ladder</a></p>',
+    '<p class="sub"><a href="./">Teacher</a> · The Bone Sparrow — <a href="teel-essay.html">the first session</a></p>')
 rep('''  el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"AB"[o.pick-1]:""}</span>${esc(o.t)}<span class="x">×</span>`;''',
     '''  el.innerHTML=`<span class="tag" ${o.pick?"":"hidden"}>${o.pick?"P"+o.pick:""}</span>${esc(o.t)}<span class="x">×</span>`;''')
 rep('''    const tag=m.el.querySelector(".tag"); tag.hidden=!m.o.pick; tag.textContent=m.o.pick?"AB"[m.o.pick-1]:""; });''',
