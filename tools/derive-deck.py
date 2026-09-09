@@ -162,5 +162,25 @@ go(cur);
 if cfg.get("css"):
     rep('/* nav */', cfg["css"]+"\n/* nav */")
 
+if cfg.get("stateUpgrade"):
+    rep('S.stage=0;   /* the first slide always opens on the prompt */',
+        cfg["stateUpgrade"]+'();\nS.stage=0;   /* the first slide always opens on the prompt */')
+
+if cfg.get("legacyKeys"):
+    rep('JSON.parse(localStorage.getItem(KEY))',
+        'JSON.parse(localStorage.getItem(KEY)||'+'||'.join(
+            'localStorage.getItem('+json.dumps(k)+')' for k in cfg['legacyKeys'])+')')
+
+if cfg.get("workedFallback"):
+    rep('  const b=S.boxes.im, L=["T","E","E","L"];',
+        '  const o=P12()[0], model=[SENT.T(o),SENT.E(o,0),SENT.E(o,1),SENT.L(o)];\n'
+        '  const b=S.boxes.im.map((h,i)=>h||model[i]), L=["T","E","E","L"];')
+
+for old,new in cfg.get("frameDescriptions",{}).items():
+    rep(old,new)
+
+s=s.replace('<!DOCTYPE html>', '<!DOCTYPE html>\n<!-- Generated in liaminhawai-cmd/Bone-Sparrow by tools/derive-deck.py\n'
+            '     from teacher/teel-essay.html and '+sys.argv[1]+'. -->', 1)
+
 open(cfg["out"],'w').write(s)
 print("written "+cfg["out"])

@@ -4,19 +4,30 @@
   "thesis": "<span class=\"w\">Fraillon makes the reader</span> <span class=\"key im\">see</span> <span class=\"w\">the</span> <span class=\"key fr\">people behind the numbers</span><span class=\"w\">.</span>",
   "introWhat": "the people behind the numbers",
   "centreWord": "the people behind the numbers",
-  "centreSub": "how does Fraillon do it?",
+  "centreSub": "Which ideas help us understand them?",
   "cloud": "purpose",
-  "brainH2": "How does Fraillon make us see the people behind the numbers?",
-  "footHint": "Tap to agree, again to disagree, again to clear. The first two ideas you agree with become the paragraphs; the yellow ones are evidence.",
-  "key": "bonesparrow.teelPurpose.v1",
+  "brainH2": "What do we learn about the people behind the numbers?",
+  "footHint": "Tap a bubble to choose a paragraph. Tap the space for another. Double-tap a bubble to drop it.",
+  "key": "bonesparrow.teelPurpose.v4",
   "names": [
     "The prompt",
-    "How does she do it?",
+    "Ideas for the essay",
     "P1 · TEEL",
     "P2 · your turn"
   ],
-  "concWhat": "What the two ways together suggest.",
+  "concWhat": "What the ideas show about the people in the camp.",
   "pool": "tools/kits/purpose-pool.js",
-  "stance": true,
-  "css": "/* this prompt is a purpose, not an idea, so it wears the purpose colour */\n.thesis.lit .key{background:var(--eff-bg);color:var(--eff-tx)}\n.centre{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-tx)}\n.centre span{color:var(--eff-tx)}\n.card .what.land{color:var(--eff-tx);background:var(--eff-bg)}\n/* agreeing is not a role, so it takes a tick rather than a colour */\n.node.agree{border-color:var(--ink);background:#fff;color:var(--ink)}\n/* a line from the book is evidence, so it wears the evidence colour */\n.node.ev{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx);font-family:Georgia,serif;font-style:italic}\n.node.ev.agree{background:var(--ev-bg);border-color:var(--ev-tx);color:var(--ev-tx)}"
+  "stance": false,
+  "css": "/* Purpose stays green; paragraph ideas stay blue. */\n.thesis.lit .key{background:var(--eff-bg);color:var(--eff-tx)}\n.centre{background:var(--eff-bg);color:var(--eff-tx);border-color:var(--eff-tx)}\n.centre span{color:var(--eff-tx)}\n#introWhat{color:var(--eff-tx);background:var(--eff-bg)}\n.build,.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}\n.build.typing{grid-template-columns:200px minmax(0,1fr)}\n.build>*{min-width:0;min-height:0}\n.slot{grid-template-columns:132px minmax(0,1fr) 44px}\n.two .slot{grid-template-columns:92px minmax(0,1fr)}\n.two .slot>span:last-child{display:none}\n.two .slot .box{min-width:0}\n@media screen and (max-height:800px){\n  .slide{padding:42px 36px 64px}\n  h2{font-size:24px;margin-bottom:12px}\n  .keyrow{margin-bottom:10px}\n  .slot .box{font-size:18px;line-height:1.55}\n  .worked{padding:12px 16px}\n  .worked p{font-size:18px;line-height:1.5;margin-bottom:8px}\n  .worked p:last-child{margin-bottom:0}\n}\n@media screen and (max-width:800px){\n  .slide{padding-left:16px;padding-right:16px}\n  .build,.build.typing{grid-template-columns:1fr;overflow:auto}\n  .anchor{display:none}\n  .two{grid-template-columns:1fr;overflow:auto}\n  .two>div{min-height:380px}\n  .slot,.two .slot{grid-template-columns:62px minmax(0,1fr)}\n  .slot .sug{grid-column:1;grid-row:auto;margin:0}\n  .slot .d{font-size:11px}\n  .nav .now{min-width:0;font-size:11px}\n}\n",
+  "stateUpgrade": "upgradePurposeState",
+  "workedFallback": true,
+  "frameDescriptions": {
+    "the idea, and why it matters": "the idea this paragraph develops",
+    "A and B, back to the main idea": "link the idea to the purpose"
+  },
+  "legacyKeys": [
+    "bonesparrow.teelPurpose.v3",
+    "bonesparrow.teelPurpose.v2",
+    "bonesparrow.teelPurpose.v1"
+  ]
 }
