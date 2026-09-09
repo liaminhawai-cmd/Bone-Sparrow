@@ -45,7 +45,7 @@ const mini=(segs)=>{const BW=560, tot=segs.reduce((a,x)=>a+x[1],0), cw=segs.map(
 const T_BAR=[["idea",1]], E_BAR=[["ev",3],["verb",1],["idea",3],["eff",3]], L_BAR=[["idea",2],["idea",2],["eff",3]];
 
 /* ruled lines to write on */
-const ruled=n=>Array.from({length:n},()=>new Paragraph({spacing:{before:180,after:0},
+const ruled=n=>Array.from({length:n},()=>new Paragraph({spacing:{before:200,after:0},
   border:{bottom:{style:BorderStyle.SINGLE,size:4,color:LINE}},children:[new TextRun({text:"",size:22})]}));
 
 /* the frame: the letter with its bar, then the lines */
@@ -70,7 +70,7 @@ const worked=(rows)=>new Table({columnWidths:[760,W-760],width:{size:W,type:Widt
       children:[new Paragraph({spacing:{after:0,line:400},children:segs.map(([k,t])=>
         k==="plain"?R(t,{size:23}):R(t,{size:23,bold:true,color:C[k],shading:{type:ShadingType.CLEAR,fill:SH[k]}}))})]})]}))});
 
-const PARA=[["T",2,T_BAR],["E",3,E_BAR],["E",3,E_BAR],["E",2,E_BAR,true,"if you get there"],["L",3,L_BAR]];
+const PARA=[["T",3,T_BAR],["E",5,E_BAR],["E",5,E_BAR],["E",4,E_BAR,true,"if you get there"],["L",4,L_BAR]];
 
 /* self assessment, same colours */
 const SELF=[
@@ -151,50 +151,45 @@ const TASKS=[
 
 { n:3, file:"BoneSparrow-folio-3-family.docx",
   prompt:[["The Bone Sparrow explores themes of "],["hl","family"],[" and "],["hl","friendship"],[". Discuss."]],
-  big:"In the centre, friendship does the work that family cannot always do.",
-  idea1:"the way a friend is someone Subhi chooses, when everything else in his life has been decided for him",
+  big:"In the centre, friendship gives Subhi some of what his family is too worn down to give.",
+  idea1:"the way friends give Subhi someone he can count on, when his family cannot always manage it",
   model:[
-   ["T",[["idea","Friendship matters so much to Subhi because a friend is the one thing he gets to choose."]],T_BAR],
+   ["T",[["idea","Friends give Subhi something his family cannot always give him in the centre: someone he can count on."]],T_BAR],
    ["E",[["plain","After Jimmie stops coming, Subhi says he knows "],
          ["ev","“for sure that Jimmie is the kind of person that keeps a promise”"],
          ["plain",". This "],["verb","shows"],["plain"," that "],
-         ["idea","Subhi trusts Jimmie for what she chooses to do, not for what she has to do"],["plain",", which "],
-         ["eff","makes the reader see why a kept promise is worth so much in a place where nothing is certain"],["plain","."]],E_BAR],
-   ["E",[["plain","Of his own friend in the camp, Subhi says, "],
+         ["idea","a friend who comes back gives Subhi something to hold on to"],["plain",", which "],
+         ["eff","makes the reader see how much a kept promise is worth in a place where nothing is certain"],["plain","."]],E_BAR],
+   ["E",[["plain","Of Eli, Subhi says, "],
          ["ev","“Eli, he’s the only one I show all my treasures to.”"],
          ["plain"," This "],["verb","suggests"],["plain"," that "],
-         ["idea","Subhi decides who is allowed to know him"],["plain",", which "],
-         ["eff","makes the reader understand that choosing a friend is one of the few choices the camp leaves him"],["plain","."]],E_BAR],
-   ["L",[["plain","So friendship holds Subhi up because it is "],["idea","chosen"],["plain",", while "],
-         ["idea","family in the centre is taken away or kept apart"],["plain",", and being able to choose is "],
-         ["eff","what gives him something of his own"],["plain","."]],L_BAR]] }
+         ["idea","Subhi has one person he can trust with what matters to him"],["plain",", which "],
+         ["eff","makes the reader understand that a friend gives him a safe place that the camp does not"],["plain","."]],E_BAR],
+   ["L",[["plain","So while his family is "],["idea","worn down by the centre"],["plain",", his friends give Subhi "],
+         ["idea","someone who comes back and someone he can trust"],["plain",", and that is "],
+         ["eff","what keeps him going"],["plain","."]],L_BAR]] }
 ];
 
 function runs(spec){ return spec.map(x=>x[0]==="hl"?hl("idea",x[1]):R(x[0])); }
 
 function doc(t){
   const kids=[
-    new Paragraph({spacing:{after:200},children:[
+    new Paragraph({spacing:{after:120},children:[
       new TextRun({text:"The Bone Sparrow — folio task "+t.n,bold:true,size:30,color:DEEP,font:"Georgia"}),
       new TextRun({text:"\tName  ",size:18,color:MUTED,font:"Calibri"}),
       new TextRun({text:"______________________",size:18,color:LINE,font:"Calibri"})],
       tabStops:[{type:"right",position:W}]}),
-    note("30 minutes. Novel, your notes and the writing wall on the desk."),
-
-    H("The prompt"),
     box([P(runs(t.prompt),{after:0})]),
 
     H("Introduction"),
     key(),
     box([
-      P([R(t.big)],{after:140}),
-      P([R("Fraillon shows this first through "),hl("idea",t.idea1),R(".")],{after:140}),
+      P([R(t.big)],{after:120}),
+      P([R("Fraillon shows this first through "),hl("idea",t.idea1),R(".")],{after:120}),
       P([R("She also shows it through")],{after:0}),
       ...ruled(2),
-      P([R("and through")],{before:160,after:0}),
+      P([R("and through"),new TextRun({text:"     if you get there",size:17,color:MUTED,font:"Calibri"})],{before:160,after:0}),
       ...ruled(2)]),
-    note("The third idea is for whoever gets that far."),
-    br(),
 
     H("The model"),
     worked(t.model),
@@ -210,14 +205,14 @@ function doc(t){
     br(),
 
     H("Conclusion"),
-    frame([["L",3,L_BAR,false,"So The Bone Sparrow shows that … — no new quotes"]]),
+    frame([["L",4,L_BAR,false,"So The Bone Sparrow shows that … — no new quotes"]]),
 
     H("How did it go?"),
     selfTable(),
-    new Paragraph({spacing:{after:160},children:[R("")]}),
-    openBox("One thing I will do better next time",800),
-    new Paragraph({spacing:{after:160},children:[R("")]}),
-    openBox("Teacher feedback",1300)
+    new Paragraph({spacing:{after:120},children:[R("")]}),
+    openBox("One thing I will do better next time",900),
+    new Paragraph({spacing:{after:120},children:[R("")]}),
+    openBox("Teacher feedback",1500)
   ];
   return new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
     sections:[{properties:{page:{size:{width:PW,height:PH},
