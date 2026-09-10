@@ -32,9 +32,10 @@ const POSTERS=[
    so the size passed is A3 portrait; the printed sheet is 23811 wide. */
 const A3W=16838, A3H=23811, MARG=800;
 const W=A3H-MARG*2, H=A3W-MARG*2;
-const BANNER=2600;
+const BANNER=2400;
+const SPARE=1500;   /* what Word gets to spend on row padding and the footer */
 
-const poster=([idea,hint])=>[
+const poster=([idea,hint],last)=>[
   new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
     borders:{top:BOX,bottom:BOX,left:BOX,right:BOX,insideH:RULE,insideV:NONE},
     rows:[
@@ -47,21 +48,19 @@ const poster=([idea,hint])=>[
               children:[new TextRun({text:idea,bold:true,size:120,color:C.idea,font:"Georgia"})]}),
             new Paragraph({alignment:AlignmentType.CENTER,spacing:{after:0},
               children:[new TextRun({text:hint,size:28,color:MUTED,font:"Calibri"})]})]})]}),
-      new TableRow({height:{value:H-BANNER-700,rule:HeightRule.ATLEAST},children:[
+      new TableRow({height:{value:H-BANNER-SPARE,rule:HeightRule.EXACT},children:[
         new TableCell({width:{size:W,type:WidthType.DXA},
           margins:{top:200,bottom:200,left:300,right:300},
           children:[new Paragraph({children:[]})]})]})]}),
-  new Paragraph({spacing:{before:120,after:0},children:[
+  new Paragraph({spacing:{before:100,after:0},children:[
     new TextRun({text:"The Bone Sparrow",size:20,color:MUTED,font:"Calibri"}),
-    new TextRun({text:"\tEvery quote: the words, the chapter, your name.",size:20,color:MUTED,font:"Calibri"})],
+    new TextRun({text:"\tEvery quote: the words, the chapter, your name.",size:20,color:MUTED,font:"Calibri"}),
+    ...(last?[]:[new PageBreak()])],
     tabStops:[{type:"right",position:W}]})
 ];
 
 const pkids=[];
-POSTERS.forEach((p,i)=>{
-  if(i) pkids.push(new Paragraph({spacing:{after:0},children:[new PageBreak()]}));
-  pkids.push(...poster(p));
-});
+POSTERS.forEach((p,i)=>pkids.push(...poster(p,i===POSTERS.length-1)));
 const posters=new Document({styles:{default:{document:{run:{font:"Georgia",size:24,color:INK}}}},
   sections:[{properties:{page:{size:{width:A3W,height:A3H,orientation:"landscape"},
     margin:{top:MARG,bottom:MARG,left:MARG,right:MARG}}},children:pkids}]});
@@ -76,7 +75,7 @@ const cell=(kids,w,o)=>new TableCell({width:{size:w,type:WidthType.DXA},
 const th=(t,k)=>new Paragraph({spacing:{after:0},children:[new TextRun({text:t,bold:true,size:17,
   color:k?C[k]:MUTED,font:"Calibri",characterSpacing:20})]});
 const QW=W4-1100-2600-3200;
-const ROWS=9;
+const ROWS=9, ROWH=1250;
 const nkids=[
   new Paragraph({spacing:{after:60},children:[
     new TextRun({text:"The Bone Sparrow — quote hunt",bold:true,size:30,color:DEEP,font:"Georgia"}),
@@ -94,7 +93,7 @@ const nkids=[
         cell([th("Chapter")],1100),
         cell([th("Which poster","idea")],2600,{shading:{type:ShadingType.CLEAR,fill:SH.idea,color:"auto"}}),
         cell([th("What it shows","eff")],3200,{shading:{type:ShadingType.CLEAR,fill:SH.eff,color:"auto"}})]}),
-      ...Array.from({length:ROWS},()=>new TableRow({height:{value:1380,rule:HeightRule.ATLEAST},children:[
+      ...Array.from({length:ROWS},()=>new TableRow({height:{value:ROWH,rule:HeightRule.ATLEAST},children:[
         cell([new Paragraph({children:[]})],QW),cell([new Paragraph({children:[]})],1100),
         cell([new Paragraph({children:[]})],2600),cell([new Paragraph({children:[]})],3200)]}))]}),
   new Paragraph({spacing:{before:160,after:0},children:[
@@ -107,7 +106,7 @@ const notes=new Document({styles:{default:{document:{run:{font:"Georgia",size:22
     children:nkids}]});
 
 Packer.toBuffer(posters).then(b=>{fs.writeFileSync(OUT,b);console.log('written '+OUT+'  ('+POSTERS.length+' A3 landscape)');
-  console.log('  banner '+BANNER+' + field '+(H-BANNER-700)+' + footer ~500 of '+H);
+  console.log('  banner '+BANNER+' + field '+(H-BANNER-SPARE)+' + spare '+SPARE+' = '+H);
   return Packer.toBuffer(notes);
 }).then(b=>{fs.writeFileSync(NOTES,b);console.log('written '+NOTES);
-  console.log('  header ~900 + table '+(400+ROWS*1380)+' + foot 400 of '+(PH-M4*2));});
+  console.log('  header ~900 + table '+(400+ROWS*ROWH)+' + foot ~700 of '+(PH-M4*2));});
