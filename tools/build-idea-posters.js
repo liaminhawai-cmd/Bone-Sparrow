@@ -98,7 +98,9 @@ const nkids=[
         cell([new Paragraph({children:[]})],QW),cell([new Paragraph({children:[]})],1100),
         cell([new Paragraph({children:[]})],2600),cell([new Paragraph({children:[]})],3200)]}))]}),
   new Paragraph({spacing:{before:160,after:0},children:[
-    new TextRun({text:"At least three different posters. Chapter number on every one.",size:19,color:MUTED,font:"Calibri"})]})
+    new TextRun({text:"At least 6 quotes, across at least three different posters. Chapter number on every one.",size:19,color:MUTED,font:"Calibri"})]}),
+  new Paragraph({spacing:{before:80,after:0},children:[
+    new TextRun({text:"Keep this sheet — you can bring it into the CAT.",size:19,color:DEEP,font:"Calibri",bold:true})]})
 ];
 const notes=new Document({styles:{default:{document:{run:{font:"Georgia",size:22,color:INK}}}},
   sections:[{properties:{page:{size:{width:PW,height:PH},margin:{top:M4,bottom:M4,left:M4,right:M4}}},
