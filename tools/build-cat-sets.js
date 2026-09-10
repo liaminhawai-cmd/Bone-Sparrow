@@ -37,10 +37,11 @@ const FAINT={style:BorderStyle.SINGLE,size:4,color:LINE};
 const PW=11906, PH=16838, MARG=720, W=PW-MARG*2;
 
 const T=(t,o={})=>new TextRun({text:t,font:FONT,size:22,color:INK,...o});
+const MODEL_SIZE=24;
 const P=(runs,o={})=>new Paragraph({spacing:{after:o.after===undefined?100:o.after,line:o.line},
   children:Array.isArray(runs)?runs:[T(runs)]});
 const H1=t=>new Paragraph({spacing:{after:40},children:[T(t,{bold:true,size:36,color:HEAD})]});
-const H2=t=>new Paragraph({spacing:{before:200,after:80},children:[T(t,{bold:true,size:26})]});
+const H2=t=>new Paragraph({spacing:{before:160,after:60},children:[T(t,{bold:true,size:25})]});
 const dot=(runs)=>new Paragraph({spacing:{after:50},indent:{left:360,hanging:220},
   children:[T("•\t"),...(Array.isArray(runs)?runs:[T(runs)])]});
 const br=()=>new Paragraph({spacing:{after:0},children:[new PageBreak()]});
@@ -65,10 +66,10 @@ const frame=(rows)=>new Table({columnWidths:[2300,W-2300],width:{size:W,type:Wid
 
 /* a marked-up sentence: [kind,text] pairs; "p" is plain. Each scheme has its
    own markup of the same words. */
-function runs(segs,S){
-  return segs.map(([k,t])=>k==="p"?T(t):
-    S.fill ? T(t,{bold:true,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}})
-           : T(t,{bold:true,color:S.col[k]}));
+function runs(segs,S,size=22){
+  return segs.map(([k,t])=>k==="p"?T(t,{size}):
+    S.fill ? T(t,{bold:true,size,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}})
+           : T(t,{bold:true,size,color:S.col[k]}));
 }
 const keyRow=(S)=>new Paragraph({spacing:{after:140},children:S.key.flatMap(([k,t])=>[
   ...runs([[k,"  "+t+"  "]],S),T("   ")])});
@@ -175,34 +176,32 @@ const TASKS=[
 function task(t,S){
   const g = S.fill ? "i" : "g";
   return [
+    /* sheet one, front: the prompt, the introduction, paragraph 2 */
     br(),
     band(t.band),
-    P([T(t.prompt,{bold:true})],{after:60}),
-    note("Thinking springboard: "+t.spring+"."),
-    P("The introduction and the first paragraph are written for you. Write the second paragraph. The third is there if you get there."),
+    P([T(t.prompt,{bold:true})],{after:40}),
+    P([T("Think about: "+t.spring+".",{italics:true,color:MUTED,size:19})],{after:80}),
     H2("Introduction"),
-    box([P(t.intro,{line:340})],GREY),
+    box([P(t.intro,{line:300,after:0})],GREY),
+    P(t.claims,{after:40}),
+    P([T("I will write about:  ",{bold:true}),T("☐ "+t.choose[0]+"     ☐ "+t.choose[1])],{after:60}),
     H2("Paragraph 2"),
-    P(t.claims),
-    P([T("I will write about:  ",{bold:true}),T("☐ "+t.choose[0]+"     ☐ "+t.choose[1])]),
-    /* the model on its own leaf, blank behind it */
-    br(),
-    H2("Paragraph 1"),
-    keyRow(S),
-    box(t.model.map((s,i)=>new Paragraph({spacing:{after:i<3?120:0,line:400},children:runs(s[g],S)})),GREY),
-    br(),
-    new Paragraph({children:[T("")]}),
-    br(),
-    H2("Paragraph 2"),
-    frame([["Topic sentence",t.stems[0],4],["Explanation with evidence",t.stems[1],5],
-           ["A second explanation",t.stems[2],5],["Link sentence",t.stems[3],4]]),
+    frame([["Topic sentence",t.stems[0].slice(0,2),3],["Explanation with evidence",t.stems[1].slice(0,2),4],
+           ["A second explanation",t.stems[2].slice(0,2),4],["Link sentence",t.stems[3].slice(0,2),3]]),
+    /* sheet one, back: paragraph 3 and the self check */
     br(),
     H2("Paragraph 3"),
     new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
       borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:FAINT,insideV:FAINT},
-      rows:[new TableRow({children:[cell(ruled(22),W)]})]}),
+      rows:[new TableRow({children:[cell(ruled(13),W)]})]}),
+    ...selfPage(S),
+    /* sheet two: the model, blank behind it, so it can be left out */
     br(),
-    ...selfPage(S)
+    H2("Paragraph 1"),
+    keyRow(S),
+    box(t.model.map((s,i)=>new Paragraph({spacing:{after:i<3?160:0,line:460},children:runs(s[g],S,MODEL_SIZE)})),GREY),
+    br(),
+    new Paragraph({children:[T("")]})
   ];
 }
 
@@ -210,20 +209,19 @@ function selfPage(S){
   const NW=2800,BW=1100,DW=W-NW-BW*3;
   const th=t=>P([T(t,{bold:true,size:17,color:MUTED})],{after:0});
   return [
-    H1("How did it go?"),
-    P("Tick one box in each row for the paragraph you wrote.",{after:120}),
+    H2("How did it go?"),
     new Table({columnWidths:[NW,DW,BW,BW,BW],width:{size:W,type:WidthType.DXA},
       borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
       rows:[
         new TableRow({children:[cell([th("")],NW),cell([th("")],DW),cell([th("NOT YET")],BW),cell([th("NEARLY")],BW),cell([th("YES")],BW)]}),
-        ...S.self.map(([k,n,d])=>new TableRow({height:{value:620,rule:HeightRule.ATLEAST},children:[
+        ...S.self.map(([k,n,d])=>new TableRow({height:{value:520,rule:HeightRule.ATLEAST},children:[
           cell([P([T(n,{bold:true,color:S.col[k]})],{after:0})],NW,
             S.fill?{shading:{type:ShadingType.CLEAR,fill:S.fill[k],color:"auto"}}:{}),
           cell([P(d,{after:0})],DW),cell([P("")],BW),cell([P("")],BW),cell([P("")],BW)]}))]}),
     H2("One thing I will do better next time"),
-    box([...ruled(3)]),
+    box([...ruled(2)]),
     H2("Teacher feedback"),
-    box([...ruled(5)])
+    box([...ruled(3)])
   ];
 }
 
@@ -286,8 +284,7 @@ function rubric(){
 
 /* -------------------------------------------------------- folio cover */
 const COVER=[
-  br(),
-  H1("Folio cover"),
+  H2("Folio cover"),
   P([T("Name:  ",{bold:true}),T("______________________________     "),T("Class:  ",{bold:true}),T("__________")],{after:200}),
   new Table({columnWidths:[900,W-900-2600,2600],width:{size:W,type:WidthType.DXA},
     borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
