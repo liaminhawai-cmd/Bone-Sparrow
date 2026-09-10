@@ -43,52 +43,66 @@ function titleBlock(task,strand,cat){
    cells are its wording, verbatim, in the continuum's own single-year
    levels. Each row is marked at a level and the levels are averaged, which
    is where the half levels on a report come from. */
-const BANDS=["Level 5","Level 6","Level 7","Level 8","Level 9"];
+const BANDS=["Needs support","5","6","7","8","9"];
+/* The department's rubric, its rows and its wording, minus the ethical
+   concepts row, which belongs to a different task. Structure is added
+   because neither this rubric nor the wall covers the shape of a
+   paragraph. One colour per row, matching the wall. */
 const ROWS=[
- ["idea","Interpreting texts","the idea about the novel","Reading and Viewing",
-  "I can describe the purpose of different text types",
-  "I can describe the way authors try to influence their audience",
-  "I can explain how the structure and language used in a text helps influence the audience",
-  "I can find the author\u2019s point of view in a text and evaluate how credible the text is",
-  "I can compare the way people and issues are represented in different texts"],
- ["ev","Using evidence","choosing the quote, and putting it in the sentence","Reading and Viewing · Writing",
-  "I can describe the depiction of events, characters and settings in texts and explain my responses to them",
-  "I can select specific details from texts to develop and explain my own responses. I can include quotes in an explanation with teacher guidance",
-  "I can select and use evidence from texts to explain my response to it. I can explain the relevance of a quote",
-  "I can select evidence from texts to describe how authors depict events, situations, and people from different viewpoints. I can embed quotes into sentences",
-  "I can select evidence from texts to explain how language choices influence an audience. I can correctly embed quotes within an explanation sentence"],
- ["eff","Evaluating texts","the effect on the reader, and the verb that carries it","Reading and Viewing",
-  "I can use metalanguage to discuss the effect of texts on the reader",
-  "I can describe how repetition, emphasis and metaphor can influence the way a reader feels",
-  "I can use examples from the text to discuss how language helps to create character",
-  "I can explain how different types of evidence can add authority to a text",
-  "I can explain how a text explores issues that relate to our own lives"],
- ["plain","Text structure and organisation","the shape of the paragraph","Writing",
-  "I can change the focus of a sentence by modifying the subject",
-  "I can avoid repetition by changing the participants in a follow-on idea",
-  "I can write a paragraph for informative and narrative texts",
-  "I can sequence ideas relating to a topic within a given structure",
-  "I can sequence ideas to present a clear argument"]
+ ["idea","Ideas",
+  "I need support to identify and explain ideas and issues within the text",
+  "I can identify parts of the story that relate to key ideas (imprisonment, loneliness, stories, etc)",
+  "I can describe characters and events that relate to key ideas",
+  "I can describe the ideas and issues that are illustrated through characters and events",
+  "I can explain the way that ideas and issues are represented by characters and events",
+  "I can analyse the way different people and perspectives are represented in the story"],
+ ["eff","Analysing language",
+  "I need help understanding the language used by the author",
+  "I can identify different perspectives in the story",
+  "I can describe language features, perspectives and non-literal ideas from the story",
+  "I can describe the meaning of language and literary features that create characterisation and tone",
+  "I can explain how language and literary devices create setting, characterisation and tone",
+  "I can analyse how language features and non-literal language work together to explore ideas"],
+ ["ev","Collecting evidence",
+  "I need help using evidence from the text",
+  "I can refer to parts of the text in my response",
+  "I can include details from the text in my response",
+  "I can use details from the text to demonstrate my ideas",
+  "I can embed details from the text to support my interpretation",
+  "I can use a range of complex sentence structures to embed different types of evidence"],
+ ["verb","Word choice",
+  "I need help using tier-2 words in my response",
+  "I can use tier-2 words in my response",
+  "I can use formal and objective words in my response",
+  "I can use appropriate tier-3 words to describe literary features",
+  "I can select a formal vocabulary appropriate to essay writing",
+  "I can use tier-2 and tier-3 words with the correct nuance"],
+ ["plain","Building a paragraph",
+  "I need help putting my ideas into a paragraph",
+  "I can write a few sentences about one idea",
+  "I can write a paragraph that starts with my idea",
+  "I can write a paragraph that stays on one idea and links back to it at the end",
+  "I can sequence the parts of my paragraph so each one builds on the last",
+  "I can sequence my paragraphs so that my ideas build into one argument"]
 ];
-const CRITW=3000, BANDW=Math.floor((LW-CRITW)/5);
+const CRITW=2400, BANDW=Math.floor((LW-CRITW)/6);
 const rc=(kids,w,o)=>new TableCell({width:{size:w,type:WidthType.DXA},
   margins:{top:70,bottom:70,left:90,right:90},...(o||{}),children:kids});
 const small=(t,o={})=>new Paragraph({spacing:{after:0},children:[T(t,{size:17,...o})]});
 function rubric(){
-  return new Table({columnWidths:[CRITW,BANDW,BANDW,BANDW,BANDW,BANDW],
+  return new Table({columnWidths:[CRITW,BANDW,BANDW,BANDW,BANDW,BANDW,BANDW],
     width:{size:LW,type:WidthType.DXA},
     borders:{top:RULE,bottom:RULE,left:RULE,right:RULE,insideH:RULE,insideV:RULE},
     rows:[
       new TableRow({tableHeader:true,children:[
-        rc([small("Criteria",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
-        ...BANDS.map((lv,i)=>rc([small(lv,{bold:true,size:18})],BANDW,
-          {shading:{type:ShadingType.CLEAR,fill:i===2?MID:GREY,color:"auto"}}))]}),
+        rc([small("",{bold:true,size:18})],CRITW,{shading:{type:ShadingType.CLEAR,fill:GREY,color:"auto"}}),
+        ...BANDS.map((lv,i)=>rc([small(lv,{bold:true,size:18,italics:i===0})],BANDW,
+          {shading:{type:ShadingType.CLEAR,fill:i===3?MID:GREY,color:"auto"}}))]}),
       ...ROWS.map(r=>new TableRow({children:[
-        rc([small(r[1],{bold:true,size:18}),small(r[2],{size:16,color:"595959"}),
-            small(r[3],{size:14,color:"808080"})],CRITW,
+        rc([small(r[1],{bold:true,size:19})],CRITW,
           {shading:{type:ShadingType.CLEAR,fill:SH[r[0]],color:"auto"}}),
-        ...r.slice(4).map(d=>rc([small(d)],BANDW,
-          {shading:{type:ShadingType.CLEAR,fill:PALE[r[0]],color:"auto"}}))]}))]});
+        ...r.slice(2).map((d,i)=>rc([small(d,{italics:i===0})],BANDW,
+          {shading:{type:ShadingType.CLEAR,fill:i===3?PALE[r[0]]:"FFFFFF",color:"auto"}}))]}))]});
 }
 
 /* the EAL rubric: the ELC analytical writing rubric, C2 to C4, the way the
@@ -131,8 +145,7 @@ const rubricPage=(name)=>[
     T("        "),...line("Name:",30)]}),
   rubric(),
   new Paragraph({spacing:{before:140},children:[
-    T("Mark each row at the level the writing shows. The grade is the average across the rows, which is where the half levels come from. ",{size:18}),
-    T("Wording quoted from the Learning Continuum master sheet, English tab.",{size:18,italics:true,color:"595959"})]}),
+    T("Mark each row at the level the writing shows. The grade is the average across the rows, which is where the half levels come from.",{size:18})]}),
   new Paragraph({spacing:{before:160},children:[T("Comment:",{bold:true,size:22})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]}),
   new Paragraph({spacing:{before:120},children:[T("_".repeat(150),{size:20,color:"808080"})]})
