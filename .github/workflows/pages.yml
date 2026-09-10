@@ -31,6 +31,7 @@ on:
       - "BoneSparrow-quote-hunt.docx"
       - "BoneSparrow-chapter-tickets.docx"
       - "BoneSparrow-lesson-precat.docx"
+      - "BoneSparrow-lesson-cat.docx"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -67,7 +68,7 @@ jobs:
           cp BoneSparrowTeel.html dist/
           mkdir dist/teacher
           cp teacher/*.html dist/teacher/
-          cp BoneSparrow-A3-booklet*.docx BoneSparrow-stations.docx BoneSparrow-TEEL-*.docx BoneSparrow-essay-planner.docx BoneSparrow-assessment-*.docx BoneSparrow-folio-*.docx BoneSparrow-idea-posters.docx BoneSparrow-quote-hunt.docx BoneSparrow-chapter-tickets.docx BoneSparrow-lesson-precat.docx dist/
+          cp BoneSparrow-A3-booklet*.docx BoneSparrow-stations.docx BoneSparrow-TEEL-*.docx BoneSparrow-essay-planner.docx BoneSparrow-assessment-*.docx BoneSparrow-folio-*.docx BoneSparrow-idea-posters.docx BoneSparrow-quote-hunt.docx BoneSparrow-chapter-tickets.docx BoneSparrow-lesson-precat.docx BoneSparrow-lesson-cat.docx dist/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
