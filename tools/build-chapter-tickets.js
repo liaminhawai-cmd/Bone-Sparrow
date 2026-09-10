@@ -19,7 +19,7 @@ for(let c=1;c<LAST_CHAPTER;c+=2) TICKETS.push([c,Math.min(c+1,LAST_CHAPTER-1)]);
 if(LAST_CHAPTER%2===1) TICKETS.push([LAST_CHAPTER,LAST_CHAPTER]);
 
 const PW=11906, PH=16838, MARG=700, W=PW-MARG*2;
-const COLS=3, ROWH=2500;
+const COLS=4, ROWH=1900;
 const COLW=Math.floor(W/COLS);
 
 const ticket=([a,b])=>{
@@ -59,7 +59,7 @@ const kids=[
     new TextRun({text:"Chapter tickets",bold:true,size:28,color:DEEP,font:"Georgia"}),
     new TextRun({text:"   —   cut out, shuffle, hand out or draw",size:18,color:MUTED,font:"Calibri"})]}),
   grid(TICKETS),
-  new Paragraph({spacing:{before:200,after:60},children:[
+  new Paragraph({spacing:{before:0,after:60},pageBreakBefore:true,children:[
     new TextRun({text:"Second set",bold:true,size:22,color:DEEP,font:"Georgia"}),
     new TextRun({text:"   —   for a class bigger than "+TICKETS.length,size:16,color:MUTED,font:"Calibri"})]}),
   grid(TICKETS)
@@ -70,5 +70,5 @@ const doc=new Document({styles:{default:{document:{run:{font:"Georgia",size:22,c
     margin:{top:MARG,bottom:MARG,left:MARG,right:MARG}}},children:kids}]});
 Packer.toBuffer(doc).then(b=>{fs.writeFileSync(OUT,b);
   console.log('written '+OUT);
-  console.log('  '+TICKETS.length+' tickets covering chapters 1-'+LAST_CHAPTER+', printed twice ('+TICKETS.length*2+' total)');
+  console.log('  '+TICKETS.length+' tickets covering chapters 1-'+LAST_CHAPTER+', printed twice ('+TICKETS.length*2+' total), one set a page: '+Math.ceil(TICKETS.length/COLS)+' rows x '+ROWH+' = '+(Math.ceil(TICKETS.length/COLS)*ROWH)+' of '+(PH-MARG*2));
 });
