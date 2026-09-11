@@ -165,7 +165,8 @@ const COVER=[
 /* ---------------------------------------------------- the three tasks */
 const TASKS=[
 { n:1, title:"Symbolism and identity",
-  prompt:[["How does Fraillon show that the "],["hl","objects"],[" the characters keep help them "],["hl","hold on to who they are"],["?"]],
+  prompt:[["How does Fraillon show that "],["hl","objects"],[" and "],["hl","family"],[" help the characters hold on to who they are?"]],
+  posters:"Friendship and family",
   intro:"In The Bone Sparrow, Zana Fraillon shows that people can hold on to who they are even when they have lost their home. Subhi has never been outside the detention centre, but the objects he keeps and the family around him keep him connected to where he comes from. Fraillon suggests that a person’s identity cannot be locked up with them: it is carried in the things they hold and the people who hold on to them.",
   claims:"The introduction names two things that keep the characters connected: objects and family. Paragraph 1 is objects.",
   choose:["the family around Subhi","Jimmie’s family and what her mother left her"],
@@ -181,6 +182,7 @@ const TASKS=[
 
 { n:2, title:"Contrast and freedom",
   prompt:[["How does Fraillon explore the relationship between "],["hl","freedom"],[" and "],["hl","confinement"],[" in The Bone Sparrow?"]],
+  posters:"Freedom · Imprisonment",
   intro:"In The Bone Sparrow, Zana Fraillon presents freedom and confinement not simply as physical states, but as experiences that shape how people understand themselves and the world around them. Through Subhi, who has never set foot outside the detention centre, and Jimmie, who moves freely but carries her own grief and loss, Fraillon complicates the idea that freedom and confinement are opposites. Fraillon suggests that while physical confinement can be imposed upon a person’s body, the imagination and the connections between people offer a kind of freedom that cannot be taken away.",
   claims:"The introduction names three claims: the fence between the detained and the free, how Subhi copes with confinement, and how Jimmie experiences freedom. Paragraph 1 is the fence.",
   choose:["how Subhi deals with being confined","how Jimmie is free, but confined in other ways"],
@@ -196,6 +198,7 @@ const TASKS=[
 
 { n:3, title:"Motif and storytelling",
   prompt:[["How does Fraillon explore the idea that "],["hl","stories"],[" are a form of "],["hl","survival"],[" in The Bone Sparrow?"]],
+  posters:"Storytelling · Imagination",
   intro:"In The Bone Sparrow, Zana Fraillon presents storytelling as the thing that keeps people going when nothing around them changes. Through the stories Maá tells, the book Jimmie carries and the stories Subhi tells himself, Fraillon shows that a story can do what food and shelter cannot: it can make a person feel brave, remembered and less alone. Fraillon suggests that for people who have been locked away, a story is not an escape from survival but a part of it.",
   claims:"The introduction names three kinds of story: Maá’s, Jimmie’s book, and Subhi’s own. Paragraph 1 is Maá’s stories and Jimmie’s book.",
   choose:["the stories Subhi tells himself","what happens when the stories stop"],
@@ -219,7 +222,7 @@ function task(t){
       new TextRun({text:"\tName  ",size:18,color:MUTED,font:"Calibri"}),
       new TextRun({text:"______________________",size:18,color:LINE,font:"Calibri"})],
       tabStops:[{type:"right",position:W}]}),
-    box([P(runs(t.prompt),{after:0})]),
+    box([P(runs(t.prompt),{after:60}),new Paragraph({spacing:{after:0},children:[new TextRun({text:"Posters: "+t.posters,size:18,color:MUTED,font:"Calibri"})]})]),
     H("Introduction"),
     box([P([R(t.intro,{size:21})],{after:0,line:290})],"F6F1E6"),
     note(t.claims),
