@@ -2,8 +2,8 @@ const fs=require('fs');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,BorderStyle,
        ShadingType,PageBreak,LineRuleType,HeightRule}=require('docx');
 
-/* The CAT folio, twice: once in the grammar colours (subject, verb, object,
-   prepositional phrase, as font colour) and once in the idea colours (idea,
+/* The CAT folio, twice: once with one colour per sentence (topic sentence,
+   explanation with evidence, second explanation, link) and once in the idea colours (idea,
    verb, evidence, purpose, as shading, with the letter-and-bar frame). Same
    prompts, same models, same pages. KHS task sheet and folio cover at the
    front; then each task is two sheets: introduction and paragraph 1 / paragraph
@@ -16,17 +16,17 @@ const NONE={style:BorderStyle.NONE,size:0,color:"FFFFFF"};
 
 /* ------------------------------------------------------------------ skins */
 const SKINS={
- grammar:{ file:'BoneSparrow-CAT-folio-grammar.docx', font:"Aptos Narrow",
+ sentences:{ file:'BoneSparrow-CAT-folio-sentences.docx', font:"Aptos Narrow",
    ink:"000000", muted:"595959", line:"BFBFBF", deep:"8C072D", tint:"F2D0DA", grey:"F2F2F2",
    rule:{style:BorderStyle.SINGLE,size:6,color:"808080"}, box:{style:BorderStyle.SINGLE,size:6,color:"808080"},
-   markup:"g", col:{S:"C00000",V:"3B7D23",O:"C04F15",PP:"0070C0"}, fill:null,
-   key:[["S","subject"],["V","verb"],["O","object"],["PP","prepositional phrase"]],
+   markup:"g", col:{t:"7A0101",e1:"09917A",e2:"005585",l:"9C561C"}, fill:null,
+   key:[["t","topic sentence"],["e1","explanation with evidence"],["e2","second explanation"],["l","link sentence"]],
    labels:["Topic sentence","Explanation with evidence","A second explanation","A third explanation","Link sentence"],
-   self:[["S","Topic sentence","My first sentence makes a clear claim about an idea."],
-         ["O","Evidence","My quote is embedded in my own sentence, with the chapter."],
-         ["V","Explanation","I explained what the language does, not just what happens."],
-         ["PP","Link sentence","My last sentence shows how both explanations support the claim."],
-         ["S","Register","Third person, present tense, formal words."]] },
+   self:[["t","Topic sentence","My first sentence makes a clear claim about an idea."],
+         ["e1","Evidence","My quote is embedded in my own sentence, with the chapter."],
+         ["e2","Explanation","I explained what the language does, not just what happens."],
+         ["l","Link sentence","My last sentence shows how both explanations support the claim."],
+         ["ink","Register","Third person, present tense, formal words."]] },
  ideas:{ file:'BoneSparrow-CAT-folio-ideas.docx', font:"Georgia",
    ink:"1E211F", muted:"645D54", line:"C9BFAE", deep:"1D3C34", tint:"F6F1E6", grey:"F6F1E6",
    rule:{style:BorderStyle.SINGLE,size:6,color:"C9BFAE"}, box:{style:BorderStyle.SINGLE,size:8,color:"1D3C34"},
@@ -59,10 +59,12 @@ function make(S){
   const P=(runs,o)=>new Paragraph({spacing:{after:120,...(o||{})},children:Array.isArray(runs)?runs:[R(runs)]});
   const H=t=>new Paragraph({spacing:{before:200,after:80},children:[R(t,{bold:true,size:25,color:S.deep})]});
   const note=t=>new Paragraph({spacing:{after:80},children:[R(t,{size:18,color:S.muted,italics:S.markup==="g"})]});
-  const mark=(segs,size)=>segs.map(([k,t])=>k==="p"?R(t,{size}):
-    S.fill?R(t,{size,bold:true,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}})
-          :R(t,{size,bold:true,color:S.col[k]}));
-  const key=()=>new Paragraph({spacing:{after:120},children:S.key.flatMap(([k,t])=>[...mark([[k,"  "+t+"  "]],20),R("   ")])});
+  const SENT=["t","e1","e2","l"];
+  const mark=(segs,size,si)=>S.fill
+    ? segs.map(([k,t])=>k==="p"?R(t,{size}):R(t,{size,bold:true,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}}))
+    : [R(segs.map(x=>x[1]).join(""),{size,color:S.col[SENT[si]]||S.ink})];
+  const key=()=>new Paragraph({spacing:{after:120},children:S.key.flatMap(([k,t])=>[
+    S.fill?R("  "+t+"  ",{size:20,bold:true,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}}):R(t,{size:20,bold:true,color:S.col[k]}),R("   ")])});
   const LABW=S.markup==="g"?2300:760;
   const cell=(kids,w,o={})=>new TableCell({width:{size:w,type:WidthType.DXA},margins:{top:100,bottom:100,left:160,right:160},...o,children:kids});
   const box=(kids,fill)=>new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
@@ -83,7 +85,7 @@ function make(S){
     borders:{top:S.box,bottom:S.box,left:S.box,right:S.box,insideH:S.rule,insideV:S.rule},
     rows:rows.map(([i,n,stems,soft])=>new TableRow({children:[
       S.markup==="g"
-        ? cell([P([R(S.labels[i],{bold:true,color:soft?S.muted:S.ink})],{after:0}),...(soft?[stemP("if you get there")]:[])],LABW,{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}})
+        ? cell([P([R(S.labels[i],{bold:true,color:soft?S.muted:(S.col[SENT[i>3?3:i]]||S.ink)})],{after:0}),...(soft?[stemP("if you get there")]:[])],LABW,{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}})
         : new TableCell({width:{size:LABW,type:WidthType.DXA},margins:{top:120,bottom:120,left:120,right:40},
             children:[new Paragraph({spacing:{after:40},children:[R(S.labels[i],{bold:true,size:40,color:soft?S.muted:S.deep})]}),mini(BARS[i]),
                       ...(soft?[new Paragraph({spacing:{before:60,after:0},children:[R("if you get there",{size:15,color:S.muted})]})]:[])]}),
@@ -95,10 +97,10 @@ function make(S){
     borders:{top:S.box,bottom:S.box,left:S.box,right:S.box,insideH:S.rule,insideV:S.rule},
     rows:rows.map((segs,i)=>{const li=i===3?4:i; return new TableRow({children:[
       S.markup==="g"
-        ? cell([P([R(S.labels[li],{bold:true})],{after:20}),stemP(NOTES[i])],LABW,{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}})
+        ? cell([P([R(S.labels[li],{bold:true,color:S.col[SENT[i]]})],{after:20}),stemP(NOTES[i])],LABW,{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}})
         : new TableCell({width:{size:LABW,type:WidthType.DXA},margins:{top:140,bottom:140,left:120,right:40},
             children:[new Paragraph({spacing:{after:40},children:[R(S.labels[li],{bold:true,size:40,color:S.deep})]}),mini(BARS[li])]}),
-      cell([new Paragraph({spacing:{after:0,line:380},children:mark(segs,23)})],W-LABW,{margins:{top:140,bottom:140,left:160,right:160}})]})})});
+      cell([new Paragraph({spacing:{after:0,line:380},children:mark(segs,23,i)})],W-LABW,{margins:{top:140,bottom:140,left:160,right:160}})]})})});
 
   const lined=(n)=>new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
     borders:{top:S.box,bottom:S.box,left:S.box,right:S.box,insideH:NONE,insideV:NONE},
@@ -112,7 +114,7 @@ function make(S){
       rows:[
         new TableRow({children:[cell([th("")],NW),cell([th("")],DW),cell([th("NOT YET")],BW),cell([th("NEARLY")],BW),cell([th("YES")],BW)]}),
         ...S.self.map(([k,n,d])=>new TableRow({height:{value:520,rule:HeightRule.ATLEAST},children:[
-          cell([P([R(n,{bold:true,color:S.col[k]})],{after:0})],NW,S.fill?{shading:{type:ShadingType.CLEAR,fill:S.fill[k],color:"auto"}}:{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}}),
+          cell([P([R(n,{bold:true,color:S.col[k]||S.ink})],{after:0})],NW,S.fill?{shading:{type:ShadingType.CLEAR,fill:S.fill[k],color:"auto"}}:{shading:{type:ShadingType.CLEAR,fill:S.tint,color:"auto"}}),
           cell([P([R(d,{size:20})],{after:0})],DW),cell([P("")],BW),cell([P("")],BW),cell([P("")],BW)]}))]});
   }
   const openBox=(label,h)=>new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
@@ -147,12 +149,12 @@ const FRONT=[
   band("Task overview"),
   kv([
     ["Task type","Analytic paragraph — written response to a literary text, as a folio of three"],
-    ["Format","Three sittings, one prompt each. In each: one paragraph of your own (approximately 150–200 words), and a second if you get there."],
+    ["Format","Three sittings, one prompt each. In each: finish the introduction, write one paragraph of your own (approximately 150–200 words) and the conclusion, and a second paragraph if you get there."],
     ["Conditions","Test conditions. On your table: a copy of the text, a dictionary, your quote-hunt sheet, one page of your own notes. No pre-written paragraphs or essays. No devices."],
     ["Time","40 minutes writing time + 10 minutes planning, each sitting"],
     ["What is marked","The paragraph you nominate on the folio cover. Feedback between sittings."]]),
   H2("What you need to do"),
-  KP("The introduction and the first paragraph are written for you. Write the next paragraph."),
+  KP("The introduction is started and the first paragraph is written for you. Finish the introduction, then write the next paragraph."),
   KP([KT("Your paragraph must include:",{bold:true})],{after:40}),
   dot("A topic sentence that makes a clear claim about an idea in the novel"),
   dot("At least one quotation or specific detail from the text, with the chapter"),
@@ -272,13 +274,14 @@ function task(t,S,h){
            h.note((g?"Thinking springboard: ":"")+t.spring),
            ...(g?[]:[new Paragraph({spacing:{after:0},children:[h.R("Posters: "+t.posters,{size:18,color:S.muted})]})])]),
     h.H("Introduction"),
-    h.box([h.P([h.R(t.intro.open,{size:21})],{after:100,line:290}),
-           h.P([h.R("Fraillon shows this first through ",{size:21}),...h.mark([[g?"O":"idea",t.intro.first]],21),h.R(".",{size:21})],{after:100}),
+    h.box([h.P([h.R(t.intro.open,{size:21,color:g?S.col.t:S.ink})],{after:100,line:290}),
+           h.P(g?[h.R("Fraillon shows this first through "+t.intro.first+".",{size:21,color:S.col.e1})]
+                :[h.R("Fraillon shows this first through ",{size:21}),...h.mark([["idea",t.intro.first]],21),h.R(".",{size:21})],{after:100}),
            h.P([h.R("She also shows it through",{size:21})],{after:40}),
            ...h.ruled(2,W-400),
            h.P([h.R("and through",{size:21}),h.R("     if you get there",{size:17,color:S.muted,italics:true})],{before:140,after:40}),
            ...h.ruled(2,W-400),
-           h.P([h.R(t.intro.contention,{size:21})],{before:160,after:0,line:290})],S.grey),
+           h.P([h.R(t.intro.contention,{size:21,color:g?S.col.e2:S.ink})],{before:160,after:0,line:290})],S.grey),
     h.H("Paragraph 1"),
     h.key(),
     h.worked(t.model.map(s=>s[S.markup])),
