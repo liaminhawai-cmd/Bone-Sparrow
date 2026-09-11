@@ -263,7 +263,7 @@ function task(t,S,h){
         h.R("\tName  ",{size:18,color:S.muted}),h.R("______________________",{size:18,color:S.line})],
         tabStops:[{type:"right",position:W}]});
   const st = t.stems ? [t.stems[0],t.stems[1],t.stems[2],t.stems[3],t.stems[4]] : [[],[],[],[],[]];
-  const PARA=[[0,3,st[0]],[1,6,st[1]],[2,6,st[2]],[3,5,st[3],true],[4,4,st[4]]];
+  const PARA=[[0,3,st[0]],[1,5,st[1]],[2,5,st[2]],[3,4,st[3],true],[4,3,st[4]]];
   return [
     /* page 1: prompt, introduction, paragraph 1 */
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
