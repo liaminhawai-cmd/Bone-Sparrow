@@ -165,19 +165,19 @@ const COVER=[
 /* ---------------------------------------------------- the three tasks */
 const TASKS=[
 { n:1, title:"Symbolism and identity",
-  prompt:[["How does Fraillon show that "],["hl","stories"],[" and "],["hl","objects"],[" help the characters hold on to who they are?"]],
-  intro:"In The Bone Sparrow, Zana Fraillon shows that people can hold on to who they are even when they have lost their home. Subhi has never been outside the detention centre, but the objects he keeps, the stories he is told and the family around him keep him connected to where he comes from. Fraillon suggests that a person’s identity cannot be locked up with them: it is carried in the things they hold and the stories they tell.",
-  claims:"The introduction names three things that keep the characters connected: objects, stories and family. Paragraph 1 is objects.",
-  choose:["memories kept alive through storytelling","the family around Subhi"],
+  prompt:[["How does Fraillon show that the "],["hl","objects"],[" the characters keep help them "],["hl","hold on to who they are"],["?"]],
+  intro:"In The Bone Sparrow, Zana Fraillon shows that people can hold on to who they are even when they have lost their home. Subhi has never been outside the detention centre, but the objects he keeps and the family around him keep him connected to where he comes from. Fraillon suggests that a person’s identity cannot be locked up with them: it is carried in the things they hold and the people who hold on to them.",
+  claims:"The introduction names two things that keep the characters connected: objects and family. Paragraph 1 is objects.",
+  choose:["the family around Subhi","Jimmie’s family and what her mother left her"],
   model:[
    ["T",[["idea","The bone sparrow necklace is an object that keeps the characters connected to their past"],["p","."]],T_BAR],
    ["E",[["p","In Jimmie’s story, Mirka gives Oto the necklace so that the sparrow will "],["ev","“recognise Anka’s soul” (ch. 17)"],["p",", which "],["verb","shows"],["p"," that "],["idea","an object can carry a person’s story after they are gone"],["p","."]],E_BAR],
    ["E",[["p","Subhi’s coin works the same way: Queeny tells him that "],["ev","“all [his] treasures … were Ba’s” (ch. 34)"],["p",", which "],["verb","shows"],["p"," that "],["idea","the things Subhi keeps are his only link to a father he has never met"],["p","."]],E_BAR],
    ["L",[["p","Through these objects, Fraillon "],["verb","suggests"],["p"," that "],["idea","who you are can be passed down in what people leave behind"],["p",", and that is what "],["eff","helps Subhi and Jimmie to "],["ev","“find each other” (ch. 17)"],["p","."]],L_BAR]],
-  stems:[["Fraillon also presents …","Through the relationships between Subhi, Queeny and Maá, Fraillon also shows that …"],
-         ["Maá’s “Listen Now” stories explore …","Queeny’s care for Subhi shows that …"],
-         ["The stories in Jimmie’s book suggest that …","Even though Eli and Subhi aren’t related, they are like family, suggesting that …"],
-         ["Through these family bonds, Fraillon suggests that …","Together with objects, __________ demonstrates that …"]] },
+  stems:[["Through the relationships between Subhi, Queeny and Maá, Fraillon also shows that …"],
+         ["Queeny’s care for Subhi shows that …"],
+         ["Even though Eli and Subhi aren’t related, they are like family, suggesting that …"],
+         ["Through these family bonds, Fraillon suggests that …"]] },
 
 { n:2, title:"Contrast and freedom",
   prompt:[["How does Fraillon explore the relationship between "],["hl","freedom"],[" and "],["hl","confinement"],[" in The Bone Sparrow?"]],
