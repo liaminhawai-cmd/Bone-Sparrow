@@ -63,14 +63,20 @@ function make(S){
     S.fill?R(t,{size,bold:true,color:S.col[k],shading:{type:ShadingType.CLEAR,fill:S.fill[k]}})
           :R(t,{size,bold:true,color:S.col[k]}));
   const key=()=>new Paragraph({spacing:{after:120},children:S.key.flatMap(([k,t])=>[...mark([[k,"  "+t+"  "]],20),R("   ")])});
+  const LABW=S.markup==="g"?2300:760;
   const cell=(kids,w,o={})=>new TableCell({width:{size:w,type:WidthType.DXA},margins:{top:100,bottom:100,left:160,right:160},...o,children:kids});
   const box=(kids,fill)=>new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
     borders:{top:S.box,bottom:S.box,left:S.box,right:S.box,insideH:NONE,insideV:NONE},
     rows:[new TableRow({children:[cell(kids,W,fill?{shading:{type:ShadingType.CLEAR,fill,color:"auto"}}:{})]})]});
-  const ruled=n=>Array.from({length:n},()=>new Paragraph({spacing:{before:200,after:0},
-    border:{bottom:{style:BorderStyle.SINGLE,size:4,color:S.line}},children:[R("",{size:22})]}));
+  /* writing lines as table rows: adjacent paragraph borders merge in Word */
+  const LINE_H=520;
+  const ruled=(n,w)=>{const cw=w||(W-LABW-320); const LB={style:BorderStyle.SINGLE,size:4,color:S.line};
+    return [new Table({columnWidths:[cw],width:{size:cw,type:WidthType.DXA},
+      borders:{top:NONE,bottom:LB,left:NONE,right:NONE,insideH:LB,insideV:NONE},
+      rows:Array.from({length:n},()=>new TableRow({height:{value:LINE_H,rule:HeightRule.EXACT},children:[
+        new TableCell({width:{size:cw,type:WidthType.DXA},margins:{top:0,bottom:0,left:0,right:0},
+          children:[new Paragraph({spacing:{after:0},children:[R("",{size:22})]})]})]}))})];};
   const stemP=s=>new Paragraph({spacing:{after:0},children:[R(s,{size:18,color:S.muted,italics:true})]});
-  const LABW=S.markup==="g"?2300:760;
 
   /* the frame: label (or letter and bar), stems, lines */
   const frame=(rows)=>new Table({columnWidths:[LABW,W-LABW],width:{size:W,type:WidthType.DXA},
@@ -96,7 +102,7 @@ function make(S){
 
   const lined=(n)=>new Table({columnWidths:[W],width:{size:W,type:WidthType.DXA},
     borders:{top:S.box,bottom:S.box,left:S.box,right:S.box,insideH:NONE,insideV:NONE},
-    rows:[new TableRow({children:[cell(ruled(n),W,{margins:{top:40,bottom:140,left:160,right:160}})]})]});
+    rows:[new TableRow({children:[cell(ruled(n,W-320),W,{margins:{top:40,bottom:140,left:160,right:160}})]})]});
 
   function selfTable(){
     const NW=2500, BW=1100, DW=W-NW-BW*3;
@@ -182,8 +188,10 @@ const TASKS=[
 { n:1, band:"PROMPT 1  —  Symbolism and identity", posters:"Friendship and family",
   prompt:"How does Fraillon show that objects and family help the characters hold on to who they are in The Bone Sparrow?",
   spring:"Consider what the bone sparrow necklace represents, how it was made and by whom, and what Subhi’s relationship to it suggests about identity and heritage. You might also think about Subhi’s treasures, Jimmie’s necklace, or the family around Subhi.",
-  intro:"In The Bone Sparrow, Zana Fraillon shows that people can hold on to who they are even when they have lost their home. Subhi has never been outside the detention centre, but the objects he keeps and the family around him keep him connected to where he comes from. Fraillon suggests that a person’s identity cannot be locked up with them: it is carried in the things they hold and the people who hold on to them.",
-  claims:"The introduction names two things that keep the characters connected: objects and family. Paragraph 1 is objects.",
+  intro:{open:"In The Bone Sparrow, Zana Fraillon shows that people can hold on to who they are even when they have lost their home. Subhi has never been outside the detention centre, but he stays connected to where he comes from.",
+         first:"the objects he keeps",
+         contention:"Fraillon suggests that a person’s identity cannot be locked up with them."},
+  claims:"Paragraph 1 is objects. Paragraph 2 is the idea you wrote second in your introduction.",
   choose:["the family around Subhi","Jimmie’s family and what her mother left her"],
   model:[
    {g:[["S","The bone sparrow necklace"],["V"," is"],["O"," an object that keeps the characters connected to their past"],["p","."]],
@@ -205,8 +213,10 @@ const TASKS=[
 { n:2, band:"PROMPT 2  —  Contrast and freedom", posters:"Freedom · Imprisonment",
   prompt:"How does Fraillon explore the relationship between freedom and confinement in The Bone Sparrow?",
   spring:"Consider inside and outside the fence; Subhi’s body locked in and his imagination free; Subhi’s world and Jimmie’s; the objects that stand for freedom and for being locked up.",
-  intro:"In The Bone Sparrow, Zana Fraillon presents freedom and confinement not simply as physical states, but as experiences that shape how people understand themselves and the world around them. Through Subhi, who has never set foot outside the detention centre, and Jimmie, who moves freely but carries her own grief and loss, Fraillon complicates the idea that freedom and confinement are opposites. Fraillon suggests that while physical confinement can be imposed upon a person’s body, the imagination and the connections between people offer a kind of freedom that cannot be taken away.",
-  claims:"The introduction names three claims: the fence between the detained and the free, how Subhi copes with confinement, and how Jimmie experiences freedom. Paragraph 1 is the fence.",
+  intro:{open:"In The Bone Sparrow, Zana Fraillon presents freedom and confinement not simply as physical states, but as experiences that shape how people understand themselves and the world around them.",
+         first:"the fence between the people inside the centre and the people outside it",
+         contention:"Fraillon suggests that while physical confinement can be imposed upon a person’s body, the imagination and the connections between people offer a kind of freedom that cannot be taken away."},
+  claims:"Paragraph 1 is the fence. Paragraph 2 is the idea you wrote second in your introduction.",
   choose:["how Subhi deals with being confined","how Jimmie is free, but confined in other ways"],
   model:[
    {g:[["S","Fraillon"],["V"," uses"],["O"," the fence"],["p"," to show that being locked in also means being cut off from knowing what is outside."]],
@@ -224,8 +234,10 @@ const TASKS=[
 { n:3, band:"PROMPT 3  —  Motif and storytelling", posters:"Storytelling · Imagination",
   prompt:"How does Fraillon explore the idea that stories are a form of survival in The Bone Sparrow?",
   spring:"Consider Maá’s Listen Now stories; Jimmie’s family book; the stories Subhi tells himself; what happens when the stories stop.",
-  intro:"In The Bone Sparrow, Zana Fraillon presents storytelling as the thing that keeps people going when nothing around them changes. Through the stories Maá tells, the book Jimmie carries and the stories Subhi tells himself, Fraillon shows that a story can do what food and shelter cannot: it can make a person feel brave, remembered and less alone. Fraillon suggests that for people who have been locked away, a story is not an escape from survival but a part of it.",
-  claims:"The introduction names three kinds of story: Maá’s, Jimmie’s book, and Subhi’s own. Paragraph 1 is Maá’s stories and Jimmie’s book.",
+  intro:{open:"In The Bone Sparrow, Zana Fraillon presents storytelling as the thing that keeps people going when nothing around them changes.",
+         first:"the stories Maá tells and the book Jimmie carries",
+         contention:"Fraillon suggests that for people who have been locked away, a story is not an escape from survival but a part of it."},
+  claims:"Paragraph 1 is Maá’s stories and Jimmie’s book. Paragraph 2 is the idea you wrote second in your introduction.",
   choose:["the stories Subhi tells himself","what happens when the stories stop"],
   model:[
    {g:[["S","Stories"],["V"," are"],["O"," how the characters in the centre keep going"],["p"," when nothing else changes."]],
@@ -251,7 +263,7 @@ function task(t,S,h){
         h.R("\tName  ",{size:18,color:S.muted}),h.R("______________________",{size:18,color:S.line})],
         tabStops:[{type:"right",position:W}]});
   const st = t.stems ? [t.stems[0],t.stems[1],t.stems[2],t.stems[3],t.stems[4]] : [[],[],[],[],[]];
-  const PARA=[[0,3,st[0]],[1,5,st[1]],[2,5,st[2]],[3,4,st[3],true],[4,4,st[4]]];
+  const PARA=[[0,3,st[0]],[1,6,st[1]],[2,6,st[2]],[3,5,st[3],true],[4,4,st[4]]];
   return [
     /* page 1: prompt, introduction, paragraph 1 */
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
@@ -260,7 +272,13 @@ function task(t,S,h){
            h.note((g?"Thinking springboard: ":"")+t.spring),
            ...(g?[]:[new Paragraph({spacing:{after:0},children:[h.R("Posters: "+t.posters,{size:18,color:S.muted})]})])]),
     h.H("Introduction"),
-    h.box([h.P([h.R(t.intro,{size:21})],{after:0,line:290})],S.grey),
+    h.box([h.P([h.R(t.intro.open,{size:21})],{after:100,line:290}),
+           h.P([h.R("Fraillon shows this first through ",{size:21}),...h.mark([[g?"O":"idea",t.intro.first]],21),h.R(".",{size:21})],{after:100}),
+           h.P([h.R("She also shows it through",{size:21})],{after:40}),
+           ...h.ruled(2,W-400),
+           h.P([h.R("and through",{size:21}),h.R("     if you get there",{size:17,color:S.muted,italics:true})],{before:140,after:40}),
+           ...h.ruled(2,W-400),
+           h.P([h.R(t.intro.contention,{size:21})],{before:160,after:0,line:290})],S.grey),
     h.H("Paragraph 1"),
     h.key(),
     h.worked(t.model.map(s=>s[S.markup])),
@@ -274,14 +292,14 @@ function task(t,S,h){
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
     h.H("Paragraph 3"),
     h.note(g?"Stretch yourself: a third paragraph, on the idea you did not choose.":"If you get there: a third paragraph, on the idea you did not choose."),
-    h.lined(28),
+    h.lined(26),
     /* page 4: conclusion and the self check */
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
     h.H("Conclusion"),
     h.note("No new quotes."),
     h.box([h.P([h.R(t.conc.given)],{after:0}),
-           new Paragraph({spacing:{before:200,after:0},border:{bottom:{style:BorderStyle.SINGLE,size:4,color:S.line}},children:[h.R(t.conc.stem,{size:18,color:S.muted,italics:true})]}),
-           ...h.ruled(4)]),
+           new Paragraph({spacing:{before:120,after:0},children:[h.R(t.conc.stem,{size:18,color:S.muted,italics:true})]}),
+           ...h.ruled(5,W-400)]),
     h.H("How did it go?"),
     h.selfTable(),
     new Paragraph({spacing:{after:100},children:[]}),
