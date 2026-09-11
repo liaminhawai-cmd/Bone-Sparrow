@@ -157,7 +157,7 @@ const COVER=[
         kcell([KP([KT("IN",{bold:true,size:18})],{after:0})],900,{shading:{type:ShadingType.CLEAR,fill:"D9D9D9",color:"auto"}}),
         kcell([KP([KT("TASK",{bold:true,size:18})],{after:0})],W-900-2600,{shading:{type:ShadingType.CLEAR,fill:"D9D9D9",color:"auto"}}),
         kcell([KP([KT("MARK THIS ONE",{bold:true,size:18})],{after:0})],2600,{shading:{type:ShadingType.CLEAR,fill:"D9D9D9",color:"auto"}})]}),
-      ...["Task 1 — Symbolism and identity","Task 2 — Contrast and freedom","Task 3 — Motif and storytelling"]
+      ...["Task 1","Task 2","Task 3"]
         .map(t=>new TableRow({height:{value:620,rule:HeightRule.ATLEAST},children:[
           kcell([KP("")],900),kcell([KP(t,{after:0})],W-900-2600),kcell([KP("")],2600)]}))]})
 ];
