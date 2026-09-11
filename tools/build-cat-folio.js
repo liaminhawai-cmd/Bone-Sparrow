@@ -291,7 +291,7 @@ function task(t,S,h){
     /* page 3: paragraph 3 */
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
     h.H("Paragraph 3"),
-    h.note(g?"Stretch yourself: a third paragraph, on the idea you did not choose.":"If you get there: a third paragraph, on the idea you did not choose."),
+    h.note(g?"Stretch yourself: the idea you wrote third in your introduction.":"If you get there: the idea you wrote third in your introduction."),
     h.lined(26),
     /* page 4: conclusion and the self check */
     new Paragraph({pageBreakBefore:true,spacing:{after:0},children:[]}),
