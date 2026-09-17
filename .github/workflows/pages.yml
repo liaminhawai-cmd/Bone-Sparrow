@@ -11,6 +11,7 @@ on:
     paths:
       - "BoneSparrowReadingHub.html"
       - "BoneSparrowVocabHub.html"
+      - "WritingFolioVocabHub.html"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -59,6 +60,7 @@ jobs:
           cp index.html dist/
           cp BoneSparrowReadingHub.html dist/
           cp BoneSparrowVocabHub.html dist/
+          cp WritingFolioVocabHub.html dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/

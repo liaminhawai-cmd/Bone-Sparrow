@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writing Folio — Vocab Hub</title>
+<style>
+  /* Suite family with the Natural Resources trainer / Grammar Hub: same warm
+     paper, same Georgia display face, same two-accent system that encodes the
+     unit — ochre for story & memory, storm-red for the camp, plum for feelings,
+     teal for the outside world. Palette matches the Grammar Hub suite. */
+  :root{
+    --bg:#f2ece0; --paper:#fbf7ef; --ink:#211d17; --muted:#6c6353;
+    --line:#d9cfb9; --line-soft:#e8e0ce;
+    --earth:#b0741f; --earth-d:#8f5d16;      /* primary accent: outback ochre */
+    --water:#2c7488; --water-d:#215866;      /* secondary accent: river teal  */
+    --people:#7a4a6f; --people-d:#5e3755;    /* people & values: plum         */
+    --hazard:#a8432f; --hazard-d:#86331f;    /* hazards: storm red            */
+    --correct:#2f6a3e; --wrong:#a8432f;
+    --okbg:#eef4ec; --badbg:#f6ece8;
+    --waterbg:#e6f0f1; --earthbg:#f4ead7; --peoplebg:#f1e6ee; --hazardbg:#f6e4df;
+    --stretch:#1f4e5e; --stretchbg:#e2edf0;
+    --base:#7c6a3c; --basebg:#f2ecdb;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);
+       min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--ink)}
+  .container{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+       max-width:920px;width:100%;padding:26px;margin-top:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  h1{text-align:center;font-size:24px;font-family:Georgia,'Times New Roman',serif;letter-spacing:.3px}
+  h2{font-family:Georgia,serif;font-size:18px;margin:4px 0 10px}
+  h3{font-family:Georgia,serif;font-size:15px;margin:18px 0 8px}
+  .subtitle{color:var(--muted);text-align:center;margin:6px 0 18px;font-size:13px}
+  .muted{color:var(--muted);font-size:13px;line-height:1.5}
+  .screen{display:none}.screen.active{display:block}
+  button{font-family:inherit}
+  .btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+       cursor:pointer;background:var(--paper);color:var(--ink);transition:all .15s ease}
+  .btn-primary{background:var(--earth);color:#fff;border-color:var(--earth)}
+  .btn-primary:hover:not(:disabled){background:var(--earth-d)}
+  .btn-primary:disabled{background:var(--line);border-color:var(--line);color:var(--muted);cursor:not-allowed}
+  .btn-water{background:var(--water);color:#fff;border-color:var(--water)}
+  .btn-water:hover:not(:disabled){background:var(--water-d)}
+  .btn-ghost{background:var(--bg);color:var(--muted)}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+  .linkbtn{background:none;border:none;color:var(--earth);font-weight:600;font-size:13px;cursor:pointer;padding:4px 8px}
+  .linkbtn:hover{text-decoration:underline}
+  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .progress{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px}
+  button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--earth);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+  /* ---- key-word translations (EAL) ---- */
+  .langrow{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;margin:0 0 16px;
+       font-size:12.5px;color:var(--muted);font-weight:600}
+  .langrow select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);
+       font-family:inherit;font-size:13px;color:var(--ink)}
+  .wtr{font-size:14px;color:var(--water-d);font-weight:600;background:var(--waterbg);border-radius:6px;padding:1px 8px}
+  .wtr.big{font-size:16px}
+
+  /* ---- home: unit map ---- */
+  .topichead{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+       margin:18px 0 8px;border-bottom:1px solid var(--line-soft);padding-bottom:4px}
+  .lessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+  .lcard{border:1px solid var(--line-soft);border-radius:10px;background:var(--paper);padding:12px 14px;
+       text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:border-color .15s ease}
+  .lcard:hover{border-color:var(--earth)}
+  .lcard .lnum{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--muted)}
+  .lcard .lname{font-family:Georgia,serif;font-size:15px;font-weight:700;line-height:1.25}
+  .lcard .lstat{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+  .lcard.done{border-color:var(--correct)}
+  .chip{font-size:10px;font-weight:800;letter-spacing:.4px;border-radius:20px;padding:2px 8px;background:var(--bg);color:var(--muted)}
+  .chip.ok{background:var(--okbg);color:var(--correct)}
+  .chip.now{background:var(--earth);color:#fff}
+  .chip.part{background:var(--earthbg);color:var(--earth-d)}
+  .chip.str{background:var(--stretchbg);color:var(--stretch)}
+  .chip.base{background:var(--basebg);color:var(--base)}
+  .homerow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+  @media(max-width:640px){.homerow{grid-template-columns:1fr}}
+  .panelcard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--bg)}
+  .panelcard .t{font-family:Georgia,serif;font-weight:700;font-size:15px;margin-bottom:4px}
+  .panelcard .d{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+  details.teach{margin-top:16px;border:1px dashed var(--line);border-radius:10px;padding:10px 14px}
+  details.teach summary{font-size:12px;font-weight:700;color:var(--muted);cursor:pointer}
+  details.teach p{font-size:12.5px;color:var(--muted);line-height:1.55;margin:8px 0}
+
+  /* ---- lesson home: step cards ---- */
+  .focusline{text-align:center;font-family:Georgia,serif;font-size:15px;color:var(--ink);
+       background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;padding:10px 14px;margin:0 0 14px;line-height:1.45}
+  .steps{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+  .step{display:flex;align-items:center;gap:14px;border:1px solid var(--line-soft);border-radius:10px;
+        padding:14px 16px;background:var(--paper);text-align:left;cursor:pointer;width:100%}
+  .step:hover:not(:disabled){border-color:var(--earth)}
+  .step:disabled{opacity:.55;cursor:not-allowed}
+  .step .num{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+  .step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+  .step .t{font-weight:700;font-size:15px}
+  .step .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .step .tag{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--muted);flex-shrink:0;text-align:right}
+  .step.done .tag{color:var(--correct)}
+  .tierbar{border-radius:10px;padding:12px 16px;margin:10px 0;font-size:13.5px;line-height:1.5;display:flex;
+       gap:12px;align-items:center;flex-wrap:wrap}
+  .tierbar .grow{flex:1;min-width:200px}
+  .tierbar b{display:block;font-family:Georgia,serif;font-size:14.5px}
+  .tierbar.base{background:var(--basebg);border:1px solid #d8c893}
+  .tierbar.stretch{background:var(--stretchbg);border:1px solid #b9d2da}
+  .tierbar .btn{padding:8px 14px;font-size:13.5px}
+
+  /* ---- study list ---- */
+  .vcard{border:1px solid var(--line-soft);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+  .vcard .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .vcard .w{font-family:Georgia,serif;font-size:23px;font-weight:700}
+  .vcard .w .mp{color:var(--mpre)} .vcard .w .mr{color:var(--mroot)} .vcard .w .ms{color:var(--msuf)} .vcard .w .mc{color:var(--mcon)}
+  .vcard .pos{font-size:12px;color:var(--muted);font-style:italic}
+  .vcard .meaning{font-size:14px;margin:6px 0;line-height:1.5}
+  .vcard .morph{font-size:12.5px;color:var(--muted);line-height:1.6;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:6px}
+  .vcard .morph b,.vcard .morph i{color:var(--ink)}
+  .vcard .morph code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:16px}
+  .vcard .morph code.mp{color:var(--mpre)} .vcard .morph code.mr{color:var(--mroot)} .vcard .morph code.ms{color:var(--msuf)} .vcard .morph code.mc{color:var(--mcon)}
+  .wstate{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.4px;padding:3px 9px;border-radius:20px;
+    text-transform:uppercase;flex-shrink:0;border:1px solid transparent}
+  .wstate.ok{color:var(--correct);background:var(--okbg);border-color:var(--correct)}
+  .wstate.work{color:var(--hazard-d);background:var(--hazardbg);border-color:var(--hazard-d)}
+  .wstate.new{color:var(--muted);background:var(--bg);border-color:var(--line)}
+  .wstate + .dtag{margin-left:8px}
+  .dtag{margin-left:auto;font-size:10.5px;font-weight:800;letter-spacing:.5px;padding:3px 9px;border-radius:20px;flex-shrink:0}
+  .dtag.story{color:var(--earth-d);background:var(--earthbg)}
+  .dtag.camp{color:var(--hazard-d);background:var(--hazardbg)}
+  .dtag.feeling{color:var(--people-d);background:var(--peoplebg)}
+  .dtag.world{color:var(--water-d);background:var(--waterbg)}
+
+  /* ---- word builder ---- */
+  .buildword{font-family:Georgia,serif;font-size:22px;text-align:center;margin-bottom:2px;color:var(--muted)}
+  .bclue{text-align:center;font-size:14px;color:var(--ink);margin:0 auto 12px;max-width:520px;line-height:1.5}
+  .slots,.bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:14px 0}
+  .slot{min-width:78px;min-height:50px;border:2px dashed var(--line);border-radius:9px;
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;padding:6px 12px;background:var(--bg)}
+  .slot.filled{border-style:solid;border-color:var(--correct);background:var(--okbg);color:var(--correct)}
+  .joiner{align-self:center;font-size:18px;color:var(--muted);font-weight:700}
+  .tile{min-width:78px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:var(--paper);
+        cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.15;transition:all .12s ease}
+  .tile:hover:not(:disabled){border-color:var(--earth)}
+  .tile:disabled{opacity:.3;cursor:default}
+  .tile .mm{font-weight:800;font-size:16px}
+  .tile .gl{font-size:11px;color:var(--muted)}
+  .tile.shake{animation:shake .3s;border-color:var(--wrong)}
+  .tile.shake .mm,.tile.shake .gl{color:var(--wrong)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .buildprog{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:14px}
+  .bdot{width:12px;height:12px;border-radius:50%;border:1px solid var(--line);background:var(--bg)}
+  .bdot.done{background:var(--correct);border-color:var(--correct)}
+  .bdot.now{border-color:var(--earth);background:var(--paper);box-shadow:0 0 0 2px rgba(176,116,31,.3)}
+  .maprow{margin:12px auto 2px;max-width:560px;font-size:13px;color:var(--muted);line-height:1.7;text-align:center}
+  .maprow b{color:var(--ink)}
+  .reveal{border:1px solid var(--correct);background:var(--okbg);border-radius:10px;padding:14px 16px;
+          margin:14px 0;font-size:14.5px;line-height:1.6;display:none}
+  .reveal.show{display:block}
+  .reveal .rw{font-family:Georgia,serif;font-weight:700}
+
+  /* ---- task shell (apply / review / tiers) ---- */
+  .prompt{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+  .qtext{font-size:17px;line-height:1.6;margin-bottom:16px}
+  .qtext .hid{display:inline-block;min-width:52px;border-bottom:2px solid var(--ink);opacity:.55}
+  .qtext .gap{display:inline-block;min-width:120px;border-bottom:2px solid var(--ink);text-align:center;font-weight:800;color:var(--earth)}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opts.chips{flex-direction:row;flex-wrap:wrap}
+  .opt{padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:15px;
+       text-align:left;cursor:pointer;line-height:1.5}
+  .chips .opt{flex:0 0 auto;padding:9px 16px}
+  .opt:hover:not(:disabled){border-color:var(--earth)}
+  .opt:disabled{cursor:default}
+  .opt.right{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:700}
+  .opt.wrongpick{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
+  .feedback{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.55;display:none}
+  .feedback.ok{display:block;background:var(--okbg);border:1px solid var(--correct)}
+  .feedback.bad{display:block;background:var(--badbg);border:1px solid var(--wrong)}
+  .nextrow{margin-top:16px;display:flex;justify-content:flex-end;gap:8px}
+  .reviewtag{font-size:11px;font-weight:800;letter-spacing:.4px;color:var(--water-d);background:var(--waterbg);
+       border-radius:20px;padding:3px 10px;display:inline-block;margin-bottom:10px}
+
+  /* ---- diagrams ---- */
+  .svgbox{border:1px solid var(--line-soft);border-radius:10px;background:var(--bg);padding:10px;margin:0 auto 16px;
+          max-width:360px;display:flex;justify-content:center}
+  .svgbox svg{width:100%;height:auto;display:block}
+
+  /* ---- summary ---- */
+  .sumbox{border:1px solid var(--line);border-radius:10px;padding:18px;margin:14px 0;text-align:center}
+  .sumbox .big{font-family:Georgia,serif;font-size:30px;font-weight:700}
+  .sumbox .big.good{color:var(--correct)} .sumbox .big.mid{color:#9a6b1f} .sumbox .big.low{color:var(--wrong)}
+
+  /* ---- report ---- */
+  .repgrid{width:100%;border-collapse:collapse;margin:12px 0}
+  .repgrid th,.repgrid td{border:1px solid var(--line);padding:7px 9px;font-size:13px;text-align:left}
+  .repgrid th{background:var(--bg);font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+  .repgrid td.score{font-weight:700;white-space:nowrap}
+  .repgrid td.nf{color:var(--muted);font-style:italic}
+  .idrow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .idrow label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+  .topnav .menulink{display:inline-block;text-decoration:none;padding:7px 13px;border:1px solid var(--line);
+    border-radius:20px;font-size:13px;font-weight:600;color:var(--earth-d);background:var(--earthbg);font-family:inherit}
+  .topnav .menulink:hover{border-color:var(--earth-d)}
+  .idrow input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;background:#fff}
+  .iderr{color:var(--wrong);font-size:12.5px;min-height:16px;margin-top:3px}
+  .vcode{font-family:'Courier New',monospace;font-size:13px;letter-spacing:2px}
+  /* ---- persistent nav ---- */
+  .topnav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:-4px 0 16px;
+       border-bottom:1px solid var(--line-soft);padding-bottom:12px}
+  .topnav button{font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:.3px;color:var(--muted);
+       background:var(--bg);border:1px solid var(--line-soft);border-radius:20px;padding:7px 15px;cursor:pointer}
+  .topnav button:hover{border-color:var(--earth);color:var(--earth-d)}
+  .topnav button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* ---- morpheme colour system (prefix / root / suffix), from the EAL book ---- */
+  :root{
+    --mpre:#2c6fa8; --mpre-bg:#e5eef5;
+    --mroot:#9a5518; --mroot-bg:#f5e7d8;
+    --msuf:#3f7a4a; --msuf-bg:#e6f1e8;
+    --mcon:#6c6353; --mcon-bg:#ece7db;
+  }
+  .mlegend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:8px 0 14px;font-size:12px}
+  .mlegend span{display:inline-flex;align-items:center;gap:5px;font-weight:700;color:var(--ink)}
+  .mlegend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+  .mtile{border-radius:9px;padding:8px 12px;display:inline-flex;flex-direction:column;align-items:center;gap:1px;
+       line-height:1.15;font-family:inherit;cursor:grab;user-select:none;touch-action:none;border:1.5px solid;background:var(--paper)}
+  .mtile .mm{font-weight:800;font-size:16px}
+  .mtile .gl{font-size:10.5px;opacity:.85}
+  .mtile.prefix{color:var(--mpre);background:var(--mpre-bg);border-color:var(--mpre)}
+  .mtile.root{color:var(--mroot);background:var(--mroot-bg);border-color:var(--mroot)}
+  .mtile.suffix{color:var(--msuf);background:var(--msuf-bg);border-color:var(--msuf)}
+  .mtile.connector{color:var(--mcon);background:var(--mcon-bg);border-color:var(--mcon)}
+  .mtile.sel{outline:3px solid var(--ink);outline-offset:2px}
+  .mtile.dragging{opacity:.35}
+  .drag-ghost{position:fixed;transform:translate(-50%,-50%);z-index:999;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  /* colour the tap-tile builder used by the tiers, too */
+  .tile.prefix .mm{color:var(--mpre)} .tile.root .mm{color:var(--mroot)} .tile.suffix .mm{color:var(--msuf)} .tile.connector .mm{color:var(--mcon)}
+
+  .mbank{background:var(--bg);border:1px solid var(--line-soft);border-radius:10px;padding:12px;margin-bottom:14px;position:sticky;top:6px;z-index:5}
+  .mbank .mgroup{margin-bottom:8px}
+  .mbank .mgroup:last-child{margin-bottom:0}
+  .mbank .glabel{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+  .mbank .glabel.prefix{color:var(--mpre)} .mbank .glabel.root{color:var(--mroot)} .mbank .glabel.suffix{color:var(--msuf)} .mbank .glabel.connector{color:var(--mcon)}
+  .mtiles{display:flex;flex-wrap:wrap;gap:7px}
+
+  /* ---- word-build table (drag morphemes to the matching meaning) ---- */
+  .wtable{display:flex;flex-direction:column;gap:9px}
+  .wrow{display:flex;align-items:center;gap:12px;border:1px solid var(--line-soft);border-radius:10px;
+       padding:10px 12px;background:var(--paper);transition:opacity .3s ease,transform .3s ease,background .2s}
+  .wrow.wrong{animation:shake .3s;border-color:var(--wrong)}
+  .wrow.done{border-color:var(--correct);background:var(--okbg)}
+  .wrow.gone{opacity:0;transform:translateX(40px)}
+  .wmean{flex:1 1 46%;min-width:190px;font-size:13.5px;line-height:1.45}
+  .wmean .pos{color:var(--muted);font-style:italic;font-size:12px}
+  .wslots{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .wjoin{color:var(--muted);font-weight:700}
+  .wslot{min-width:60px;min-height:46px;border:2px dashed var(--line);border-radius:8px;display:flex;
+       align-items:center;justify-content:center;background:var(--bg);cursor:pointer;padding:4px 8px}
+  .wslot .ph{color:var(--muted);font-size:10px;letter-spacing:.3px}
+  .wslot .mm{font-weight:800;font-size:15px}
+  .wslot.over{border-color:var(--ink);background:#fff}
+  .wslot.filled{border-style:solid}
+  .wslot.filled.prefix{border-color:var(--mpre);background:var(--mpre-bg);color:var(--mpre)}
+  .wslot.filled.root{border-color:var(--mroot);background:var(--mroot-bg);color:var(--mroot)}
+  .wslot.filled.suffix{border-color:var(--msuf);background:var(--msuf-bg);color:var(--msuf)}
+  .wslot.filled.connector{border-color:var(--mcon);background:var(--mcon-bg);color:var(--mcon)}
+  .wbuilt{flex:1 1 46%;min-width:190px;text-align:right;display:none}
+  .wrow.done .wslots{display:none}
+  .wrow.done .wbuilt{display:block}
+  .wbuilt .wname{font-family:Georgia,serif;font-weight:700;font-size:16px;color:var(--correct)}
+  .wbuilt .wtickmark{color:var(--correct);font-weight:800;margin-left:4px}
+  .buildhint{font-size:12.5px;color:var(--wrong);text-align:center;min-height:16px;margin:4px 0 6px;font-weight:600}
+  @media(max-width:560px){ .wmean{flex:1 1 100%} .wbuilt{flex:1 1 100%;text-align:left} }
+
+  /* ---- reference views (morpheme table + word list) ---- */
+  .reftable{width:100%;border-collapse:collapse;margin:4px 0 14px}
+  .reftable th,.reftable td{border:1px solid var(--line-soft);padding:7px 10px;font-size:13px;text-align:left;vertical-align:middle}
+  .reftable th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+  .reftable .mtile{display:inline-flex}
+  .refhead{font-family:Georgia,serif;font-size:16px;margin:18px 0 6px;padding-bottom:3px;border-bottom:2px solid var(--line-soft)}
+  .refhead.prefix{color:var(--mpre)} .refhead.root{color:var(--mroot)} .refhead.suffix{color:var(--msuf)} .refhead.connector{color:var(--mcon)}
+  .reffilter{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .reffilter input{padding:9px 13px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:var(--paper);color:var(--ink);min-width:220px}
+  .eqn{font-family:Georgia,serif;font-size:18px;letter-spacing:.5px}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .container{border:none;box-shadow:none;max-width:100%;padding:8px}
+    .noprint{display:none !important}
+  }
+  /* ---- example sentence from the lesson ---- */
+  .vcard .eg{font-size:13.5px;color:var(--ink);line-height:1.5;margin:4px 0 6px;padding-left:10px;border-left:3px solid var(--line)}
+  .vcard .eg b{color:var(--earth-d)}
+  /* ---- sentence hunt (Lesson 02) ---- */
+  .passage{border:1px solid var(--line-soft);border-radius:10px;background:var(--bg);padding:12px 14px;margin-bottom:4px}
+  .passage .ptitle{font-family:Georgia,serif;font-weight:700;font-size:15px;margin-bottom:8px}
+  .passage p{line-height:2.1;font-size:16px}
+  .sent{font-family:inherit;font-size:16px;line-height:1.5;background:var(--paper);border:1px solid var(--line-soft);border-radius:6px;
+        padding:3px 7px;margin:2px 3px 2px 0;cursor:pointer;text-align:left;color:var(--ink)}
+  .sent:hover:not(:disabled){border-color:var(--earth)}
+  .sent:disabled{cursor:default}
+  .sent.right{background:var(--okbg);border-color:var(--correct);color:var(--correct);font-weight:700}
+  .sent.wrongpick{background:var(--badbg);border-color:var(--wrong);color:var(--wrong)}
+#backTrip{position:fixed;left:16px;bottom:16px;z-index:60;border:1px solid var(--line);border-radius:24px;
+  background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);padding:9px 16px;font-weight:700;cursor:pointer;font-size:13.5px}
+#backTrip:hover{transform:translateY(-1px)}
+#backTrip .bx{display:inline-block;margin-left:8px;color:#98917f;font-weight:400}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="topnav noprint">
+  <a class="menulink" href="index.html">&#8962; Main menu</a>
+  <button data-scr="home" onclick="go('home')">&#9776; Lessons</button>
+  <button data-scr="morphtable" onclick="go('morphtable')">Morpheme table</button>
+  <button data-scr="glossary" onclick="go('glossary')">Word list</button>
+  <button data-scr="report" onclick="go('report')">My report</button>
+</div>
+
+<div class="screen" id="scr-id">
+  <h1>Writing Folio — Vocab Hub</h1>
+  <p class="subtitle"> Your work saves on this device under these details and they go on your printed report.</p>
+  <div id="id-body"></div>
+</div>
+
+<div class="screen active" id="scr-home">
+  <h1>Writing Folio — Vocab Hub</h1>
+  <p class="subtitle">Lessons 01 to 08 &middot; lesson by lesson</p>
+  <div id="home-map"></div>
+  <div class="homerow">
+    <div class="panelcard">
+      <div class="t">&#9776; My word list</div>
+      <div class="d" id="wordlist-line"></div>
+      <div class="d" id="fix-desc" style="margin-top:6px"></div>
+      <button class="btn btn-water" id="fix-start" onclick="startFixDrill()">Drill my unmastered words</button>
+    </div>
+    <div class="panelcard">
+      <div class="t">&#8635; Quick review</div>
+      <div class="d" id="review-desc">A shuffled set of words from the lessons you&rsquo;ve already done &mdash; everyone gets a different mix, so eyes on your own screen.</div>
+      <button class="btn btn-water" id="review-start" onclick="startReviewSetup()">Review earlier words</button>
+    </div>
+    <div class="panelcard">
+      <div class="t">&#9998; My report</div>
+      <div class="d">Everything you&rsquo;ve done &mdash; first-attempt scores lesson by lesson, plus your review history. Save it as a PDF for your teacher at any time.</div>
+      <button class="btn btn-ghost" onclick="go('report')">Open my report</button>
+    </div>
+  </div>
+  <div class="nextrow noprint" style="justify-content:center">
+    <button class="linkbtn" onclick="resetAll()">start over (clears everything)</button>
+  </div>
+</div>
+
+<div class="screen" id="scr-lesson">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; all lessons</button><span class="progress" id="lesson-prog"></span></div>
+  <div id="lesson-body"></div>
+</div>
+
+<div class="screen" id="scr-study">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="study-prog">STEP 1 &middot; MEET THE WORDS</span></div>
+  <div id="study-body"></div>
+</div>
+
+<div class="screen" id="scr-build">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="build-prog">STEP 2 &middot; BUILD</span></div>
+  <div id="build-body"></div>
+</div>
+
+<div class="screen" id="scr-apply">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="apply-prog">STEP 3 &middot; USE THE WORDS</span></div>
+  <div id="apply-body"></div>
+</div>
+
+<div class="screen" id="scr-base">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="base-prog">BASE CAMP</span></div>
+  <div id="base-body"></div>
+</div>
+
+<div class="screen" id="scr-stretch">
+  <div class="topbar noprint"><button class="linkbtn" onclick="goLesson()">&larr; lesson</button><span class="progress" id="stretch-prog">STRETCH</span></div>
+  <div id="stretch-body"></div>
+</div>
+
+<div class="screen" id="scr-review">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress" id="review-prog">REVIEW</span></div>
+  <div id="review-body"></div>
+</div>
+
+<div class="screen" id="scr-report">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress">REPORT</span></div>
+  <div id="report-body"></div>
+</div>
+
+<div class="screen" id="scr-morphtable">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; lessons</button><span class="progress">MORPHEME TABLE</span></div>
+  <div id="morphtable-body"></div>
+</div>
+
+<div class="screen" id="scr-glossary">
+  <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; lessons</button><span class="progress">WORD LIST</span></div>
+  <div id="glossary-body"></div>
+</div>
+
+</div>
+<script>
+"use strict";
+/* ============================================================
+   WRITING FOLIO — VOCAB HUB
+   Companion to the Year 7 English Writing Folio, Lessons 01 to 08.
+   Same build as the Bone Sparrow Vocab Hub, with the unit's words
+   split lesson by lesson; scores live under their own key, sign-in
+   is the suite's shared profile.
+
+   Opening a lesson AUTO-RUNS a review of earlier lessons first
+   (skipped for Lesson 01), then drops into it.
+
+   One lesson = one short set of key words (6–7). For each lesson:
+     MEET  — read the words: meaning, an example from the lesson,
+             and the morphemes that build it.
+     BUILD — one colour-coded morpheme bank above a table of the
+             lesson's word MEANINGS; drag (or tap) each morpheme into
+             the word it belongs to. Words with no parts (trait,
+             voice, register, claim…) come as origin questions after.
+     USE   — one task per word, dealt from an authored bank plus
+             generated items so neighbouring students differ.
+   Lesson 02 adds a SENTENCE HUNT: find the declarative, imperative,
+   interrogative and exclamative sentences inside short passages.
+
+   MORPHEME TABLE and WORD LIST sit in the top nav. All scores record
+   FIRST attempts; wrong answers loop until mastered. The REPORT prints
+   to PDF with a verification code.
+   ============================================================ */
+/* ---------------- SIMPLE SCHEMATIC DIAGRAMS (hand-drawn SVG) ---------------- */
+const SVG_EVAP = `<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sea, cloud and arrows rising from the water">
+  <circle cx="272" cy="40" r="20" fill="#f0c268" stroke="#b0741f" stroke-width="2"/>
+  <g stroke="#b0741f" stroke-width="2" stroke-linecap="round">
+    <line x1="272" y1="8" x2="272" y2="16"/><line x1="300" y1="40" x2="308" y2="40"/>
+    <line x1="294" y1="18" x2="300" y2="12"/><line x1="294" y1="62" x2="300" y2="68"/>
+  </g>
+  <path d="M40 46 q-16 0 -16 16 q0 16 16 16 h58 q18 0 18 -18 q0 -16 -16 -16 q-2 -14 -18 -14 q-16 0 -18 16 z" fill="#e3e0d6" stroke="#8a8577" stroke-width="1.5"/>
+  <rect x="0" y="132" width="320" height="48" fill="#bfe0e4"/>
+  <path d="M0 132 q40 -8 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <g stroke="#2c7488" stroke-width="2.4" stroke-linecap="round" fill="none">
+    <path d="M58 128 V86 M52 98 L58 88 L64 98"/>
+    <path d="M112 128 V78 M106 90 L112 80 L118 90"/>
+    <path d="M166 128 V86 M160 98 L166 88 L172 98"/>
+  </g>
+  <text x="160" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">sea surface</text>
+</svg>`;
+
+const SVG_BEND = `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A curving river with a fast outer bank marked A and a slow inner bank with a sandbar marked B">
+  <rect x="0" y="0" width="320" height="200" fill="#f4ead7"/>
+  <path d="M40 0 C 40 70, 250 70, 250 110 C 250 150, 60 150, 60 200 L 130 200 C 130 160, 320 160, 320 110 C 320 55, 120 55, 120 0 Z" fill="#bfe0e4"/>
+  <path d="M40 0 C 40 70, 250 70, 250 110 C 250 150, 60 150, 60 200" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <path d="M120 0 C 120 55, 320 55, 320 110" fill="none" stroke="#2c7488" stroke-width="2"/>
+  <g fill="none" stroke="#a8432f" stroke-width="2.6" stroke-linecap="round">
+    <path d="M232 96 q10 14 -2 30 M226 118 l4 8 l-9 -1"/>
+  </g>
+  <circle cx="255" cy="112" r="11" fill="#a8432f"/><text x="255" y="116" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">A</text>
+  <path d="M118 108 q22 -8 40 4 q-18 10 -40 4 z" fill="#e0c98c"/>
+  <circle cx="132" cy="112" r="11" fill="#2f6a3e"/><text x="132" y="116" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">B</text>
+  <path d="M70 44 l26 8" stroke="#2c7488" stroke-width="2.4" fill="none" stroke-linecap="round" marker-end="url(#ar)"/>
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#2c7488"/></marker></defs>
+  <text x="60" y="40" font-family="Georgia,serif" font-size="11" fill="#215866">flow</text>
+</svg>`;
+
+const SVG_OXBOW = `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A river that has cut a straight new channel across a loop, leaving a curved lake on its own">
+  <rect x="0" y="0" width="320" height="190" fill="#f4ead7"/>
+  <path d="M0 96 h70 c40 0 40 -70 90 -70 s50 70 90 70 h70" fill="none" stroke="#8fb9c0" stroke-width="14" stroke-linecap="round" opacity="0.5"/>
+  <path d="M60 96 c30 0 30 -58 100 -58 s70 58 100 58" fill="none" stroke="#8aa2a6" stroke-width="3" stroke-dasharray="5 5"/>
+  <path d="M0 96 h320" fill="none" stroke="#2c7488" stroke-width="14" stroke-linecap="round"/>
+  <path d="M60 96 c30 0 30 -58 100 -58 s70 58 100 58" fill="none" stroke="#2c7488" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="160" cy="34" r="12" fill="#2c7488"/>
+  <text x="160" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">cut-off loop</text>
+  <text x="160" y="120" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">new, straighter channel</text>
+</svg>`;
+
+const SVG_GROUND = `<svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A cross-section of the ground showing rain soaking down to a stored layer of water, with a well reaching it">
+  <rect x="0" y="0" width="320" height="60" fill="#e6f0f1"/>
+  <rect x="0" y="60" width="320" height="70" fill="#e0c98c"/>
+  <rect x="0" y="130" width="320" height="60" fill="#8fb9c0"/>
+  <path d="M0 130 q40 -6 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#2c7488" stroke-width="2.5"/>
+  <g stroke="#2c7488" stroke-width="2" stroke-linecap="round">
+    <line x1="60" y1="18" x2="54" y2="34"/><line x1="90" y1="14" x2="84" y2="30"/><line x1="120" y1="18" x2="114" y2="34"/>
+  </g>
+  <g stroke="#215866" stroke-width="1.6" stroke-dasharray="3 4" fill="none">
+    <path d="M70 62 v56"/><path d="M100 62 v56"/><path d="M130 62 v56"/>
+  </g>
+  <rect x="228" y="26" width="24" height="132" fill="#fbf7ef" stroke="#6c6353" stroke-width="2"/>
+  <rect x="220" y="18" width="40" height="10" fill="#8f5d16"/>
+  <rect x="232" y="136" width="16" height="18" fill="#2c7488"/>
+  <text x="66" y="52" font-family="Georgia,serif" font-size="11" fill="#215866">rain soaks in</text>
+  <text x="160" y="176" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#fbf7ef">water stored in the ground</text>
+  <text x="240" y="12" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#215866">well</text>
+</svg>`;
+
+/* ============================================================
+   LESSON DATA
+   word types — "morph": build from morpheme tiles (in order);
+                "compound": same mechanic, plain-English pieces;
+                "origin": no honest cuts -> word-origin question.
+   Each word carries its own APPLY bank; one item per word is
+   sampled per run. Review draws on the same banks.
+   ============================================================ */
+/* ---------------- LESSON DATA ----------------
+   word.type: "morph" (buildable from tiles) or "origin" (one-part word, asked as an origin question)
+   tiles:  [piece, gloss] in order. A trailing hyphen marks a prefix, a leading one a suffix,
+           both a joiner. decoys do NOT belong to the word.
+   eg:     an example sentence from (or in the spirit of) the lesson; **word** is bolded.
+   apply:  authored tasks: cloze (before/after), scenario, desc; every distractor is a look-alike. */
+const LESSONS = [
+
+/* ================= 01 THE SIX TRAITS OF WRITING ================= */
+{ id:"01", topic:"Part 1 · What makes good writing", title:"The six traits of writing",
+  focus:"What makes for “good” writing? Six traits: ideas, organisation, voice and register, word choice, sentence fluency and conventions.",
+  words:[
+  { w:"Trait", pos:"noun", domain:"story", type:"origin",
+    meaning:"A quality or feature that makes something what it is. The six traits are the six qualities of good writing.",
+    eg:"Sentence fluency is the **trait** that makes writing sound smooth when it is read aloud.",
+    originQ:"<b>Trait</b> comes from French <i>trait</i>, “a stroke of the pen”, from Latin <i>tractus</i>, “drawn”. Why does that fit a quality of writing?",
+    originA:"Each trait is one stroke that helps draw the whole picture of good writing",
+    originOpts:["Each trait is one stroke that helps draw the whole picture of good writing","A trait is something you trade with another writer","A trait is a trap that catches weak writing","A trait is a train of ideas in a row"],
+    note:"Same <i>tract-</i> (drawn, pulled) in <b>tractor</b>, <b>attract</b> and <b>extract</b>. A trait is one “line” in the drawing of a person or a piece of writing. Do not confuse it with <i>trade</i> or <i>treat</i>.",
+    apply:[
+      { id:"ap_trait_cloze", type:"cloze",
+        before:"Word choice is the", after:"that covers picking the exact word for the job.",
+        a:"trait", opts:["trait","trade","treat","trait-line"],
+        explain:"A quality of good writing is a <b>trait</b>. A <i>trade</i> is a swap or a job; a <i>treat</i> is something nice." },
+      { id:"ap_trait_scn", type:"scenario",
+        q:"Your teacher says: “Your ideas are strong, but your conventions need work.” What is the teacher using to describe your writing?",
+        a:"Two of the six traits", opts:["Two of the six traits","Two of the six text types","Two of the six sentence types","Two of the six conventions"],
+        explain:"Ideas and conventions are two of the six <b>traits</b>: the qualities every piece of writing can be judged on." } ] },
+
+  { w:"Organisation", pos:"noun", domain:"story", type:"morph",
+    meaning:"The way ideas are arranged in an order the reader can follow: a clear beginning, middle and end, with paragraphs in a sensible sequence.",
+    eg:"Good **organisation** means the reader never has to wonder what comes next.",
+    tiles:[["organ","tool, working part (Greek organon)"],["-is(e)","to make, to do"],["-ation","the process of"]],
+    decoys:[["-ment","the result of"],["re-","again"],["-ity","the state of"]],
+    note:"Greek <i>organon</i> meant a tool or instrument, and later a working part of the body. To <b>organise</b> is to make the parts work together like organs in a body. Same root in <b>organ</b> and <b>organic</b>. Australian spelling keeps the <i>s</i>: organi<b>s</b>ation.",
+    apply:[
+      { id:"ap_org_cloze", type:"cloze",
+        before:"The recipe jumped from the icing back to mixing the batter, so its", after:"confused everyone.",
+        a:"organisation", opts:["organisation","organism","origination","ornamentation"],
+        explain:"The order of the ideas is the <b>organisation</b>. An <i>organism</i> is a living thing; <i>origination</i> is where something starts." },
+      { id:"ap_org_scn", type:"scenario",
+        q:"A student rewrites their story so the events happen in order and each paragraph has one job. Which trait have they improved?",
+        a:"Organisation", opts:["Organisation","Conventions","Voice","Word choice"],
+        explain:"Order and paragraphing are <b>organisation</b>: the parts arranged so they work together." } ] },
+
+  { w:"Voice", pos:"noun", domain:"story", type:"origin",
+    meaning:"The writer’s personality coming through the words, so the writing sounds like a real person, not a machine.",
+    eg:"You can hear her **voice** in every sentence: dry, funny and a little bit fed up.",
+    originQ:"<b>Voice</b> comes from Latin <i>vox, vocis</i>. Which of these words is built on the same root?",
+    originA:"Vocabulary", originOpts:["Vocabulary","Vision","Voyage","Volcano"],
+    note:"Latin <i>vox</i> (voice) gives us <b>vocal</b>, <b>vocabulary</b> (the words you have a voice for), <b>advocate</b> (to speak for someone) and <b>invoke</b>. In writing, voice is the sound of the writer on the page.",
+    apply:[
+      { id:"ap_voice_scn", type:"scenario",
+        q:"Two students write about the same excursion. One piece is flat and could have been written by anyone; the other sounds unmistakably like its writer, with jokes only she would make. What does the second piece have that the first lacks?",
+        a:"Voice", opts:["Voice","Conventions","Organisation","Fluency"],
+        explain:"The writer’s personality showing through is <b>voice</b>: the writing “sounds like” its author." },
+      { id:"ap_voice_cloze", type:"cloze",
+        before:"A strong writer’s", after:"is so clear you could pick their work out of a pile without a name on it.",
+        a:"voice", opts:["voice","vice","void","vote"],
+        explain:"Personality on the page = <b>voice</b>. A <i>vice</i> is a bad habit; a <i>void</i> is an empty space." } ] },
+
+  { w:"Register", pos:"noun", domain:"story", type:"origin",
+    meaning:"How formal or informal the language is, chosen to suit the audience and purpose: a text message and a job application use different registers.",
+    eg:"“Dear Sir or Madam” is a formal **register**; “hey, what’s up?” is an informal one.",
+    originQ:"<b>Register</b> comes from Latin <i>regerere</i>, “to record” or “carry back”. Which of these is a register in the WRITING sense?",
+    originA:"The level of formality a writer chooses for their audience",
+    originOpts:["The level of formality a writer chooses for their audience","The list a teacher marks the roll on","The cash drawer at a shop counter","The lowest notes a singer can reach"],
+    note:"The word has several meanings that all come from “a record”: the class roll, the till, the range of a voice. In English class, register means the <b>level of language</b>: formal, neutral or informal. Voice is who you sound like; register is how formal you sound.",
+    apply:[
+      { id:"ap_reg_scn", type:"scenario",
+        q:"A student writes to the principal: “yo, the canteen’s cooked, fix it lol.” The ideas are fine. What is wrong?",
+        a:"The register is too informal for the audience", opts:["The register is too informal for the audience","The voice is too strong","The organisation is out of order","The sentence fluency is poor"],
+        explain:"The level of formality does not match the audience: a <b>register</b> problem, not an ideas problem." },
+      { id:"ap_reg_cloze", type:"cloze",
+        before:"A formal", after:"avoids slang, contractions and jokes.",
+        a:"register", opts:["register","regulator","registrar","resister"],
+        explain:"The formality level of language is its <b>register</b>. A <i>registrar</i> is a person who keeps records." } ] },
+
+  { w:"Fluency", pos:"noun", domain:"story", type:"morph",
+    meaning:"The smooth, easy flow of sentences: varied lengths and beginnings, so the writing reads well aloud.",
+    eg:"Read it aloud to test the sentence **fluency**: if you stumble, so will your reader.",
+    tiles:[["flu","to flow (Latin fluere)"],["-ency","the state or quality of"]],
+    decoys:[["flect","to bend"],["-ity","the state of"],["in-","not"]],
+    note:"Latin <i>fluere</i>, to flow: fluent writing <b>flows</b>. Same <i>flu</i> in <b>fluid</b>, <b>fluent</b>, <b>influence</b> (something that flows in) and even <b>flu</b>, which was once blamed on the “influence” of the stars.",
+    apply:[
+      { id:"ap_flu_cloze", type:"cloze",
+        before:"Every sentence started with “Then” and was exactly six words long, so the", after:"was choppy.",
+        a:"fluency", opts:["fluency","frequency","fluidity","affluence"],
+        explain:"The flow of the sentences is <b>fluency</b>. <i>Frequency</i> is how often; <i>affluence</i> is wealth." },
+      { id:"ap_flu_scn", type:"scenario",
+        q:"A writer mixes short punchy sentences with long flowing ones, and starts them in different ways. Which trait is this?",
+        a:"Sentence fluency", opts:["Sentence fluency","Conventions","Organisation","Ideas"],
+        explain:"Variety and flow in sentences is <b>sentence fluency</b>: <i>flu</i> = flow." } ] },
+
+  { w:"Conventions", pos:"noun", domain:"story", type:"morph",
+    meaning:"The agreed rules of written English: spelling, punctuation, capital letters, grammar and paragraphing.",
+    eg:"Check your **conventions** last: spelling, capitals, full stops.",
+    tiles:[["con-","together"],["vent","to come (Latin venire)"],["-ion","the act or result of"]],
+    decoys:[["contra-","against"],["-ive","tending to"],["vers","to turn"]],
+    note:"Latin <i>convenire</i>, to <b>come together</b>: a convention is what people have come together and agreed on. Same <i>vent/ven</i> in <b>event</b>, <b>adventure</b>, <b>prevent</b> and <b>convene</b>. The rules of writing are conventions because writers agreed on them, not because they were always true.",
+    apply:[
+      { id:"ap_conv_cloze", type:"cloze",
+        before:"The story was gripping, but missing capitals and full stops meant the", after:"let it down.",
+        a:"conventions", opts:["conventions","conversions","inventions","conventicles"],
+        explain:"Spelling, punctuation and capitals are the <b>conventions</b>. <i>Conversions</i> are changes from one thing to another." },
+      { id:"ap_conv_scn", type:"scenario",
+        q:"Why are full stops and capital letters called conventions rather than laws?",
+        a:"Because writers agreed on them together; they are shared rules, not natural facts",
+        opts:["Because writers agreed on them together; they are shared rules, not natural facts","Because they were invented at a convention centre","Because they are only used in conversation","Because they can be ignored whenever you like"],
+        explain:"<i>con-</i> (together) + <i>vent</i> (come): rules that people came together and agreed on." } ] },
+  ] },
+
+/* ================= 02 PROCEDURAL WRITING ================= */
+{ id:"02", topic:"Part 2 · Procedural writing", title:"Procedural writing and sentence types",
+  focus:"Learn how a procedural text works, and meet sentences with four different purposes: declarative, imperative, interrogative and exclamative.",
+  words:[
+  { w:"Procedural", pos:"adjective", domain:"story", type:"morph",
+    meaning:"Describes a text that explains how to do something, step by step: a recipe, a set of instructions, a game’s rules.",
+    eg:"A **procedural** text like “How to bake brownies” uses numbered steps.",
+    tiles:[["pro-","forward"],["ced","to go (Latin cedere)"],["-ur(e)","the result or process of"],["-al","relating to"]],
+    decoys:[["pre-","before"],["-ment","the result of"],["sed","to sit"]],
+    note:"Latin <i>procedere</i>, to <b>go forward</b>: a procedure goes forward one step at a time. Same <i>ced/ceed</i> in <b>proceed</b>, <b>exceed</b>, <b>recede</b> and <b>process</b>.",
+    apply:[
+      { id:"ap_proc_cloze", type:"cloze",
+        before:"“How to do crunches” is a", after:"text because it tells you what to do in order.",
+        a:"procedural", opts:["procedural","proverbial","processional","precedential"],
+        explain:"Step-by-step instructions = a <b>procedural</b> text (<i>pro-</i> forward + <i>ced</i> go)." },
+      { id:"ap_proc_scn", type:"scenario",
+        q:"Which of these is a procedural text?",
+        a:"A guide to setting up a new phone, in numbered steps", opts:["A guide to setting up a new phone, in numbered steps","A review of a new phone","A letter arguing that phones should be banned in class","A story about a phone that could talk"],
+        explain:"Numbered steps that go forward one at a time = <b>procedural</b>. The others are evaluative, persuasive and narrative texts." } ] },
+
+  { w:"Declarative", pos:"adjective", domain:"world", type:"morph",
+    meaning:"Describes a sentence that states a fact or describes something: subject first, then verb. It ends with a full stop.",
+    eg:"“The pencil case is a reflection of the soul.” is a **declarative** sentence.",
+    tiles:[["de-","thoroughly, completely"],["clar","clear (Latin clarus)"],["-ative","having the quality of"]],
+    decoys:[["dis-","apart, away"],["-ify","to make"],["clam","to shout"]],
+    note:"Latin <i>declarare</i>, to make completely <b>clear</b>: a declarative sentence declares something plainly. Same <i>clar</i> in <b>clear</b>, <b>clarity</b> and <b>clarify</b>. Watch the decoy <i>clam</i> (to shout), which builds <b>exclamative</b> instead.",
+    apply:[
+      { id:"ap_decl_scn", type:"scenario",
+        q:"“On the weekend, a volcano erupted in Indonesia.” What type of sentence is this?",
+        a:"Declarative", opts:["Declarative","Imperative","Interrogative","Exclamative"],
+        explain:"It states a fact, subject then verb, and ends with a full stop: <b>declarative</b>." },
+      { id:"ap_decl_cloze", type:"cloze",
+        before:"The overview of a procedural text uses mostly", after:"sentences, because it describes what and why.",
+        a:"declarative", opts:["declarative","decorative","derivative","deliberative"],
+        explain:"Describing and stating = <b>declarative</b> (<i>clar</i> = clear). <i>Decorative</i> means for decoration." } ] },
+
+  { w:"Imperative", pos:"adjective", domain:"world", type:"morph",
+    meaning:"Describes a sentence that gives an instruction, command or direction. It starts with a verb: “Clean your pencil case.”",
+    eg:"Each step in a recipe is an **imperative** sentence: “Preheat the oven.”",
+    tiles:[["im-","in, upon"],["per","to prepare, to order (Latin parare)"],["-ative","having the quality of"]],
+    decoys:[["inter-","between"],["-ition","the act of"],["port","to carry"]],
+    note:"Latin <i>imperare</i>, to <b>command</b>: from <i>in-</i> + <i>parare</i> (to make ready, to order). An <b>emperor</b> is the one who commands; an <b>empire</b> is what he commands. An imperative sentence commands the reader.",
+    apply:[
+      { id:"ap_imp_scn", type:"scenario",
+        q:"“Clean your pencil case.” What type of sentence is this?",
+        a:"Imperative", opts:["Imperative","Declarative","Interrogative","Exclamative"],
+        explain:"It starts with a verb and tells you what to do: <b>imperative</b>." },
+      { id:"ap_imp_cloze", type:"cloze",
+        before:"The method section of a procedural text uses mainly", after:"sentences that begin with a verb.",
+        a:"imperative", opts:["imperative","imperial","impartial","imperceptive"],
+        explain:"Instructions that begin with a verb are <b>imperative</b> sentences. <i>Imperial</i> relates to an empire." } ] },
+
+  { w:"Interrogative", pos:"adjective", domain:"world", type:"morph",
+    meaning:"Describes a sentence that asks a question. It often starts with a question word (how, what, why, where) and ends with a question mark.",
+    eg:"“How much is that doggy in the window?” is an **interrogative** sentence.",
+    tiles:[["inter-","between"],["rog","to ask (Latin rogare)"],["-ative","having the quality of"]],
+    decoys:[["intra-","within"],["reg","to rule"],["-ition","the act of"]],
+    note:"Latin <i>interrogare</i>, to ask <b>between</b> two people. Detectives <b>interrogate</b> suspects. Same <i>rog</i> in <b>arrogant</b> (claiming for yourself) and <b>prerogative</b> (asked before others).",
+    apply:[
+      { id:"ap_inter_scn", type:"scenario",
+        q:"“If you looked inside your pencil case, what would you find?” What type of sentence is this?",
+        a:"Interrogative", opts:["Interrogative","Imperative","Declarative","Exclamative"],
+        explain:"It asks for information and ends with a question mark: <b>interrogative</b> (<i>rog</i> = ask)." },
+      { id:"ap_inter_cloze", type:"cloze",
+        before:"A rhetorical question is an", after:"sentence that does not expect an answer.",
+        a:"interrogative", opts:["interrogative","interactive","integrative","intransitive"],
+        explain:"Any question is an <b>interrogative</b> sentence. <i>Interactive</i> means acting on each other." } ] },
+
+  { w:"Exclamative", pos:"adjective", domain:"world", type:"morph",
+    meaning:"Describes a sentence that expresses surprise, joy, anger or other strong feeling. It usually ends with an exclamation mark.",
+    eg:"“What a load of rubbish!” is an **exclamative** sentence.",
+    tiles:[["ex-","out"],["clam","to shout, cry out (Latin clamare)"],["-ative","having the quality of"]],
+    decoys:[["en-","in"],["clar","clear"],["-ation","the process of"]],
+    note:"Latin <i>exclamare</i>, to <b>shout out</b>. Same <i>clam/claim</i> in <b>exclaim</b>, <b>proclaim</b>, <b>claim</b> and <b>clamour</b>. Watch the decoy <i>clar</i> (clear), which builds <b>declarative</b>.",
+    apply:[
+      { id:"ap_excl_scn", type:"scenario",
+        q:"“Noooooo!” What type of sentence is this?",
+        a:"Exclamative", opts:["Exclamative","Interrogative","Imperative","Declarative"],
+        explain:"A single word bursting with feeling can still be a sentence: <b>exclamative</b> (<i>ex-</i> out + <i>clam</i> shout)." },
+      { id:"ap_excl_cloze", type:"cloze",
+        before:"“How amazing!” is an", after:"sentence, even though it starts with a question word.",
+        a:"exclamative", opts:["exclamative","explanatory","exclusive","excavative"],
+        explain:"It expresses feeling rather than asking: <b>exclamative</b>. <i>Exclusive</i> means shutting others out." } ] },
+
+  { w:"Conjunction", pos:"noun", domain:"world", type:"morph",
+    meaning:"A joining word. Coordinating conjunctions (and, but, or, so) join two clauses into a compound sentence; subordinating ones (because, although, when) build complex sentences.",
+    eg:"“Preheat the oven, **and** line the tin.” The **conjunction** joins the two clauses.",
+    tiles:[["con-","together"],["junct","to join (Latin jungere)"],["-ion","the act or result of"]],
+    decoys:[["dis-","apart"],["-ure","the result of"],["duct","to lead"]],
+    note:"Latin <i>conjungere</i>, to <b>join together</b>. Same <i>junct/join</i> in <b>junction</b> (where roads join), <b>joint</b> and <b>adjoin</b>. You met simple, compound and complex sentences earlier in the year; the conjunction is the hinge.",
+    apply:[
+      { id:"ap_conj_scn", type:"scenario",
+        q:"In “Mix the batter, but do not over-beat it,” which word is the conjunction?",
+        a:"but", opts:["but","mix","batter","not"],
+        explain:"<b>but</b> joins the two clauses (<i>junct</i> = join)." },
+      { id:"ap_conj_cloze", type:"cloze",
+        before:"A compound sentence needs a comma and a coordinating", after:"such as and, but or so.",
+        a:"conjunction", opts:["conjunction","conjecture","junction","injunction"],
+        explain:"The joining word is a <b>conjunction</b>. A <i>junction</i> is where roads join; a <i>conjecture</i> is a guess." } ] },
+  ],
+  /* Sentence hunt: after the vocab, find each sentence type inside a passage. */
+  hunt:{
+    intro:"You have built the four sentence types. Now find them in the wild. Read each passage, then click the sentence that matches what you are asked for. Any sentence of the right type counts.",
+    passages:[
+      { title:"How to bake brownies (opening)", sentences:[
+        { t:"Brownies are the easiest thing you will ever bake.", type:"declarative" },
+        { t:"Have you ever had one that was dry and crumbly?", type:"interrogative" },
+        { t:"This recipe fixes that.", type:"declarative" },
+        { t:"Preheat the oven to 180 degrees.", type:"imperative" },
+        { t:"Line a square tin with baking paper.", type:"imperative" },
+        { t:"What a difference the paper makes!", type:"exclamative" },
+        { t:"The batter should be thick and glossy.", type:"declarative" },
+      ] },
+      { title:"How to do crunches", sentences:[
+        { t:"Crunches strengthen the muscles of your core.", type:"declarative" },
+        { t:"Lie on your back with your knees bent.", type:"imperative" },
+        { t:"Why do so many people get them wrong?", type:"interrogative" },
+        { t:"They pull on their neck instead of using their stomach.", type:"declarative" },
+        { t:"Keep your chin off your chest.", type:"imperative" },
+        { t:"Ouch, that burns!", type:"exclamative" },
+        { t:"Rest for thirty seconds between sets.", type:"imperative" },
+      ] },
+      { title:"Pencil case notice", sentences:[
+        { t:"Is your pencil case a disaster zone?", type:"interrogative" },
+        { t:"Most students own three pens that do not work.", type:"declarative" },
+        { t:"Empty everything onto your desk.", type:"imperative" },
+        { t:"Throw out anything that has dried up.", type:"imperative" },
+        { t:"How good does that feel!", type:"exclamative" },
+        { t:"A tidy pencil case is a tidy mind.", type:"declarative" },
+        { t:"Where did all those rubbers come from?", type:"interrogative" },
+      ] },
+    ],
+    types:{ declarative:"declarative (states a fact or describes something)", imperative:"imperative (gives an instruction; starts with a verb)",
+            interrogative:"interrogative (asks a question)", exclamative:"exclamative (expresses strong feeling)" },
+  } },
+
+/* ================= 03 WRITING A PROCEDURAL TEXT ================= */
+{ id:"03", topic:"Part 2 · Procedural writing", title:"Writing a procedural text",
+  focus:"Plan, draft and proofread your own procedural text: title, overview, what you will need, method, and an optional tips section.",
+  words:[
+  { w:"Overview", pos:"noun", domain:"story", type:"morph",
+    meaning:"A short section at the start that describes the what and the why: what the reader will be able to do, and why it matters.",
+    eg:"The **overview** tells the reader why these instructions are better than the others.",
+    tiles:[["over-","above"],["view","a look, a sight"]],
+    decoys:[["under-","below"],["-ing","the act of"],["re-","again"]],
+    note:"A view from <b>above</b>: you see the whole thing at once before you zoom in on the steps. Compare <b>preview</b> (a look before) and <b>review</b> (a look back), which you will meet in Lesson 06.",
+    apply:[
+      { id:"ap_over_cloze", type:"cloze",
+        before:"Write the", after:"in declarative sentences: explain what the reader will make and why it is worth making.",
+        a:"overview", opts:["overview","overture","interview","oversight"],
+        explain:"The what-and-why at the top is the <b>overview</b> (a view from above). An <i>oversight</i> is a mistake you missed." },
+      { id:"ap_over_scn", type:"scenario",
+        q:"“These brownies take twenty minutes and use one bowl, so they are perfect for a school night.” Which section of a procedural text does this belong in?",
+        a:"Overview", opts:["Overview","Method","You will need","Tips"],
+        explain:"It describes what and why in declarative sentences: the <b>overview</b>." } ] },
+
+  { w:"Subheading", pos:"noun", domain:"story", type:"morph",
+    meaning:"A smaller heading that labels one section of a text, such as “You will need” or “Method”.",
+    eg:"Use a **subheading** to label each section so the reader can jump straight to the steps.",
+    tiles:[["sub-","under, below"],["head","the top, the chief part"],["-ing","noun: the thing that does it"]],
+    decoys:[["super-","above, over"],["-ed","past, finished"],["hed","hedge"]],
+    note:"<i>sub-</i> (under) + <b>heading</b>: a heading that sits under the main title. Same <i>sub-</i> in <b>submarine</b>, <b>subway</b> and <b>subtitle</b>. Its opposite prefix, <i>super-</i>, is the decoy.",
+    apply:[
+      { id:"ap_subh_cloze", type:"cloze",
+        before:"Put “Method” as a", after:"above your numbered steps.",
+        a:"subheading", opts:["subheading","subsection","superheading","subtitle"],
+        explain:"A smaller heading under the title, labelling a section: a <b>subheading</b>. A <i>subtitle</i> sits under the title itself." },
+      { id:"ap_subh_scn", type:"scenario",
+        q:"A reader wants to check the ingredients without reading the whole page. What helps them find that section instantly?",
+        a:"A subheading", opts:["A subheading","A conjunction","An overview","A substitution"],
+        explain:"<b>Subheadings</b> label sections so readers can jump to the one they need." } ] },
+
+  { w:"Proofread", pos:"verb", domain:"story", type:"morph",
+    meaning:"To read a finished draft slowly and carefully to find and fix errors in spelling, capitals, punctuation and sentence types.",
+    eg:"**Proofread** your draft for spelling and capital letters before you submit it.",
+    tiles:[["proof","a test, a check (Latin probare, to test)"],["read","to read"]],
+    decoys:[["re-","again"],["-er","one who"],["prove","to show to be true"]],
+    note:"Printers once made a “proof”, a test copy, and read it for errors before printing thousands. To <b>proofread</b> is to read as a tester, hunting for mistakes. Same <i>prob/proof</i> in <b>probe</b>, <b>prove</b> and <b>approve</b>.",
+    apply:[
+      { id:"ap_proof_cloze", type:"cloze",
+        before:"Before you upload the draft to Compass,", after:"it for missing capitals and dried-up sentences.",
+        a:"proofread", opts:["proofread","reread","proofed","proofreader"],
+        explain:"Reading to find and fix errors is to <b>proofread</b>. <i>Reread</i> just means read again, not necessarily to check." },
+      { id:"ap_proof_scn", type:"scenario",
+        q:"A student reads their finished draft aloud, circles two spelling errors and a missing full stop, then fixes them. What are they doing?",
+        a:"Proofreading", opts:["Proofreading","Planning","Drafting","Brainstorming"],
+        explain:"Checking a finished draft for errors is <b>proofreading</b>: reading as a tester." } ] },
+
+  { w:"Precise", pos:"adjective", domain:"story", type:"morph",
+    meaning:"Exact and clear, with nothing vague: “bake for 25 minutes”, not “bake for a while”.",
+    eg:"Instructions must be clear and **precise**: say exactly how much and exactly how long.",
+    tiles:[["pre-","in front, before"],["cise","to cut (Latin caedere)"],],
+    decoys:[["de-","down, away"],["-ion","the act of"],["con-","together"]],
+    note:"Latin <i>praecidere</i>, to <b>cut off in front</b>: precise language has everything unnecessary cut away. Same <i>cis/cide</i> (cut) in <b>scissors</b>, <b>incision</b>, <b>decide</b> (cut off the other options) and <b>concise</b>.",
+    apply:[
+      { id:"ap_prec_cloze", type:"cloze",
+        before:"“Add some flour” is vague; “add 200 g of plain flour” is", after:".",
+        a:"precise", opts:["precise","concise","prized","pretence"],
+        explain:"Exact amounts are <b>precise</b>. <i>Concise</i> means short; it can still be vague." },
+      { id:"ap_prec_scn", type:"scenario",
+        q:"Why must the method section be precise?",
+        a:"So that a reader who has never done it can follow every step exactly", opts:["So that a reader who has never done it can follow every step exactly","So that it sounds more formal","So that it is shorter than the overview","So that it rhymes"],
+        explain:"Precise = exact, with the vagueness cut away (<i>cise</i> = cut). Instructions fail when a step can be read two ways." } ] },
+
+  { w:"Fragment", pos:"noun", domain:"story", type:"morph",
+    meaning:"A piece of a sentence, not a whole one: it lacks a subject or a verb. Used on purpose in a “You will need” list; an error everywhere else.",
+    eg:"“2 eggs” and “a square tin” are sentence **fragments**, which is fine in a list.",
+    tiles:[["frag","to break (Latin frangere)"],["-ment","the result of"]],
+    decoys:[["fric","to rub"],["-ure","the result or process of"],["frig","cold"]],
+    note:"Latin <i>frangere</i>, to <b>break</b>: a fragment is a broken-off piece. Same <i>frag/fract</i> in <b>fragile</b>, <b>fracture</b> and <b>fraction</b>. In the “You will need” list you use fragments on purpose; in the overview you write full declarative sentences.",
+    apply:[
+      { id:"ap_frag_scn", type:"scenario",
+        q:"“Because the oven was too hot.” What is this?",
+        a:"A fragment: a dependent clause with no main clause to lean on", opts:["A fragment: a dependent clause with no main clause to lean on","A declarative sentence","An imperative sentence","A compound sentence"],
+        explain:"It is a broken-off piece of a sentence (<i>frag</i> = break). It needs a main clause: “Because the oven was too hot, the edges burnt.”" },
+      { id:"ap_frag_cloze", type:"cloze",
+        before:"In the “You will need” list, write each item as a", after:", not a complete sentence.",
+        a:"fragment", opts:["fragment","fraction","figment","fragrance"],
+        explain:"A part of a sentence is a <b>fragment</b>. A <i>fraction</i> is a part of a number; a <i>figment</i> is imaginary." } ] },
+
+  { w:"Substitution", pos:"noun", domain:"story", type:"morph",
+    meaning:"Swapping one thing in for another: an ingredient a reader can use instead, for diet or allergy reasons.",
+    eg:"The tips section suggested a **substitution** for readers who cannot eat dairy.",
+    tiles:[["sub-","under, in place of"],["stitut","to set up, to place (Latin statuere)"],["-ion","the act of"]],
+    decoys:[["con-","together"],["-ive","tending to"],["stat","to stand"]],
+    note:"Latin <i>substituere</i>, to <b>put in place of</b>. Same <i>stitut</i> in <b>institute</b>, <b>constitution</b> and <b>statue</b> (a thing set up). A substitute teacher stands in the place of the usual one.",
+    apply:[
+      { id:"ap_subs_cloze", type:"cloze",
+        before:"A good", after:"for eggs in brownies is mashed banana.",
+        a:"substitution", opts:["substitution","subscription","constitution","institution"],
+        explain:"Putting one thing in place of another = <b>substitution</b>. A <i>subscription</i> is signing up for something." },
+      { id:"ap_subs_scn", type:"scenario",
+        q:"Which optional section of a procedural text would list gluten-free alternatives?",
+        a:"Tips: substitutions for diet or allergies", opts:["Tips: substitutions for diet or allergies","Overview","Method","Title"],
+        explain:"Substitutions (things set in place of others) belong in the optional <b>tips</b> section." } ] },
+  ] },
+
+/* ================= 04 PERSUASIVE WRITING ================= */
+{ id:"04", topic:"Part 3 · Persuasive writing", title:"Persuasive writing",
+  focus:"Understand the language and structure of a persuasive text: contention, claims, evidence and the techniques that move a reader.",
+  words:[
+  { w:"Persuasive", pos:"adjective", domain:"camp", type:"morph",
+    meaning:"Describes a text that aims to convince an audience to think, feel or act in a certain way.",
+    eg:"A **persuasive** text has a contention and a purpose, and uses claims, evidence and techniques.",
+    tiles:[["per-","thoroughly"],["suas","to urge, to advise (Latin suadere)"],["-ive","tending to"]],
+    decoys:[["pre-","before"],["-ion","the act of"],["sect","to cut"]],
+    note:"Latin <i>persuadere</i>: <i>per-</i> (thoroughly) + <i>suadere</i> (to urge). To persuade is to urge someone all the way to agreement. Its opposite is <b>dissuade</b> (urge away). Same <i>per-</i> as <b>persecution</b> from the Bone Sparrow unit.",
+    apply:[
+      { id:"ap_pers_cloze", type:"cloze",
+        before:"A protest sign is a short", after:"text: it wants you to act.",
+        a:"persuasive", opts:["persuasive","pervasive","perceptive","possessive"],
+        explain:"Text that urges you to think or act = <b>persuasive</b>. <i>Pervasive</i> means spread everywhere." },
+      { id:"ap_pers_scn", type:"scenario",
+        q:"What does it mean to persuade somebody?",
+        a:"To convince them to change their mind, or to think or act in a certain way", opts:["To convince them to change their mind, or to think or act in a certain way","To describe something to them without judging it","To tell them how to do something step by step","To entertain them with an invented story"],
+        explain:"<i>per-</i> + <i>suas</i>: to urge thoroughly. The other options describe evaluative, procedural and narrative writing." } ] },
+
+  { w:"Contention", pos:"noun", domain:"camp", type:"morph",
+    meaning:"The main argument of a persuasive text: the one thing the writer wants the audience to believe.",
+    eg:"The article’s **contention** is that children under 16 should be banned from social media.",
+    tiles:[["con-","together, with"],["tent","to stretch, to strain (Latin tendere)"],["-ion","the act or result of"]],
+    decoys:[["contra-","against"],["-ure","the result of"],["tain","to hold"]],
+    note:"Latin <i>contendere</i>, to <b>strain together</b>, to struggle or compete. A contention is the position you are contending for. Same <i>tend/tent</i> in <b>tension</b>, <b>tent</b> (stretched cloth), <b>intend</b> and <b>attention</b>.",
+    apply:[
+      { id:"ap_cont_cloze", type:"cloze",
+        before:"State your", after:"clearly in the introduction: what is the main thing you are arguing?",
+        a:"contention", opts:["contention","convention","contentment","attention"],
+        explain:"The main argument is the <b>contention</b>. A <i>convention</i> is an agreed rule; <i>contentment</i> is happiness." },
+      { id:"ap_cont_scn", type:"scenario",
+        q:"“The state government should put more funding towards social housing.” In a persuasive plan, what is this sentence?",
+        a:"The contention", opts:["The contention","A claim","A piece of evidence","An anecdote"],
+        explain:"The single position the whole text argues for is the <b>contention</b>; claims are the smaller points that prove it." } ] },
+
+  { w:"Claim", pos:"noun", domain:"camp", type:"origin",
+    meaning:"A statement the writer says is true and must prove; each claim supports the contention.",
+    eg:"Each body paragraph makes one **claim** and backs it with evidence.",
+    originQ:"<b>Claim</b> shares its root with <i>exclamative</i>: Latin <i>clamare</i>, to shout out. Why does that fit?",
+    originA:"A claim is something you call out as true, and then have to prove",
+    originOpts:["A claim is something you call out as true, and then have to prove","A claim is something you keep quiet about","A claim is a question you ask the audience","A claim is a story about yourself"],
+    note:"Latin <i>clamare</i> (to shout) gives <b>claim</b>, <b>exclaim</b>, <b>proclaim</b> and <b>clamour</b>. You “call out” a claim; then the evidence has to back it up. Three claims that lead to a conclusion make an argument.",
+    apply:[
+      { id:"ap_claim_scn", type:"scenario",
+        q:"“There are over 300 rough sleepers in Melbourne every night.” In a plan whose contention is about social housing, what is this?",
+        a:"A claim: a point the writer will prove to support the contention", opts:["A claim: a point the writer will prove to support the contention","The contention itself","A rhetorical question","A call to action"],
+        explain:"It is one thing the writer must prove on the way to the contention: a <b>claim</b>." },
+      { id:"ap_claim_cloze", type:"cloze",
+        before:"Identify three", after:"the author makes to support their main argument.",
+        a:"claims", opts:["claims","clams","clauses","climaxes"],
+        explain:"Points the author calls out as true are <b>claims</b>. <i>Clauses</i> are grammar; <i>clams</i> are shellfish." } ] },
+
+  { w:"Evidence", pos:"noun", domain:"camp", type:"morph",
+    meaning:"Facts, figures, quotes, expert opinions or examples that back up a claim so the reader can see it is true.",
+    eg:"Hard **evidence** makes a claim logical: numbers, dates, a quote from an expert.",
+    tiles:[["e-","out"],["vid","to see (Latin videre)"],["-ence","the state or quality of"]],
+    decoys:[["in-","not, in"],["-ify","to make"],["vis","to see (a different form)"]],
+    note:"Latin <i>evidens</i>, <b>seen out</b> clearly, obvious. Same <i>vid/vis</i> in <b>video</b>, <b>visible</b>, <b>evident</b> and <b>provide</b>. Evidence is what lets the reader see the claim for themselves.",
+    apply:[
+      { id:"ap_evid_cloze", type:"cloze",
+        before:"The writer supports the claim with", after:": a survey of 2,000 teenagers and a quote from a psychologist.",
+        a:"evidence", opts:["evidence","evidently","providence","incidence"],
+        explain:"Facts and quotes that let the reader see the claim is true = <b>evidence</b> (<i>vid</i> = see)." },
+      { id:"ap_evid_scn", type:"scenario",
+        q:"Which of these is evidence, rather than a claim?",
+        a:"“In 2023, 41% of Australian teens reported being bullied online.”", opts:["“In 2023, 41% of Australian teens reported being bullied online.”","“Social media is dangerous for teenagers.”","“Something must be done.”","“Do we really want this for our children?”"],
+        explain:"A specific, checkable fact is <b>evidence</b>. The others are a claim, a call to action and a rhetorical question." } ] },
+
+  { w:"Rhetorical", pos:"adjective", domain:"camp", type:"morph",
+    meaning:"Designed to persuade. A rhetorical question is asked for effect, not for an answer: “Do we really want this for our children?”",
+    eg:"“Who could say no to that?” is a **rhetorical** question: the answer is meant to be obvious.",
+    tiles:[["rhetor","a public speaker (Greek rhētōr)"],["-ical","relating to"]],
+    decoys:[["retro-","backwards"],["-ity","the state of"],["-ology","the study of"]],
+    note:"In ancient Greece a <i>rhētōr</i> was a trained public speaker, and <b>rhetoric</b> was the art of persuading a crowd. A rhetorical device is any speaker’s trick. The spelling trap is the silent <i>h</i> after the <i>r</i>.",
+    apply:[
+      { id:"ap_rhet_scn", type:"scenario",
+        q:"“Is this really the Australia we want to live in?” Why does the writer not expect an answer?",
+        a:"It is a rhetorical question: asked for effect, so the reader agrees without being told to", opts:["It is a rhetorical question: asked for effect, so the reader agrees without being told to","It is an imperative sentence in disguise","It is a piece of evidence","It is an anecdote"],
+        explain:"A question used as a persuasive device is <b>rhetorical</b>: the speaker already knows the answer they want." },
+      { id:"ap_rhet_cloze", type:"cloze",
+        before:"Repetition, emotive language and", after:"questions are all persuasive techniques.",
+        a:"rhetorical", opts:["rhetorical","retrospective","theoretical","hysterical"],
+        explain:"Questions asked for persuasive effect are <b>rhetorical</b> (from <i>rhētōr</i>, a public speaker)." } ] },
+
+  { w:"Emotive", pos:"adjective", domain:"camp", type:"morph",
+    meaning:"Describes language chosen to stir up feelings in the reader: “innocent children”, “heartless companies”, “a tragedy”.",
+    eg:"The article calls the platforms “predatory”, which is **emotive** language.",
+    tiles:[["e-","out"],["mot","to move (Latin movere)"],["-ive","tending to"]],
+    decoys:[["de-","down, away"],["-ion","the act of"],["mit","to send"]],
+    note:"Latin <i>emovere</i>, to <b>move out</b>: an emotion is a feeling that moves through you, and emotive language moves the reader. Same <i>mot/mov</i> in <b>motion</b>, <b>motor</b>, <b>promote</b> and <b>remote</b>.",
+    apply:[
+      { id:"ap_emot_cloze", type:"cloze",
+        before:"Calling the app “a digital playground for predators” is", after:"language: it is chosen to make readers afraid.",
+        a:"emotive", opts:["emotive","emotional","motive","remote"],
+        explain:"Language designed to move the reader’s feelings is <b>emotive</b>. <i>Emotional</i> describes the person feeling it." },
+      { id:"ap_emot_scn", type:"scenario",
+        q:"Which version uses emotive language?",
+        a:"“Vulnerable kids are being preyed on every single night.”", opts:["“Vulnerable kids are being preyed on every single night.”","“Some users under 16 receive unwanted messages.”","“The survey covered 2,000 respondents.”","“The policy begins in December.”"],
+        explain:"“Vulnerable”, “preyed on” and “every single night” are chosen to move you (<i>mot</i> = move). The others are neutral." } ] },
+
+  { w:"Anecdote", pos:"noun", domain:"camp", type:"origin",
+    meaning:"A short personal story told to make a point: it creates authority (“I was there”) and stirs emotion.",
+    eg:"The writer opens with an **anecdote** about her own daughter’s first week online.",
+    originQ:"<b>Anecdote</b> comes from Greek <i>anekdota</i>, “things not given out”, meaning unpublished stories. Why does that fit a persuasive technique?",
+    originA:"It is a private, personal story the writer shares to bring the reader close",
+    originOpts:["It is a private, personal story the writer shares to bring the reader close","It is a medicine that cures the reader’s doubts","It is a quote from an expert","It is a statistic the writer hides"],
+    note:"Greek <i>an-</i> (not) + <i>ekdotos</i> (given out, published). The word once meant secret stories about the powerful. Do not confuse it with <b>antidote</b> (a cure for poison), which sounds close.",
+    apply:[
+      { id:"ap_anec_scn", type:"scenario",
+        q:"“Last year my nephew, who is twelve, was messaged by a stranger within an hour of joining.” What technique is this?",
+        a:"An anecdote", opts:["An anecdote","A statistic","A rhetorical question","Repetition"],
+        explain:"A short personal story used to make a point is an <b>anecdote</b>." },
+      { id:"ap_anec_cloze", type:"cloze",
+        before:"A personal", after:"can create a sense of authority, because the writer was there.",
+        a:"anecdote", opts:["anecdote","antidote","anagram","annotation"],
+        explain:"A short personal story is an <b>anecdote</b>. An <i>antidote</i> cures poison; an <i>annotation</i> is a note." } ] },
+  ] },
+
+/* ================= 05 WRITING A PERSUASIVE TEXT ================= */
+{ id:"05", topic:"Part 3 · Persuasive writing", title:"Writing a persuasive text",
+  focus:"Plan a persuasive argument with clear logic: a contention, three claims that lead to a conclusion, and the evidence and tone of each.",
+  words:[
+  { w:"Audience", pos:"noun", domain:"camp", type:"morph",
+    meaning:"The people a text is written for. Knowing your audience decides your register, your evidence and your tone.",
+    eg:"Once they believe me, I want the **audience** to sign the petition.",
+    tiles:[["audi","to hear (Latin audire)"],["-ence","the state of, those who"]],
+    decoys:[["auto-","self"],["-ance","the state of (wrong spelling here)"],["vid","to see"]],
+    note:"Latin <i>audire</i>, to <b>hear</b>: an audience was originally the people who heard a speech. Same <i>audi</i> in <b>audio</b>, <b>audible</b> and <b>auditorium</b>. The spelling trap is the ending: <i>-ence</i>, not <i>-ance</i>.",
+    apply:[
+      { id:"ap_aud_cloze", type:"cloze",
+        before:"Who is the intended", after:"of this article, and why?",
+        a:"audience", opts:["audience","audition","auditor","ambience"],
+        explain:"The people the text is written for are its <b>audience</b> (<i>audi</i> = hear). An <i>audition</i> is a try-out." },
+      { id:"ap_aud_scn", type:"scenario",
+        q:"A student writes a persuasive text to the school council but fills it with slang and jokes. What have they misjudged?",
+        a:"The audience, and so the register", opts:["The audience, and so the register","The contention","The evidence","The conclusion"],
+        explain:"Register follows audience: who will “hear” this (<i>audi</i>) decides how formal it should be." } ] },
+
+  { w:"Authority", pos:"noun", domain:"camp", type:"morph",
+    meaning:"The sense that the writer knows what they are talking about, built with formal language, expert quotes or a personal anecdote.",
+    eg:"Quoting a paediatrician gives the argument **authority**.",
+    tiles:[["author","originator, one who creates (Latin auctor)"],["-ity","the state or quality of"]],
+    decoys:[["auto-","self"],["-ise","to make"],["-ism","a belief or practice"]],
+    note:"Latin <i>auctor</i>, the <b>originator</b>, from <i>augere</i> (to increase, to grow). An author makes a text grow; authority is the weight their word carries. Same root in <b>authorise</b> and <b>augment</b>.",
+    apply:[
+      { id:"ap_auth_cloze", type:"cloze",
+        before:"Formal, specific language and an expert quote create a sense of", after:".",
+        a:"authority", opts:["authority","authenticity","autonomy","austerity"],
+        explain:"The weight of knowing what you are talking about is <b>authority</b>. <i>Autonomy</i> is self-rule." },
+      { id:"ap_auth_scn", type:"scenario",
+        q:"Which sentence builds authority?",
+        a:"“Professor Ng, who has studied screen time for twenty years, found that…”", opts:["“Professor Ng, who has studied screen time for twenty years, found that…”","“Everyone knows this is bad, obviously.”","“Do we want this? No!”","“Kids, kids, kids: it is always the kids who suffer.”"],
+        explain:"An expert with credentials lends the writer weight: <b>authority</b>. The others are assertion, a rhetorical question and repetition." } ] },
+
+  { w:"Logic", pos:"noun", domain:"camp", type:"morph",
+    meaning:"Clear reasoning: claims backed by hard evidence, arranged so each one leads to the conclusion.",
+    eg:"Use **logic** by including clear claims and hard evidence.",
+    tiles:[["log","word, reason (Greek logos)"],["-ic","relating to"]],
+    decoys:[["leg","law"],["-ical","relating to (one step too far here)"],["lex","word (Greek, a different form)"]],
+    note:"Greek <i>logos</i> meant both <b>word</b> and <b>reason</b>: to the Greeks, reasoning was words in the right order. Same <i>log</i> in <b>dialogue</b>, <b>biology</b>, <b>apology</b> and <b>catalogue</b>.",
+    apply:[
+      { id:"ap_log_cloze", type:"cloze",
+        before:"An argument with", after:"moves from claim to evidence to conclusion without any gaps.",
+        a:"logic", opts:["logic","logo","lodge","logistics"],
+        explain:"Reasoning in the right order is <b>logic</b> (<i>logos</i> = word, reason). <i>Logistics</i> is organising supplies." },
+      { id:"ap_log_scn", type:"scenario",
+        q:"Which of the three persuasive appeals relies on claims and hard evidence?",
+        a:"Logic", opts:["Logic","Authority","Emotion","Repetition"],
+        explain:"Claims + evidence → conclusion is <b>logic</b>. Authority comes from expertise; emotion from emotive language." } ] },
+
+  { w:"Hyperbole", pos:"noun", domain:"camp", type:"morph",
+    meaning:"Deliberate exaggeration for effect: “I have told you a million times.”",
+    eg:"“This is the greatest crisis our nation has ever faced” is **hyperbole**.",
+    tiles:[["hyper-","over, beyond"],["bole","a throw (Greek ballein, to throw)"]],
+    decoys:[["hypo-","under"],["-ic","relating to"],["pole","a stake, an axis"]],
+    note:"Greek <i>hyperballein</i>, to <b>throw beyond</b> the mark. Same <i>bol/ball</i> in <b>symbol</b> (thrown together), <b>problem</b> (thrown forward) and <b>ballistic</b>. It is pronounced hy-PER-bo-lee, four syllables.",
+    apply:[
+      { id:"ap_hyp_cloze", type:"cloze",
+        before:"“Every single teenager on Earth is addicted” is", after:": the writer is exaggerating on purpose.",
+        a:"hyperbole", opts:["hyperbole","hyperbola","hypothesis","hyperactive"],
+        explain:"Throwing a claim beyond the truth for effect is <b>hyperbole</b>. A <i>hyperbola</i> is a curve in maths." },
+      { id:"ap_hyp_scn", type:"scenario",
+        q:"Which sentence uses hyperbole?",
+        a:"“Without this ban, childhood itself will be wiped out.”", opts:["“Without this ban, childhood itself will be wiped out.”","“Screen time rose by 12% last year.”","“Do we really want that?”","“Preheat the oven to 180 degrees.”"],
+        explain:"“Childhood itself will be wiped out” is thrown far beyond the evidence (<i>hyper-</i> beyond + <i>bole</i> throw)." } ] },
+
+  { w:"Conclusion", pos:"noun", domain:"camp", type:"morph",
+    meaning:"The closing section that ties the claims together, restates the contention and gives the audience a call to action.",
+    eg:"The **conclusion** tied all three claims together and told readers to write to their MP.",
+    tiles:[["con-","together, completely"],["clus","to close, to shut (Latin claudere)"],["-ion","the act of"]],
+    decoys:[["ex-","out"],["-ive","tending to"],["clud","to close (a different form)"]],
+    note:"Latin <i>concludere</i>, to <b>shut up together</b>: a conclusion closes all the threads at once. Same <i>clud/clus/clos</i> in <b>include</b>, <b>exclude</b>, <b>close</b> and <b>clause</b> (a closed-off unit of meaning).",
+    apply:[
+      { id:"ap_conc_cloze", type:"cloze",
+        before:"Three claims that lead to a", after:"make an argument.",
+        a:"conclusion", opts:["conclusion","collusion","inclusion","confusion"],
+        explain:"The closing that all the claims lead to is the <b>conclusion</b>. <i>Collusion</i> is a secret plot." },
+      { id:"ap_conc_scn", type:"scenario",
+        q:"“So the evidence is clear: ban the ads, protect the kids, and write to your MP today.” Which part of a persuasive text is this?",
+        a:"The conclusion, with its call to action", opts:["The conclusion, with its call to action","The hook","A body paragraph’s topic sentence","The overview"],
+        explain:"It closes the threads together (<i>con-</i> + <i>clus</i>) and tells the reader what to do." } ] },
+
+  { w:"Hook", pos:"noun", domain:"camp", type:"origin",
+    meaning:"The opening sentence written to grab the reader and pull them into the text: a shocking fact, a question, an anecdote.",
+    eg:"Write a sentence that will **hook** the reader into your piece.",
+    originQ:"<b>Hook</b> is an Old English word (<i>hōc</i>) for a curved piece of metal. Why is the first sentence of a persuasive text called a hook?",
+    originA:"It catches the reader and pulls them in, like a fish on a line",
+    originOpts:["It catches the reader and pulls them in, like a fish on a line","It hangs the rest of the text up neatly","It is bent, so it does not say what it means","It is the sharpest criticism in the text"],
+    note:"A hook is a fishing image: the reader bites and cannot get away. Good hooks are a startling statistic, a question, a short anecdote or a bold statement. Weak hooks announce themselves: “In this essay I will…”.",
+    apply:[
+      { id:"ap_hook_scn", type:"scenario",
+        q:"Which opening sentence is the best hook?",
+        a:"“Every 40 seconds, an Australian child receives a message from a stranger.”", opts:["“Every 40 seconds, an Australian child receives a message from a stranger.”","“In this essay I am going to talk about social media.”","“Social media is an app on your phone.”","“There are many opinions about this topic.”"],
+        explain:"A startling, specific fact catches the reader (<b>hook</b>). The others announce or state the obvious." },
+      { id:"ap_hook_cloze", type:"cloze",
+        before:"Open with a", after:"sentence, then give some context about the issue.",
+        a:"hook", opts:["hook","hoop","hood","hunch"],
+        explain:"The sentence that catches the reader is the <b>hook</b>." } ] },
+  ] },
+
+/* ================= 06 EVALUATIVE WRITING ================= */
+{ id:"06", topic:"Part 4 · Evaluative writing", title:"Evaluative writing",
+  focus:"Understand the ideas and structure of evaluative writing: facts and opinions, and what a review of a film, album or game actually contains.",
+  words:[
+  { w:"Evaluative", pos:"adjective", domain:"feeling", type:"morph",
+    meaning:"Describes writing that judges the value or quality of something. The most common evaluative text is a review.",
+    eg:"**Evaluative** writing contains opinions about how good or bad something is.",
+    tiles:[["e-","out"],["valu","worth, strength (Latin valere, to be strong)"],["-ative","having the quality of"]],
+    decoys:[["de-","down, away"],["-ity","the state of"],["vol","to wish, to will"]],
+    note:"Latin <i>valere</i>, to be strong, to be worth: to <b>evaluate</b> is to work out the worth of something. Same <i>val</i> in <b>value</b>, <b>valid</b>, <b>valiant</b> and <b>invalid</b> (not strong).",
+    apply:[
+      { id:"ap_eval_cloze", type:"cloze",
+        before:"A film review is an", after:"text: it judges the acting, the script and the effects.",
+        a:"evaluative", opts:["evaluative","elevated","evasive","evocative"],
+        explain:"Judging worth = <b>evaluative</b> (<i>valu</i> = worth). <i>Evocative</i> means bringing feelings to mind." },
+      { id:"ap_eval_scn", type:"scenario",
+        q:"Which of these is evaluative writing?",
+        a:"A review that says the album’s second half drags", opts:["A review that says the album’s second half drags","A recipe for lemon slice","A letter arguing for a later school start","A 99-word story about a lost dog"],
+        explain:"Judging quality is <b>evaluative</b>. The others are procedural, persuasive and narrative texts." } ] },
+
+  { w:"Fact", pos:"noun", domain:"feeling", type:"origin",
+    meaning:"An idea that can be observed, measured or proven, so it is the same for everyone: “Cigarettes cause lung cancer.”",
+    eg:"“Many innocent people are killed in war” is a **fact**; “war is always wrong” is an opinion.",
+    originQ:"<b>Fact</b> comes from Latin <i>factum</i>. What did <i>factum</i> mean?",
+    originA:"A thing done", originOpts:["A thing done","A thing believed","A thing said","A thing hoped for"],
+    note:"Latin <i>facere</i>, to make or do: a fact is a thing that has actually been <b>done</b> or happened. Same <i>fac/fact</i> in <b>factory</b>, <b>manufacture</b> and <b>identification</b> (to make the same). A fact can be checked; an opinion cannot.",
+    apply:[
+      { id:"ap_fact_scn", type:"scenario",
+        q:"Which of these is a fact rather than an opinion?",
+        a:"“The film runs for 128 minutes.”", opts:["“The film runs for 128 minutes.”","“The film is far too long.”","“Wild animals should not be kept in zoos.”","“The best sandwich is a toastie.”"],
+        explain:"A running time can be measured: a <b>fact</b>. “Too long”, “should not” and “best” are judgements." },
+      { id:"ap_fact_cloze", type:"cloze",
+        before:"A", after:"is objective: it can be observed, measured or proven.",
+        a:"fact", opts:["fact","fad","feat","factor"],
+        explain:"A thing that has actually happened and can be checked is a <b>fact</b>. A <i>feat</i> is an achievement." } ] },
+
+  { w:"Opinion", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"A belief or judgement that cannot easily be proven: it depends on the person holding it.",
+    eg:"“Teachers should be allowed to smack children” is an **opinion**, and a bad one.",
+    tiles:[["opin","to think, to suppose (Latin opinari)"],["-ion","the act or result of"]],
+    decoys:[["-ive","tending to"],["op-","against"],["-ate","to make"]],
+    note:"Latin <i>opinari</i>, to think or <b>suppose</b>. An opinion is what someone supposes to be true. A review is built from opinions, but the strong ones are backed by facts about the thing being reviewed.",
+    apply:[
+      { id:"ap_opin_cloze", type:"cloze",
+        before:"“The soundtrack is the best of the decade” is an", after:", not a fact.",
+        a:"opinion", opts:["opinion","option","omission","opening"],
+        explain:"A judgement that cannot be proven is an <b>opinion</b> (<i>opin</i> = suppose). An <i>option</i> is a choice." },
+      { id:"ap_opin_scn", type:"scenario",
+        q:"Why do people read reviews if they are only opinions?",
+        a:"Because a well-argued opinion, backed by facts, helps you decide whether the thing is worth your time", opts:["Because a well-argued opinion, backed by facts, helps you decide whether the thing is worth your time","Because opinions can always be proven","Because reviews contain no facts at all","Because reviews are procedural texts"],
+        explain:"Opinions are subjective, but a reviewer explains theirs with evidence from the thing itself." } ] },
+
+  { w:"Objective", pos:"adjective", domain:"feeling", type:"morph",
+    meaning:"Based on facts, not feelings; the same no matter who is looking. Facts are objective.",
+    eg:"The descriptive part of a review is **objective**: it tells you what happens without judging it.",
+    tiles:[["ob-","against, in front of"],["ject","to throw (Latin jacere)"],["-ive","tending to"]],
+    decoys:[["sub-","under"],["-ion","the act of"],["junct","to join"]],
+    note:"Latin <i>objectum</i>, a thing <b>thrown in front of</b> you: an object is out there for anyone to see, so objective means true for everyone. Same <i>ject</i> in <b>project</b>, <b>reject</b>, <b>inject</b> and <b>eject</b>. Its partner, <b>subjective</b>, is the decoy prefix.",
+    apply:[
+      { id:"ap_obj_cloze", type:"cloze",
+        before:"The plot summary should be", after:": describe what happens, and save the judging for later.",
+        a:"objective", opts:["objective","subjective","objectionable","obedient"],
+        explain:"Facts anyone can see are <b>objective</b> (<i>ob-</i> in front + <i>ject</i> throw). <i>Subjective</i> is the opposite." },
+      { id:"ap_obj_scn", type:"scenario",
+        q:"“The game has 40 levels and was released in March.” What kind of statement is this?",
+        a:"Objective: measurable facts, the same for everyone", opts:["Objective: measurable facts, the same for everyone","Subjective: a personal judgement","Persuasive: a call to action","Emotive: chosen to stir feelings"],
+        explain:"Counts and dates can be checked by anyone: <b>objective</b>." } ] },
+
+  { w:"Subjective", pos:"adjective", domain:"feeling", type:"morph",
+    meaning:"Based on personal feelings, tastes and opinions; it changes from person to person. Opinions are subjective.",
+    eg:"Whether the ending is satisfying is **subjective**: it depends on the viewer.",
+    tiles:[["sub-","under"],["ject","to throw (Latin jacere)"],["-ive","tending to"]],
+    decoys:[["ob-","against, in front of"],["-ion","the act of"],["tract","to pull"]],
+    note:"Latin <i>subjectum</i>, thrown <b>under</b>: the subject is the person underneath the experience, so subjective means “as it seems to that person”. Same <i>ject</i> as <b>objective</b>, with the opposite prefix.",
+    apply:[
+      { id:"ap_subj_cloze", type:"cloze",
+        before:"Star ratings are", after:": two honest reviewers can give the same film two and four stars.",
+        a:"subjective", opts:["subjective","objective","subjunctive","submissive"],
+        explain:"Depends on the person = <b>subjective</b> (<i>sub-</i> under: the person underneath the judgement)." },
+      { id:"ap_subj_scn", type:"scenario",
+        q:"“The lead actor is wooden and unconvincing.” What kind of statement is this?",
+        a:"Subjective: a judgement that depends on the reviewer", opts:["Subjective: a judgement that depends on the reviewer","Objective: a measurable fact","Procedural: an instruction","Declarative and therefore a fact"],
+        explain:"Another viewer might find the acting restrained and powerful: <b>subjective</b>. Declarative describes the sentence shape, not its truth." } ] },
+
+  { w:"Medium", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"The form a text or artwork takes: film, music, a game, a book, a TV show. The plural is media.",
+    eg:"What **medium** is being reviewed: a film, an album or a game?",
+    tiles:[["medi","middle (Latin medius)"],["-um","Latin noun ending: a thing"]],
+    decoys:[["-a","Latin plural ending (media = more than one medium)"],["-al","relating to"],["mega-","large"]],
+    note:"Latin <i>medius</i>, <b>middle</b>: a medium sits in the middle between the creator and the audience, carrying the work across. Same <i>medi</i> in <b>medieval</b> (the middle ages), <b>mediate</b> and <b>intermediate</b>. One medium, many media.",
+    apply:[
+      { id:"ap_med_cloze", type:"cloze",
+        before:"A music review evaluates a different", after:"from a film review, so it judges different elements: production, songwriting, performance.",
+        a:"medium", opts:["medium","median","medal","medley"],
+        explain:"The form the work takes is its <b>medium</b> (<i>medi</i> = middle, carrying the work across). A <i>median</i> is a middle value in maths." },
+      { id:"ap_med_scn", type:"scenario",
+        q:"A reviewer covers film, television, games and graphic novels. How many media is that?",
+        a:"Four media (one medium, many media)", opts:["Four media (one medium, many media)","Four mediums","Four medians","One medium with four parts"],
+        explain:"<i>Medium</i> is a Latin noun; its plural keeps the Latin ending: <b>media</b>." } ] },
+
+  { w:"Review", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"A text that describes and evaluates a film, album, game, book, show or restaurant, and usually ends with a recommendation.",
+    eg:"Read a film **review**, then a music **review**, and compare what each one judges.",
+    tiles:[["re-","again, back"],["view","a look, a sight"]],
+    decoys:[["pre-","before"],["-er","one who"],["over-","above"]],
+    note:"<i>re-</i> (again, back) + <b>view</b>: a look back over something you have watched, played or read. Compare <b>preview</b> (a look before) and <b>overview</b> (a look from above) from Lesson 03. The same three prefixes change the word completely.",
+    apply:[
+      { id:"ap_rev_cloze", type:"cloze",
+        before:"The most common kind of evaluative writing is a", after:".",
+        a:"review", opts:["review","preview","overview","interview"],
+        explain:"A look back that judges = <b>review</b>. A <i>preview</i> comes before; an <i>overview</i> is a summary from above." },
+      { id:"ap_rev_scn", type:"scenario",
+        q:"Which of these does a review NOT have to include?",
+        a:"A star rating or percentage", opts:["A star rating or percentage","A description of what the thing is","An evaluation of its elements","A recommendation or final statement"],
+        explain:"Film reviews often give stars; music reviews usually do not. The ideas in the writing are enough." } ] },
+  ] },
+
+/* ================= 07 WRITING AN EVALUATIVE TEXT ================= */
+{ id:"07", topic:"Part 4 · Evaluative writing", title:"Writing an evaluative text",
+  focus:"Plan and write your own review: an introduction with a hook, a descriptive element, an evaluative element and a conclusion with a recommendation.",
+  words:[
+  { w:"Introduction", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"The opening of a review: a hook, details about the thing being reviewed, first impressions and some background.",
+    eg:"The **introduction** names the film, the director and the year before giving a first impression.",
+    tiles:[["intro-","inward, within"],["duct","to lead (Latin ducere)"],["-ion","the act of"]],
+    decoys:[["extra-","outside, beyond"],["-ive","tending to"],["dict","to say"]],
+    note:"Latin <i>introducere</i>, to <b>lead inside</b>: the introduction leads the reader into the text. Same <i>duc/duct</i> in <b>conduct</b>, <b>product</b>, <b>educate</b> (lead out) and <b>aqueduct</b> (lead water).",
+    apply:[
+      { id:"ap_intro_cloze", type:"cloze",
+        before:"The", after:"gives details about the album and the reviewer’s first impressions.",
+        a:"introduction", opts:["introduction","instruction","induction","introspection"],
+        explain:"The section that leads the reader in is the <b>introduction</b> (<i>duct</i> = lead). An <i>induction</i> leads someone into a job." },
+      { id:"ap_intro_scn", type:"scenario",
+        q:"“Directed by Greta Gerwig and released in 2023, the film had me laughing within a minute.” Which part of a review is this?",
+        a:"The introduction: details plus a first impression", opts:["The introduction: details plus a first impression","The descriptive element","The evaluative element","The conclusion"],
+        explain:"Naming the creators and giving a first impression leads the reader in: the <b>introduction</b>." } ] },
+
+  { w:"Descriptive", pos:"adjective", domain:"feeling", type:"morph",
+    meaning:"Describes the part of a review that tells you what the thing contains, its story, characters or main ideas, without judging it.",
+    eg:"The **descriptive** element is delivered objectively, without judgement.",
+    tiles:[["de-","down, thoroughly"],["script","to write (Latin scribere)"],["-ive","tending to"]],
+    decoys:[["pre-","before"],["-ion","the act of"],["scrib","to write (a different form)"]],
+    note:"Latin <i>describere</i>, to <b>write down</b> fully. Same <i>scrib/script</i> in <b>manuscript</b> (written by hand), <b>scribble</b>, <b>prescription</b> and <b>subscribe</b> (write your name under).",
+    apply:[
+      { id:"ap_desc_cloze", type:"cloze",
+        before:"The", after:"element of a game review explains the setting, the goal and the main characters.",
+        a:"descriptive", opts:["descriptive","prescriptive","deceptive","destructive"],
+        explain:"Writing down what the thing contains is <b>descriptive</b> (<i>script</i> = write). <i>Prescriptive</i> tells you what to do." },
+      { id:"ap_desc_scn", type:"scenario",
+        q:"“The story follows two brothers who inherit a failing bakery in Bendigo.” Is this descriptive or evaluative?",
+        a:"Descriptive: it reports the content without judging it", opts:["Descriptive: it reports the content without judging it","Evaluative: it judges the quality","Persuasive: it argues for a contention","Procedural: it gives a step"],
+        explain:"No judgement, just what happens: the <b>descriptive</b> element." } ] },
+
+  { w:"Recommendation", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"The reviewer’s advice at the end: whether to watch, read, play or buy it, and who it suits.",
+    eg:"Finish with a summary and a **recommendation** or suggestion.",
+    tiles:[["re-","again"],["com-","together, with"],["mend","to entrust, to hand over (Latin mandare)"],["-ation","the act of"]],
+    decoys:[["de-","down, away"],["-ment","the result of"],["mand","to order (a different form)"]],
+    note:"Latin <i>commendare</i>, to <b>entrust</b> something to someone: to recommend is to hand something over with your approval. Same <i>mand/mend</i> in <b>command</b>, <b>mandate</b> and <b>commend</b>. Spelling: one <i>c</i>, two <i>m</i>s.",
+    apply:[
+      { id:"ap_rec_cloze", type:"cloze",
+        before:"The review ends with a clear", after:": “Worth seeing on the big screen, but skip the 3D.”",
+        a:"recommendation", opts:["recommendation","recompense","commendation","recollection"],
+        explain:"Advice on whether to see it is a <b>recommendation</b>. A <i>commendation</i> is praise; a <i>recollection</i> is a memory." },
+      { id:"ap_rec_scn", type:"scenario",
+        q:"Which sentence is a recommendation?",
+        a:"“If you loved the first game, buy this one; newcomers should start with the original.”", opts:["“If you loved the first game, buy this one; newcomers should start with the original.”","“The game was released in June.”","“The graphics are sharper than before.”","“The plot follows a lost robot.”"],
+        explain:"Telling the reader who should get it and who should not is the <b>recommendation</b>." } ] },
+
+  { w:"Cinematography", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"The art of the camera in a film: framing, lighting, movement and colour. One of the elements a film review evaluates.",
+    eg:"The **cinematography** was stunning: every shot looked like a painting.",
+    tiles:[["cinemat","movement, moving pictures (Greek kinēma)"],["-o-","joiner"],["graph","to write, draw, record (Greek graphein)"],["-y","the art or practice of"]],
+    decoys:[["photo","light"],["-ology","the study of"],["tele-","far"]],
+    note:"Greek <i>kinēma</i> (movement) + <i>graphein</i> (to write): cinematography is <b>writing with moving pictures</b>. Same <i>graph</i> in <b>photograph</b> (writing with light), <b>autograph</b> and <b>paragraph</b>. The <i>-o-</i> is a joiner that Greek compounds use to glue the parts together.",
+    apply:[
+      { id:"ap_cine_cloze", type:"cloze",
+        before:"A film review might evaluate acting,", after:", sound, special effects, editing and screenwriting.",
+        a:"cinematography", opts:["cinematography","choreography","cinematology","photography"],
+        explain:"Camera work in a film is <b>cinematography</b>. <i>Choreography</i> is dance; <i>photography</i> is still pictures." },
+      { id:"ap_cine_scn", type:"scenario",
+        q:"“The camera lingers on the empty road at dawn, all blue shadows and long light.” Which element is the reviewer evaluating?",
+        a:"Cinematography", opts:["Cinematography","Screenwriting","Acting","Sound"],
+        explain:"Framing, light and colour are the camera’s work: <b>cinematography</b> (moving-picture writing)." } ] },
+
+  { w:"Atmosphere", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"The mood or feeling of a place or a work: what a restaurant review means by “a warm, buzzing room”.",
+    eg:"A restaurant review evaluates service, **atmosphere** and décor, as well as the dishes.",
+    tiles:[["atmo","vapour, air (Greek atmos)"],["sphere","a ball, a globe (Greek sphaira)"]],
+    decoys:[["hemi-","half"],["-ic","relating to"],["astro","star"]],
+    note:"Greek <i>atmos</i> (vapour) + <i>sphaira</i> (ball): the <b>ball of air</b> around the Earth. In a review it is the “air” of a place or a work: its mood. Same <i>sphere</i> in <b>hemisphere</b> and <b>spherical</b>; the decoy <i>astro</i> builds <b>astronaut</b>.",
+    apply:[
+      { id:"ap_atm_cloze", type:"cloze",
+        before:"The food was fine, but the", after:"was cold: harsh lights, silence and staff who never smiled.",
+        a:"atmosphere", opts:["atmosphere","hemisphere","stratosphere","atmospheric"],
+        explain:"The mood of the room is its <b>atmosphere</b>. A <i>hemisphere</i> is half a globe." },
+      { id:"ap_atm_scn", type:"scenario",
+        q:"“Dim lamps, low music and a low hum of conversation made the whole room feel like a secret.” What is the reviewer describing?",
+        a:"The atmosphere", opts:["The atmosphere","The décor only","The service","The ingredients"],
+        explain:"The overall feeling of the place is its <b>atmosphere</b>: the “air” of the room." } ] },
+
+  { w:"Consistency", pos:"noun", domain:"feeling", type:"morph",
+    meaning:"Staying the same in quality all the way through: an album is consistent if there are no weak tracks.",
+    eg:"A music review might judge the overall tone and **consistency** of the album.",
+    tiles:[["con-","together"],["sist","to stand (Latin sistere)"],["-ency","the state or quality of"]],
+    decoys:[["re-","again, back"],["-ive","tending to"],["cist","a box"]],
+    note:"Latin <i>consistere</i>, to <b>stand together</b>, to hold firm. Same <i>sist</i> in <b>resist</b> (stand against), <b>insist</b>, <b>persist</b> and <b>assist</b>. A consistent album stands together as one thing.",
+    apply:[
+      { id:"ap_cons_cloze", type:"cloze",
+        before:"The album lacks", after:": three brilliant songs, then filler.",
+        a:"consistency", opts:["consistency","insistence","resistance","constancy"],
+        explain:"Standing together in quality throughout is <b>consistency</b> (<i>sist</i> = stand). <i>Resistance</i> is standing against." },
+      { id:"ap_cons_scn", type:"scenario",
+        q:"A reviewer praises a TV series because every episode is as strong as the first. Which quality are they praising?",
+        a:"Consistency", opts:["Consistency","Cinematography","Atmosphere","Originality"],
+        explain:"Same quality all the way through = <b>consistency</b>." } ] },
+  ] },
+
+/* ================= 08 MICRO-FICTION ================= */
+{ id:"08", topic:"Part 5 · Micro-fiction", title:"Micro-fiction",
+  focus:"Convey a whole story in as few words as possible: a character and a problem, in exactly 99 words.",
+  words:[
+  { w:"Micro-fiction", pos:"noun", domain:"story", type:"morph",
+    meaning:"An invented story that is very short: from a few sentences to a few pages. Even shorter than a short story.",
+    eg:"“For sale: baby shoes, never worn.” is **micro-fiction** in six words.",
+    tiles:[["micro-","small (Greek mikros)"],["fict","to shape, to make up (Latin fingere)"],["-ion","the act or result of"]],
+    decoys:[["macro-","large"],["-ive","tending to"],["fac","to make, to do"]],
+    note:"<i>micro-</i> (small) + <b>fiction</b>: fiction is a story <b>shaped</b> by the writer, from Latin <i>fingere</i>, to shape or invent. Same <i>fict/fig</i> in <b>figure</b>, <b>figment</b> and <b>effigy</b>. Same <i>micro-</i> in <b>microscope</b> and <b>microphone</b>; its opposite <i>macro-</i> is the decoy.",
+    apply:[
+      { id:"ap_micro_cloze", type:"cloze",
+        before:"A 99-word story is", after:": an invented narrative, kept tiny.",
+        a:"micro-fiction", opts:["micro-fiction","micro-friction","macro-fiction","non-fiction"],
+        explain:"Small (<i>micro-</i>) + made-up story (<i>fiction</i>). <i>Non-fiction</i> is true; <i>macro-</i> would mean large." },
+      { id:"ap_micro_scn", type:"scenario",
+        q:"What does the prefix micro- add to fiction?",
+        a:"Small: a story much shorter than a short story", opts:["Small: a story much shorter than a short story","True: a story that really happened","Ancient: a story from long ago","Spoken: a story told aloud"],
+        explain:"<i>mikros</i> = small. Micro-fiction is small fiction." } ] },
+
+  { w:"Narrative", pos:"noun", domain:"story", type:"morph",
+    meaning:"A story: a series of connected events told by a narrator. Fiction is an invented narrative.",
+    eg:"You already know what fiction is: an invented **narrative**.",
+    tiles:[["narr","to tell, to relate (Latin narrare)"],["-ative","having the quality of"]],
+    decoys:[["-ity","the state of"],["nat","born"],["-ator","one who"]],
+    note:"Latin <i>narrare</i>, to <b>tell</b>: a narrative is a told thing, and the <b>narrator</b> is the one telling it. The decoy <i>-ator</i> would build narrator instead. Spelling: two <i>r</i>s.",
+    apply:[
+      { id:"ap_narr_cloze", type:"cloze",
+        before:"Even a six-word", after:"has a character and a problem.",
+        a:"narrative", opts:["narrative","narrator","normative","native"],
+        explain:"The told story is the <b>narrative</b>; the <i>narrator</i> is the one telling it." },
+      { id:"ap_narr_scn", type:"scenario",
+        q:"Which of these is a narrative?",
+        a:"A story about a girl who finds a key that opens nothing", opts:["A story about a girl who finds a key that opens nothing","A recipe for scones","A review of a new album","A letter arguing for more bike lanes"],
+        explain:"A series of connected events told by a narrator: a <b>narrative</b>. The others are procedural, evaluative and persuasive." } ] },
+
+  { w:"Character", pos:"noun", domain:"story", type:"origin",
+    meaning:"A person or creature in a story. In micro-fiction the character does not need a name or a description.",
+    eg:"The most basic story must have a **character** and a problem.",
+    originQ:"<b>Character</b> comes from Greek <i>kharaktēr</i>, “an engraved mark or stamp”. Why does that fit a person in a story?",
+    originA:"A character is stamped with distinct marks that make them who they are",
+    originOpts:["A character is stamped with distinct marks that make them who they are","A character is always carved from stone","A character is a letter of the alphabet","A character is a mark for good behaviour"],
+    note:"The Greek word was a tool for stamping coins, then the mark it made, then the distinctive marks of a person. That is why <i>character</i> also means the letters on a keyboard and a person’s moral qualities. In Hemingway’s six words the character is a parent; that is all we need.",
+    apply:[
+      { id:"ap_char_scn", type:"scenario",
+        q:"“For sale: baby shoes, never worn.” Who is the character?",
+        a:"A parent, though they are never named or described", opts:["A parent, though they are never named or described","The shoes","The buyer","There is no character, so it is not a story"],
+        explain:"Someone is selling shoes their baby never wore. The reader supplies the rest: that is the <b>character</b>." },
+      { id:"ap_char_cloze", type:"cloze",
+        before:"In micro-fiction, the", after:"does not have to have a name.",
+        a:"character", opts:["character","caricature","characteristic","charter"],
+        explain:"The person in the story is the <b>character</b>. A <i>caricature</i> is an exaggerated drawing." } ] },
+
+  { w:"Resolution", pos:"noun", domain:"story", type:"morph",
+    meaning:"The part of a story where the problem is settled or untied. Micro-fiction often leaves it out and lets the reader imagine it.",
+    eg:"The problem does not need to be explained in detail and does not need a **resolution**.",
+    tiles:[["re-","again, back"],["solut","to loosen, to untie (Latin solvere)"],["-ion","the act of"]],
+    decoys:[["dis-","apart"],["-ive","tending to"],["volut","to roll"]],
+    note:"Latin <i>resolvere</i>, to <b>loosen back</b>, to untie a knot. Same <i>solv/solut</i> in <b>solve</b>, <b>dissolve</b> and <b>solution</b>. A story’s problem is a knot; the resolution unties it. The decoy <i>volut</i> would build <b>revolution</b>.",
+    apply:[
+      { id:"ap_res_cloze", type:"cloze",
+        before:"Hemingway’s story has a character and a problem, but no", after:": we never learn what happens next.",
+        a:"resolution", opts:["resolution","revolution","resignation","restitution"],
+        explain:"The untying of the problem is the <b>resolution</b> (<i>solut</i> = loosen). A <i>revolution</i> is a turning over." },
+      { id:"ap_res_scn", type:"scenario",
+        q:"A 99-word story ends with the lost dog scratching at the back door. What has the writer given the reader?",
+        a:"A resolution: the problem is settled", opts:["A resolution: the problem is settled","A hook: the story is just starting","A contention: the story argues a point","A recommendation: the story gives advice"],
+        explain:"The knot (a lost dog) is untied: a <b>resolution</b>." } ] },
+
+  { w:"Refine", pos:"verb", domain:"story", type:"morph",
+    meaning:"To improve something by making small, careful changes until it is as good as it can be. Cut 150 words down to 99.",
+    eg:"Don’t settle for “good enough”: how much can you **refine** it?",
+    tiles:[["re-","again"],["fine","finished, pure, of high quality (Latin finis, an end)"]],
+    decoys:[["de-","down, away"],["-ment","the result of"],["fin","a fish’s fin"]],
+    note:"<i>re-</i> (again) + <i>fine</i>, from Latin <i>finis</i>, an <b>end</b>: something fine has been brought to its finish, and to refine is to finish it again and again. Same <i>fin</i> in <b>finish</b>, <b>final</b> and <b>define</b>. Sugar and oil are refined too: the impurities are taken out.",
+    apply:[
+      { id:"ap_ref_cloze", type:"cloze",
+        before:"Aim for about 150 words, then", after:"the story down to exactly 99.",
+        a:"refine", opts:["refine","redefine","confine","refund"],
+        explain:"Improving by careful cutting and polishing = <b>refine</b>. <i>Confine</i> means to shut in." },
+      { id:"ap_ref_scn", type:"scenario",
+        q:"A student swaps “very big” for “vast”, deletes two adjectives and moves the last sentence to the front. What are they doing?",
+        a:"Refining the story", opts:["Refining the story","Planning the story","Brainstorming ideas","Proofreading for conventions"],
+        explain:"Small careful changes to make it as good as possible: <b>refining</b>. Proofreading only hunts errors." } ] },
+
+  { w:"Convey", pos:"verb", domain:"story", type:"morph",
+    meaning:"To carry an idea or feeling across to the reader, so they get it without being told.",
+    eg:"Learning intention: to **convey** ideas using as few words as possible.",
+    tiles:[["con-","together, with"],["vey","a way, a road (Latin via)"]],
+    decoys:[["sur-","over"],["-ance","the state of"],["vict","to conquer"]],
+    note:"Latin <i>conviare</i>, to travel <b>along the way with</b>: a conveyor belt carries things along a way, and a writer conveys ideas along the page to the reader. Same <i>vey/via/voy</i> in <b>voyage</b>, <b>convoy</b> and <b>via</b> (by way of).",
+    apply:[
+      { id:"ap_conv_cloze", type:"cloze",
+        before:"“Never worn” manages to", after:"a whole tragedy in two words.",
+        a:"convey", opts:["convey","convoy","convert","survey"],
+        explain:"Carrying an idea across to the reader = <b>convey</b> (<i>vey</i> = way). A <i>convoy</i> is a group travelling together." },
+      { id:"ap_conv_scn", type:"scenario",
+        q:"Instead of writing “she was sad”, the writer says “she set two plates, then put one away.” What has the writer done?",
+        a:"Conveyed the feeling without naming it", opts:["Conveyed the feeling without naming it","Proofread the sentence","Resolved the problem","Added a rhetorical question"],
+        explain:"The feeling travels to the reader by another road: it is <b>conveyed</b>, not stated." } ] },
+  ] },
+];
+
+/* ---------------- KEY-WORD TRANSLATIONS ----------------
+   The languages of the unit's EAL vocabulary sheets. Shown on study cards,
+   build reveals and the word list when a language is chosen; the tasks
+   stay in English. Like the EAL sheets, these were machine-assisted and
+   should be checked by a speaker before students rely on them. */
+const LANGS = [
+  ["zh","中文（简体）· Mandarin"],
+  ["yue","中文（繁體）· Cantonese"],
+  ["vi","Tiếng Việt · Vietnamese"],
+  ["ar","العربية · Arabic"],
+  ["fa","فارسی · Farsi"],
+];
+const RTL = { ar:1, fa:1 };
+const TR = {
+"Trait":{zh:"特质",yue:"特質",vi:"đặc điểm",ar:"سمة",fa:"ویژگی"},
+"Organisation":{zh:"组织（条理）",yue:"組織（條理）",vi:"cách tổ chức (bố cục)",ar:"التنظيم",fa:"سازمان‌دهی"},
+"Voice":{zh:"声音（作者风格）",yue:"聲音（作者風格）",vi:"giọng văn",ar:"صوت الكاتب",fa:"صدای نویسنده"},
+"Register":{zh:"语域（正式程度）",yue:"語域（正式程度）",vi:"ngữ vực (mức độ trang trọng)",ar:"مستوى اللغة (السجل اللغوي)",fa:"سطح زبان (رسمی یا غیررسمی)"},
+"Fluency":{zh:"流畅性",yue:"流暢性",vi:"sự trôi chảy",ar:"الطلاقة",fa:"روانی"},
+"Conventions":{zh:"书写规范",yue:"書寫規範",vi:"quy ước (chính tả, dấu câu)",ar:"قواعد الكتابة",fa:"قواعد نگارش"},
+"Procedural":{zh:"程序性的（说明步骤的）",yue:"程序性的（說明步驟的）",vi:"(văn bản) hướng dẫn quy trình",ar:"إجرائي",fa:"روندی (دستورالعملی)"},
+"Declarative":{zh:"陈述句的",yue:"陳述句的",vi:"(câu) trần thuật",ar:"خبري (جملة خبرية)",fa:"خبری (جملهٔ خبری)"},
+"Imperative":{zh:"祈使句的",yue:"祈使句的",vi:"(câu) mệnh lệnh",ar:"أمري (جملة أمر)",fa:"امری (جملهٔ امری)"},
+"Interrogative":{zh:"疑问句的",yue:"疑問句的",vi:"(câu) nghi vấn",ar:"استفهامي (جملة استفهامية)",fa:"پرسشی (جملهٔ پرسشی)"},
+"Exclamative":{zh:"感叹句的",yue:"感嘆句的",vi:"(câu) cảm thán",ar:"تعجبي (جملة تعجبية)",fa:"تعجبی (جملهٔ تعجبی)"},
+"Conjunction":{zh:"连词",yue:"連詞",vi:"liên từ",ar:"أداة ربط (حرف عطف)",fa:"حرف ربط"},
+"Overview":{zh:"概述",yue:"概述",vi:"tổng quan",ar:"نظرة عامة",fa:"مرور کلی"},
+"Subheading":{zh:"小标题",yue:"小標題",vi:"tiêu đề phụ",ar:"عنوان فرعي",fa:"عنوان فرعی"},
+"Proofread":{zh:"校对",yue:"校對",vi:"đọc soát lỗi",ar:"يدقّق (تدقيق لغوي)",fa:"نمونه‌خوانی (غلط‌گیری)"},
+"Precise":{zh:"精确的",yue:"精確的",vi:"chính xác",ar:"دقيق",fa:"دقیق"},
+"Fragment":{zh:"句子片段（不完整句）",yue:"句子片段（不完整句）",vi:"mảnh câu (câu không hoàn chỉnh)",ar:"جزء من جملة (جملة ناقصة)",fa:"پاره‌جمله (جملهٔ ناقص)"},
+"Substitution":{zh:"替代",yue:"替代",vi:"sự thay thế",ar:"استبدال",fa:"جایگزینی"},
+"Persuasive":{zh:"有说服力的",yue:"有說服力的",vi:"thuyết phục",ar:"إقناعي",fa:"اقناعی (متقاعدکننده)"},
+"Contention":{zh:"主要论点",yue:"主要論點",vi:"luận điểm chính",ar:"الفكرة الرئيسية (الادعاء المحوري)",fa:"ادعای اصلی"},
+"Claim":{zh:"主张（论点）",yue:"主張（論點）",vi:"luận điểm (lời khẳng định)",ar:"ادعاء",fa:"ادعا"},
+"Evidence":{zh:"证据",yue:"證據",vi:"bằng chứng",ar:"دليل",fa:"شواهد"},
+"Rhetorical":{zh:"修辞的（设问的）",yue:"修辭的（設問的）",vi:"tu từ (câu hỏi tu từ)",ar:"بلاغي (سؤال بلاغي)",fa:"بلاغی (پرسش بلاغی)"},
+"Emotive":{zh:"煽情的（激发情感的）",yue:"煽情的（激發情感的）",vi:"gợi cảm xúc",ar:"عاطفي (لغة مؤثرة)",fa:"احساس‌برانگیز"},
+"Anecdote":{zh:"轶事（个人小故事）",yue:"軼事（個人小故事）",vi:"giai thoại (câu chuyện ngắn cá nhân)",ar:"حكاية قصيرة (قصة شخصية)",fa:"حکایت (داستان کوتاه شخصی)"},
+"Audience":{zh:"读者（受众）",yue:"讀者（受眾）",vi:"độc giả (khán giả)",ar:"الجمهور (القرّاء)",fa:"مخاطب"},
+"Authority":{zh:"权威性",yue:"權威性",vi:"uy tín (thẩm quyền)",ar:"المصداقية (السلطة)",fa:"اعتبار (اقتدار)"},
+"Logic":{zh:"逻辑",yue:"邏輯",vi:"lô-gích (lập luận)",ar:"المنطق",fa:"منطق"},
+"Hyperbole":{zh:"夸张",yue:"誇張",vi:"phóng đại (ngoa dụ)",ar:"مبالغة",fa:"اغراق"},
+"Conclusion":{zh:"结论",yue:"結論",vi:"kết luận",ar:"الخاتمة",fa:"نتیجه‌گیری"},
+"Hook":{zh:"开头钩子（吸引读者的开头句）",yue:"開頭鉤子（吸引讀者的開頭句）",vi:"câu mở đầu thu hút",ar:"جملة افتتاحية جاذبة",fa:"قلاب (جملهٔ آغازین جذاب)"},
+"Evaluative":{zh:"评价性的",yue:"評價性的",vi:"(văn bản) đánh giá",ar:"تقييمي",fa:"ارزیابانه"},
+"Fact":{zh:"事实",yue:"事實",vi:"sự thật (sự kiện có thật)",ar:"حقيقة",fa:"واقعیت"},
+"Opinion":{zh:"观点（意见）",yue:"觀點（意見）",vi:"ý kiến",ar:"رأي",fa:"نظر (عقیده)"},
+"Objective":{zh:"客观的",yue:"客觀的",vi:"khách quan",ar:"موضوعي",fa:"عینی (بی‌طرفانه)"},
+"Subjective":{zh:"主观的",yue:"主觀的",vi:"chủ quan",ar:"ذاتي",fa:"ذهنی (شخصی)"},
+"Medium":{zh:"媒介（形式）",yue:"媒介（形式）",vi:"phương tiện (loại hình)",ar:"الوسيط (نوع العمل)",fa:"رسانه (قالب اثر)"},
+"Review":{zh:"评论（影评、乐评）",yue:"評論（影評、樂評）",vi:"bài đánh giá (bài phê bình)",ar:"مراجعة نقدية",fa:"نقد و بررسی"},
+"Introduction":{zh:"引言（开头）",yue:"引言（開頭）",vi:"phần mở đầu",ar:"المقدمة",fa:"مقدمه"},
+"Descriptive":{zh:"描述性的",yue:"描述性的",vi:"mô tả",ar:"وصفي",fa:"توصیفی"},
+"Recommendation":{zh:"推荐（建议）",yue:"推薦（建議）",vi:"lời khuyên (khuyến nghị)",ar:"توصية",fa:"توصیه"},
+"Cinematography":{zh:"电影摄影",yue:"電影攝影",vi:"nghệ thuật quay phim",ar:"التصوير السينمائي",fa:"فیلم‌برداری"},
+"Atmosphere":{zh:"氛围",yue:"氛圍",vi:"bầu không khí",ar:"الأجواء",fa:"فضا (حال و هوا)"},
+"Consistency":{zh:"一致性",yue:"一致性",vi:"sự nhất quán",ar:"الاتساق",fa:"یکدستی (انسجام)"},
+"Micro-fiction":{zh:"微型小说",yue:"微型小說",vi:"truyện cực ngắn",ar:"قصة قصيرة جدًا",fa:"داستان خیلی کوتاه (میکروداستان)"},
+"Narrative":{zh:"叙事（故事）",yue:"敘事（故事）",vi:"câu chuyện (tự sự)",ar:"سرد (قصة)",fa:"روایت"},
+"Character":{zh:"人物（角色）",yue:"人物（角色）",vi:"nhân vật",ar:"شخصية",fa:"شخصیت"},
+"Resolution":{zh:"结局（问题的解决）",yue:"結局（問題的解決）",vi:"kết thúc (giải quyết vấn đề)",ar:"الحل (نهاية القصة)",fa:"گره‌گشایی (پایان داستان)"},
+"Refine":{zh:"润色（精炼）",yue:"潤色（精煉）",vi:"trau chuốt",ar:"يصقل (يحسّن)",fa:"پالایش کردن (بهبود دادن)"},
+"Convey":{zh:"传达",yue:"傳達",vi:"truyền đạt",ar:"ينقل (يوصل فكرة)",fa:"منتقل کردن"},
+};
+
+const SVGS = { SVG_EVAP, SVG_BEND, SVG_OXBOW, SVG_GROUND };
+const LESSON_BY_ID = {}; LESSONS.forEach(l=>LESSON_BY_ID[l.id]=l);
+const ALL_WORDS = []; const WORD_LESSON = {};
+LESSONS.forEach(l=>l.words.forEach(w=>{ ALL_WORDS.push(w); WORD_LESSON[w.w]=l.id; }));
+const ITEM_WORD = {}; // apply item id -> word object
+LESSONS.forEach(l=>l.words.forEach(w=>(w.apply||[]).forEach(it=>ITEM_WORD[it.id]=w)));
+const WORD_BY_NAME = {}; ALL_WORDS.forEach(w=>WORD_BY_NAME[w.w]=w);
+
+/* morpheme index: unique word-parts across every buildable word, typed + with examples */
+function classifyMorph(piece){
+  if(/^-.*-$/.test(piece)) return "connector";   // e.g. -o-
+  if(/^-/.test(piece)) return "suffix";
+  if(/-$/.test(piece)) return "prefix";
+  return "root";
+}
+const MCLASS={prefix:"mp",root:"mr",suffix:"ms",connector:"mc"};
+function morphCls(piece){ return MCLASS[classifyMorph(piece)]||"mr"; }
+/* Rebuild a headword with each morpheme's own letters coloured by its role —
+   the same colours used on the morph line and in the legend. */
+function colourWord(w){
+  if(!w.tiles || !w.tiles.length) return esc(w.w);
+  let out="", rest=w.w, lower=w.w.toLowerCase();
+  for(const t of w.tiles){
+    const piece=t[0].replace(/-/g,"");
+    if(!piece) continue;
+    const idx=lower.indexOf(piece.toLowerCase());
+    if(idx===-1) return esc(w.w);
+    out += esc(rest.slice(0,idx)) + `<span class="${morphCls(t[0])}">${esc(rest.slice(idx,idx+piece.length))}</span>`;
+    rest=rest.slice(idx+piece.length); lower=lower.slice(idx+piece.length);
+  }
+  return out+esc(rest);
+}
+function egHtml(t){ return esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>"); }
+function morphLine(w){
+  if(!w.tiles || !w.tiles.length) return "";
+  return w.tiles.map(t=>`<code class="${morphCls(t[0])}">${esc(t[0])}</code> <i>${esc(t[1])}</i>`).join(" + ");
+}
+const MLEGEND_ROW=`<div class="mlegend"><span><i style="background:var(--mpre)"></i><span style="color:var(--mpre)">prefix</span></span>`+
+  `<span><i style="background:var(--mroot)"></i><span style="color:var(--mroot)">root</span></span>`+
+  `<span><i style="background:var(--msuf)"></i><span style="color:var(--msuf)">suffix</span></span>`+
+  `</div>`;
+const MORPHS = [];                 // {piece, gloss, type, examples:[wordName]}
+const MORPH_BY_PIECE = {};
+LESSONS.forEach(l=>l.words.forEach(w=>(w.tiles||[]).forEach(([p,g])=>{
+  if(!MORPH_BY_PIECE[p]){ const m={piece:p, gloss:g, type:classifyMorph(p), examples:[]}; MORPH_BY_PIECE[p]=m; MORPHS.push(m); }
+  if(MORPH_BY_PIECE[p].examples.indexOf(w.w)<0) MORPH_BY_PIECE[p].examples.push(w.w);
+})));
+const ALL_GLOSSES = [...new Set(MORPHS.map(m=>m.gloss))];
+const MTYPE_LABEL = {prefix:"Prefixes", root:"Roots & base words", suffix:"Suffixes", connector:"Joiners"};
+const MTYPE_ORDER = ["prefix","root","suffix","connector"];
+
+/* ================= STATE ================= */
+/* storage shim: real localStorage as a standalone file / on GitHub Pages;
+   silent in-memory fallback if storage is blocked (e.g. a sandboxed preview). */
+const store = (function(){
+  try{ const k="__wvh_probe"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return localStorage; }
+  catch(e){ const m={}; return { getItem:k=>(k in m?m[k]:null), setItem:(k,v)=>{m[k]=String(v);}, removeItem:k=>{delete m[k];} }; }
+})();
+const KEY = "writingfolio.vocabhub.v1";
+/* Shared profile written by the front door (index.html) so a student signs in
+   once for the whole suite. Identity, chapter and language live there; scores
+   stay in this hub's own key. We adopt it on boot and write back on change. */
+const PKEY = "bonesparrow.profile.v1";
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){ try{
+  const p=readProfile()||{};
+  store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid,lang:S.lang,eal:S.lang?true:p.eal})));
+}catch(e){} }
+let S = load();
+function blankLesson(){ return { studied:false, buildDone:{}, buildFirst:{}, buildComplete:false,
+  applySample:[], applyFirst:{}, applyDone:false, huntFirst:{}, huntDone:false,
+  baseDone:false, baseFirst:{}, stretchDone:false, stretchFirst:{} }; }
+function blank(){ return { name:"", fname:"", lname:"", sid:"", lang:"", chapter:5, startedAt:null, lessons:{}, reviews:[], wstat:{} }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&s.lessons)?s:blank(); }catch(e){ return blank(); } }
+function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function L(id){ if(!S.lessons[id]) S.lessons[id]=blankLesson(); const st=S.lessons[id]; if(!st.huntFirst) st.huntFirst={}; return st; }
+function WS(w){ if(!S.wstat[w]) S.wstat[w]={wrong:0,seen:0,rev:0,right:0,streak:0,mastered:false}; return S.wstat[w]; }
+/* THE WORD LIST. Every encounter with a word — building it, using it, meeting
+   it again in a review — updates one running record that outlives the lesson.
+   Two correct encounters in a row and a word counts as mastered; a single miss
+   breaks the streak and puts it back in the queue. Unmastered words are then
+   weighted back into every later drill, so nothing is quietly dropped. */
+const MASTERY_STREAK = 2;
+function noteResult(word, correct){
+  const ws=WS(word);
+  ws.seen=(ws.seen||0)+1;
+  if(correct){
+    ws.right=(ws.right||0)+1;
+    ws.streak=(ws.streak||0)+1;
+    if(ws.streak>=MASTERY_STREAK) ws.mastered=true;
+  } else {
+    ws.wrong=(ws.wrong||0)+1;
+    ws.streak=0;
+    ws.mastered=false;
+  }
+  save();
+}
+function metWords(){
+  const out=[];
+  LESSONS.forEach(l=>{ const st=S.lessons[l.id]; if(!st||!st.studied) return; l.words.forEach(w=>out.push(w)); });
+  return out;
+}
+function unmasteredWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return ws && ws.seen && !ws.mastered; }); }
+function masteredWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return ws && ws.mastered; }); }
+function undrilledWords(){ return metWords().filter(w=>{ const ws=S.wstat[w.w]; return !ws || !ws.seen; }); }
+function wordState(w){
+  const ws=S.wstat[w];
+  if(!ws || !ws.seen) return {k:"new", label:"not met yet"};
+  if(ws.mastered) return {k:"ok", label:"mastered"};
+  return {k:"work", label: ws.wrong ? `needs work (missed ${ws.wrong}${ws.wrong===1?" time":" times"})` : "nearly there"};
+}
+function resetAll(){ if(confirm("Wipe all your progress, scores and review history?")){ S=blank(); save(); go("home"); } }
+function touchStart(){ if(!S.startedAt){ S.startedAt=Date.now(); save(); } }
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function esc(t){ const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+let cur = null; // current lesson id
+function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S.lname||"").trim() && sid.length>=4 && sid.length<=8; }
+(function adoptProfile(){
+  const p=readProfile(); if(!p) return;
+  S.fname=p.fname||S.fname; S.lname=p.lname||S.lname; S.sid=p.sid||S.sid;
+  S.name=(S.fname+" "+S.lname).trim()||S.name;
+  if(typeof p.chapter==="number") S.chapter=p.chapter;
+  if(p.eal===false) S.lang=""; else if(p.lang) S.lang=p.lang;
+  save();
+})();
+function go(id){
+  if(!idOk() && id!=="id") id="id";
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("scr-"+id).classList.add("active");
+  window.scrollTo(0,0);
+  updateNav(id);
+  if(id==="id") renderIdentity();
+  if(id==="home") renderHome();
+  if(id==="report") renderReport();
+  if(id==="morphtable") renderMorphTable();
+  if(id==="glossary") renderGlossary();
+}
+function updateNav(id){
+  const group={morphtable:"morphtable", glossary:"glossary", report:"report"}[id] || "home";
+  document.querySelectorAll(".topnav button").forEach(b=>b.classList.toggle("on", b.dataset.scr===group));
+}
+function goLesson(){ if(cur) openLesson(cur, false); else go("home"); }
+
+/* translations */
+function trSpan(w, big){
+  if(!S.lang || !TR[w]) return "";
+  const t = TR[w][S.lang]; if(!t) return "";
+  return `<span class="wtr${big?" big":""}" ${RTL[S.lang]?'dir="rtl"':""} lang="${esc(S.lang)}">${esc(t)}</span>`;
+}
+
+/* ================= SCORE HELPERS ================= */
+function buildCounts(l){
+  const st=L(l.id);
+  const done=l.words.filter(w=>st.buildDone[w.w]).length;
+  const clean=l.words.filter(w=>st.buildFirst[w.w]===true).length;
+  return {done, clean, total:l.words.length};
+}
+/* apply sample = descriptors: {k:"a",id} authored, or {k:"g",g:type,w:name} generated */
+function applyKey(d){ return d.k==="a" ? d.id : ("g:"+d.g+":"+d.w); }
+function applyItem(d){
+  if(d.k==="a"){ const w=ITEM_WORD[d.id]; return w.apply.find(x=>x.id===d.id); }
+  return genTask(d.g, WORD_BY_NAME[d.w]);
+}
+function applyWordName(d){ return d.k==="a" ? ITEM_WORD[d.id].w : d.w; }
+function applyCounts(l){
+  const st=L(l.id);
+  const ds=st.applySample||[];
+  const ans=ds.filter(d=>st.applyFirst[applyKey(d)]!==undefined).length;
+  const got=ds.filter(d=>st.applyFirst[applyKey(d)]===true).length;
+  return {ans, got, total:ds.length||l.words.length};
+}
+function lessonCleanRate(l){
+  const b=buildCounts(l), a=applyCounts(l);
+  const attempted=b.done+a.ans; if(!attempted) return null;
+  return (b.clean+a.got)/attempted;
+}
+function lessonDone(l){ const st=L(l.id); return st.buildComplete && st.applyDone && (!l.hunt || st.huntDone); }
+function tierCounts(items, firsts){
+  const ans=items.filter(it=>firsts[it.id]!==undefined).length;
+  const got=items.filter(it=>firsts[it.id]===true).length;
+  return {ans, got, total:items.length};
+}
+
+/* ================= HOME ================= */
+function renderHome(){
+  const wrap=document.getElementById("home-map"); wrap.innerHTML="";
+  /* language toggle */
+  const lrow=document.createElement("div");
+  lrow.className="langrow noprint";
+  let lopts=`<option value="">English only</option>`;
+  LANGS.forEach(([c,n])=>{ lopts+=`<option value="${c}"${S.lang===c?" selected":""}>${esc(n)}</option>`; });
+  lrow.innerHTML=`<label for="langsel">Key words in my language:</label> <select id="langsel">${lopts}</select>`;
+  wrap.appendChild(lrow);
+  lrow.querySelector("#langsel").onchange=(e)=>{ S.lang=e.target.value; save(); writeProfile(); };
+
+  let topic="";
+  let firstOpen=null;
+  LESSONS.forEach(l=>{
+    if(l.topic!==topic){ topic=l.topic;
+      const h=document.createElement("div"); h.className="topichead"; h.textContent=topic; wrap.appendChild(h);
+      const grid=document.createElement("div"); grid.className="lessons"; grid.dataset.grid="1"; wrap.appendChild(grid);
+    }
+    const grid=wrap.querySelectorAll(".lessons")[wrap.querySelectorAll(".lessons").length-1];
+    const st=L(l.id), b=buildCounts(l), a=applyCounts(l);
+    const chips=[];
+    if(lessonDone(l)) chips.push(`<span class="chip ok">DONE ✓</span>`);
+    else if(b.done||st.studied){ chips.push(`<span class="chip now">IN PROGRESS</span>`); if(firstOpen===null) firstOpen=l.id; }
+    if(st.studied) chips.push(`<span class="chip part">met</span>`);
+    if(b.done) chips.push(`<span class="chip ${st.buildComplete?"ok":"part"}">built ${st.buildComplete?`${b.clean}/${b.total} clean`:`${b.done}/${b.total}`}</span>`);
+    if(a.ans) chips.push(`<span class="chip ${st.applyDone?"ok":"part"}">used ${a.got}/${st.applyDone?a.total:a.ans}</span>`);
+    if(l.hunt){ const h=huntCounts(l); if(h.ans) chips.push(`<span class="chip ${st.huntDone?"ok":"part"}">hunt ${h.got}/${st.huntDone?h.total:h.ans}</span>`); }
+    if(st.baseDone) chips.push(`<span class="chip base">base camp ✓</span>`);
+    if(st.stretchDone) chips.push(`<span class="chip str">stretch ✓</span>`);
+    const card=document.createElement("button");
+    card.className="lcard"+(lessonDone(l)?" done":"");
+    card.innerHTML=`<span class="lnum">LESSON ${esc(l.id)} · ${l.words.length} WORDS${l.hunt?" + SENTENCE HUNT":""}</span>
+      <span class="lname">${esc(l.title)}</span>
+      <span class="lstat">${chips.join("")||`<span class="chip">not started</span>`}</span>`;
+    card.onclick=()=>openLesson(l.id, true);
+    grid.appendChild(card);
+  });
+  /* the word list at a glance */
+  const met=metWords(), unmastered=unmasteredWords(), mastered=masteredWords(), undrilled=undrilledWords();
+  const wl=document.getElementById("wordlist-line");
+  if(wl){
+    wl.innerHTML = met.length
+      ? `Your word list: <b>${met.length}</b> words · <b>${mastered.length}</b> mastered · <b>${unmastered.length}</b> to fix`
+        + (undrilled.length?` · <b>${undrilled.length}</b> not drilled yet.`:".")
+      : `Your word list starts as soon as you meet your first set of words.`;
+  }
+  const fixBtn=document.getElementById("fix-start");
+  if(fixBtn){
+    fixBtn.disabled = unmastered.length<1;
+    fixBtn.textContent = unmastered.length ? `Drill my ${unmastered.length} unmastered word${unmastered.length===1?"":"s"}` : "Nothing outstanding";
+  }
+  const fixDesc=document.getElementById("fix-desc");
+  if(fixDesc){
+    fixDesc.innerHTML = unmastered.length
+      ? `Words you have missed and not yet answered right twice running.`
+      : (met.length ? `Every word you've met is mastered — answered correctly twice running. New sets will add to the list.`
+                    : `Words land here once you've met them and missed one.`);
+  }
+  /* review availability */
+  const pool=reviewPool(latestLessonIdx());
+  const btn=document.getElementById("review-start");
+  btn.disabled = pool.length<4;
+  document.getElementById("review-desc").innerHTML = pool.length<4
+    ? "Available after your first lesson."
+    : `Extra practice — a shuffled set from the <b>${pool.length} words</b> you’ve met so far (this also runs automatically when you open a lesson). Everyone gets a different mix. Done ${S.reviews.length} review${S.reviews.length===1?"":"s"} so far.`;
+}
+
+/* ================= LESSON HOME ================= */
+function openLesson(id, fromHome){
+  cur=id;
+  const l=LESSON_BY_ID[id], st=L(id);
+  if(fromHome){
+    const idx=LESSONS.findIndex(x=>x.id===id);
+    const pool=reviewPool(idx);
+    if(pool.length>=4){ runReview(idx, {contLesson:id}); return; }
+  }
+  document.getElementById("lesson-prog").textContent=`LESSON ${id}`;
+  const b=buildCounts(l), a=applyCounts(l);
+  const rate=lessonCleanRate(l);
+  const steps=[
+    { t:"Meet the words", d:`Read this lesson’s ${l.words.length} words — meaning, morphemes and where each came from.`,
+      done:st.studied, locked:false, fn:()=>renderStudy(l), tag:st.studied?"READ":"" },
+    { t:"Build the words", d:"Drag the colour-coded morphemes into the word each one belongs to. Finished words tick off and leave the board.",
+      done:st.buildComplete, locked:!st.studied, fn:()=>startBuild(l),
+      tag:st.buildComplete?`${b.clean}/${b.total} CLEAN`:(b.done?`${b.done}/${b.total} built`:"") },
+    { t:"Use the words", d:"Your own sample of apply tasks — scenarios, sentences, diagrams. Your neighbour’s set will be different.",
+      done:st.applyDone, locked:!st.buildComplete, fn:()=>startApply(l),
+      tag:st.applyDone?`${a.got}/${a.total} FIRST TRY`:(a.ans?`${a.ans}/${a.total} done`:"") },
+  ];
+  if(l.hunt){ const h=huntCounts(l); steps.push({ t:"Sentence hunt", d:"Find the declarative, imperative, interrogative and exclamative sentences inside three short passages.",
+      done:st.huntDone, locked:!st.applyDone, fn:()=>startHunt(l),
+      tag:st.huntDone?`${h.got}/${h.total} FIRST TRY`:(h.ans?`${h.ans}/${h.total} done`:"") }); }
+  const mount=document.getElementById("lesson-body");
+  mount.innerHTML=`<h2 style="text-align:center">Lesson ${esc(l.id)} · ${esc(l.title)}</h2>
+    <p class="focusline">${l.focus}</p><div class="steps" id="lsteps"></div><div id="ltiers"></div>`;
+  const wrap=mount.querySelector("#lsteps");
+  steps.forEach((stp,i)=>{
+    const btn=document.createElement("button");
+    btn.className="step"+(stp.done?" done":"");
+    btn.disabled=stp.locked;
+    btn.innerHTML=`<span class="num">${stp.done?"✓":i+1}</span><span><span class="t">${stp.t}</span><br><span class="d">${stp.d}</span></span><span class="tag">${stp.locked?"LOCKED":stp.tag}</span>`;
+    btn.onclick=stp.fn;
+    wrap.appendChild(btn);
+  });
+  /* adaptive tiers */
+  const tiers=mount.querySelector("#ltiers");
+  if(l.base){
+    const bc=tierCounts(l.base.items, st.baseFirst);
+    const struggling = st.buildComplete && rate!==null && rate<0.5 && !st.baseDone;
+    const t=document.createElement("div"); t.className="tierbar base";
+    t.innerHTML=`<span class="grow"><b>⛺ Base camp${st.baseDone?` — done (${bc.got}/${bc.total} first try)`:""}</b>
+      ${struggling?"The same word-parts inside everyday words.":"The same morphemes in everyday words. Start here any time you want a warm-up — it all counts on your report."}</span>
+      <button class="btn btn-ghost" onclick="startBase('${l.id}')">${st.baseDone?"Do it again":"Warm up"}</button>`;
+    tiers.appendChild(t);
+  }
+  if(l.stretch){
+    const sc=tierCounts(l.stretch.items, st.stretchFirst);
+    const unlocked = st.applyDone;
+    const t=document.createElement("div"); t.className="tierbar stretch";
+    t.innerHTML=`<span class="grow"><b>⛰ Stretch${st.stretchDone?` — done (${sc.got}/${sc.total} first try)`:""}</b>
+      ${unlocked?(rate!==null&&rate>=0.85?"Heavier words built from the parts you just learned.":"Heavier words built from the parts you just learned — including some that show up in the CAT."):"Finish “Use the words” to unlock."}</span>
+      <button class="btn btn-water" ${unlocked?"":"disabled"} onclick="startStretch('${l.id}')">${st.stretchDone?"Do it again":"Stretch"}</button>`;
+    tiers.appendChild(t);
+  }
+  go("lesson");
+}
+
+/* ================= STUDY ================= */
+function renderStudy(l){
+  const mount=document.getElementById("study-body");
+  document.getElementById("study-prog").textContent=`STEP 1 · MEET THE WORDS · ${l.id}`;
+  let html=`<h2>Lesson ${esc(l.id)} — ${esc(l.title)}</h2>
+    <p class="muted" style="margin-bottom:14px">Read each word: its meaning, and how its <b>morphemes</b> build that meaning. Tags show each word’s domain.</p>
+    ${MLEGEND_ROW}`;
+  mount.innerHTML=html;
+  l.words.forEach(v=>{
+    const map=(v.type==="origin")?"":morphLine(v);
+    const d=document.createElement("div"); d.className="vcard";
+    const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT"}[v.domain]||v.domain;
+    d.innerHTML=`<div class="top"><span class="w">${(v.type==="origin")?esc(v.w):colourWord(v)}</span><span class="pos">${esc(v.pos)}</span>${trSpan(v.w)}
+        <span class="dtag ${v.domain}">${domLabel}</span></div>
+      <div class="meaning">${esc(v.meaning)}</div>
+      ${v.eg?`<div class="eg">${egHtml(v.eg)}</div>`:""}
+      <div class="morph">${ (v.type==="origin"||!map) ? v.note : (map+" &nbsp;→&nbsp; <b>"+esc(v.w)+"</b><br>"+v.note) }</div>`;
+    mount.appendChild(d);
+  });
+  const row=document.createElement("div"); row.className="nextrow noprint";
+  row.innerHTML=`<button class="btn btn-primary">I’ve read them — start building →</button>`;
+  row.querySelector("button").onclick=()=>{ L(l.id).studied=true; touchStart(); save(); startBuild(l); };
+  mount.appendChild(row);
+  go("study");
+}
+
+/* ================= GENERIC BUILDER (words + tier builds) ================= */
+function renderBuilder(mount, spec, opts){
+  /* spec: {w, pos?, tiles, decoys, meaning, note?/explain?} ; opts: {dots, prompt, onFirst, onDone} */
+  const pieces=spec.tiles.map(t=>t[0]);
+  const bank=shuffle(spec.tiles.concat(spec.decoys||[]));
+  let pos=0, errored=false;
+  const slotHtml=pieces.map((_,i)=>(i?`<span class="joiner">+</span>`:"")+`<span class="slot">&nbsp;</span>`).join("");
+  mount.innerHTML=`${opts.dots||""}
+    <div class="prompt">${opts.prompt||"Build the word — tap the morphemes into place, in order"}</div>
+    <div class="buildword" id="bword">? ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
+    ${spec.meaning?`<div class="bclue">Build the word that means: <b>${esc(spec.meaning)}</b></div>`:""}
+    <div class="slots" id="slots">${slotHtml}</div>
+    <div class="bank" id="bank"></div>
+    <div class="maprow" id="maprow"></div>
+    <div class="reveal" id="reveal"></div>
+    <div class="nextrow noprint"><button class="btn btn-primary" id="bnext" style="display:none">Next →</button></div>`;
+  const bankEl=mount.querySelector("#bank");
+  const slots=mount.querySelectorAll("#slots .slot");
+  bank.forEach(([piece,gloss])=>{
+    const t=document.createElement("button"); t.className="tile "+classifyMorph(piece);
+    t.innerHTML=`<span class="mm">${esc(piece)}</span><span class="gl">${esc(gloss)}</span>`;
+    t.onclick=()=>{
+      if(pos>=pieces.length) return;
+      if(piece===pieces[pos] && !t.disabled){
+        slots[pos].textContent=piece; slots[pos].classList.add("filled");
+        t.disabled=true; pos++;
+        if(pos===pieces.length){
+          mount.querySelector("#bword").innerHTML=`${esc(spec.w)} ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""} ${trSpan(spec.w)}`;
+          opts.onFirst && opts.onFirst(!errored);
+          const mr=mount.querySelector("#maprow");
+          mr.innerHTML=spec.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" &nbsp;+&nbsp; ")+" &nbsp;→&nbsp; <b>"+esc(spec.w)+"</b>";
+          const r=mount.querySelector("#reveal");
+          r.className="reveal show";
+          r.innerHTML=`<span class="rw">${esc(spec.w)}</span> — ${esc(spec.meaning)}${(spec.note||spec.explain)?`<br><span class="muted">${spec.note||spec.explain}</span>`:""}`;
+          const nb=mount.querySelector("#bnext");
+          nb.style.display="inline-block"; nb.onclick=opts.onDone;
+          nb.focus();
+        }
+      } else {
+        errored=true;
+        t.classList.add("shake");
+        setTimeout(()=>t.classList.remove("shake"),320);
+      }
+    };
+    bankEl.appendChild(t);
+  });
+}
+
+/* origin question (used in build step + review) */
+function renderOriginQ(mount, spec, opts){
+  mount.innerHTML=`${opts.dots||""}
+    <div class="prompt">This word can’t be cut into smaller meaningful parts — just match it to its meaning</div>
+    <div class="buildword">${esc(spec.w)} ${spec.pos?`<span class="muted" style="font-size:14px">(${esc(spec.pos)})</span>`:""}</div>
+    <div class="qtext" style="text-align:center">${spec.originQ}</div>
+    <div class="opts" id="oopts"></div>
+    <div class="reveal" id="reveal"></div>
+    <div class="nextrow noprint"><button class="btn btn-primary" id="bnext" style="display:none">Next →</button></div>`;
+  const optsEl=mount.querySelector("#oopts");
+  let first=true;
+  shuffle(spec.originOpts.slice()).forEach(o=>{
+    const btn=document.createElement("button"); btn.className="opt"; btn.textContent=o;
+    btn.onclick=()=>{
+      const correct=(o===spec.originA);
+      if(first){ opts.onFirst && opts.onFirst(correct); first=false; }
+      if(correct){
+        btn.classList.add("right");
+        optsEl.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+        const r=mount.querySelector("#reveal");
+        r.className="reveal show";
+        r.innerHTML=`<span class="rw">${esc(spec.w)}</span> ${trSpan(spec.w)} — ${esc(spec.meaning)}<br><span class="muted">${spec.note}</span>`;
+        const nb=mount.querySelector("#bnext");
+        nb.style.display="inline-block"; nb.onclick=opts.onDone; nb.focus();
+      } else {
+        btn.classList.add("wrongpick"); btn.disabled=true;
+      }
+    };
+    optsEl.appendChild(btn);
+  });
+}
+
+/* ================= STEP 2 · BUILD — colour-coded drag-and-drop morpheme table ================= */
+let buildCtx=null; // {l, tapSel}
+function startBuild(l){
+  touchStart();
+  const st=L(l.id);
+  const buildable=l.words.filter(w=>w.type==="morph"||w.type==="compound");
+  if(buildable.every(w=>st.buildDone[w.w])){ buildOriginPhase(l); return; }
+  go("build");
+  renderBuildTable(l, buildable);
+}
+function buildProgressText(l){
+  const st=L(l.id);
+  const done=l.words.filter(w=>st.buildDone[w.w]).length;
+  document.getElementById("build-prog").textContent=`STEP 2 · BUILD · ${done}/${l.words.length} words`;
+}
+function renderBuildTable(l, buildable){
+  const st=L(l.id);
+  buildCtx={l, tapSel:null};
+  /* one shared morpheme bank: every part these words need, deduped, plus a few decoys */
+  const need=new Map();
+  buildable.forEach(w=>w.tiles.forEach(([p,g])=>{ if(!need.has(p)) need.set(p,g); }));
+  const realSet=new Set(need.keys());
+  const decoyPool=[]; const seenD=new Set();
+  buildable.forEach(w=>(w.decoys||[]).forEach(([p,g])=>{ if(!realSet.has(p)&&!seenD.has(p)){ seenD.add(p); decoyPool.push([p,g]); } }));
+  const bankArr=[...need.entries()].map(([p,g])=>({piece:p,gloss:g,type:classifyMorph(p)}))
+    .concat(shuffle(decoyPool).slice(0,3).map(([p,g])=>({piece:p,gloss:g,type:classifyMorph(p)})));
+  let bankHtml="";
+  MTYPE_ORDER.forEach(type=>{
+    const group=bankArr.filter(m=>m.type===type);
+    if(!group.length) return;
+    bankHtml+=`<div class="mgroup"><div class="glabel ${type}">${MTYPE_LABEL[type]}</div><div class="mtiles">`+
+      shuffle(group).map(m=>`<button class="mtile ${m.type}" data-piece="${esc(m.piece)}" data-gloss="${esc(m.gloss)}" data-type="${m.type}"><span class="mm">${esc(m.piece)}</span><span class="gl">${esc(m.gloss)}</span></button>`).join("")+
+      `</div></div>`;
+  });
+  const active=shuffle(buildable.filter(w=>!st.buildDone[w.w]));
+  const rowsHtml=active.map(w=>{
+    const slots=w.tiles.map((_,si)=>(si?`<span class="wjoin">+</span>`:"")+`<span class="wslot" data-i="${si}"><span class="ph">drop</span></span>`).join("");
+    return `<div class="wrow" data-w="${esc(w.w)}">
+      <div class="wmean"><span class="pos">${esc(w.pos)}</span> — ${esc(w.meaning)}</div>
+      <div class="wslots">${slots}</div>
+      <div class="wbuilt"></div></div>`;
+  }).join("");
+  const mount=document.getElementById("build-body");
+  mount.innerHTML=`
+    <h2 style="text-align:center">Build the words — Lesson ${esc(l.id)}</h2>
+    <p class="muted" style="text-align:center;margin-bottom:8px">Drag each morpheme into the word it belongs to — or tap a morpheme, then tap a slot. Build <b>prefix → root → suffix</b>, left to right. A finished word ticks off and leaves the board; keep going until none are left.</p>
+    <div class="mlegend"><span><i style="background:var(--mpre)"></i>Prefix (start)</span><span><i style="background:var(--mroot)"></i>Root (heart)</span><span><i style="background:var(--msuf)"></i>Suffix (end)</span></div>
+    <div class="mbank">${bankHtml}</div>
+    <div class="buildhint" id="buildhint"></div>
+    <div class="wtable" id="wtable">${rowsHtml}</div>`;
+  buildProgressText(l);
+  wireBuildDnD(mount);
+}
+function wireBuildDnD(mount){
+  mount.querySelectorAll(".mtile").forEach(tile=>{
+    const info={piece:tile.dataset.piece, gloss:tile.dataset.gloss, type:tile.dataset.type};
+    tile.addEventListener("pointerdown", e=>startTileDrag(e, tile, info));
+  });
+  mount.querySelectorAll(".wslot").forEach(slot=>{
+    slot.addEventListener("click", ()=>{
+      if(slot.dataset.piece){ clearSlot(slot); return; }
+      if(buildCtx.tapSel){ const s=buildCtx.tapSel; setTapSel(null); fillSlot(slot, s); }
+    });
+  });
+}
+function setTapSel(info){
+  buildCtx.tapSel=info;
+  document.querySelectorAll("#build-body .mtile").forEach(t=>{
+    t.classList.toggle("sel", !!info && t.dataset.piece===info.piece && t.dataset.type===info.type);
+  });
+}
+function startTileDrag(e, tile, info){
+  e.preventDefault();
+  const sx=e.clientX, sy=e.clientY; let moved=false, ghost=null;
+  try{ tile.setPointerCapture(e.pointerId); }catch(_){}
+  function mv(ev){
+    if(!moved && Math.hypot(ev.clientX-sx, ev.clientY-sy)>6){ moved=true; tile.classList.add("dragging"); ghost=mkGhost(info); }
+    if(moved && ghost){ ghost.style.left=ev.clientX+"px"; ghost.style.top=ev.clientY+"px"; hoverSlot(ev); }
+  }
+  function up(ev){
+    tile.removeEventListener("pointermove",mv); tile.removeEventListener("pointerup",up);
+    try{ tile.releasePointerCapture(e.pointerId); }catch(_){}
+    if(moved){
+      tile.classList.remove("dragging"); if(ghost) ghost.remove(); clearHover();
+      const slot=slotAt(ev);
+      if(slot && !slot.dataset.piece) fillSlot(slot, info);
+    } else {
+      const same=buildCtx.tapSel && buildCtx.tapSel.piece===info.piece && buildCtx.tapSel.type===info.type;
+      setTapSel(same ? null : info);
+    }
+  }
+  tile.addEventListener("pointermove",mv); tile.addEventListener("pointerup",up);
+}
+function mkGhost(info){
+  const g=document.createElement("div"); g.className="drag-ghost mtile "+info.type;
+  g.innerHTML=`<span class="mm">${esc(info.piece)}</span><span class="gl">${esc(info.gloss)}</span>`;
+  document.body.appendChild(g); return g;
+}
+function slotAt(ev){ const el=document.elementFromPoint(ev.clientX,ev.clientY); return el?el.closest(".wslot"):null; }
+function hoverSlot(ev){ clearHover(); const s=slotAt(ev); if(s && !s.dataset.piece) s.classList.add("over"); }
+function clearHover(){ document.querySelectorAll("#build-body .wslot.over").forEach(s=>s.classList.remove("over")); }
+function fillSlot(slot, info){
+  slot.dataset.piece=info.piece; slot.dataset.type=info.type;
+  slot.className="wslot filled "+info.type; slot.innerHTML=`<span class="mm">${esc(info.piece)}</span>`;
+  checkRow(slot.closest(".wrow"));
+}
+function clearSlot(slot){
+  delete slot.dataset.piece; delete slot.dataset.type;
+  slot.className="wslot"; slot.innerHTML=`<span class="ph">drop</span>`;
+  const h=document.getElementById("buildhint"); if(h) h.textContent="";
+}
+function checkRow(rowEl){
+  const w=WORD_BY_NAME[rowEl.dataset.w];
+  const slots=[...rowEl.querySelectorAll(".wslot")];
+  if(slots.some(s=>!s.dataset.piece)) return;
+  const placed=slots.map(s=>s.dataset.piece);
+  const answer=w.tiles.map(t=>t[0]);
+  const correct=placed.length===answer.length && placed.every((p,i)=>p===answer[i]);
+  const hint=document.getElementById("buildhint");
+  if(correct){ if(hint) hint.textContent=""; markRowDone(rowEl, w); }
+  else {
+    const st=L(buildCtx.l.id);
+    if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=false; noteResult(w.w,false); save(); }
+    const sameSet=[...placed].sort().join("~")===[...answer].sort().join("~");
+    rowEl.classList.add("wrong"); setTimeout(()=>rowEl.classList.remove("wrong"),320);
+    if(hint) hint.innerHTML = sameSet
+      ? "Right pieces — check the <b>order</b> (prefix → root → suffix). Tap a slot to send its piece back."
+      : "Not a match yet — reread the meaning. Tap any slot to send its piece back.";
+  }
+}
+function markRowDone(rowEl, w){
+  const st=L(buildCtx.l.id);
+  st.buildDone[w.w]=true;
+  if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=true; noteResult(w.w,true); }
+  save();
+  rowEl.classList.add("done");
+  rowEl.querySelector(".wbuilt").innerHTML=`<span class="wname">${esc(w.w)}</span> ${trSpan(w.w)} <span class="wtickmark">✓</span>`;
+  buildProgressText(buildCtx.l);
+  setTimeout(()=>{
+    rowEl.classList.add("gone");
+    setTimeout(()=>{
+      rowEl.remove();
+      if(!document.querySelector("#wtable .wrow")) buildOriginPhase(buildCtx.l);
+    },320);
+  },850);
+}
+function buildOriginPhase(l){
+  const st=L(l.id);
+  const origins=l.words.filter(w=>w.type==="origin" && !st.buildDone[w.w]);
+  if(!origins.length){ finishBuild(l); return; }
+  go("build");
+  const mount=document.getElementById("build-body");
+  mount.innerHTML=`<h2 style="text-align:center">Match the meaning — Lesson ${esc(l.id)}</h2>
+    <p class="muted" style="text-align:center;margin-bottom:12px">A few of this lesson’s words come from names or places, not word-parts — so instead of building them, just match each one to its meaning. (Curious where a word comes from? The answer explains it once you’ve got it.)</p>
+    <div id="origin-slot"></div>`;
+  let queue=shuffle(origins.slice());
+  function next(){
+    buildProgressText(l);
+    if(!queue.length){ finishBuild(l); return; }
+    const w=queue.shift();
+    renderTaskItem(document.getElementById("origin-slot"),
+      {type:"desc", q:w.originQ, a:w.originA, opts:w.originOpts.slice(), explain:w.note, tag:"ORIGIN · "+w.w},
+      { onAnswer:(correct)=>{
+          if(st.buildFirst[w.w]===undefined){ st.buildFirst[w.w]=correct; noteResult(w.w,correct); save(); }
+          if(correct){ st.buildDone[w.w]=true; save(); } else queue.push(w);
+        },
+        onNext:next });
+  }
+  next();
+}
+function finishBuild(l){
+  const st=L(l.id); st.buildComplete=true; save();
+  const b=buildCounts(l);
+  const pct=Math.round(100*b.clean/b.total);
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  document.getElementById("build-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">Lesson ${esc(l.id)} — clean builds (right first go)</div>
+    <div class="big ${cls}">${b.clean} / ${b.total}</div>
+    <p class="muted">Every word is built. “Clean” means you placed it correctly on the first full attempt — anything you had to redo still counts as done, just not clean.</p></div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="goLesson()">back to lesson</button>
+      <button class="btn btn-primary" onclick="startApply(LESSON_BY_ID['${l.id}'])">Use the words →</button></div>`;
+}
+
+/* ================= SHARED MCQ ITEM RENDERER ================= */
+function renderTaskItem(mount, it, hooks){
+  /* it: {type, q/before/after/svg(string name or raw), a, opts, explain, tag?} */
+  const box=document.createElement("div");
+  if(it.tag) box.innerHTML+=`<span class="reviewtag">${esc(it.tag)}</span>`;
+  let fb, nextBtn;
+  const isRight=(o)=>o===it.a;
+  function finishItem(correct){
+    fb.className="feedback "+(correct?"ok":"bad");
+    fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — the answer is “${esc(it.a)}”.</b> `)+(it.explain||"");
+    if(!correct) fb.innerHTML+=" <i>This one will come back around.</i>";
+    nextBtn.style.display="inline-block";
+    hooks.onAnswer && hooks.onAnswer(correct);
+  }
+  const kind=it.type||"desc";
+  if(kind==="diagram"){
+    const svg=SVGS[it.svg]||it.svg;
+    box.innerHTML+=`<div class="prompt">Read the diagram, then choose</div><div class="svgbox">${svg}</div>`;
+    const qd=document.createElement("div"); qd.className="qtext"; qd.innerHTML=it.q; box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",null));
+  } else if(kind==="cloze"){
+    box.innerHTML+=`<div class="prompt">Choose the word that fits the sentence</div>`;
+    const qd=document.createElement("div"); qd.className="qtext";
+    qd.innerHTML=`${esc(it.before)} <span class="gap">&nbsp;</span> ${esc(it.after)}`;
+    box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",qd.querySelector(".gap")));
+  } else {
+    const prompts={scenario:"Read the scenario, then choose",desc:"Match the word",morphmatch:"Read the morphemes, then choose the word they build",alchemy:"Word alchemy — use the parts to work it out",wordsum:"Add the morphemes — which word do they make?",meaningmatch:"Which word fits the meaning?",morphmeaning:"What does the word-part mean?"};
+    box.innerHTML+=`<div class="prompt">${prompts[kind]||prompts.desc}</div>`;
+    const qd=document.createElement("div"); qd.className="qtext"; qd.innerHTML=it.q; box.appendChild(qd);
+    box.appendChild(buildOpts(it,isRight,finishItem,()=>nextBtn.style.display==="inline-block",null));
+  }
+  fb=document.createElement("div"); fb.className="feedback"; box.appendChild(fb);
+  const row=document.createElement("div"); row.className="nextrow noprint";
+  nextBtn=document.createElement("button"); nextBtn.className="btn btn-primary"; nextBtn.textContent="Next →";
+  nextBtn.style.display="none"; nextBtn.onclick=hooks.onNext;
+  row.appendChild(nextBtn); box.appendChild(row);
+  mount.innerHTML=""; mount.appendChild(box);
+}
+function buildOpts(it, isRight, finishItem, locked, gapEl){
+  const optList=shuffle(it.opts.slice());
+  const opts=document.createElement("div");
+  opts.className=optList.every(o=>o.length<28)?"opts chips":"opts";
+  optList.forEach(o=>{
+    const btn=document.createElement("button"); btn.className="opt"; btn.textContent=o;
+    btn.onclick=()=>{
+      if(locked()) return;
+      const correct=isRight(o);
+      btn.classList.add(correct?"right":"wrongpick");
+      if(!correct) opts.querySelectorAll(".opt").forEach(x=>{ if(isRight(x.textContent)) x.classList.add("right"); });
+      opts.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+      if(gapEl && correct) gapEl.textContent=o;
+      finishItem(correct);
+    };
+    opts.appendChild(btn);
+  });
+  return opts;
+}
+
+/* ================= GENERATED TASKS (for variety + anti-copying) ================= */
+function sameLessonDistractors(word, n){
+  const l=LESSON_BY_ID[WORD_LESSON[word.w]];
+  return shuffle(l.words.filter(x=>x.w!==word.w).map(x=>x.w)).slice(0,n);
+}
+function morphMap(word){
+  return word.tiles ? word.tiles.map(t=>`<b>${esc(t[0])}</b> ${esc(t[1])}`).join(" + ")+" → <b>"+esc(word.w)+"</b>" : (word.note||"");
+}
+function genTypesFor(word){
+  /* Meaning to word is the item that actually teaches the vocabulary, so it is
+     the one students mostly get. The morphology items are here to support it —
+     they are not the point — so they come up about a third of the time. */
+  if(!word.tiles) return ["meaningmatch"];
+  const morph = wordsumSharers(word).length>=2 ? ["wordsum","morphmeaning"] : ["morphmeaning"];
+  return ["meaningmatch","meaningmatch","meaningmatch"].concat(morph);
+}
+
+/* The definitions were written to be read next to the word, so half of them use
+   it: "Blind Anka learns to navigate by clicking her tongue". Asked as a
+   question that hands the answer over, so the word is blanked out of its own
+   definition — the example sentence still does its work. */
+function wordStem(w){
+  let s = w.toLowerCase().replace(/[^a-z]/g,"");
+  const full = s;
+  s = s.replace(/(ations?|ions?|ments?|ings?|edly|ed|ers?|ors?|ly|es|s)$/,"");
+  s = s.replace(/e$/,"");
+  const un = s.replace(/([bdfglmnprt])\1$/,"$1");
+  if(un.length>=4) s = un;
+  return s.length>=3 ? s : full;
+}
+function maskTarget(html, word){
+  const stem = wordStem(word);
+  if(stem.length<3) return html;
+  const re = new RegExp("\\b"+stem.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[a-z\u2019']*\\b","gi");
+  return html.replace(re, '<span class="hid">&nbsp;</span>');
+}
+
+/* Distractors that look like the answer. Words built from the same parts first,
+   then words that start or end the same way, so the choice cannot be made on
+   the shape of the word alone. */
+function morphKey(piece){ return piece.replace(/[()\u2010-\u2015-]/g,"").toLowerCase(); }
+function wordsumSharers(word){
+  const mine = (word.tiles||[]).map(t=>morphKey(t[0]));
+  const roots = (word.tiles||[]).filter(t=>classifyMorph(t[0])==="root").map(t=>morphKey(t[0]));
+  const tail = word.w.toLowerCase().slice(-4);
+  return lookalikePool(word).filter(x=>x.w!==word.w && x.tiles && x.tiles.length).map(x=>{
+    const theirs = x.tiles.map(t=>morphKey(t[0]));
+    let sc = 0;
+    theirs.forEach(m=>{ if(roots.indexOf(m)>=0) sc+=5; else if(mine.indexOf(m)>=0) sc+=3; });
+    if(x.w.toLowerCase().slice(-4)===tail) sc+=2;      /* looks the same at the end */
+    return {w:x.w, sc, pos:x.pos};
+  }).filter(x=>x.sc>0);
+}
+/* Only offer words the class has already met — a distractor from four chapters
+   ahead is a word they have never seen, which makes it easy to rule out and
+   spoils the word besides. Falls back to the whole book if that pool is thin. */
+function lookalikePool(word){
+  const out = [];
+  LESSONS.forEach(l=>{ const st=S.lessons[l.id]; if(st && st.studied) l.words.forEach(w=>out.push(w)); });
+  LESSON_BY_ID[WORD_LESSON[word.w]].words.forEach(w=>{ if(out.indexOf(w)<0) out.push(w); });
+  return out.length>=6 ? out : ALL_WORDS;
+}
+function lookalikeDistractors(word, n, pool){
+  const me = word.w.toLowerCase();
+  const mine = (word.tiles||[]).map(t=>morphKey(t[0]));
+  const roots = (word.tiles||[]).filter(t=>classifyMorph(t[0])==="root").map(t=>morphKey(t[0]));
+  const cands = pool || lookalikePool(word);
+  const scored = shuffle(cands.filter(x=>x.w!==word.w)).map(x=>{
+    const them = x.w.toLowerCase();
+    let sc = 0;
+    (x.tiles||[]).map(t=>morphKey(t[0])).forEach(m=>{
+      if(roots.indexOf(m)>=0) sc+=5; else if(mine.indexOf(m)>=0) sc+=3;
+    });
+    if(them.slice(-3)===me.slice(-3)) sc+=3;
+    if(them.slice(-4)===me.slice(-4)) sc+=2;
+    if(them.slice(0,3)===me.slice(0,3)) sc+=3;
+    if(x.pos===word.pos) sc+=1;
+    if(Math.abs(them.length-me.length)<=2) sc+=1;
+    return {w:x.w, sc};
+  }).filter(x=>x.sc>0);
+  scored.sort((a,b)=>b.sc-a.sc);                       /* pool was shuffled: ties stay random */
+  const out=[]; scored.forEach(x=>{ if(out.indexOf(x.w)<0 && out.length<n) out.push(x.w); });
+  if(out.length<n && pool) lookalikeDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  if(out.length<n) sameLessonDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  return out;
+}
+function wordsumDistractors(word, n){
+  const scored = shuffle(wordsumSharers(word));        /* shuffled first: ties stay random */
+  scored.forEach(x=>{ if(x.pos===word.pos) x.sc+=1; });
+  scored.sort((a,b)=>b.sc-a.sc);
+  const out=[]; scored.forEach(x=>{ if(out.indexOf(x.w)<0 && out.length<n) out.push(x.w); });
+  if(out.length<n) lookalikeDistractors(word, n).forEach(w=>{ if(out.indexOf(w)<0 && out.length<n) out.push(w); });
+  return out;
+}
+
+/* Same trap in the other direction: a root asked with three suffix meanings under
+   it answers itself. Offer meanings of the same kind of part, and use the word's
+   own authored near-misses first where there are any. */
+function morphGlossDistractors(piece, gloss, word, n){
+  const kind = classifyMorph(piece);
+  const near = (word.decoys||[]).filter(d=>classifyMorph(d[0])===kind).map(d=>d[1]);
+  const same = MORPHS.filter(m=>m.type===kind).map(m=>m.gloss);
+  const out=[];
+  shuffle(near).concat(shuffle(same)).concat(shuffle(ALL_GLOSSES.slice())).forEach(g=>{
+    if(g!==gloss && out.indexOf(g)<0 && out.length<n) out.push(g);
+  });
+  return out;
+}
+function genTask(gtype, word){
+  if(gtype==="wordsum" && word.tiles){
+    const eq=word.tiles.map(t=>`<b>${esc(t[0])}</b>`).join(" + ");
+    return { type:"wordsum", q:`Which word do these parts build?<br><span class="eqn">${eq}</span>`,
+      a:word.w, opts:[word.w].concat(wordsumDistractors(word,3)), explain:morphMap(word) };
+  }
+  if(gtype==="morphmeaning" && word.tiles){
+    const roots=word.tiles.filter(t=>classifyMorph(t[0])==="root");
+    const t=pick(roots.length?roots:word.tiles);
+    const wrong=morphGlossDistractors(t[0], t[1], word, 3);
+    return { type:"morphmeaning", q:`In <b>${esc(word.w)}</b>, what does the part <b>${esc(t[0])}</b> mean?`,
+      a:t[1], opts:[t[1]].concat(wrong), explain:`<b>${esc(t[0])}</b> = ${esc(t[1])}. &nbsp; ${morphMap(word)}` };
+  }
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${maskTarget(esc(word.meaning), word.w)}</i>`,
+    a:word.w, opts:[word.w].concat(lookalikeDistractors(word,3)), explain:morphMap(word) };
+}
+
+/* ================= STEP 3 · USE THE WORDS ================= */
+function startApply(l){
+  touchStart();
+  const st=L(l.id);
+  if(!st.applySample.length){
+    st.applySample=l.words.map(w=>{
+      const gts=genTypesFor(w);
+      if(Math.random()<0.5 && w.apply && w.apply.length) return {k:"a", id:pick(w.apply).id};
+      return {k:"g", g:pick(gts), w:w.w};
+    });
+    save();
+  }
+  go("apply");
+  const descs=st.applySample.slice();
+  const record = !st.applyDone; /* re-runs don't change the report */
+  let queue=shuffle(descs.map(d=>({d, it:Object.assign({}, applyItem(d))})));
+  let mastered=0;
+  /* Redundancy bank. Getting it wrong does NOT hand back the same question —
+     you get a fresh one on the same word, from a different angle, until you
+     can do the skill rather than remember the answer. `seen` tracks which
+     versions this student has already met for each word. */
+  const seen={};
+  function markSeen(d){ const w=applyWordName(d); (seen[w]=seen[w]||new Set()).add(d.k==="a"?("a:"+d.id):("g:"+d.g)); }
+  function parallelFor(d){
+    const wName=applyWordName(d), w=WORD_BY_NAME[wName];
+    const used=seen[wName]||new Set();
+    if(w){
+      const freshAuthored=(w.apply||[]).filter(it=>!used.has("a:"+it.id));
+      if(freshAuthored.length) return {k:"a", id:pick(freshAuthored).id};
+      const freshGen=genTypesFor(w).filter(g=>!used.has("g:"+g));
+      if(freshGen.length) return {k:"g", g:pick(freshGen), w:wName};
+      const gts=genTypesFor(w);
+      if(gts.length>1){ const other=gts.filter(g=>!(d.k==="g"&&g===d.g)); if(other.length) return {k:"g", g:pick(other), w:wName}; }
+    }
+    return d; /* bank exhausted — repeat as a last resort */
+  }
+  function next(){
+    document.getElementById("apply-prog").textContent=`STEP 3 · USE THE WORDS · mastered ${mastered}/${descs.length}`;
+    if(!queue.length){ finishApply(l, record); return; }
+    const cur=queue.shift();
+    markSeen(cur.shown || cur.d);   /* remember exactly what they were shown */
+    const key=applyKey(cur.d);
+    renderTaskItem(document.getElementById("apply-body"), cur.it, {
+      onAnswer:(correct)=>{
+        if(record && st.applyFirst[key]===undefined){
+          st.applyFirst[key]=correct;
+          noteResult(applyWordName(cur.d), correct);
+          save();
+        }
+        if(correct){ mastered++; }
+        else {
+          markSeen(cur.d);
+          const alt=parallelFor(cur.d);
+          queue.push({d:cur.d, it:Object.assign({}, applyItem(alt)), retryOf:cur.d, shown:alt});
+        }
+      },
+      onNext:next,
+    });
+  }
+  next();
+}
+function finishApply(l, recorded){
+  const st=L(l.id);
+  if(recorded){ st.applyDone=true; save(); }
+  const a=applyCounts(l);
+  const pct=a.total?Math.round(100*a.got/a.total):0;
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  const rate=lessonCleanRate(l);
+  let follow="";
+  if(rate!==null && rate<0.5 && l.base && !st.baseDone){
+    follow=`<div class="tierbar base"><span class="grow"><b>⛺ Base camp</b> The same word-parts live inside easy words you already know — a five-minute warm-up there, then this lesson will feel different.</span>
+      <button class="btn btn-ghost" onclick="startBase('${l.id}')">Warm up</button></div>`;
+  } else if(rate!==null && rate>=0.85 && l.stretch && !st.stretchDone){
+    follow=`<div class="tierbar stretch"><span class="grow"><b>⛰ Stretch</b> — heavier words built from the same morphemes.</span>
+      <button class="btn btn-water" onclick="startStretch('${l.id}')">Stretch</button></div>`;
+  }
+  document.getElementById("apply-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">Lesson ${esc(l.id)} — first attempts</div>
+    <div class="big ${cls}">${a.got} / ${a.total}</div>
+    <p class="muted">Every task is mastered — wrong answers looped back until you cleared them. The score above is your FIRST attempt on each.${recorded?"":" (Practice run — your report kept the original scores.)"}</p></div>
+    ${follow}
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="goLesson()">back to lesson</button>
+      ${l.hunt?`<button class="btn btn-primary" onclick="startHunt(LESSON_BY_ID['${l.id}'])">Sentence hunt →</button>`:`<button class="btn btn-primary" onclick="go('home')">all lessons</button>`}</div>`;
+}
+
+/* ================= TIERS: BASE CAMP & STRETCH ================= */
+function runTier(lid, tierKey){
+  const l=LESSON_BY_ID[lid], st=L(lid);
+  const tier=l[tierKey];
+  const firsts = tierKey==="base" ? st.baseFirst : st.stretchFirst;
+  const doneFlag = tierKey==="base" ? "baseDone" : "stretchDone";
+  const scr = tierKey==="base" ? "base" : "stretch";
+  const label = tierKey==="base" ? "BASE CAMP" : "STRETCH";
+  touchStart();
+  go(scr);
+  const mount=document.getElementById(scr+"-body");
+  const progEl=document.getElementById(scr+"-prog");
+  const record=!st[doneFlag];
+  let queue=shuffle(tier.items.slice());
+  let mastered=0; const total=tier.items.length;
+  let intro=true;
+  function recFirst(id, correct){
+    if(record && firsts[id]===undefined){ firsts[id]=correct; save(); }
+  }
+  function next(){
+    progEl.textContent=`${label} · ${lid} · mastered ${mastered}/${total}`;
+    if(!queue.length){
+      if(record){ st[doneFlag]=true; save(); }
+      const tc=tierCounts(tier.items, firsts);
+      const pct=Math.round(100*tc.got/tc.total);
+      const cls=pct>=80?"good":(pct>=60?"mid":"low");
+      mount.innerHTML=`<div class="sumbox"><div class="prompt">${label} · lesson ${esc(lid)} — first attempts</div>
+        <div class="big ${cls}">${tc.got} / ${tc.total}</div>
+        <p class="muted">${tierKey==="base"?"The same parts appear in this lesson's words.":"Recorded on your report as extension."}</p></div>
+        <div class="nextrow" style="justify-content:center">
+        <button class="btn btn-primary" onclick="goLesson()">back to lesson</button></div>`;
+      return;
+    }
+    const it=queue.shift();
+    if(it.kind==="build"){
+      renderBuilder(mount, it, { prompt:"Build the word — tap the pieces into place, in order",
+        onFirst:(clean)=>recFirst(it.id, clean),
+        onDone:()=>{ mastered++; next(); } });
+    } else {
+      renderTaskItem(mount, {type:"alchemy", q:it.q, a:it.a, opts:it.opts, explain:it.explain}, {
+        onAnswer:(correct)=>{ recFirst(it.id, correct); if(correct) mastered++; else queue.push(it); },
+        onNext:next });
+    }
+  }
+  if(intro){
+    mount.innerHTML=`<h2 style="text-align:center">${tierKey==="base"?"⛺ Base camp":"⛰ Stretch"} · Lesson ${esc(lid)}</h2>
+      <p class="focusline">${tier.intro}</p>
+      <div class="nextrow" style="justify-content:center"><button class="btn btn-primary" id="tstart">Start →</button></div>`;
+    mount.querySelector("#tstart").onclick=()=>{ intro=false; next(); };
+  }
+}
+function startBase(lid){ runTier(lid,"base"); }
+function startStretch(lid){ runTier(lid,"stretch"); }
+
+/* ================= REVIEW ================= */
+function latestLessonIdx(){
+  let idx=-1;
+  LESSONS.forEach((l,i)=>{ const st=S.lessons[l.id]; if(st && (st.studied||Object.keys(st.buildDone).length)) idx=i; });
+  return idx;
+}
+function reviewPool(uptoIdx){
+  /* every word from lessons BEFORE this one that the student has actually MET
+     (studied) — with chapter-gating, skipped-ahead students shouldn't be
+     warm-up-quizzed on words from chapter sets they never opened */
+  const pool=[];
+  LESSONS.forEach((l,i)=>{
+    if(uptoIdx>=0 && i>=uptoIdx) return;
+    const st=S.lessons[l.id];
+    if(!st || !st.studied) return;
+    l.words.forEach(w=>pool.push(w));
+  });
+  return pool;
+}
+function startFixDrill(){
+  const pool=unmasteredWords();
+  if(!pool.length) return;
+  runReview(latestLessonIdx(), {pool, n:Math.min(6,pool.length)});
+}
+function startReviewSetup(){
+  const idx=latestLessonIdx();
+  if(idx<0){ return; }
+  go("review");
+  const mount=document.getElementById("review-body");
+  document.getElementById("review-prog").textContent="REVIEW · SET-UP";
+  let opts="";
+  LESSONS.forEach((l,i)=>{
+    const st=S.lessons[l.id];
+    const started=st&&(st.studied||Object.keys(st.buildDone).length);
+    if(started||i<=idx) opts+=`<option value="${i}"${i===idx?" selected":""}>${l.id} · ${esc(l.title)}</option>`;
+  });
+  mount.innerHTML=`<h2 style="text-align:center">Quick review</h2>
+    <p class="focusline">Five words drawn from earlier lessons — weighted so the ones you’ve missed before come back more often. Gap-fill or match to meaning. Every run is a different mix.</p>
+    <div class="idrow" style="justify-content:center">
+      <span><label for="rev-upto">We’re currently learning lesson…</label>
+      <select id="rev-upto" class="btn" style="font-weight:600">${opts}</select></span>
+    </div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-water" id="rev-go">Shuffle my five →</button>
+    </div>`;
+  mount.querySelector("#rev-go").onclick=()=>{
+    const upto=parseInt(mount.querySelector("#rev-upto").value,10);
+    runReview(upto);
+  };
+}
+function weightedSample(pool, n){
+  const entries=pool.map(w=>{
+    const ws=WS(w.w);
+    /* unmastered words are the point of a review: they outweigh settled ones */
+    let wt=1 + 2*Math.min(ws.wrong,4) + (ws.rev===0?1.5:0) + (ws.seen && !ws.mastered ? 4 : 0);
+    return {w, wt};
+  });
+  const out=[];
+  while(out.length<n && entries.length){
+    let total=entries.reduce((s,e)=>s+e.wt,0);
+    let r=Math.random()*total;
+    let k=0;
+    for(let i=0;i<entries.length;i++){ r-=entries[i].wt; if(r<=0){ k=i; break; } }
+    out.push(entries[k].w);
+    entries.splice(k,1);
+  }
+  return out;
+}
+function reviewTaskFor(word, pool){
+  /* quick warm-up tasks only: GAP-FILL a sentence, or MATCH the word to its definition.
+     Both are backed by the lesson data (authored cloze items + word meanings). */
+  const clozes=(word.apply||[]).filter(it=>it.type==="cloze");
+  if(clozes.length && Math.random()<0.5) return Object.assign({}, pick(clozes));
+  /* match word -> definition, with distractors drawn from the review pool */
+  const opts=[word.w].concat(lookalikeDistractors(word, 3, pool));
+  return { type:"meaningmatch", q:`Which word means this?<br><i>${maskTarget(esc(word.meaning), word.w)}</i>`,
+    a:word.w, opts, explain:morphMap(word) };
+}
+function runReview(uptoIdx, opts){
+  opts=opts||{};
+  const pool=opts.pool || reviewPool(uptoIdx);
+  const floor=opts.pool?1:4;
+  if(pool.length<floor){ if(opts.contLesson) openLesson(opts.contLesson, false); else go("home"); return; }
+  go("review");
+  const n=Math.min(opts.n||5,pool.length);
+  const words=weightedSample(pool,n);
+  const items=words.map(w=>{ const it=Object.assign({}, reviewTaskFor(w,pool.length>=4?pool:metWords()));
+    it._w=w.w;
+    it.tag=(opts.pool?"WORDS TO FIX · ":"REVIEW · ")+("lesson "+WORD_LESSON[w.w]);
+    return it; });
+  let queue=shuffle(items);
+  let mastered=0;
+  const firsts={};
+  words.forEach(w=>{ WS(w.w).rev++; });   /* seen is counted per answer in noteResult */
+  function next(){
+    document.getElementById("review-prog").textContent=(opts.contLesson?`WARM-UP REVIEW → LESSON ${opts.contLesson}`:"REVIEW")+` · mastered ${mastered}/${items.length}`;
+    if(!queue.length){ finishReview(uptoIdx, words, firsts, opts); return; }
+    const it=queue.shift();
+    renderTaskItem(document.getElementById("review-body"), it, {
+      onAnswer:(correct)=>{
+        if(firsts[it._w]===undefined){
+          firsts[it._w]=correct;
+          noteResult(it._w, correct);
+          save();
+        }
+        if(correct) mastered++; else queue.push(it);
+      },
+      onNext:next,
+    });
+  }
+  if(opts.contLesson){
+    const mount=document.getElementById("review-body");
+    mount.innerHTML=`<div class="sumbox"><div class="prompt">Before Lesson ${esc(opts.contLesson)}</div>
+      <p class="muted" style="margin:6px 0 0">Quick warm-up first — <b>5 words from earlier lessons</b>, drawn at random (ones you’ve missed come back more often). Just gap-fill a sentence or match the word to its meaning. </p></div>
+      <div class="nextrow" style="justify-content:center"><button class="btn btn-water" id="rev-begin">Start warm-up →</button>
+      <button class="btn btn-ghost" onclick="openLesson('${opts.contLesson}', false)">Skip to lesson</button></div>`;
+    mount.querySelector("#rev-begin").onclick=next;
+  } else next();
+}
+function finishReview(uptoIdx, words, firsts, opts){
+  opts=opts||{};
+  const got=words.filter(w=>firsts[w.w]===true).length;
+  const missed=words.filter(w=>firsts[w.w]===false).map(w=>w.w);
+  S.reviews.push({ when:Date.now(), upTo:LESSONS[uptoIdx]?LESSONS[uptoIdx].id:"—", total:words.length, got, missed });
+  save();
+  const pct=Math.round(100*got/words.length);
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  const buttons = opts.contLesson
+    ? `<button class="btn btn-primary" onclick="openLesson('${opts.contLesson}', false)">Start Lesson ${esc(opts.contLesson)} →</button>
+       <button class="btn btn-ghost" onclick="go('home')">home</button>`
+    : `<button class="btn btn-water" onclick="startReviewSetup()">Another five</button>
+       <button class="btn btn-ghost" onclick="go('home')">home</button>
+       <button class="btn btn-ghost" onclick="go('report')">my report</button>`;
+  document.getElementById("review-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">${opts.contLesson?"Warm-up review":"Review"} — first attempts</div>
+    <div class="big ${cls}">${got} / ${words.length}</div>
+    <p class="muted">${missed.length?`Coming back in later reviews: <b>${esc(missed.join(", "))}</b>`:"All correct first try."}</p></div>
+    <div class="nextrow" style="justify-content:center">${buttons}</div>`;
+}
+
+/* ================= REFERENCE LOOK-UPS (always available from the nav) ================= */
+function renderMorphTable(){
+  const m=document.getElementById("morphtable-body");
+  let html=`<h2 style="text-align:center">Morpheme table</h2>
+    <p class="muted" style="text-align:center;margin-bottom:6px">Every word-part in the unit, colour-coded. </p>
+    <div class="mlegend"><span><i style="background:var(--mpre)"></i>Prefix</span><span><i style="background:var(--mroot)"></i>Root / base</span><span><i style="background:var(--msuf)"></i>Suffix</span></div>`;
+  MTYPE_ORDER.forEach(type=>{
+    const group=MORPHS.filter(mm=>mm.type===type).slice().sort((a,b)=>a.piece.replace(/-/g,"").localeCompare(b.piece.replace(/-/g,"")));
+    if(!group.length) return;
+    html+=`<div class="refhead ${type}">${MTYPE_LABEL[type]}</div>
+      <table class="reftable"><tr><th>Part</th><th>Meaning</th><th>Words that use it</th></tr>`;
+    group.forEach(mm=>{
+      html+=`<tr><td><span class="mtile ${type}"><span class="mm">${esc(mm.piece)}</span></span></td>
+        <td>${esc(mm.gloss)}</td><td class="muted">${mm.examples.map(esc).join(", ")}</td></tr>`;
+    });
+    html+=`</table>`;
+  });
+  m.innerHTML=html;
+}
+function renderGlossary(){
+  const m=document.getElementById("glossary-body");
+  m.innerHTML=`<h2 style="text-align:center">Word list</h2>
+    <p class="muted" style="text-align:center;margin-bottom:10px">Every key word in the unit — meaning, parts and (if you’ve chosen a language) your translation. Search or scroll.</p>
+    <div class="reffilter"><input id="gloss-search" placeholder="Search a word or meaning…" aria-label="search words"></div>
+    ${MLEGEND_ROW}
+    <div id="gloss-list"></div>`;
+  const input=m.querySelector("#gloss-search");
+  input.addEventListener("input", ()=>drawGloss(input.value.trim().toLowerCase()));
+  drawGloss("");
+}
+function drawGloss(q){
+  const wrap=document.getElementById("gloss-list"); if(!wrap) return;
+  let html="";
+  LESSONS.forEach(l=>{
+    const ws=l.words.filter(w=> !q || w.w.toLowerCase().includes(q) || w.meaning.toLowerCase().includes(q));
+    if(!ws.length) return;
+    const done=ws.filter(w=>wordState(w.w).k==="ok").length;
+    html+=`<div class="topichead">Lesson ${esc(l.id)} · ${esc(l.title)} — ${done}/${ws.length} mastered</div>`;
+    ws.forEach(w=>{
+      const map=w.tiles
+        ? morphLine(w)+" &nbsp;→&nbsp; <b>"+esc(w.w)+"</b>"
+        : (w.note||"");
+      const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT"}[w.domain]||w.domain;
+      const stt=wordState(w.w);
+      html+=`<div class="vcard"><div class="top"><span class="w">${colourWord(w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
+          <span class="wstate ${stt.k}">${esc(stt.label)}</span>
+          <span class="dtag ${w.domain}">${domLabel}</span></div>
+        <div class="meaning">${esc(w.meaning)}</div>
+        ${w.eg?`<div class="eg">${egHtml(w.eg)}</div>`:""}
+        <div class="morph">${map}</div></div>`;
+    });
+  });
+  wrap.innerHTML=html || `<p class="muted" style="text-align:center">No words match “${esc(q)}”.</p>`;
+}
+
+/* ================= REPORT ================= */
+function vcode(str){
+  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
+function fmtWhen(t){
+  try{ return new Date(t).toLocaleString("en-AU",{day:"numeric",month:"short",hour:"numeric",minute:"2-digit"}); }
+  catch(e){ return ""; }
+}
+function renderReport(){
+  const m=document.getElementById("report-body");
+  const name=S.name||"", sid=S.sid||"";
+  const dt=new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
+  let rows="", aggFirst=0, aggAtt=0, sig="";
+  LESSONS.forEach(l=>{
+    const st=S.lessons[l.id];
+    if(!st){ rows+=`<tr><td>Lesson ${esc(l.id)} — ${esc(l.title)}</td><td class="nf">—</td><td class="nf">—</td><td class="nf">${l.hunt?"—":""}</td></tr>`; return; }
+    const b=buildCounts(l), a=applyCounts(l), h=huntCounts(l);
+    const bTxt = b.done? (st.buildComplete?`${b.clean}/${b.total}`:`${b.clean}/${b.done} (${b.done}/${b.total} built)`) : "—";
+    const aTxt = a.ans? (st.applyDone?`${a.got}/${a.total}`:`${a.got}/${a.ans} (unfinished)`) : "—";
+    const hTxt = l.hunt ? (h.ans? (st.huntDone?`${h.got}/${h.total}`:`${h.got}/${h.ans} (unfinished)`) : "—") : "";
+    aggFirst += b.clean + a.got + h.got; aggAtt += b.done + a.ans + h.ans;
+    sig += `|${l.id}:${b.clean}.${a.got}.${h.got}`;
+    rows+=`<tr><td>Lesson ${esc(l.id)} — ${esc(l.title)}</td>
+      <td class="score">${bTxt}</td><td class="score">${aTxt}</td><td class="score">${hTxt}</td></tr>`;
+  });
+  let revRows="";
+  S.reviews.slice(-12).forEach(r=>{
+    revRows+=`<tr><td>${esc(fmtWhen(r.when))}</td><td>${esc(r.upTo)}</td><td class="score">${r.got}/${r.total}</td>
+      <td${r.missed.length?"":" class='nf'"}>${r.missed.length?esc(r.missed.join(", ")):"none"}</td></tr>`;
+  });
+  const needs={};
+  LESSONS.forEach(l=>{
+    const st=S.lessons[l.id]; if(!st) return;
+    l.words.forEach(w=>{ if(st.buildFirst[w.w]===false) needs[w.w]=(needs[w.w]||0)+1; });
+    (st.applySample||[]).forEach(d=>{ if(st.applyFirst[applyKey(d)]===false) needs[applyWordName(d)]=(needs[applyWordName(d)]||0)+1; });
+    if(l.hunt) Object.keys(st.huntFirst||{}).forEach(k=>{ if(st.huntFirst[k]===false){ const t=k.split("_")[2]; const tw=t.charAt(0).toUpperCase()+t.slice(1); needs[tw]=(needs[tw]||0)+1; } });
+  });
+  S.reviews.forEach(r=>r.missed.forEach(w=>{ needs[w]=(needs[w]||0)+1; }));
+  const needList=Object.keys(needs).sort((x,y)=>needs[y]-needs[x]);
+  const revFirst=S.reviews.reduce((s,r)=>s+r.got,0), revAtt=S.reviews.reduce((s,r)=>s+r.total,0);
+  const code=vcode(`${name}|${sid}|${aggFirst}/${aggAtt}|${revFirst}/${revAtt}${sig}`);
+  m.innerHTML=`
+    <div class="idrow noprint">
+      <span style="align-self:flex-end"><button class="btn btn-primary" onclick="saveIdAndPrint()">Save as PDF</button></span>
+      <span style="align-self:flex-end"><button class="btn btn-ghost" onclick="go('id')">Edit my details</button></span>
+    </div>
+    <p class="muted noprint" style="margin-bottom:14px">Click <b>Save as PDF</b>, choose “Save as PDF” as the destination in the print box, then send the file to your teacher.</p>
+    <h2>Writing Folio — Vocab Report</h2>
+    <p class="muted">${name?`<b>${esc(name)}</b>`:"<i>(name not entered)</i>"} · ID ${sid?`<b>${esc(sid)}</b>`:"<i>(not entered)</i>"} · ${dt}</p>
+    <table class="repgrid">
+      <tr><th>Lesson</th><th>Build (clean)</th><th>Use (1st try)</th><th>Sentence hunt</th></tr>
+      ${rows}
+      <tr><td><b>All lesson items attempted</b></td><td class="score" colspan="2"><b>${aggAtt?`${aggFirst}/${aggAtt} (${Math.round(100*aggFirst/aggAtt)}%)`:"—"}</b></td><td>first attempts; everything was then mastered via the retry loop</td></tr>
+    </table>
+    <h3>Review sessions (${S.reviews.length})</h3>
+    ${S.reviews.length?`<table class="repgrid"><tr><th>When</th><th>Up to lesson</th><th>First try</th><th>Missed</th></tr>${revRows}</table>
+      <p class="muted">Across all reviews: <b>${revFirst}/${revAtt}</b> first-attempt. ${S.reviews.length>12?"(last 12 shown)":""}</p>`
+      :`<p class="muted">No review sessions yet.</p>`}
+    <h3>Word list</h3>
+    <p class="muted">${(function(){ const m=metWords(), u=unmasteredWords(), k=masteredWords(), d=undrilledWords();
+      return m.length? `<b>${m.length}</b> words in the list · <b>${k.length}</b> mastered (answered correctly twice running) · <b>${u.length}</b> still coming back in drills${u.length?`: ${u.map(w=>esc(w.w)).join(", ")}`:""}${d.length?` · ${d.length} not drilled yet`:""}.`
+                     : "No words met yet."; })()}</p>
+    <h3>Words needing another go</h3>
+    <p class="muted">${needList.length?needList.map(w=>`${esc(w)}${needs[w]>1?` (×${needs[w]})`:""}`).join(", "):"None recorded — every first attempt so far has landed."}</p>
+    <h3>Reading this report</h3>
+    <p class="muted">Each lesson runs meet → build (assemble the word from its morphemes) → use (apply tasks sampled from a bank). Lesson 02 adds a sentence hunt: finding declarative, imperative, interrogative and exclamative sentences in a passage. Reviews shuffle words from earlier lessons, weighted toward ones previously missed. All scores are FIRST attempts; wrong answers loop until mastered, so a rough first-attempt score with everything cleared still shows honest, finished work.</p>
+    <p class="muted">Verification code: <span class="vcode">${code}</span> · Writing Folio Vocab Hub</p>`;
+}
+function saveIdAndPrint(){
+  renderReport();
+  setTimeout(()=>window.print(),150);
+}
+
+function renderIdentity(){
+  document.getElementById("id-body").innerHTML=`
+  <div class="idrow" style="flex-direction:column;max-width:460px">
+    <span><label for="idf">First name</label><input id="idf" style="width:100%" value="${esc(S.fname||"")}" autocomplete="off"><div class="iderr" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" style="width:100%" value="${esc(S.lname||"")}" autocomplete="off"><div class="iderr" id="el"></div></span>
+    <span><label for="ids">Student ID</label><input id="ids" style="width:100%" maxlength="8" value="${esc(S.sid||"")}" autocomplete="off"><div class="iderr" id="es"></div></span>
+    <span><button class="btn btn-primary" onclick="idSubmit()">Start →</button></span>
+  </div>`;
+}
+function idSubmit(){
+  const f=document.getElementById("idf").value.trim(), l=document.getElementById("idl").value.trim(), sid=document.getElementById("ids").value.trim();
+  document.getElementById("ef").textContent = f? "" : "First name needed.";
+  document.getElementById("el").textContent = l? "" : "Last name needed.";
+  document.getElementById("es").textContent = (sid.length>=4&&sid.length<=8)? "" : "That doesn’t look right — check your student ID and try again.";
+  if(!f||!l||sid.length<4||sid.length>8) return;
+  S.fname=f; S.lname=l; S.sid=sid; S.name=f+" "+l; touchStart(); save(); writeProfile();
+  go("home");
+}
+
+
+/* ================= STEP 4 · SENTENCE HUNT (Lesson 02) =================
+   Each passage is shown whole; the student clicks the sentence that
+   matches the type asked for. Any sentence of that type counts. */
+function huntItems(l){
+  if(!l.hunt) return [];
+  const out=[];
+  l.hunt.passages.forEach((p,pi)=>Object.keys(l.hunt.types).forEach(type=>{
+    if(p.sentences.some(s=>s.type===type)) out.push({id:`h_${pi}_${type}`, pi, type});
+  }));
+  return out;
+}
+function huntCounts(l){
+  const st=L(l.id); const items=huntItems(l);
+  const ans=items.filter(it=>st.huntFirst[it.id]!==undefined).length;
+  const got=items.filter(it=>st.huntFirst[it.id]===true).length;
+  return {ans, got, total:items.length};
+}
+function huntExplain(s){
+  const why={ declarative:"It states a fact or describes something, subject then verb, and ends with a full stop.",
+              imperative:"It starts with a verb and tells the reader what to do.",
+              interrogative:"It asks a question and ends with a question mark.",
+              exclamative:"It expresses a strong feeling, usually with an exclamation mark." };
+  return `“${esc(s.t)}” ${why[s.type]}`;
+}
+function startHunt(l){
+  touchStart();
+  const st=L(l.id);
+  const record=!st.huntDone;
+  go("apply");
+  const items=huntItems(l);
+  let queue=shuffle(items);
+  let mastered=0;
+  const mount=document.getElementById("apply-body");
+  function progress(){ document.getElementById("apply-prog").textContent=`STEP 4 · SENTENCE HUNT · mastered ${mastered}/${items.length}`; }
+  function next(){
+    progress();
+    if(!queue.length){ finishHunt(l, record); return; }
+    const it=queue.shift();
+    const p=l.hunt.passages[it.pi];
+    mount.innerHTML=`<div class="prompt">Find the sentence</div>
+      <div class="qtext">Click a sentence that is <b>${esc(l.hunt.types[it.type])}</b>.</div>
+      <div class="passage"><div class="ptitle">${esc(p.title)}</div><p id="psent"></p></div>
+      <div class="feedback" id="hfb"></div>
+      <div class="nextrow noprint"><button class="btn btn-primary" id="hnext" style="display:none">Next →</button></div>`;
+    const para=mount.querySelector("#psent");
+    let answered=false;
+    p.sentences.forEach(s=>{
+      const b=document.createElement("button"); b.className="sent"; b.textContent=s.t;
+      b.onclick=()=>{
+        if(answered) return; answered=true;
+        const correct=(s.type===it.type);
+        b.classList.add(correct?"right":"wrongpick");
+        para.querySelectorAll(".sent").forEach(x=>{ x.disabled=true; });
+        if(!correct) para.querySelectorAll(".sent").forEach((x,i)=>{ if(p.sentences[i].type===it.type) x.classList.add("right"); });
+        const fb=mount.querySelector("#hfb");
+        fb.className="feedback "+(correct?"ok":"bad");
+        fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite — that sentence is <b>${esc(s.type)}</b>.</b> `)+huntExplain(s)+(correct?"":" <i>This one will come back around.</i>");
+        if(record && st.huntFirst[it.id]===undefined){ st.huntFirst[it.id]=correct; save(); }
+        if(correct) mastered++; else queue.push(it);
+        const nb=mount.querySelector("#hnext"); nb.style.display="inline-block"; nb.onclick=next; nb.focus();
+      };
+      para.appendChild(b);
+    });
+  }
+  mount.innerHTML=`<h2 style="text-align:center">Sentence hunt — Lesson ${esc(l.id)}</h2>
+    <p class="focusline">${l.hunt.intro}</p>
+    <div class="nextrow" style="justify-content:center"><button class="btn btn-primary" id="hstart">Start the hunt →</button></div>`;
+  mount.querySelector("#hstart").onclick=next;
+}
+function finishHunt(l, recorded){
+  const st=L(l.id);
+  if(recorded){ st.huntDone=true; save(); }
+  const h=huntCounts(l);
+  const pct=h.total?Math.round(100*h.got/h.total):0;
+  const cls=pct>=80?"good":(pct>=60?"mid":"low");
+  document.getElementById("apply-body").innerHTML=`
+    <div class="sumbox"><div class="prompt">Sentence hunt — first attempts</div>
+    <div class="big ${cls}">${h.got} / ${h.total}</div>
+    <p class="muted">Four sentence types across three passages. Every miss came back until you found it.${recorded?"":" (Practice run — your report kept the original scores.)"}</p></div>
+    <div class="nextrow" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="goLesson()">back to lesson</button>
+      <button class="btn btn-primary" onclick="go('home')">all lessons</button></div>`;
+}
+
+/* ---- boot ---- */
+(function boot(){
+  const m=location.hash.match(/^#set-(.+)$/);
+  go("home");
+  if(m && idOk()){
+    const id=decodeURIComponent(m[1]);
+    if(LESSON_BY_ID[id]) openLesson(id, false);
+  }
+  /* the trip back: if another page sent the student here, offer the way home */
+  try{
+    const bk=JSON.parse(localStorage.getItem("bonesparrow.return.v1"));
+    if(bk && bk.href){
+      const b=document.createElement("button"); b.id="backTrip";
+      b.innerHTML=`↩ Back to where you were <span class="bx" title="dismiss">×</span>`;
+      b.onclick=(e)=>{
+        if(e.target.classList.contains("bx")){ localStorage.removeItem("bonesparrow.return.v1"); b.remove(); return; }
+        location.href=bk.href+"#resume";
+      };
+      document.body.appendChild(b);
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
