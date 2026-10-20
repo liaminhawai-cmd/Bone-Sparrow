@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contention and claims — Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* Colour is a taxonomy: one colour, one named category, legend always on
+     screen beside it. Correctness is never carried by these. */
+  --cont-bg:#cfe0f5; --cont-tx:#17406e;
+  --claim-bg:#d4ecd8; --claim-tx:#1d5c2e;
+  --fact-bg:#fdf0b8; --fact-tx:#6a5200;
+  --rhetq-bg:#e6dcf7; --rhetq-tx:#4a2f7d;
+  --emot-bg:#fbd9da; --emot-tx:#8d2733;
+  --incl-bg:#fde0c8; --incl-tx:#8a4a12;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:18px 12px 60px}
+.container{width:100%;max-width:880px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+body.wide .container{max-width:min(1200px,98vw)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 10px}
+h3{font-family:Georgia,serif;font-size:16px;margin:18px 0 6px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.55}
+.eyebrow{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin:0 0 6px}
+p.lead{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 14px}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 16px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+textarea{line-height:1.6;resize:vertical}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+/* ---- step list ---- */
+.step{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 10px;
+      font-family:inherit;font-size:15px;color:inherit;cursor:pointer;transition:border-color .15s}
+.step:hover{border-color:var(--accent)}
+.step .num{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+           display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.step .t{font-weight:700}
+.step .d{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.5}
+.step .tag{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;
+           letter-spacing:.4px;color:var(--muted);white-space:nowrap;padding-top:4px}
+
+/* ---- deck ---- */
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:9px 14px;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.deckbar b{color:var(--ink)}
+.meter{flex:1;min-width:120px;height:7px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:0 0 14px}
+.prompt{font-size:14px;font-weight:700;margin:0 0 10px}
+.stim{font-family:Georgia,serif;font-size:17px;line-height:1.6;background:var(--bg);
+      border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 15px;margin:0 0 14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+     font-size:14.5px;font-family:inherit;color:inherit;cursor:pointer;line-height:1.5}
+.opt:hover{border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.chosen{border:2px solid var(--ink)}
+.opt.right{background:var(--okbg);border-color:var(--correct)}
+.opt.wrong{background:var(--wrongbg);border-color:var(--wrong)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips .opt{flex:0 1 auto}
+.fb{border-radius:9px;padding:12px 15px;margin:14px 0 0;font-size:13.5px;line-height:1.6;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb.warn{background:var(--warnbg);border:1px solid var(--warn)}
+.fb ul{margin:7px 0 0;padding-left:20px}
+.fb li{margin:3px 0}
+.fb .rule{display:block;font-weight:700;margin-bottom:3px}
+.notjudged{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);color:var(--muted);font-size:12.5px}
+
+/* ---- samples: clickable chunks ---- */
+.sample{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 12px;
+        font-family:Georgia,serif;font-size:16px;line-height:1.85}
+.chunk{cursor:pointer;border-radius:4px;padding:1px 2px;border-bottom:1px dotted var(--line)}
+.chunk:hover{background:var(--bg)}
+.chunk.picked{outline:2px solid var(--ink);outline-offset:1px}
+.chunk.right{background:var(--okbg)}
+.chunk.wrong{background:var(--wrongbg)}
+.src{display:block;font-family:'Segoe UI',sans-serif;font-size:11px;color:var(--muted);margin-top:10px}
+
+/* ---- the taxonomy ---- */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;font-size:12px;color:var(--muted)}
+.legend .sw{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-2px;margin-right:5px}
+.sw.cont{background:var(--cont-bg);border:1px solid var(--cont-tx)}
+.sw.claim{background:var(--claim-bg);border:1px solid var(--claim-tx)}
+.sw.fact{background:var(--fact-bg);border:1px solid var(--fact-tx)}
+.sw.rhetq{background:var(--rhetq-bg);border:1px solid var(--rhetq-tx)}
+.sw.emot{background:var(--emot-bg);border:1px solid var(--emot-tx)}
+.sw.incl{background:var(--incl-bg);border:1px solid var(--incl-tx)}
+.m-cont{background:var(--cont-bg);color:var(--cont-tx)}
+.m-claim{background:var(--claim-bg);color:var(--claim-tx)}
+.m-fact{background:var(--fact-bg);color:var(--fact-tx)}
+.m-rhetq{background:var(--rhetq-bg);color:var(--rhetq-tx)}
+.m-emot{background:var(--emot-bg);color:var(--emot-tx)}
+.m-incl{background:var(--incl-bg);color:var(--incl-tx)}
+
+/* ---- marker ---- */
+.palette{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.pbtn{border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;
+      font-family:inherit;cursor:pointer;background:#fff;color:var(--ink)}
+.pbtn.on{outline:2px solid var(--ink);outline-offset:1px}
+.canvasdoc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+           font-family:Georgia,serif;font-size:16px;line-height:2.05;margin:0 0 12px}
+.tok{cursor:pointer;border-radius:3px;padding:1px 0}
+.tok:hover{box-shadow:inset 0 -2px 0 var(--accent)}
+.tok.anchor{outline:2px solid var(--ink);outline-offset:1px}
+.tok.mk{padding:2px 1px}
+.cov{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:0 0 12px}
+.covcell{background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 12px}
+.covcell .n{font-size:19px;font-weight:800}
+.covcell .l{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+
+table.rpt{width:100%;border-collapse:collapse;font-size:13.5px;margin:0 0 10px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+.dim{color:#97907f}
+.vcode{letter-spacing:1px;font-weight:700}
+.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 14px}
+
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:16px} }
+@media print{
+  body{background:#fff;padding:0;display:block}
+  .container{max-width:none;border:0;box-shadow:none;padding:0;border-radius:0}
+  .noprint{display:none !important}
+  .container{background:#fff}
+  .canvasdoc,.panel,table.rpt,.covcell{border-color:#999}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1,h2,h3{page-break-after:avoid}
+  table.rpt,.canvasdoc{page-break-inside:auto}
+}
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+
+<script>
+/* ============================================================================
+   CONTENTION AND CLAIMS
+   Single file, no build, no dependencies. Data first, engine after.
+
+   Source material. The card sorts (Sets D and E) and the six sentences in the
+   "which of these are her claims" task are the teacher's own wording from
+   06.1c and 06.1w. Where the mentor text itself is needed — because locating a
+   contention in real prose is the skill — short extracts are quoted and
+   attributed, paragraph by paragraph, with the printed reading copy (05.1r)
+   as the text students actually read from. The whole article is not
+   reproduced here: this site is public.
+   ========================================================================== */
+
+const CATS = {
+  cont : { label:"Contention",         cls:"cont",  tx:"the writer's position: what they want you to think or do" },
+  claim: { label:"Claim",              cls:"claim", tx:"a reason given to show the contention is true" },
+  fact : { label:"Fact",               cls:"fact",  tx:"something checkable: a number, a date, a finding" },
+  rhetq: { label:"Rhetorical question", cls:"rhetq", tx:"a question asked to make a point, not to get an answer" },
+  emot : { label:"Emotive language",   cls:"emot",  tx:"words chosen to make the reader feel something" },
+  incl : { label:"Inclusive language", cls:"incl",  tx:"we, us, our — pulling the reader onto the writer's side" }
+};
+const CAT_ORDER = ["cont","claim","fact","rhetq","emot","incl"];
+
+/* ---- why a contention isn't one yet ---------------------------------- */
+const MISSING = {
+  vague : { s:"Too vague",        l:"Too vague — it doesn't say what should happen about it." },
+  fact  : { s:"A fact",           l:"That's a fact, not a position. Nobody can disagree with it." },
+  fence : { s:"Sits on the fence",l:"It sits on the fence. A contention takes one side." },
+  quest : { s:"A question",       l:"That's a question. A contention is a statement." },
+  topic : { s:"A topic",          l:"That's a topic, not a sentence. A contention is a full statement." },
+  want  : { s:"What you want",    l:"That says what you want, not what should happen." }
+};
+
+/* ============================ THE SAMPLES ================================ */
+/* Each chunk carries every category that honestly applies to it, so a chunk
+   that is both a claim and inclusive language is right for either question. */
+const SAMPLES = {
+  lunch: {
+    title:"Lunchtime — a Year 7 student's letter",
+    src:"Written for this task.",
+    chunks:[
+      { t:"Every student in this school deserves a lunchtime long enough to eat.", c:["cont"] },
+      { t:"Right now we get twenty minutes.", c:["fact"] },
+      { t:"Is that really enough time for a growing teenager?", c:["rhetq"] },
+      { t:"A recent school survey found that 68 per cent of Year 7 students throw food away because they run out of time.", c:["fact"] },
+      { t:"Children are left hungry, rushed and miserable.", c:["emot"] },
+      { t:"We all know what it feels like to sit down and be told to stand up again.", c:["incl"] },
+      { t:"Students who eat properly concentrate better in afternoon classes.", c:["claim"] },
+      { t:"The canteen is on the north side of the campus.", c:[] }
+    ]
+  },
+  homework: {
+    title:"Homework over the holidays",
+    src:"Written for this task.",
+    chunks:[
+      { t:"Schools should not set homework over the holidays.", c:["cont"] },
+      { t:"Holidays are the only time many families can travel together.", c:["claim"] },
+      { t:"Last year, 41 per cent of our students reported doing schoolwork during the September break.", c:["fact"] },
+      { t:"Why should a thirteen-year-old spend their break staring at a worksheet?", c:["rhetq"] },
+      { t:"Our children come back exhausted before the year has even started.", c:["emot","incl"] },
+      { t:"We owe them a proper rest.", c:["incl"] },
+      { t:"Term three finishes on the nineteenth of September.", c:[] }
+    ]
+  },
+  /* --- mentor text, quoted in short extracts and attributed --- */
+  cm16: {
+    title:"The Courier Mail — paragraphs 16–19",
+    src:"Eleni Paneras, “Why delaying social media is the best gift we can give our children”, The Courier Mail, 23 November 2025. Extract. Full text: reading copy 05.1r.",
+    chunks:[
+      { t:"That’s why I support Australia’s decision to delay social media access for kids under 16 – not ban it, delay it.", c:["cont"] },
+      { t:"Because this isn’t about denying them something.", c:[] },
+      { t:"It’s about protecting them until they’re old enough to handle it.", c:["claim"] },
+      { t:"If we would never hand our kids alcohol or cigarettes, why do we hand them social media?", c:["rhetq","incl"] },
+      { t:"Remember when people said smoking was a personal choice?", c:["rhetq"] }
+    ]
+  },
+  cm27: {
+    title:"The Courier Mail — paragraphs 27–28",
+    src:"Eleni Paneras, The Courier Mail, 23 November 2025. Extract. Full text: reading copy 05.1r.",
+    chunks:[
+      { t:"Parents are fighting an unwinnable battle against trillion-dollar tech companies whose business models depend on keeping users – including our children – hooked.", c:["claim","incl"] },
+      { t:"Because if we’re honest, none of us want to see our kids trapped in the scroll.", c:["emot","incl"] },
+      { t:"None of us want to watch them measure their worth in likes and views.", c:["emot","incl"] },
+      { t:"My son is eight.", c:["fact"] }
+    ]
+  }
+};
+
+/* ============================ THE CARD POOL ============================== */
+/* rule = the thing the card tests. Siblings share a rule, so a miss pulls in
+   a different card testing the same rule rather than the same card again. */
+const POOL = [
+ /* ---- contention / claim / fact, from 06.1w Part 3 ---- */
+ { id:"s1", type:"sort", rule:"claimfact", stim:"Parents cannot win against tech companies that design apps to keep children hooked.",
+   a:"claim", why:"A reason she gives for her position — and one you could argue with." },
+ { id:"s2", type:"sort", rule:"claimfact", stim:"The writer's son is eight years old.",
+   a:"fact", why:"Checkable, and nobody would argue about it. It supports her story, but it isn't a reason." },
+ { id:"s3", type:"sort", rule:"claimfact", stim:"Social media makes young people measure their worth in likes and views.",
+   a:"claim", why:"A reason, stated as something that happens. Somebody could disagree." },
+ { id:"s4", type:"sort", rule:"claimfact", stim:"Mixtapes used to be recorded off the radio.",
+   a:"fact", why:"True, checkable, and not a reason for anything she argues." },
+ { id:"s5", type:"sort", rule:"claimfact", stim:"We would never give children alcohol or cigarettes, so we should not give them social media either.",
+   a:"claim", why:"A reason, built by comparison. Disagreeing with it is possible, which is what makes it a claim." },
+ { id:"s6", type:"sort", rule:"contclaim", stim:"Under-16s should not be allowed to have social media accounts.",
+   a:"cont", why:"It names what should happen. That is the position itself, not a reason for it." },
+ { id:"s7", type:"sort", rule:"contclaim", stim:"Gaming late at night stops students from getting enough sleep.",
+   a:"claim", why:"A reason. It would sit underneath a contention about limiting gaming." },
+ { id:"s8", type:"sort", rule:"claimfact", stim:"Sixty-eight per cent of Year 7 students throw food away at lunch.",
+   a:"fact", why:"A number from a survey. Evidence for a claim, not the claim itself." },
+ { id:"s9", type:"sort", rule:"contclaim", stim:"Lunchtime should be 20 minutes longer.",
+   a:"cont", why:"It says what should happen and takes a side." },
+ { id:"s10", type:"sort", rule:"claimfact", stim:"Students who eat properly concentrate better in afternoon classes.",
+   a:"claim", why:"A reason, and one somebody could challenge." },
+ { id:"s11", type:"sort", rule:"contclaim", stim:"Video games.",
+   a:"none", why:"A topic. It isn't a sentence, so it can't be a position or a reason." },
+ { id:"s12", type:"sort", rule:"rhetq", stim:"Why do we rush children through their food?",
+   a:"none", why:"A rhetorical question. It pushes you towards a position without stating one." },
+ { id:"s13", type:"sort", rule:"emotive", stim:"Children are left hungry, rushed and miserable.",
+   a:"none", why:"Emotive language. It makes you feel the problem rather than giving a reason or a checkable fact." },
+
+ /* ---- strong contention or not yet, from Set D ---- */
+ { id:"d1", type:"strong", rule:"strong", stim:"Social media is bad.", ok:false, miss:"vague" },
+ { id:"d2", type:"strong", rule:"strong", stim:"Lots of students have phones.", ok:false, miss:"fact" },
+ { id:"d3", type:"strong", rule:"strong", stim:"Some people like homework and some people don't.", ok:false, miss:"fence" },
+ { id:"d4", type:"strong", rule:"strong", stim:"Is lunchtime too short?", ok:false, miss:"quest" },
+ { id:"d5", type:"strong", rule:"strong", stim:"Gambling on sports.", ok:false, miss:"topic" },
+ { id:"d6", type:"strong", rule:"strong", stim:"I want to be able to use social media.", ok:false, miss:"want" },
+ { id:"d7", type:"strong", rule:"strong", stim:"I love books.", ok:false, miss:"want" },
+ { id:"d8", type:"strong", rule:"strong", stim:"Under-16s should not be allowed to have social media accounts.", ok:true },
+ { id:"d9", type:"strong", rule:"strong", stim:"Schools should not set homework over the holidays.", ok:true },
+ { id:"d10", type:"strong", rule:"strong", stim:"Year 7 students should be allowed to wear sports uniform every day.", ok:true },
+ { id:"d11", type:"strong", rule:"strong", stim:"The AFL must stop changing its rules every year.", ok:true },
+ { id:"d12", type:"strong", rule:"strong", stim:"Lunchtime should be 20 minutes longer.", ok:true },
+
+ /* ---- rewrite it ---- */
+ { id:"f1", type:"fix", rule:"rewrite", want:"cont", stim:"Social media is bad.",
+   note:"vague", ask:"Rewrite it as a strong contention." },
+ { id:"f2", type:"fix", rule:"rewrite", want:"cont", stim:"Is lunchtime too short?",
+   note:"quest", ask:"Rewrite it as a strong contention." },
+ { id:"f3", type:"fix", rule:"rewrite", want:"cont", stim:"Lots of students have phones.",
+   note:"fact", ask:"Rewrite it as a strong contention." },
+ { id:"f4", type:"fix", rule:"rewrite", want:"cont", stim:"Some people like homework and some people don't.",
+   note:"fence", ask:"Rewrite it as a strong contention." },
+ { id:"f5", type:"fix", rule:"rewrite", want:"cont", stim:"Gambling on sports.",
+   note:"topic", ask:"Rewrite it as a strong contention." },
+ { id:"f6", type:"fix", rule:"rewrite", want:"claim", stim:"Homework is annoying.",
+   note:"vague", ask:"Rewrite it as a claim: a reason somebody could argue with." },
+ { id:"f7", type:"fix", rule:"rewrite", want:"claim", stim:"Phones are bad at school.",
+   note:"vague", ask:"Rewrite it as a claim: a reason somebody could argue with." },
+
+ /* ---- spot it in a text ---- */
+ { id:"p1", type:"spot", rule:"contclaim", sample:"cm16", want:"cont", need:1 },
+ { id:"p2", type:"spot", rule:"rhetq",     sample:"cm16", want:"rhetq", need:2 },
+ { id:"p3", type:"spot", rule:"claimfact", sample:"cm27", want:"claim", need:1 },
+ { id:"p4", type:"spot", rule:"emotive",   sample:"cm27", want:"emot", need:2 },
+ { id:"p5", type:"spot", rule:"inclusive", sample:"cm27", want:"incl", need:3 },
+ { id:"p6", type:"spot", rule:"contclaim", sample:"lunch", want:"cont", need:1 },
+ { id:"p7", type:"spot", rule:"claimfact", sample:"lunch", want:"fact", need:2 },
+ { id:"p8", type:"spot", rule:"rhetq",     sample:"lunch", want:"rhetq", need:1 },
+ { id:"p9", type:"spot", rule:"emotive",   sample:"lunch", want:"emot", need:1 },
+ { id:"p10", type:"spot", rule:"inclusive", sample:"homework", want:"incl", need:2 },
+ { id:"p11", type:"spot", rule:"emotive",   sample:"homework", want:"emot", need:1 },
+ { id:"p12", type:"spot", rule:"claimfact", sample:"homework", want:"fact", need:1 },
+
+ /* ---- which contention does this claim support (Set E) ---- */
+ { id:"m1", type:"match", rule:"support", stim:"Young children often copy what they see on screen.", a:"A" },
+ { id:"m2", type:"match", rule:"support", stim:"Violent games can give young children nightmares and make them anxious.", a:"A" },
+ { id:"m3", type:"match", rule:"support", stim:"Parents know their own children better than any government does.", a:"B" },
+ { id:"m4", type:"match", rule:"support", stim:"Many parents play games with their children and can talk about what they see.", a:"B" },
+ { id:"m5", type:"match", rule:"support", stim:"Gaming late at night stops students from getting enough sleep.", a:"C" },
+ { id:"m6", type:"match", rule:"support", stim:"Students who game for hours have less time for homework and reading.", a:"C" },
+ { id:"m7", type:"match", rule:"support", stim:"Online gaming is how many teenagers stay connected with their friends.", a:"D" },
+ { id:"m8", type:"match", rule:"support", stim:"Gaming can help students relax after a stressful school day.", a:"D" }
+];
+
+const CONTENTIONS = {
+  A:"Age ratings on violent games should be strictly enforced.",
+  B:"Parents, not the government, should decide which games their children play.",
+  C:"Gaming should be limited to one hour on school nights.",
+  D:"Strict time limits on gaming are not needed on school nights."
+};
+
+const RULE_LABEL = {
+  claimfact:"Claim or fact", contclaim:"Contention or claim", strong:"Strong contention",
+  rewrite:"Rewriting a weak one", rhetq:"Rhetorical question", emotive:"Emotive language",
+  inclusive:"Inclusive language", support:"Which contention it supports"
+};
+
+/* ====================== STATE ============================================ */
+const KEY = "writingfolio.contention.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store = localStorage;
+function blank(){ return { fname:"", lname:"", sid:"", first:{}, deckDone:false,
+  draft:{ text:"", marks:[] }, exported:false, startedAt:null }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
+let S = load();
+function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p) return;
+  S.fname=S.fname||p.fname||""; S.lname=S.lname||p.lname||""; S.sid=S.sid||p.sid||""; save(); })();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+/* First attempt only, and never overwritten — a later miss cannot erase a
+   first-go success, and a later success cannot hide a first-go miss. */
+function recFirst(id, ok){ if(S.first[id]===undefined){ S.first[id]=!!ok; save(); } }
+function vcode(str){
+  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return "F-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
+
+/* ====================== ROUTER =========================================== */
+let screen="home";
+function go(s){
+  if(!idOk() && s!=="id") s="id";
+  screen=s;
+  document.body.classList.toggle("wide", s==="mark");
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(s==="id") renderId();
+  else if(s==="home") renderHome();
+  else if(s==="words") renderWords();
+  else if(s==="deck") startDeck();
+  else if(s==="draft") renderDraft();
+  else if(s==="mark") renderMark();
+  else if(s==="send") renderSend();
+}
+function topbar(){
+  return `<div class="topbar noprint">
+    <span class="eyebrow" style="margin:0">Writing folio · contention and claims</span>
+    <span class="sp">
+      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
+    </span></div>`;
+}
+
+/* ====================== IDENTITY ========================================= */
+function renderId(){
+  $("body").innerHTML=`<h1>Contention and claims</h1>
+  <p class="sub">Your work saves on this device under your name and student code.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right — check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  S.fname=f; S.lname=l; S.sid=s; S.startedAt=S.startedAt||Date.now(); save(); writeProfile();
+  go("home");
+}
+
+/* ====================== STEP LIST ======================================== */
+function deckScore(){
+  const ks=POOL.map(c=>c.id).filter(id=>S.first[id]!==undefined);
+  return { got:ks.filter(k=>S.first[k]).length, total:ks.length };
+}
+function wordScore(){
+  const ks=Object.keys(S.first).filter(k=>k.indexOf("w.")===0);
+  return { got:ks.filter(k=>S.first[k]).length, total:ks.length };
+}
+function renderHome(){
+  const sc=deckScore();
+  const marks=(S.draft.marks||[]).length, words=(S.draft.text||"").trim().split(/\s+/).filter(Boolean).length;
+  const steps=[
+    { t:"The words", d:"Contention, claim, evidence, rhetorical, emotive, inclusive.",
+      tag:S.first["wordsdone"]?"done":"", done:!!S.first["wordsdone"], go:"words" },
+    { t:"Grammar with the class", d:"Your teacher runs this part. Come back here afterwards.",
+      tag:"", done:false, go:"home", teacher:true },
+    { t:"The deck", d:"Sort, judge, rewrite and find. A card you get wrong goes back in.",
+      tag:S.deckDone?"done":(sc.total?`${sc.got}/${sc.total} first go`:""), done:S.deckDone, go:"deck" },
+    { t:"Your draft", d:"Write your persuasive piece.",
+      tag:words?`${words} words`:"", done:words>40, go:"draft" },
+    { t:"Mark it up", d:"Colour your contention, claims, facts and techniques.",
+      tag:marks?`${marks} marked`:"", done:marks>=4, go:"mark" },
+    { t:"Send it to your teacher", d:"Save the PDF and email it.",
+      tag:S.exported?"sent":"", done:!!S.exported, go:"send" }
+  ];
+  let h=topbar()+`<h1>Contention and claims</h1>
+  <p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
+  steps.forEach((st,i)=>{
+    h+=`<button class="step ${st.done?"done":""}" onclick="${st.teacher?`markTeacherStep()`:`go('${st.go}')`}">
+      <span class="num">${st.done?"✓":i+1}</span>
+      <span><span class="t">${esc(st.t)}</span><br><span class="d">${esc(st.d)}</span></span>
+      <span class="tag">${esc(st.tag)}</span></button>`;
+  });
+  $("body").innerHTML=h;
+}
+function markTeacherStep(){ go("deck"); }
+
+/* ====================== STEP 1 · THE WORDS ===============================
+   A recall drill, not a first meeting: the words are met in the folio vocab
+   hub. Build each word from its parts, then say what it does. */
+const WORDS = [
+ { w:"Contention", parts:[["con-","together"],["tend","to stretch, to strain"],["-ion","the act of"]],
+   decoys:[["contra-","against"],["tain","to hold"],["-ure","the result of"]],
+   q:"Which one is the contention?",
+   opts:["Under-16s should not be allowed social media accounts.",
+         "Sixty-eight per cent of teenagers use social media daily.",
+         "Social media and young people.",
+         "Do you think social media is harmful?"],
+   a:0, ex:"The position itself: it says what should happen, in a full statement." },
+ { w:"Claim", parts:[["clam","to cry out, to shout"]],
+   decoys:[["clar","clear"],["-ity","the state of"]],
+   q:"Which one is a claim?",
+   opts:["Gaming late at night stops students getting enough sleep.",
+         "Gaming should be limited to one hour on school nights.",
+         "Video games.",
+         "Minecraft was released in 2011."],
+   a:0, ex:"A reason that sits underneath a contention. The second option is the contention; the last is a fact." },
+ { w:"Evidence", parts:[["e-","out"],["vid","to see"],["-ence","the state of"]],
+   decoys:[["ex-","former"],["voc","voice"],["-ment","the result of"]],
+   q:"Which one is evidence?",
+   opts:["A school survey found 68 per cent of students throw food away.",
+         "Lunchtime is far too short for anyone.",
+         "Lunchtime should be 20 minutes longer.",
+         "Why do we rush children through their food?"],
+   a:0, ex:"Something checkable that backs a claim up. The others are emotive language, a contention and a rhetorical question." },
+ { w:"Rhetorical", parts:[["rhetor","public speaker"],["-ical","to do with"]],
+   decoys:[["rhino","nose"],["-ology","the study of"]],
+   q:"Which one is a rhetorical question?",
+   opts:["Is that really enough time for a growing teenager?",
+         "What time does lunch start?",
+         "Lunchtime should be longer.",
+         "Students are hungry and miserable."],
+   a:0, ex:"Asked to make a point, not to get an answer. The second one genuinely wants an answer." },
+ { w:"Emotive", parts:[["e-","out"],["mot","to move"],["-ive","tending to"]],
+   decoys:[["em-","in"],["mod","measure"],["-ous","full of"]],
+   q:"Which one uses emotive language?",
+   opts:["Children are left hungry, rushed and miserable.",
+         "Lunch runs from 1.10pm to 1.30pm.",
+         "Lunchtime should be 20 minutes longer.",
+         "Most students eat in the quadrangle."],
+   a:0, ex:"Words picked to make you feel something — the same point could be made flatly." },
+ { w:"Inclusive", parts:[["in-","in"],["clud/clus","to shut, to close"],["-ive","tending to"]],
+   decoys:[["ex-","out"],["cord","heart"],["-able","able to be"]],
+   q:"Which one uses inclusive language?",
+   opts:["We all know what it feels like to be rushed.",
+         "Students are rushed at lunchtime.",
+         "The school rushes its students.",
+         "Lunch is twenty minutes long."],
+   a:0, ex:"<i>We</i> and <i>us</i> put the reader on the writer's side before they have agreed to anything." }
+];
+let W = null;
+function renderWords(){
+  W = W || { i:0, phase:"build", picked:[], tried:{} };
+  const item = WORDS[W.i];
+  if(!item){
+    recFirst("wordsdone", true);
+    $("body").innerHTML = topbar()+`<h2>The words</h2>
+      <div class="fb ok on">All six built and used.</div>
+      <div class="btnrow"><button class="btn btn-primary" onclick="go('deck')">The deck →</button>
+      <button class="btn btn-ghost" onclick="W=null;go('words')">Again</button>
+      <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>`;
+    return;
+  }
+  let h=topbar()+`<h2>The words</h2>
+    <div class="deckbar"><b>${W.i+1} of ${WORDS.length}</b>
+      <span class="meter"><i style="width:${Math.round(100*W.i/WORDS.length)}%"></i></span></div>`;
+
+  if(W.phase==="build"){
+    const tiles = shuffle(item.parts.concat(item.decoys));
+    h+=`<div class="cardbox">
+      <p class="prompt">Build <b>${esc(item.w)}</b> from its parts, in order.</p>
+      <div class="stim" id="slot">${W.picked.length?W.picked.map(p=>`<span class="m-cont" style="padding:2px 7px;border-radius:6px;margin-right:4px">${esc(p[0])}</span>`).join(""):"<span class='dim'>Tap the parts below.</span>"}</div>
+      <div class="chips" id="tiles">
+        ${tiles.map((t,i)=>`<button class="opt" data-i="${i}" onclick="wordTile(${i})">${esc(t[0])} <span class="dim">${esc(t[1])}</span></button>`).join("")}
+      </div>
+      <div class="btnrow"><button class="btn btn-ghost" onclick="W.picked=[];renderWords()">Clear</button></div>
+      <div class="fb" id="fb"></div></div>`;
+    $("body").innerHTML=h;
+    window.__tiles = tiles;
+    return;
+  }
+  /* phase: use */
+  const opts = W.optOrder || (W.optOrder = shuffle(item.opts.map((t,i)=>({t,i}))));
+  h+=`<div class="cardbox">
+    <p class="prompt">${esc(item.q)}</p>
+    <div class="opts">${opts.map((o,k)=>`<button class="opt" id="o${k}" onclick="wordAnswer(${o.i},${k})">${esc(o.t)}</button>`).join("")}</div>
+    <div class="fb" id="fb"></div></div>`;
+  $("body").innerHTML=h;
+}
+function wordTile(i){
+  const item=WORDS[W.i], t=window.__tiles[i];
+  W.picked.push(t);
+  const want = item.parts;
+  const n = W.picked.length;
+  if(W.picked[n-1][0] !== want[n-1][0]){
+    if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("w.build."+item.w, false); }
+    W.picked.pop();
+    renderWords();
+    const fb=$("fb"); fb.className="fb bad on";
+    fb.innerHTML=`<span class="rule">Not that part, or not yet.</span>${esc(t[0])} means “${esc(t[1])}”. ${n===1?"Start with the part that comes first in the word.":"The part you need next comes straight after “"+esc(want[n-2][0])+"”."}`;
+    return;
+  }
+  if(W.picked.length===want.length){
+    if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("w.build."+item.w, true); }
+    W.phase="use"; W.optOrder=null; renderWords();
+    const fb=$("fb"); fb.className="fb ok on";
+    fb.innerHTML=`<b>${esc(item.w)}</b> = ${want.map(p=>esc(p[0])+" (" + esc(p[1]) + ")").join(" + ")}.`;
+    return;
+  }
+  renderWords();
+}
+function wordAnswer(i,k){
+  const item=WORDS[W.i], ok = (i===item.a);
+  if(!W.tried["u"+W.i]){ W.tried["u"+W.i]=true; recFirst("w.use."+item.w, ok); }
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("o"+k).classList.add(ok?"right":"wrong");
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+item.ex+
+    `<div class="btnrow"><button class="btn btn-primary" onclick="wordNext()">${ok?"Next →":"Try the next word →"}</button></div>`;
+}
+function wordNext(){ W.i++; W.phase="build"; W.picked=[]; W.optOrder=null; renderWords(); }
+
+/* ====================== STEP 3 · THE DECK ================================
+   A card leaves the deck after two correct answers in a row. A wrong answer
+   sends it back down the deck, resets its streak, and pulls in a different
+   card testing the same rule — so the way out is the rule, not the item. */
+const SESSION_SIZE = 16;
+const RETIRE_STREAK = 2;
+const PENALTY_GAP = 4;
+let D = null;
+
+function startDeck(){
+  if(!D){
+    const byType = {};
+    POOL.forEach(c=>{ (byType[c.type]=byType[c.type]||[]).push(c); });
+    const picked=[], used={};
+    /* stratified: every type and every rule gets into the session */
+    Object.keys(byType).forEach(t=>{
+      const take = shuffle(byType[t]).slice(0, Math.max(2, Math.round(SESSION_SIZE/5)));
+      take.forEach(c=>{ if(!used[c.id]){ used[c.id]=1; picked.push(c); } });
+    });
+    const rest = shuffle(POOL.filter(c=>!used[c.id]));
+    while(picked.length < SESSION_SIZE && rest.length) { const c=rest.shift(); used[c.id]=1; picked.push(c); }
+    D = { queue: shuffle(picked).map(c=>({ id:c.id, streak:0 })),
+          bank: POOL.filter(c=>!used[c.id]).map(c=>c.id),
+          retired:0, total:picked.length, phase:null, pick:[], sub:null };
+  }
+  renderCard();
+}
+function card(id){ return POOL.find(c=>c.id===id); }
+function deckDone(){
+  S.deckDone=true; save();
+  const sc=deckScore();
+  $("body").innerHTML = topbar()+`<h2>The deck</h2>
+    <div class="fb ok on"><b>Deck clear.</b> ${sc.got} of ${sc.total} right on the first go.</div>
+    <div class="btnrow"><button class="btn btn-primary" onclick="go('draft')">Your draft →</button>
+    <button class="btn btn-ghost" onclick="D=null;go('deck')">New deck</button>
+    <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>`;
+}
+function missCard(entry){
+  /* back down the deck, streak gone, and a sibling on the same rule joins it */
+  entry.streak=0;
+  const c=card(entry.id);
+  D.queue.shift();
+  const at=Math.min(PENALTY_GAP, D.queue.length);
+  D.queue.splice(at,0,entry);
+  const sib=D.bank.find(id=>card(id).rule===c.rule);
+  if(sib){
+    D.bank=D.bank.filter(x=>x!==sib);
+    D.queue.splice(Math.min(at+1,D.queue.length),0,{id:sib,streak:0});
+    D.total++;
+  }
+}
+function hitCard(entry){
+  entry.streak++;
+  D.queue.shift();
+  if(entry.streak>=RETIRE_STREAK){ D.retired++; }
+  else { D.queue.splice(Math.min(PENALTY_GAP+2, D.queue.length),0,entry); }
+}
+function deckBar(){
+  const left=D.queue.length;
+  return `<div class="deckbar"><b>${left}</b> card${left===1?"":"s"} to clear
+    <span class="meter"><i style="width:${Math.round(100*D.retired/Math.max(1,D.total))}%"></i></span>
+    <span>two in a row clears a card</span></div>`;
+}
+function renderCard(){
+  if(!D.queue.length) return deckDone();
+  const entry=D.queue[0], c=card(entry.id);
+  D.phase=null; D.pick=[]; D.sub=null;
+  let h=topbar()+`<h2>The deck</h2>`+deckBar();
+  if(c.type==="sort")   h+=cardSort(c);
+  if(c.type==="strong") h+=cardStrong(c);
+  if(c.type==="fix")    h+=cardFix(c);
+  if(c.type==="spot")   h+=cardSpot(c);
+  if(c.type==="match")  h+=cardMatch(c);
+  $("body").innerHTML=h;
+  if(c.type==="fix"){ const t=$("fixIn"); if(t) t.focus(); }
+}
+function fbBox(){ return `<div class="fb" id="fb"></div>`; }
+function nextBtn(label){ return `<div class="btnrow"><button class="btn btn-primary" id="nextBtn" onclick="renderCard()">${label||"Next card →"}</button></div>`; }
+
+/* ---- sort ---- */
+function cardSort(c){
+  const opts=shuffle([["cont","Contention"],["claim","Claim"],["fact","Fact"],["none","None of these"]]);
+  D.optOrder=opts;
+  return `<div class="cardbox">
+    <p class="prompt">Contention, claim, or fact?</p>
+    <div class="stim">${esc(c.stim)}</div>
+    <div class="chips">${opts.map((o,k)=>`<button class="opt" id="o${k}" onclick="ansSort('${o[0]}',${k})">${esc(o[1])}</button>`).join("")}</div>
+    ${fbBox()}</div>`;
+}
+function ansSort(v,k){
+  const entry=D.queue[0], c=card(entry.id), ok=(v===c.a);
+  recFirst(c.id, ok);
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("o"+k).classList.add(ok?"right":"wrong");
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  const name={cont:"a contention",claim:"a claim",fact:"a fact",none:"none of these"}[c.a];
+  fb.innerHTML=(ok?"":`<span class="rule">It's ${name}.</span>`)+esc(c.why)+
+    (ok?"":`<div class="notjudged">This card goes back into the deck, with another one like it.</div>`)+
+    nextBtn();
+  if(ok) hitCard(entry); else missCard(entry);
+}
+
+/* ---- strong contention, two steps ---- */
+function cardStrong(c){
+  return `<div class="cardbox">
+    <p class="prompt">Strong contention, or not yet?</p>
+    <div class="stim">${esc(c.stim)}</div>
+    <div class="chips">
+      <button class="opt" id="oY" onclick="ansStrong(true)">Strong contention</button>
+      <button class="opt" id="oN" onclick="ansStrong(false)">Not a contention yet</button>
+    </div>
+    ${fbBox()}</div>`;
+}
+function ansStrong(said){
+  const entry=D.queue[0], c=card(entry.id), ok=(said===c.ok);
+  const fb=$("fb");
+  if(!ok){
+    recFirst(c.id, false);
+    document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+    $(said?"oY":"oN").classList.add("wrong"); $(c.ok?"oY":"oN").classList.add("right");
+    fb.className="fb bad on";
+    fb.innerHTML=`<span class="rule">${c.ok?"It is one.":"Not yet."}</span>`+
+      (c.ok?"It takes a side, it is specific, and it is a statement."
+           :esc(MISSING[c.miss].l))+
+      `<div class="notjudged">This card goes back into the deck, with another one like it.</div>`+nextBtn();
+    missCard(entry);
+    return;
+  }
+  if(c.ok){
+    recFirst(c.id, true);
+    document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+    $("oY").classList.add("right");
+    fb.className="fb ok on";
+    fb.innerHTML=`It takes a side, it is specific, and it is a statement.`+nextBtn();
+    hitCard(entry);
+    return;
+  }
+  /* right that it isn't one — now say what is missing */
+  D.phase="why";
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("oN").classList.add("right");
+  const opts=shuffle(Object.keys(MISSING));
+  fb.className="fb warn on";
+  fb.innerHTML=`<span class="rule">Right. Now what is missing?</span>
+    <div class="chips" style="margin-top:9px">${opts.map((m,k)=>
+      `<button class="opt" id="w${k}" onclick="ansWhy('${m}',${k})">${esc(MISSING[m].s)}</button>`).join("")}</div>`;
+}
+function ansWhy(m,k){
+  const entry=D.queue[0], c=card(entry.id), ok=(m===c.miss);
+  recFirst(c.id, ok);
+  $("fb").querySelectorAll("button.opt").forEach(b=>b.disabled=true);
+  $("w"+k).classList.add(ok?"right":"wrong");
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  fb.innerHTML=(ok?`<span class="rule">Yes.</span>`:`<span class="rule">Not that.</span>`)+esc(MISSING[c.miss].l)+
+    (ok?"":`<div class="notjudged">This card goes back into the deck, with another one like it.</div>`)+nextBtn();
+  if(ok) hitCard(entry); else missCard(entry);
+}
+
+/* ---- rewrite, typed ---- */
+function cardFix(c){
+  return `<div class="cardbox">
+    <p class="prompt">${esc(c.ask)}</p>
+    <div class="stim">${esc(c.stim)}<span class="src">${esc(MISSING[c.note].l)}</span></div>
+    <textarea id="fixIn" rows="2" placeholder="Type your sentence"></textarea>
+    <div class="btnrow"><button class="btn btn-primary" onclick="ansFix()">Check it</button></div>
+    ${fbBox()}</div>`;
+}
+/* Only properties a machine can actually read are judged, and the card says
+   which judgements it is not making. */
+function judgeWrite(txt, want, stim){
+  const t=(txt||"").trim(), low=t.toLowerCase(), f=[];
+  const words=t.split(/\s+/).filter(Boolean);
+  if(!t) return [{r:"Nothing typed yet."}];
+  if(words.length<5) f.push({r:"Too short to be a sentence.", d:"A contention or claim is a full sentence — give it a subject and a verb."});
+  if(/\?\s*$/.test(t)) f.push({r:"That's a question.", d:"A contention is a statement. Turn it round: say what should happen."});
+  if(low.replace(/[^a-z ]/g,"").trim()===stim.toLowerCase().replace(/[^a-z ]/g,"").trim())
+    f.push({r:"That's the same sentence.", d:"Change it so it takes a side and says what should happen."});
+  if(/\b(some people .* (and )?(some|others))|\bit depends\b|\bmaybe\b|\bsort of\b|\bkind of\b/.test(low))
+    f.push({r:"It sits on the fence.", d:"Pick one side. 'Some people… and some people…' is not a position."});
+  if(/^\s*i (want|like|love|hate|reckon|feel)\b/.test(low))
+    f.push({r:"That says what you want.", d:"A contention says what SHOULD happen, not what you'd like."});
+  if(want==="cont"){
+    if(!/\b(should|shouldn't|should not|must|mustn't|must not|ought|need(s)? to|has to|have to|deserve[sd]?|allow(ed)?|ban(ned)?|stop|start|require[sd]?)\b/.test(low))
+      f.push({r:"It doesn't take a side.", d:"A contention names what should happen — should, must, ought to, needs to, should not be allowed."});
+    if(/^(social media|homework|phones?|lunchtime|gambling|school)\s+(is|are)\s+(bad|good|great|terrible|annoying|rubbish|awful|fine)\s*\.?$/.test(low))
+      f.push({r:"Still too vague.", d:"Bad how, and what should happen about it? Name the change you want."});
+    if(/^(lots of|many|most|some|a lot of|there (is|are))\b/.test(low) &&
+       !/\b(should|must|ought|need)\b/.test(low))
+      f.push({r:"That's a fact, not a position.", d:"Nobody can disagree with it. Say what should change."});
+  }
+  if(want==="claim"){
+    if(!/\b(because|since|so|stops?|helps?|makes?|means?|leads? to|gives?|takes?|prevents?|lets?|causes?|costs?)\b/.test(low))
+      f.push({r:"It doesn't give a reason yet.", d:"A claim says what happens as a result — it stops, it means, it helps, because…"});
+  }
+  if(!/[.!?]$/.test(t)) f.push({r:"No full stop.", d:"Finish the sentence."});
+  return f;
+}
+function ansFix(){
+  const entry=D.queue[0], c=card(entry.id);
+  const txt=$("fixIn").value;
+  const f=judgeWrite(txt, c.want, c.stim);
+  const ok=!f.length;
+  recFirst(c.id, ok);
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  const notJudged = `<div class="notjudged">Checked: it takes a side, it is specific, it is a statement, it is a full sentence.
+    Not checked: whether it is true, and whether it is your strongest point — your teacher reads that.</div>`;
+  if(ok){
+    fb.innerHTML=`<span class="rule">That works as a ${c.want==="cont"?"contention":"claim"}.</span>
+      <div class="stim" style="margin:8px 0 0">${esc(txt.trim())}</div>`+notJudged+nextBtn();
+    hitCard(entry);
+  } else {
+    fb.innerHTML=`<span class="rule">Not yet.</span><ul>`+
+      f.map(x=>`<li><b>${esc(x.r)}</b>${x.d?" "+esc(x.d):""}</li>`).join("")+`</ul>`+notJudged+
+      `<div class="btnrow"><button class="btn btn-primary" onclick="renderCard()">This one goes back in the deck →</button></div>`;
+    missCard(entry);
+  }
+}
+
+/* ---- spot it in a sample ---- */
+function cardSpot(c){
+  const s=SAMPLES[c.sample], cat=CATS[c.want];
+  return `<div class="cardbox">
+    <p class="prompt">Click the ${esc(cat.label.toLowerCase())}. <span class="dim">${esc(cat.tx)}</span></p>
+    <div class="legend"><span><i class="sw ${cat.cls}"></i>${esc(cat.label)}</span></div>
+    <div class="sample">${s.chunks.map((ch,i)=>`<span class="chunk" id="c${i}" onclick="spotPick(${i})">${esc(ch.t)}</span> `).join("")}
+      <span class="src">${esc(s.title)} · ${esc(s.src)}</span></div>
+    <div class="btnrow"><button class="btn btn-primary" onclick="ansSpot()">Check</button>
+      <button class="btn btn-ghost" onclick="D.pick=[];spotPaint()">Clear</button></div>
+    <p class="dim" style="font-size:12.5px;margin:8px 0 0">${c.need>1?`There ${c.need===2?"are two":"are "+c.need}.`:"There is one."}</p>
+    ${fbBox()}</div>`;
+}
+function spotPick(i){
+  const at=D.pick.indexOf(i);
+  if(at>=0) D.pick.splice(at,1); else D.pick.push(i);
+  spotPaint();
+}
+function spotPaint(){
+  const c=card(D.queue[0].id), s=SAMPLES[c.sample];
+  s.chunks.forEach((ch,i)=>{ const el=$("c"+i); if(el) el.classList.toggle("picked", D.pick.includes(i)); });
+}
+function ansSpot(){
+  const entry=D.queue[0], c=card(entry.id), s=SAMPLES[c.sample];
+  const right=s.chunks.map((ch,i)=>ch.c.includes(c.want)?i:-1).filter(i=>i>=0);
+  const picked=D.pick.slice().sort(), want=right.slice().sort();
+  const ok = picked.length===want.length && picked.every((v,i)=>v===want[i]);
+  recFirst(c.id, ok);
+  s.chunks.forEach((ch,i)=>{
+    const el=$("c"+i); if(!el) return;
+    el.classList.remove("picked");
+    el.onclick=null;
+    if(right.includes(i)) el.classList.add("right");
+    else if(D.pick.includes(i)) el.classList.add("wrong");
+  });
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  const cat=CATS[c.want];
+  const missed=right.filter(i=>!D.pick.includes(i)).length, extra=D.pick.filter(i=>!right.includes(i)).length;
+  fb.innerHTML=(ok?`<span class="rule">All of it.</span>`
+    :`<span class="rule">${missed?`${missed} missed`:""}${missed&&extra?", ":""}${extra?`${extra} that isn't ${cat.label.toLowerCase()}`:""}.</span>`)+
+    `${esc(cat.label)}: ${esc(cat.tx)}. Green is every one in this extract.`+
+    (ok?"":`<div class="notjudged">This card goes back into the deck, with another one like it.</div>`)+nextBtn();
+  if(ok) hitCard(entry); else missCard(entry);
+}
+
+/* ---- which contention does it support ---- */
+function cardMatch(c){
+  const keys=shuffle(Object.keys(CONTENTIONS));
+  D.optOrder=keys;
+  return `<div class="cardbox">
+    <p class="prompt">Which contention does this claim support?</p>
+    <div class="stim">${esc(c.stim)}</div>
+    <div class="opts">${keys.map((k,i)=>`<button class="opt" id="o${i}" onclick="ansMatch('${k}',${i})">${esc(CONTENTIONS[k])}</button>`).join("")}</div>
+    ${fbBox()}</div>`;
+}
+function ansMatch(k,i){
+  const entry=D.queue[0], c=card(entry.id), ok=(k===c.a);
+  recFirst(c.id, ok);
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("o"+i).classList.add(ok?"right":"wrong");
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  fb.innerHTML=(ok?`<span class="rule">Yes.</span>`:`<span class="rule">It supports this one:</span><div class="stim" style="margin:8px 0">${esc(CONTENTIONS[c.a])}</div>`)+
+    `A claim has to give a reason for <i>that</i> position. Two of these four argue the opposite side.`+
+    (ok?"":`<div class="notjudged">This card goes back into the deck, with another one like it.</div>`)+nextBtn();
+  if(ok) hitCard(entry); else missCard(entry);
+}
+
+/* ====================== STEP 4 · DRAFT =================================== */
+function renderDraft(){
+  $("body").innerHTML=topbar()+`<h2>Your draft</h2>
+  <p class="lead">Write your persuasive piece. One contention, at least three claims, and the evidence and techniques that back them up.</p>
+  <textarea id="draftIn" rows="16" placeholder="Start typing.">${esc(S.draft.text||"")}</textarea>
+  <div class="btnrow">
+    <button class="btn btn-primary" onclick="saveDraft(true)">Save and mark it up →</button>
+    <button class="btn btn-ghost" onclick="saveDraft(false)">Save</button>
+  </div>
+  <div class="fb" id="fb"></div>`;
+  $("draftIn").addEventListener("input", ()=>{ clearTimeout(window.__dt);
+    window.__dt=setTimeout(()=>{ S.draft.text=$("draftIn").value; save(); }, 700); });
+}
+function saveDraft(move){
+  const t=$("draftIn").value;
+  if(t!==S.draft.text){ S.draft.text=t; S.draft.marks=[]; }
+  save();
+  if(move) go("mark");
+  else { const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Saved."; }
+}
+
+/* ====================== STEP 5 · MARK IT UP ==============================
+   Click the first word of a span, then the last, then a colour. Tagging by
+   word runs from a single phrase up to a whole sentence with one mechanic. */
+let MK = { cat:"cont", anchor:null };
+function tokens(){
+  const t=S.draft.text||"";
+  const out=[]; const re=/\S+/g; let m;
+  while((m=re.exec(t))!==null) out.push({ s:m.index, e:m.index+m[0].length, w:m[0] });
+  return out;
+}
+function renderMark(){
+  const toks=tokens();
+  if(!toks.length){
+    $("body").innerHTML=topbar()+`<h2>Mark it up</h2>
+      <div class="fb warn on">There's no draft to mark yet.</div>
+      <div class="btnrow"><button class="btn btn-primary" onclick="go('draft')">Write your draft →</button></div>`;
+    return;
+  }
+  let h=topbar()+`<h2>Mark it up</h2>
+  <p class="lead">Click the first word of a part, then the last word, then the colour it belongs to. Click a coloured part to take the colour off.</p>
+  <div class="palette noprint">${CAT_ORDER.map(k=>
+    `<button class="pbtn m-${CATS[k].cls} ${MK.cat===k?"on":""}" onclick="MK.cat='${k}';MK.anchor=null;renderMark()">${esc(CATS[k].label)}</button>`).join("")}</div>
+  <div class="canvasdoc" id="doc">${markHtml(toks,true)}</div>`;
+  h+=coverage();
+  h+=`<div class="btnrow noprint">
+    <button class="btn btn-primary" onclick="go('send')">Send it to your teacher →</button>
+    <button class="btn btn-ghost" onclick="go('draft')">Back to the draft</button></div>`;
+  $("body").innerHTML=h;
+}
+function markAt(i){ return (S.draft.marks||[]).find(m=>i>=m.a && i<=m.b); }
+function markHtml(toks, live){
+  let h="", i=0;
+  while(i<toks.length){
+    const m=markAt(i);
+    if(m){
+      const txt=toks.slice(m.a,m.b+1).map(t=>t.w).join(" ");
+      h+=`<span class="tok mk m-${CATS[m.c].cls}" ${live?`onclick="unmark(${m.a})"`:""} title="${esc(CATS[m.c].label)}">${esc(txt)}</span> `;
+      i=m.b+1;
+    } else {
+      h+=`<span class="tok ${MK.anchor===i?"anchor":""}" ${live?`onclick="tapTok(${i})"`:""}>${esc(toks[i].w)}</span> `;
+      i++;
+    }
+  }
+  return h;
+}
+function tapTok(i){
+  if(MK.anchor===null){ MK.anchor=i; renderMark(); return; }
+  const a=Math.min(MK.anchor,i), b=Math.max(MK.anchor,i);
+  for(let k=a;k<=b;k++) if(markAt(k)){ MK.anchor=null; renderMark(); return; }
+  S.draft.marks.push({a,b,c:MK.cat}); S.draft.marks.sort((x,y)=>x.a-y.a);
+  MK.anchor=null; save(); renderMark();
+}
+function unmark(a){
+  S.draft.marks=(S.draft.marks||[]).filter(m=>m.a!==a); save(); renderMark();
+}
+function counts(){
+  const n={}; CAT_ORDER.forEach(k=>n[k]=0);
+  (S.draft.marks||[]).forEach(m=>{ n[m.c]=(n[m.c]||0)+1; });
+  return n;
+}
+function coverage(){
+  const n=counts();
+  return `<div class="cov">${CAT_ORDER.map(k=>
+    `<div class="covcell"><div class="n m-${CATS[k].cls}" style="display:inline-block;padding:0 8px;border-radius:6px">${n[k]}</div>
+     <div class="l">${esc(CATS[k].label)}</div></div>`).join("")}</div>
+   <p class="dim" style="font-size:12.5px;margin:0 0 6px">Counts only. Whether each part does its job is your teacher's call.</p>`;
+}
+
+/* ====================== STEP 6 · SEND ==================================== */
+function byRule(){
+  const out={};
+  POOL.forEach(c=>{ if(S.first[c.id]===undefined) return;
+    const r=out[c.rule]=out[c.rule]||{got:0,total:0};
+    r.total++; if(S.first[c.id]) r.got++; });
+  return out;
+}
+function renderSend(){
+  const n=counts(), toks=tokens(), rules=byRule();
+  const sc=deckScore();
+  const wordsN=toks.length;
+  const code=vcode(JSON.stringify(S.first)+"|"+S.fname+"|"+S.lname+"|"+S.sid+"|"+(S.draft.text||"")+"|"+JSON.stringify(S.draft.marks||[]));
+  const dt=new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
+  let h=topbar()+`
+  <div class="btnrow noprint" style="margin:0 0 14px">
+    <button class="btn btn-primary" onclick="S.exported=true;save();window.print()">Save as PDF</button>
+    <button class="btn btn-ghost" onclick="go('mark')">Back to mark-up</button>
+  </div>
+  <p class="lead noprint">Save as PDF, then email the file to your teacher.</p>
+
+  <h1>Contention and claims</h1>
+  <p class="sub"><b>${esc(S.fname)} ${esc(S.lname)}</b> · ${esc(S.sid)} · ${esc(dt)}</p>
+
+  <h3>The deck — first attempt</h3>
+  <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>
+  ${Object.keys(rules).length
+    ? Object.keys(rules).map(r=>`<tr><td>${esc(RULE_LABEL[r]||r)}</td><td><b>${rules[r].got} / ${rules[r].total}</b></td></tr>`).join("")
+    : `<tr><td colspan="2" class="dim">Deck not started.</td></tr>`}
+  ${sc.total?`<tr><td><b>All cards</b></td><td><b>${sc.got} / ${sc.total}</b>${sc.total?` (${Math.round(100*sc.got/sc.total)}%)`:""}</td></tr>`:""}
+  </table>
+  <p class="dim" style="font-size:12.5px">Every card was answered until it was right; the score above is the first attempt at each one.</p>
+
+  <h3>The draft</h3>
+  <div class="legend">${CAT_ORDER.map(k=>`<span><i class="sw ${CATS[k].cls}"></i>${esc(CATS[k].label)}</span>`).join("")}</div>
+  ${wordsN?`<div class="canvasdoc">${markHtml(toks,false)}</div>`:`<div class="panel dim">No draft written.</div>`}
+  <table class="rpt"><tr>${CAT_ORDER.map(k=>`<th>${esc(CATS[k].label)}</th>`).join("")}<th>Words</th></tr>
+    <tr>${CAT_ORDER.map(k=>`<td><b>${n[k]}</b></td>`).join("")}<td><b>${wordsN}</b></td></tr></table>
+  <p class="dim" style="font-size:12.5px">Marked by the student. The colours report what they labelled, not whether the label is right.</p>
+  <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span> — changes if the name, code, draft or any score changes.</p>`;
+  $("body").innerHTML=h;
+}
+
+/* ---- boot ---- */
+go(idOk() ? "home" : "id");
+</script>
+</body>
+</html>

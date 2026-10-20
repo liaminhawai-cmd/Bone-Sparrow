@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing Folio — Year 7 English</title>
+<style>
+/* Same paper palette as the rest of the suite, with its own accent so the two
+   strands are tellable apart at a glance. This page is the folio's front
+   door: it collects name and code once and hands them on through the shared
+   profile the other pages already read. */
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:22px 12px 48px}
+.container{width:100%;max-width:760px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:25px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 18px;line-height:1.55}
+.eyebrow{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin:0 0 6px}
+p.lead{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 14px}
+
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 0 6px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+.btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.linkbtn{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0;font-family:inherit}
+.linkbtn:hover{text-decoration:underline}
+
+a.card{display:block;width:100%;text-align:left;text-decoration:none;color:inherit;background:#fff;
+       border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 10px;
+       transition:border-color .15s}
+a.card:hover{border-color:var(--accent)}
+a.card .t{font-weight:700;font-size:16px}
+a.card .t .arrow{color:var(--accent)}
+a.card .d{color:var(--muted);font-size:13px;margin-top:4px;line-height:1.55}
+a.card .st{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+           border-radius:99px;padding:2px 9px;margin-left:8px;vertical-align:2px;
+           color:var(--correct);background:var(--okbg);border:1px solid var(--correct)}
+.secondary a.card{background:var(--bg)}
+.secondary{margin-top:22px}
+.whoami{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--line);
+        border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:13px}
+.topmini{display:flex;justify-content:flex-end;margin:0 0 14px;min-height:20px}
+.topmini .linkbtn2{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 13px;
+    font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;text-decoration:none}
+.topmini .linkbtn2:hover{border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="topmini" id="topMini"></div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* ============================================================================
+   The folio shares the suite's one profile record, so a student who has
+   already signed in anywhere does not sign in again. Folio progress lives in
+   each activity's own key; nothing about the novel is read or written here.
+   ========================================================================== */
+const PKEY = "bonesparrow.profile.v1";
+function readProfile(){ try{ const p=JSON.parse(localStorage.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(p){ try{ localStorage.setItem(PKEY, JSON.stringify(Object.assign({v:1},p))); }catch(e){} }
+function readJSON(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
+
+let P = readProfile() || { fname:"", lname:"", sid:"", eal:null, lang:"", chapter:null };
+let step = P.sid ? 2 : 1;
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+
+function renderStep1(){
+  $("app").innerHTML = `
+  <h1>Writing Folio — Year 7 English</h1>
+  <p class="sub">Your work saves on this device under your name and student code, so use the same computer where you can.</p>
+  <h2>First, who are you?</h2>
+  <p class="lead">Use the name and code your school knows you by — they go on the report you send your teacher.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(P.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(P.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" autocomplete="off" maxlength="8" value="${esc(P.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" id="go1">Continue →</button></div>`;
+  $("go1").onclick = submit1;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") submit1(); });
+}
+function submit1(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
+  $("ef").textContent = f ? "" : "We need your first name.";
+  $("el").textContent = l ? "" : "We need your last name.";
+  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right — check your student code and try again.";
+  if(!f || !l || sid.length<4 || sid.length>8) return;
+  P.fname=f; P.lname=l; P.sid=sid; writeProfile(P);
+  step=2; render();
+}
+
+/* Status chips read each activity's own storage, so the list reports real
+   state rather than what the student last clicked. */
+function ccStatus(){
+  const S = readJSON("writingfolio.contention.v1");
+  if(!S) return "";
+  if(S.exported) return "sent";
+  if(S.draft && S.draft.text) return "drafting";
+  if(S.deckDone) return "deck done";
+  if(S.first && Object.keys(S.first).length) return "in progress";
+  return "";
+}
+function vocabStatus(){
+  const V = readJSON("writingfolio.vocabhub.v1");
+  if(!V || !V.lessons) return "";
+  const done = Object.keys(V.lessons).filter(id=>V.lessons[id] && V.lessons[id].applyDone).length;
+  return done ? done+" of 8 done" : (Object.keys(V.lessons).length ? "in progress" : "");
+}
+
+function renderStep2(){
+  const cc = ccStatus(), vs = vocabStatus();
+  $("app").innerHTML = `
+  <h1>Hi, ${esc(P.fname)}.</h1>
+  <div class="whoami">
+    <span><b>${esc(P.fname)} ${esc(P.lname)}</b> · ${esc(P.sid)}</span>
+    <span style="margin-left:auto"><button class="linkbtn" id="editMe">Not you?</button></span>
+  </div>
+
+  <a class="card" href="ContentionClaims.html">
+    <div class="t">Contention and claims ${cc?`<span class="st">${esc(cc)}</span>`:""}<span class="arrow"> →</span></div>
+    <div class="d">Work through the deck, write your draft, then send the PDF to your teacher.</div></a>
+
+  <a class="card" href="WritingFolioVocabHub.html#set-04">
+    <div class="t">Persuasive writing words ${vs?`<span class="st">${esc(vs)}</span>`:""}<span class="arrow"> →</span></div>
+    <div class="d">Meet the words, build them from their parts, then use them.</div></a>
+
+  <div class="secondary">
+    <a class="card" href="WritingFolioVocabHub.html">
+      <div class="t">Writing Folio vocab — all sets<span class="arrow"> →</span></div>
+      <div class="d">Procedural, persuasive, evaluative and micro-fiction.</div></a>
+    <a class="card" href="GrammarHuboffline.html">
+      <div class="t">Grammar Hub<span class="arrow"> →</span></div>
+      <div class="d">Sentence types, clauses and punctuation.</div></a>
+  </div>`;
+  $("editMe").onclick = ()=>{ step=1; render(); };
+}
+
+function renderTopMini(){
+  const bar=$("topMini"); if(!bar) return;
+  bar.innerHTML = P.sid
+    ? `<a class="linkbtn2" href="index.html">The Bone Sparrow →</a>`
+    : "";
+}
+function render(){
+  if(step===1) renderStep1(); else renderStep2();
+  renderTopMini();
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

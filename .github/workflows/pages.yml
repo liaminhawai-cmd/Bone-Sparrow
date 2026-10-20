@@ -12,6 +12,8 @@ on:
       - "BoneSparrowReadingHub.html"
       - "BoneSparrowVocabHub.html"
       - "WritingFolioVocabHub.html"
+      - "WritingFolio.html"
+      - "ContentionClaims.html"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -61,6 +63,8 @@ jobs:
           cp BoneSparrowReadingHub.html dist/
           cp BoneSparrowVocabHub.html dist/
           cp WritingFolioVocabHub.html dist/
+          cp WritingFolio.html dist/
+          cp ContentionClaims.html dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/

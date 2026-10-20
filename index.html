@@ -293,6 +293,8 @@ const DIRECTORY = [
  { g:"Writing the analysis", items:[
    {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]},
  { g:"Writing Folio (next unit)", items:[
+   {u:"WritingFolio.html", t:"Writing Folio", d:"its own front door — start there"},
+   {u:"ContentionClaims.html", t:"Contention and claims", d:"the deck, then your draft"},
    {u:"WritingFolioVocabHub.html", t:"Writing Folio Vocab Hub", d:"lessons 01–08, words and sentence types"} ]}
 ];
 
@@ -373,7 +375,10 @@ function scoreBand(got,total){
   return p>=0.85 ? "band4" : p>=0.7 ? "band3" : p>=0.5 ? "band2" : "band1";
 }
 function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">—</span>`; }
-function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
+function vcode(str){
+  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return "V-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
 function renderReports(){
   const R = readJSON("bonesparrow.readinghub.v2")||{};
   const V = readJSON("bonesparrow.vocabhub.v1")||{};
