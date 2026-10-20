@@ -106,8 +106,10 @@ textarea{line-height:1.6;resize:vertical}
 .chunk{cursor:pointer;border-radius:4px;padding:1px 2px;border-bottom:1px dotted var(--line)}
 .chunk:hover{background:var(--bg)}
 .chunk.picked{outline:2px solid var(--ink);outline-offset:1px}
-.chunk.right{background:var(--okbg)}
-.chunk.wrong{background:var(--wrongbg)}
+.chunk.right{background:#d6ecd9;box-shadow:inset 0 -2px 0 var(--correct);border-bottom-color:transparent}
+.chunk.right::after{content:" \2713";color:var(--correct);font-weight:800}
+.chunk.wrong{background:#f8dadb;box-shadow:inset 0 -2px 0 var(--wrong);border-bottom-color:transparent}
+.chunk.wrong::after{content:" \2717";color:var(--wrong);font-weight:800}
 .src{display:block;font-family:'Segoe UI',sans-serif;font-size:11px;color:var(--muted);margin-top:10px}
 
 /* ---- the taxonomy ---- */
@@ -1314,10 +1316,24 @@ function ansSpot(){
   });
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   const cat=CATS[c.want];
-  const missed=right.filter(i=>!D.pick.includes(i)).length, extra=D.pick.filter(i=>!right.includes(i)).length;
-  fb.innerHTML=(ok?`<span class="rule">All of it.</span>`
-    :`<span class="rule">${missed?`${missed} missed`:""}${missed&&extra?", ":""}${extra?`${extra} that isn't ${cat.label.toLowerCase()}`:""}.</span>`)+
-    `${esc(cat.label)}: ${esc(cat.tx)}. Green is every one in this extract.`+
+  const missed=right.filter(i=>!D.pick.includes(i));
+  const extra=D.pick.filter(i=>!right.includes(i));
+  const snip=i=>esc(s.chunks[i].t.length>64 ? s.chunks[i].t.slice(0,64)+"…" : s.chunks[i].t);
+  /* name what each wrongly-picked chunk actually is, from its own tags */
+  /* Of the six labels, the two ending in "language" are uncountable; the
+     rest take "a". That is the whole rule. */
+  const named=k=>{ const l=CATS[k].label.toLowerCase();
+    return /language$/.test(l) ? l : "a "+l; };
+  const isWhat=i=>{
+    const cs=s.chunks[i].c.filter(x=>x!==c.want);
+    return cs.length ? cs.map(named).join(" and ")
+                     : "none of the six — it carries the story along";
+  };
+  let lines="";
+  missed.forEach(i=>{ lines+=`<li>Missed: “${snip(i)}”</li>`; });
+  extra.forEach(i=>{ lines+=`<li>“${snip(i)}” is ${isWhat(i)}, not ${esc(named(c.want))}.</li>`; });
+  fb.innerHTML=(ok?`<span class="rule">${right.length>1?"Both of them.":"That's the one."}</span>${esc(cat.label)}: ${esc(cat.tx)}.`
+    :`<span class="rule">${esc(cat.label)}: ${esc(cat.tx)}.</span><ul>${lines}</ul>`)+
     (ok?"":`<div class="notjudged">This card goes back into the deck, with another one like it.</div>`)+nextBtn();
   if(ok) hitCard(entry); else missCard(entry);
 }
