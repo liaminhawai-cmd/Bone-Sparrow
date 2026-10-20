@@ -763,17 +763,17 @@ const GRAM = {
  /* --- 08: the sentence type that carries both facts and claims --- */
  declar:[
   { t:"Australia introduced the social media ban for under-16s in November 2024.",
-    verb:[1,1], a:"fact", why:"The date is documented, so somebody else can check it." },
+    verb:"introduced", a:"fact", why:"The date is documented, so somebody else can check it." },
   { t:"The social media ban will protect young people from serious harm.",
-    verb:[4,5], a:"claim", why:"Nobody can check a prediction yet. The verb group is “will protect”, modal and verb together." },
+    verb:"will protect", a:"claim", why:"Nobody can check a prediction yet. The verb group is “will protect”, modal and verb together." },
   { t:"Social media platforms profit from the attention of vulnerable teenagers.",
-    verb:[3,3], a:"claim", why:"“Vulnerable” is a judgement, so the sentence argues even though it is shaped like a fact." },
+    verb:"profit", a:"claim", why:"“Vulnerable” is a judgement, so the sentence argues even though it is shaped like a fact." },
   { t:"Water boils at 100 degrees.",
-    verb:[1,1], a:"fact", why:"Anybody with a thermometer can check it." },
+    verb:"boils", a:"fact", why:"Anybody with a thermometer can check it." },
   { t:"Grammar is the most important subject in school.",
-    verb:[1,1], a:"claim", why:"“Most important” cannot be checked by anyone. It is the writer's argument." },
+    verb:"is", a:"claim", why:"“Most important” cannot be checked by anyone. It is the writer's argument." },
   { t:"Sixty-eight per cent of Year 7 students threw food away at lunch.",
-    verb:[6,6], a:"fact", why:"A survey figure. Somebody counted it." }
+    verb:"threw", a:"fact", why:"A survey figure. Somebody counted it." }
  ],
  /* --- 09: the question that argues --- */
  rhet:[
@@ -833,6 +833,21 @@ const GRAM = {
 };
 const RHET_TYPES = { rhet:"Rhetorical question", gen:"Genuine question", decl:"Declarative", imp:"Imperative" };
 
+/* The sentence is the source of truth: the data says which words are the verb
+   group, and the position is worked out from the sentence itself. A hand-
+   counted index is invisible when it is wrong — this one told a student the
+   verb of "…Year 7 students threw food away…" was "students". */
+function verbSpan(it){
+  if(it._span!==undefined) return it._span;
+  const bare=x=>x.toLowerCase().replace(/[^a-z0-9'’-]/g,"");
+  const ws=it.t.split(/\s+/).map(bare), want=it.verb.split(/\s+/).map(bare);
+  let at=-1, hits=0;
+  for(let i=0;i+want.length<=ws.length;i++){
+    if(want.every((w,k)=>ws[i+k]===w)){ hits++; if(at<0) at=i; }
+  }
+  it._span = (hits===1) ? [at, at+want.length-1] : null;
+  return it._span;
+}
 let G = null;
 function renderGram(){
   G = G || { strand:0, i:0, phase:"pick", sel:[], order:[], tried:{} };
@@ -861,7 +876,13 @@ function gramBtn(){ return `<div class="btnrow"><button class="btn btn-primary n
 
 /* ---- 08 ---- */
 function gramDeclar(){
-  const it=GRAM.declar[G.i], ws=it.t.split(/\s+/);
+  const it=GRAM.declar[G.i], ws=it.t.split(/\s+/), span=verbSpan(it);
+  if(!span){
+    $("body").innerHTML=topbar()+`<h2>Grammar</h2>
+      <div class="fb bad on">This card can't be shown: “${esc(it.verb)}” does not appear exactly once in the sentence.</div>
+      <div class="btnrow"><button class="btn btn-primary" onclick="gramNext()">Skip it →</button></div>`;
+    return;
+  }
   let h=topbar()+`<h2>Grammar</h2>`+gramBar(G.i,GRAM.declar.length,"Declaratives: fact or claim");
   h+=`<div class="cardbox">
     <p class="prompt">${glossify(G.phase==="pick"
@@ -869,7 +890,7 @@ function gramDeclar(){
       : "Can somebody else check this sentence, or is it the writer's argument?")}</p>
     <div class="gsent">${ws.map((w,i)=>{
       let cls="gw2";
-      if(G.phase!=="pick"){ if(i>=it.verb[0]&&i<=it.verb[1]) cls+=" right";
+      if(G.phase!=="pick"){ if(i>=span[0]&&i<=span[1]) cls+=" right";
         else if(G.sel.includes(i)) cls+=" wrong"; }
       else if(G.sel.includes(i)) cls+=" on";
       return `<span class="${cls}" ${G.phase==="pick"?`onclick="gramWord(${i})"`:""}>${esc(w)}</span>`;
@@ -885,17 +906,18 @@ function gramDeclar(){
 }
 function gramWord(i){ const at=G.sel.indexOf(i); if(at>=0) G.sel.splice(at,1); else G.sel.push(i); renderGram(); }
 function gramCheckVerb(){
-  const it=GRAM.declar[G.i];
-  const want=[]; for(let i=it.verb[0];i<=it.verb[1];i++) want.push(i);
+  const it=GRAM.declar[G.i], span=verbSpan(it);
+  if(!span) return;
+  const want=[]; for(let i=span[0];i<=span[1];i++) want.push(i);
   const got=G.sel.slice().sort((a,b)=>a-b);
   const ok = got.length===want.length && got.every((v,i)=>v===want[i]);
   if(!G.tried["v"+G.i]){ G.tried["v"+G.i]=true; recFirst("g.verb."+G.i, ok); }
-  const words=it.t.split(/\s+/).slice(it.verb[0], it.verb[1]+1).join(" ");
+  const words=it.t.split(/\s+/).slice(span[0], span[1]+1).join(" ");
   G.phase="fc";
   G.verbFb = ok
     ? { k:"ok", h:`<span class="rule">That's the verb group.</span>${esc(words)}` }
     : { k:"bad", h:`<span class="rule">The verb group is “${esc(words)}”.</span>`+
-        (it.verb[1]>it.verb[0]?glossify("A Modal and the verb it measures count as one verb group. Take both or neither."):
+        (span[1]>span[0]?glossify("A Modal and the verb it measures count as one verb group. Take both or neither."):
          "Green shows it in the sentence.") };
   renderGram();
 }
