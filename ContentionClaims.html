@@ -18,6 +18,12 @@
   --rhetq-bg:#e6dcf7; --rhetq-tx:#4a2f7d;
   --emot-bg:#fbd9da; --emot-tx:#8d2733;
   --incl-bg:#fde0c8; --incl-tx:#8a4a12;
+  /* Morphemes keep the colours they have in the vocab hub, so a part of a
+     word means the same thing in both places. */
+  --mpre:#2c6fa8; --mpre-bg:#e5eef5;
+  --mroot:#9a5518; --mroot-bg:#f5e7d8;
+  --msuf:#3f7a4a; --msuf-bg:#e6f1e8;
+  --mcon:#6c6353; --mcon-bg:#ece7db;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -144,17 +150,34 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:0 0 14px}
 
 /* key words, tappable wherever they appear */
-.kw{border:0;background:transparent;font:inherit;color:inherit;cursor:help;padding:0 1px;border-radius:3px;
-    border-bottom:2px dotted var(--accent)}
+.kw{cursor:help;padding:0 1px;border-radius:3px;border-bottom:2px dotted var(--accent)}
 .kw:hover,.kw:focus-visible{background:#fff;box-shadow:0 0 0 2px #fff,0 2px 10px rgba(40,30,10,.25);outline:none}
 .kwpop{position:fixed;z-index:80;width:min(330px,calc(100vw - 24px));background:#fff;border:1px solid var(--line);
        border-radius:12px;box-shadow:0 12px 34px rgba(40,30,10,.3);padding:13px 15px}
 .kwpop .gx{position:absolute;top:5px;right:8px;border:0;background:none;color:var(--muted);font-size:19px;cursor:pointer;line-height:1}
 .kwpop .kww{font-family:Georgia,serif;font-size:19px;font-weight:700;margin-bottom:7px}
 .kwparts{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:0 0 8px}
-.mchip{display:inline-flex;flex-direction:column;align-items:center;background:var(--cont-bg);color:var(--cont-tx);
+.mchip{display:inline-flex;flex-direction:column;align-items:center;border:1px solid transparent;
        border-radius:8px;padding:3px 9px;line-height:1.25;opacity:0;transform:translateY(10px) scale(.6);
        animation:chipIn .45s cubic-bezier(.2,.85,.3,1.25) forwards}
+.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.tile.mp,.opt.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.tile.mr,.opt.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.tile.ms,.opt.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.tile.mc,.opt.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:12px}
+.mlegend i{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:5px}
+.slotline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
+.mslot{min-width:62px;min-height:38px;border:1px dashed var(--line);border-radius:8px;background:#fff;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 8px;line-height:1.2}
+.mslot b{font-size:14px} .mslot small{font-size:9.5px;opacity:.85}
+.mslot.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.mslot.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.mslot.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.mslot.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
 .mchip b{font-size:13.5px} .mchip small{font-size:10px;opacity:.85}
 .mplus{font-weight:800;color:var(--muted)}
 .kwm{font-size:13px;line-height:1.55}
@@ -424,10 +447,23 @@ function glossify(html){
                              || k.toLowerCase()===m.toLowerCase());
       if(!base || seen[base]) return m;
       seen[base]=1;
-      return `<button class="kw" data-w="${base}" onclick="termPop(event)" title="What does this word mean?">${m}</button>`;
+      return `<span class="kw" role="button" tabindex="0" data-w="${base}" onclick="termPop(event)"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();termPop(event);}"
+        title="What does this word mean?">${m}</span>`;
     });
   }).join("");
 }
+/* prefix, root, suffix or connector — the same test the vocab hub uses */
+function classifyMorph(piece){
+  if(/^-.*-$/.test(piece)) return "mc";
+  if(/^-/.test(piece)) return "ms";
+  if(/-$/.test(piece)) return "mp";
+  return "mr";
+}
+const MORPH_LEGEND = `<div class="mlegend">
+  <span style="color:var(--mpre)"><i style="background:var(--mpre)"></i>prefix</span>
+  <span style="color:var(--mroot)"><i style="background:var(--mroot)"></i>root</span>
+  <span style="color:var(--msuf)"><i style="background:var(--msuf)"></i>suffix</span></div>`;
 function termPop(ev){
   ev.stopPropagation(); ev.preventDefault();
   termPopClose();
@@ -436,7 +472,7 @@ function termPop(ev){
   d.innerHTML=`<button class="gx" onclick="termPopClose()" aria-label="close">×</button>
     <div class="kww">${esc(w)}</div>
     <div class="kwparts">${t.parts.map((x,i)=>
-      `<span class="mchip" style="animation-delay:${90+i*150}ms"><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span>`)
+      `<span class="mchip ${classifyMorph(x[0])}" style="animation-delay:${90+i*150}ms"><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span>`)
       .join(`<span class="mplus">+</span>`)}</div>
     <div class="kwm">${t.m}</div>`;
   document.body.appendChild(d);
@@ -545,7 +581,7 @@ function renderHome(){
       tag:S.first["wordsdone"]?"done":"", done:!!S.first["wordsdone"], go:"words" },
     { t:"Grammar", d:"After your teacher's lesson: fact or claim, rhetorical questions, modal verbs.",
       tag:S.first["gramdone"]?"done":"", done:!!S.first["gramdone"], go:"gram" },
-    { t:"The deck", d:"Sort, judge, rewrite and find. A card you get wrong goes back in.",
+    { t:"The deck", d:"A card you get wrong goes back in, with another one like it.",
       tag:S.deckDone?"done":(sc.total?`${sc.got}/${sc.total} first go`:""), done:S.deckDone, go:"deck" },
     { t:"Your draft", d:"Write your persuasive piece.",
       tag:words?`${words} words`:"", done:words>40, go:"draft" },
@@ -639,9 +675,16 @@ function renderWords(){
     const tiles = shuffle(item.parts.concat(item.decoys));
     h+=`<div class="cardbox">
       <p class="prompt">Build <b>${esc(item.w)}</b> from its parts, in order.</p>
-      <div class="stim" id="slot">${W.picked.length?W.picked.map(p=>`<span class="m-cont" style="padding:2px 7px;border-radius:6px;margin-right:4px">${esc(p[0])}</span>`).join(""):"<span class='dim'>Tap the parts below.</span>"}</div>
+      ${MORPH_LEGEND}
+      <div class="stim"><div class="slotline" id="slot">${
+        item.parts.map((p,i)=>{
+          const got=W.picked[i];
+          return got
+            ? `<span class="mslot ${classifyMorph(got[0])}" style="border-style:solid"><b>${esc(got[0])}</b><small>${esc(got[1])}</small></span>`
+            : `<span class="mslot"></span>`;
+        }).join(`<span class="mplus">+</span>`)}</div></div>
       <div class="chips" id="tiles">
-        ${tiles.map((t,i)=>`<button class="opt" data-i="${i}" onclick="wordTile(${i})">${esc(t[0])} <span class="dim">${esc(t[1])}</span></button>`).join("")}
+        ${tiles.map((t,i)=>`<button class="opt ${classifyMorph(t[0])}" data-i="${i}" onclick="wordTile(${i})">${esc(t[0])} <small style="opacity:.8">${esc(t[1])}</small></button>`).join("")}
       </div>
       <div class="btnrow"><button class="btn btn-ghost" onclick="W.picked=[];renderWords()">Clear</button></div>
       <div class="fb" id="fb"></div></div>`;
@@ -674,7 +717,9 @@ function wordTile(i){
     if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("w.build."+item.w, true); }
     W.phase="use"; W.optOrder=null; renderWords();
     const fb=$("fb"); fb.className="fb ok on";
-    fb.innerHTML=`<b>${esc(item.w)}</b> = ${want.map(p=>esc(p[0])+" (" + esc(p[1]) + ")").join(" + ")}.`;
+    fb.innerHTML=`<b>${esc(item.w)}</b> = `+want.map(p=>
+      `<span class="mchip ${classifyMorph(p[0])}" style="animation:none;opacity:1;transform:none"><b>${esc(p[0])}</b><small>${esc(p[1])}</small></span>`)
+      .join(`<span class="mplus"> + </span>`);
     return;
   }
   renderWords();
@@ -686,7 +731,7 @@ function wordAnswer(i,k){
   $("o"+k).classList.add(ok?"right":"wrong");
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+item.ex+
-    `<div class="btnrow"><button class="btn btn-primary" onclick="wordNext()">${ok?"Next →":"Try the next word →"}</button></div>`;
+    `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Try the next word →"}</button></div>`;
 }
 function wordNext(){ W.i++; W.phase="build"; W.picked=[]; W.optOrder=null; renderWords(); }
 
@@ -697,9 +742,9 @@ const GRAM = {
   { t:"Australia introduced the social media ban for under-16s in November 2024.",
     verb:[1,1], a:"fact", why:"The date is documented, so somebody else can check it." },
   { t:"The social media ban will protect young people from serious harm.",
-    verb:[4,5], a:"claim", why:"Nobody can check a prediction. “Will protect” is the whole verb group — the modal and the verb together." },
+    verb:[4,5], a:"claim", why:"Nobody can check a prediction yet. The verb group is “will protect”, modal and verb together." },
   { t:"Social media platforms profit from the attention of vulnerable teenagers.",
-    verb:[3,3], a:"claim", why:"It is shaped like a fact, but “vulnerable” is a judgement. That one word turns it into an argument." },
+    verb:[3,3], a:"claim", why:"“Vulnerable” is a judgement, so the sentence argues even though it is shaped like a fact." },
   { t:"Water boils at 100 degrees.",
     verb:[1,1], a:"fact", why:"Anybody with a thermometer can check it." },
   { t:"Grammar is the most important subject in school.",
@@ -711,13 +756,13 @@ const GRAM = {
  rhet:[
   { t:"How many more tragedies do we need before action is taken?", a:"rhet",
     implied:"We already have enough reason to act.",
-    why:"It does not want an answer. It wants you to agree that the answer is obvious." },
+    why:"It expects no answer. The answer it implies is meant to feel obvious." },
   { t:"What time does the submission close?", a:"gen",
-    why:"This one genuinely wants an answer. Same sentence type, different purpose." },
+    why:"This one expects an answer. Same sentence type as the one above, different purpose." },
   { t:"Social media has transformed how young people experience adolescence.", a:"decl",
-    why:"A statement. Subject, then verb." },
+    why:"A statement: subject, then verb." },
   { t:"Watch the movie before you form an opinion.", a:"imp",
-    why:"A command. The verb comes first and the subject is not written down — it is you." },
+    why:"A command. The verb comes first and the subject is not written down: it is you." },
   { t:"Are we really prepared to trust something when we don't understand how it works?", a:"rhet",
     implied:"We are not prepared to trust something when we don't understand how it works.",
     why:"The subject “we” sits inside the verb group: <i>Are we … prepared</i>. That inversion is what makes it an interrogative." },
@@ -768,7 +813,7 @@ function gramNext(){ G.i++; G.phase="pick"; G.sel=[];
   if(G.i>=lens[G.strand]){ G.strand++; G.i=0; G.order=[]; }
   renderGram();
 }
-function gramBtn(){ return `<div class="btnrow"><button class="btn btn-primary" onclick="gramNext()">Next →</button></div>`; }
+function gramBtn(){ return `<div class="btnrow"><button class="btn btn-primary nextb" onclick="gramNext()">Next →</button></div>`; }
 
 /* ---- 08 ---- */
 function gramDeclar(){
@@ -806,7 +851,7 @@ function gramCheckVerb(){
   G.verbFb = ok
     ? { k:"ok", h:`<span class="rule">That's the verb group.</span>${esc(words)}` }
     : { k:"bad", h:`<span class="rule">The verb group is “${esc(words)}”.</span>`+
-        (it.verb[1]>it.verb[0]?glossify("Two words, one job: a Modal and the verb it measures. Take both or neither."):
+        (it.verb[1]>it.verb[0]?glossify("A Modal and the verb it measures count as one verb group. Take both or neither."):
          "Green shows it in the sentence.") };
   renderGram();
 }
@@ -856,7 +901,7 @@ function gramRhetPick(k,i){
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   fb.innerHTML=(ok?"":`<span class="rule">It's a ${esc(RHET_TYPES[it.a].toLowerCase())}.</span>`)+glossify(it.why)+
     (it.a==="rhet"
-      ? `<div class="btnrow"><button class="btn btn-primary" onclick="G.phase='say';renderGram()">Now write what it implies →</button></div>`
+      ? `<div class="btnrow"><button class="btn btn-primary nextb" onclick="G.phase='say';renderGram()">Now write what it implies →</button></div>`
       : gramBtn());
 }
 function gramImplied(){
@@ -909,7 +954,7 @@ function gramRank(m){
   fb.innerHTML=(ok?`<span class="rule">That's the scale.</span>`
     :`<span class="rule">Not quite. The scale runs:</span><div class="stim" style="margin:6px 0">${GRAM.scale.join(" → ")}</div>`)+
     glossify("A Modal measures how certain you are, so the one you pick has to match the evidence you actually have.")+
-    `<div class="btnrow"><button class="btn btn-primary" onclick="G.order=[];gramNext()">Next →</button>
+    `<div class="btnrow"><button class="btn btn-primary nextb" onclick="G.order=[];gramNext()">Next →</button>
      ${ok?"":`<button class="btn btn-ghost" onclick="G.order=[];renderGram()">Try it again</button>`}</div>`;
 }
 function gramModalPick(m,k){
@@ -1000,7 +1045,7 @@ function renderCard(){
   if(c.type==="fix"){ const t=$("fixIn"); if(t) t.focus(); }
 }
 function fbBox(){ return `<div class="fb" id="fb"></div>`; }
-function nextBtn(label){ return `<div class="btnrow"><button class="btn btn-primary" id="nextBtn" onclick="renderCard()">${label||"Next card →"}</button></div>`; }
+function nextBtn(label){ return `<div class="btnrow"><button class="btn btn-primary nextb" id="nextBtn" onclick="renderCard()">${label||"Next card →"}</button></div>`; }
 
 /* ---- sort ---- */
 function cardSort(c){
@@ -1136,7 +1181,7 @@ function ansFix(){
   } else {
     fb.innerHTML=`<span class="rule">Not yet.</span><ul>`+
       f.map(x=>`<li><b>${esc(x.r)}</b>${x.d?" "+esc(x.d):""}</li>`).join("")+`</ul>`+notJudged+
-      `<div class="btnrow"><button class="btn btn-primary" onclick="renderCard()">This one goes back in the deck →</button></div>`;
+      `<div class="btnrow"><button class="btn btn-primary nextb" onclick="renderCard()">This one goes back in the deck →</button></div>`;
     missCard(entry);
   }
 }
