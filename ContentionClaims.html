@@ -168,6 +168,10 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 .tile.mr,.opt.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
 .tile.ms,.opt.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
 .tile.mc,.opt.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.metword{font-family:Georgia,serif;font-size:27px;font-weight:700;line-height:1.2}
+.metword .pos{font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:400;font-style:italic;color:var(--muted);margin-left:6px}
+.metm{font-size:15.5px;line-height:1.6;margin:6px 0 12px}
+.metnote{font-size:13px;line-height:1.65;color:var(--muted);background:var(--bg);border-radius:8px;padding:11px 14px;margin:12px 0 0}
 .mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:12px}
 .mlegend i{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:5px}
 .slotline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
@@ -197,6 +201,11 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 .scale .slot.full{border-style:solid;background:var(--cont-bg);color:var(--cont-tx)}
 .scale .arrow{color:var(--muted);font-size:12px}
 .strands{display:flex;flex-direction:column;gap:10px}
+.railrow{display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;flex-wrap:wrap}
+.raillab{flex:0 0 96px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+         color:var(--muted);padding-top:11px}
+.railsent{font-family:Georgia,serif;font-size:17px;line-height:1.6;background:var(--bg);
+          border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 15px;margin:4px 0 0}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media screen and (max-width:860px){ .container{padding:16px} }
@@ -535,7 +544,6 @@ function go(s){
 }
 function topbar(){
   return `<div class="topbar noprint">
-    <span class="eyebrow" style="margin:0">Writing folio · contention and claims</span>
     <span class="sp">
       <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
       <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
@@ -605,7 +613,7 @@ function renderHome(){
    A recall drill, not a first meeting: the words are met in the folio vocab
    hub. Build each word from its parts, then say what it does. */
 const WORDS = [
- { w:"Contention", m:"The writer's position: what they want you to think or do.", parts:[["con-","together"],["tend","to stretch, to strain"],["-ion","the act of"]],
+ { w:"Contention", pos:"noun", eg:`The article’s <b>contention</b> is that children under 16 should be banned from social media.`, note:`Latin <i>contendere</i>, to <b>strain together</b>, to struggle or compete. A contention is the position you are contending for. Same <i>tend/tent</i> in <b>tension</b>, <b>tent</b> (stretched cloth), <b>intend</b> and <b>attention</b>.`, m:"The writer's position: what they want you to think or do.", parts:[["con-","together"],["tend","to stretch, to strain"],["-ion","the act of"]],
    decoys:[["contra-","against"],["tain","to hold"],["-ure","the result of"]],
    q:"Which one is the contention?",
    opts:["Under-16s should not be allowed social media accounts.",
@@ -613,7 +621,7 @@ const WORDS = [
          "Social media and young people.",
          "Do you think social media is harmful?"],
    a:0, ex:"The position itself: it says what should happen, in a full statement." },
- { w:"Claim", m:"A reason given to show the contention is true. Somebody could argue with it.", parts:[["clam","to cry out, to shout"]],
+ { w:"Claim", pos:"noun", eg:`Each body paragraph makes one <b>claim</b> and backs it with evidence.`, note:`Latin <i>clamare</i> (to shout) gives <b>claim</b>, <b>exclaim</b>, <b>proclaim</b> and <b>clamour</b>. You “call out” a claim; then the evidence has to back it up.`, m:"A reason given to show the contention is true. Somebody could argue with it.", parts:[["clam","to cry out, to shout"]],
    decoys:[["clar","clear"],["-ity","the state of"]],
    q:"Which one is a claim?",
    opts:["Gaming late at night stops students getting enough sleep.",
@@ -621,7 +629,7 @@ const WORDS = [
          "Video games.",
          "Minecraft was released in 2011."],
    a:0, ex:"A reason that sits underneath a contention. The second option is the contention; the last is a fact." },
- { w:"Evidence", m:"Something checkable that backs a claim up.", parts:[["e-","out"],["vid","to see"],["-ence","the state of"]],
+ { w:"Evidence", pos:"noun", eg:`Hard <b>evidence</b> makes a claim logical: numbers, dates, a quote from an expert.`, note:`Latin <i>evidens</i>, <b>seen out</b> clearly, obvious. Same <i>vid/vis</i> in <b>video</b>, <b>visible</b>, <b>evident</b> and <b>provide</b>. Evidence is what lets the reader see the claim for themselves.`, m:"Something checkable that backs a claim up.", parts:[["e-","out"],["vid","to see"],["-ence","the state of"]],
    decoys:[["ex-","former"],["voc","voice"],["-ment","the result of"]],
    q:"Which one is evidence?",
    opts:["A school survey found 68 per cent of students throw food away.",
@@ -629,7 +637,7 @@ const WORDS = [
          "Lunchtime should be 20 minutes longer.",
          "Why do we rush children through their food?"],
    a:0, ex:"Something checkable that backs a claim up. The others are emotive language, a contention and a rhetorical question." },
- { w:"Rhetorical", m:"Describes a question asked to make a point rather than to get an answer.", parts:[["rhetor","public speaker"],["-ical","to do with"]],
+ { w:"Rhetorical", pos:"adjective", eg:`“Who could say no to that?” is a <b>rhetorical</b> question: the answer is meant to be obvious.`, note:`In ancient Greece a <i>rhētōr</i> was a trained public speaker, and <b>rhetoric</b> was the art of persuading a crowd. A rhetorical device is any speaker’s trick. The spelling trap is the silent <i>h</i> after the <i>r</i>.`, m:"Describes a question asked to make a point rather than to get an answer.", parts:[["rhetor","public speaker"],["-ical","to do with"]],
    decoys:[["rhino","nose"],["-ology","the study of"]],
    q:"Which one is a rhetorical question?",
    opts:["Is that really enough time for a growing teenager?",
@@ -637,7 +645,7 @@ const WORDS = [
          "Lunchtime should be longer.",
          "Students are hungry and miserable."],
    a:0, ex:"Asked to make a point, not to get an answer. The second one genuinely wants an answer." },
- { w:"Emotive", m:"Describes words chosen to make the reader feel something.", parts:[["e-","out"],["mot","to move"],["-ive","tending to"]],
+ { w:"Emotive", pos:"adjective", eg:`The article calls the platforms “predatory”, which is <b>emotive</b> language.`, note:`Latin <i>emovere</i>, to <b>move out</b>: an emotion is a feeling that moves through you, and emotive language moves the reader. Same <i>mot/mov</i> in <b>motion</b>, <b>motor</b>, <b>promote</b> and <b>remote</b>.`, m:"Describes words chosen to make the reader feel something.", parts:[["e-","out"],["mot","to move"],["-ive","tending to"]],
    decoys:[["em-","in"],["mod","measure"],["-ous","full of"]],
    q:"Which one uses emotive language?",
    opts:["Children are left hungry, rushed and miserable.",
@@ -645,7 +653,7 @@ const WORDS = [
          "Lunchtime should be 20 minutes longer.",
          "Most students eat in the quadrangle."],
    a:0, ex:"Words picked to make you feel something — the same point could be made flatly." },
- { w:"Inclusive", m:"Describes words that pull the reader onto the writer's side: we, us, our.", parts:[["in-","in"],["clus","to shut, to close"],["-ive","tending to"]],
+ { w:"Inclusive", pos:"adjective", eg:`“<b>We</b> all know what it feels like to be rushed” uses <b>inclusive</b> language.`, note:`Latin <i>includere</i>, to <b>shut in</b>: <i>in-</i> (in) + <i>claudere</i> (to close). Same <i>clud/clus</i> in <b>include</b>, <b>exclude</b> (shut out), <b>conclude</b> and <b>seclusion</b>. Inclusive language shuts the reader in on the writer’s side.`, m:"Describes words that pull the reader onto the writer's side: we, us, our.", parts:[["in-","in"],["clus","to shut, to close"],["-ive","tending to"]],
    decoys:[["ex-","out"],["cord","heart"],["-able","able to be"]],
    q:"Which one uses inclusive language?",
    opts:["We all know what it feels like to be rushed.",
@@ -656,25 +664,40 @@ const WORDS = [
 ];
 let W = null;
 function renderWords(){
-  W = W || { i:0, phase:"build", picked:[], tried:{} };
+  W = W || { i:0, phase:"meet", picked:[], tried:{} };
   const item = WORDS[W.i];
   if(!item){
     recFirst("wordsdone", true);
     $("body").innerHTML = topbar()+`<h2>The words</h2>
-      <div class="fb ok on">All six built and used.</div>
+      <div class="fb ok on">All six met, built and used.</div>
       <div class="btnrow"><button class="btn btn-primary" onclick="go('gram')">Grammar →</button>
       <button class="btn btn-ghost" onclick="W=null;go('words')">Again</button>
       <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>`;
     return;
   }
+  const phaseN = {meet:0, build:1, use:2}[W.phase] || 0;
   let h=topbar()+`<h2>The words</h2>
     <div class="deckbar"><b>${W.i+1} of ${WORDS.length}</b>
-      <span class="meter"><i style="width:${Math.round(100*W.i/WORDS.length)}%"></i></span></div>`;
+      <span class="meter"><i style="width:${Math.round(100*(W.i+phaseN/3)/WORDS.length)}%"></i></span>
+      <span>${["meet it","build it","use it"][phaseN]}</span></div>`;
+
+  if(W.phase==="meet"){
+    h+=`<div class="cardbox">
+      <div class="metword">${esc(item.w)} <span class="pos">${esc(item.pos||"")}</span></div>
+      <p class="metm">${esc(item.m)}</p>
+      <div class="stim">${item.eg}</div>
+      <p class="metnote">${item.note}</p>
+      <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.phase='build';W.picked=[];renderWords()">Build it →</button></div>
+    </div>`;
+    $("body").innerHTML=h;
+    return;
+  }
 
   if(W.phase==="build"){
     const tiles = shuffle(item.parts.concat(item.decoys));
     h+=`<div class="cardbox">
-      <p class="prompt">Build <b>${esc(item.w)}</b> from its parts, in order.</p>
+      <p class="prompt">Build the word that means this, part by part, in order:</p>
+      <div class="stim" style="font-family:'Segoe UI',sans-serif;font-size:15px">${esc(item.m)}</div>
       ${MORPH_LEGEND}
       <div class="stim"><div class="slotline" id="slot">${
         item.parts.map((p,i)=>{
@@ -733,7 +756,7 @@ function wordAnswer(i,k){
   fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+item.ex+
     `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Try the next word →"}</button></div>`;
 }
-function wordNext(){ W.i++; W.phase="build"; W.picked=[]; W.optOrder=null; renderWords(); }
+function wordNext(){ W.i++; W.phase="meet"; W.picked=[]; W.optOrder=null; renderWords(); }
 
 /* ====================== GRAMMAR · SESSIONS 08-10 ========================= */
 const GRAM = {
@@ -756,6 +779,13 @@ const GRAM = {
  rhet:[
   { t:"How many more tragedies do we need before action is taken?", a:"rhet",
     implied:"We already have enough reason to act.",
+    build:{ tail:"to act.",
+      subj:[["We",1],
+            ["Tragedies",0,"The question asks what <i>we</i> need, so the statement starts with us."],
+            ["Nobody",0,"“Nobody” answers a question starting with “Who”. This one starts with “How many”."]],
+      verb:[["already have enough reason",1],
+            ["need more tragedies",0,"That says what the question asks on the surface. A rhetorical question implies the opposite."],
+            ["do not have enough reason",0,"That argues for waiting. The writer is pushing you the other way."]] },
     why:"It expects no answer. The answer it implies is meant to feel obvious." },
   { t:"What time does the submission close?", a:"gen",
     why:"This one expects an answer. Same sentence type as the one above, different purpose." },
@@ -765,9 +795,23 @@ const GRAM = {
     why:"A command. The verb comes first and the subject is not written down: it is you." },
   { t:"Are we really prepared to trust something when we don't understand how it works?", a:"rhet",
     implied:"We are not prepared to trust something when we don't understand how it works.",
+    build:{ tail:"to trust something when we don't understand how it works.",
+      subj:[["We",1],
+            ["Something",0,"“Something” is what we would be trusting, not the one doing the trusting."],
+            ["Nobody",0,"The question is about us in particular, not about everyone."]],
+      verb:[["are not prepared",1],
+            ["are prepared",0,"The question implies the answer <i>no</i>, so the verb has to be negative."],
+            ["were not prepared",0,"The question is about now, so keep the present tense."]] },
     why:"The subject “we” sits inside the verb group: <i>Are we … prepared</i>. That inversion is what makes it an interrogative." },
   { t:"Who can truly say if the same will happen again?", a:"rhet",
     implied:"Nobody can truly say if the same will happen again.",
+    build:{ tail:"if the same will happen again.",
+      subj:[["Nobody",1],
+            ["Everybody",0,"That is the opposite of what the question implies."],
+            ["We",0,"“Who” is asking which people can say. The implied answer names them: nobody."]],
+      verb:[["can truly say",1],
+            ["cannot truly say",0,"“Nobody cannot say” is a double negative. The subject already carries the <i>no</i>."],
+            ["could truly say",0,"The question is about now, so keep the present tense."]] },
     why:"“Who” is the subject and a question word at once, so it comes first. The implied answer is nobody." }
  ],
  /* --- 10: measuring how certain you are --- */
@@ -808,7 +852,7 @@ function gramBar(n,total,label){
   return `<div class="deckbar"><b>${esc(label)}</b><span class="meter"><i style="width:${Math.round(100*n/total)}%"></i></span>
     <span>${n} of ${total}</span></div>`;
 }
-function gramNext(){ G.i++; G.phase="pick"; G.sel=[];
+function gramNext(){ G.i++; G.phase="pick"; G.sel=[]; G.pick={}; G.order2=null; G.railWrong=[];
   const lens=[GRAM.declar.length, GRAM.rhet.length, GRAM.modal.length+1];
   if(G.i>=lens[G.strand]){ G.strand++; G.i=0; G.order=[]; }
   renderGram();
@@ -878,15 +922,26 @@ function gramRhet(){
       <div class="opts">${keys.map((k,i)=>`<button class="opt" id="o${i}" onclick="gramRhetPick('${k}',${i})">${esc(RHET_TYPES[k])}</button>`).join("")}</div>
       <div class="fb" id="fb"></div></div>`;
   } else {
+    const b=it.build;
+    G.pick = G.pick || {};
+    const row=(kind,label)=>{
+      const got=G.pick[kind];
+      return `<div class="railrow"><span class="raillab">${label}</span>
+        <div class="chips">${(G.order2&&G.order2[kind]||b[kind]).map((o,i)=>
+          `<button class="opt ${got===o[0]?"chosen":""}" onclick="gramRail('${kind}',${i})"
+            ${got!==undefined&&got!==null?"disabled":""}>${esc(o[0])}</button>`).join("")}</div></div>`;
+    };
+    if(!G.order2) G.order2={ subj:shuffle(b.subj), verb:shuffle(b.verb) };
     h+=`<div class="cardbox">
-      <p class="prompt">Write the claim it implies, as a Declarative sentence.</p>
+      <p class="prompt">Build the claim it implies, as a Declarative sentence.</p>
       <div class="stim">${esc(it.t)}</div>
-      <textarea id="impIn" rows="2" placeholder="The writer wants you to think that…"></textarea>
-      <div class="btnrow"><button class="btn btn-primary" onclick="gramImplied()">Check it</button></div>
+      ${row("subj","Who or what")}
+      ${row("verb","Verb group")}
+      <div class="railsent">${esc(G.pick.subj||"…")} ${esc(G.pick.verb||"…")} ${esc(b.tail)}</div>
       <div class="fb" id="fb"></div></div>`;
   }
   $("body").innerHTML=glossify_safe(h);
-  if(G.phase==="say"){ const t=$("impIn"); if(t) t.focus(); }
+
 }
 /* glossify only the prompt line: the stim and the options must stay plain so a
    nested button can never swallow the click the task needs */
@@ -901,23 +956,27 @@ function gramRhetPick(k,i){
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   fb.innerHTML=(ok?"":`<span class="rule">It's a ${esc(RHET_TYPES[it.a].toLowerCase())}.</span>`)+glossify(it.why)+
     (it.a==="rhet"
-      ? `<div class="btnrow"><button class="btn btn-primary nextb" onclick="G.phase='say';renderGram()">Now write what it implies →</button></div>`
+      ? `<div class="btnrow"><button class="btn btn-primary nextb" onclick="G.phase='say';G.pick={};G.order2=null;renderGram()">Now build what it implies →</button></div>`
       : gramBtn());
 }
-function gramImplied(){
-  const it=GRAM.rhet[G.i], t=($("impIn").value||"").trim();
-  const f=[];
-  if(!t) f.push("Nothing typed yet.");
-  if(/\?\s*$/.test(t)) f.push("Still a question. A Declarative ends in a full stop, not a question mark.");
-  if(t.split(/\s+/).filter(Boolean).length<4) f.push("Too short to be a sentence.");
-  if(t && !/[.!]$/.test(t)) f.push("No full stop.");
-  const ok=!f.length;
+function gramRail(kind,i){
+  const it=GRAM.rhet[G.i], o=G.order2[kind][i];
+  G.pick[kind]=o[0];
+  G.railWrong=G.railWrong||[];
+  if(!o[1]) G.railWrong.push(o[2]||"");
+  renderGram();
+  if(G.pick.subj===undefined||G.pick.subj===null||G.pick.verb===undefined||G.pick.verb===null) return;
+  /* both halves chosen — judge the sentence they have built */
+  const sub=G.order2.subj.find(x=>x[0]===G.pick.subj), vb=G.order2.verb.find(x=>x[0]===G.pick.verb);
+  const ok=!!(sub&&sub[1]&&vb&&vb[1]);
   if(!G.tried["i"+G.i]){ G.tried["i"+G.i]=true; recFirst("g.implied."+G.i, ok); }
+  const sent=G.pick.subj+" "+G.pick.verb+" "+it.build.tail;
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
-  fb.innerHTML=(ok?`<span class="rule">That's a statement.</span>`
-                 :`<span class="rule">Not a statement yet.</span><ul>`+f.map(x=>`<li>${esc(x)}</li>`).join("")+`</ul>`)+
-    `<div style="margin-top:9px"><b>One way to put it:</b></div><div class="stim" style="margin:6px 0 0">${esc(it.implied)}</div>`+
-    `<div class="notjudged">Checked: that it is a statement and a full sentence. Not checked: whether you have caught the claim the writer meant — read yours against the one above.</div>`+
+  const faults=[sub&&!sub[1]?sub[2]:null, vb&&!vb[1]?vb[2]:null].filter(Boolean);
+  fb.innerHTML=(ok?`<span class="rule">That's the claim it implies.</span>`
+    :`<span class="rule">Not what it implies.</span><ul>`+faults.map(x=>`<li>${x}</li>`).join("")+`</ul>`)+
+    (ok?"":`<div class="stim" style="margin:8px 0 0">${esc(it.implied)}</div>`)+
+    (ok?"":`<div class="btnrow"><button class="btn btn-ghost" onclick="G.pick={};G.order2=null;renderGram()">Build it again</button></div>`)+
     gramBtn();
 }
 
@@ -1162,13 +1221,21 @@ function judgeWrite(txt, want, stim){
     if(!/\b(because|since|so|stops?|helps?|makes?|means?|leads? to|gives?|takes?|prevents?|lets?|causes?|costs?)\b/.test(low))
       f.push({r:"It doesn't give a reason yet.", d:"A claim says what happens as a result — it stops, it means, it helps, because…"});
   }
-  if(!/[.!?]$/.test(t)) f.push({r:"No full stop.", d:"Finish the sentence."});
   return f;
+}
+/* Punctuation and a capital are worth fixing, but a sentence that does the
+   thinking should not fail on them. */
+function tidyWrite(t){
+  let out=(t||"").trim(), notes=[];
+  if(out && !/^[A-Z]/.test(out)){ out=out.charAt(0).toUpperCase()+out.slice(1); notes.push("a capital letter to start"); }
+  if(out && !/[.!?]$/.test(out)){ out+="."; notes.push("a full stop to finish"); }
+  return { out, notes };
 }
 function ansFix(){
   const entry=D.queue[0], c=card(entry.id);
   const txt=$("fixIn").value;
-  const f=judgeWrite(txt, c.want, c.stim);
+  const tidy=tidyWrite(txt);
+  const f=judgeWrite(tidy.out, c.want, c.stim);
   const ok=!f.length;
   recFirst(c.id, ok);
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
@@ -1176,7 +1243,9 @@ function ansFix(){
     Not checked: whether it is true, and whether it is your strongest point — your teacher reads that.</div>`;
   if(ok){
     fb.innerHTML=`<span class="rule">That works as a ${c.want==="cont"?"contention":"claim"}.</span>
-      <div class="stim" style="margin:8px 0 0">${esc(txt.trim())}</div>`+notJudged+nextBtn();
+      <div class="stim" style="margin:8px 0 0">${esc(tidy.out)}</div>`+
+      (tidy.notes.length?`<p class="dim" style="font-size:12.5px;margin:7px 0 0">Tidied for you: ${esc(tidy.notes.join(" and "))}.</p>`:"")+
+      notJudged+nextBtn();
     hitCard(entry);
   } else {
     fb.innerHTML=`<span class="rule">Not yet.</span><ul>`+
