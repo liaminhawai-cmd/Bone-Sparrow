@@ -246,17 +246,17 @@ const CATS = {
   fact : { label:"Fact",               cls:"fact",  tx:"something checkable: a number, a date, a finding" },
   rhetq: { label:"Rhetorical question", cls:"rhetq", tx:"a question asked to make a point, not to get an answer" },
   emot : { label:"Emotive language",   cls:"emot",  tx:"words chosen to make the reader feel something" },
-  incl : { label:"Inclusive language", cls:"incl",  tx:"we, us, our — pulling the reader onto the writer's side" }
+  incl : { label:"Inclusive language", cls:"incl",  tx:"we, us, our: pulling the reader onto the writer's side" }
 };
 const CAT_ORDER = ["cont","claim","fact","rhetq","emot","incl"];
 
 /* ---- why a contention isn't one yet ---------------------------------- */
 const MISSING = {
-  vague : { s:"Too vague",        l:"Too vague — it doesn't say what should happen about it." },
-  fact  : { s:"A fact",           l:"That's a fact, not a position. Nobody can disagree with it." },
+  vague : { s:"Too vague",        l:"Too vague. It doesn't say what should happen about it." },
+  fact  : { s:"A fact",           l:"That's a fact rather than a position. Nobody can disagree with it." },
   fence : { s:"Sits on the fence",l:"It sits on the fence. A contention takes one side." },
   quest : { s:"A question",       l:"That's a question. A contention is a statement." },
-  topic : { s:"A topic",          l:"That's a topic, not a sentence. A contention is a full statement." },
+  topic : { s:"A topic",          l:"That's a topic rather than a sentence. A contention is a full statement." },
   want  : { s:"What you want",    l:"That says what you want, not what should happen." }
 };
 
@@ -265,7 +265,7 @@ const MISSING = {
    that is both a claim and inclusive language is right for either question. */
 const SAMPLES = {
   lunch: {
-    title:"Lunchtime — a Year 7 student's letter",
+    title:"Lunchtime: a Year 7 student's letter",
     src:"Written for this task.",
     chunks:[
       { t:"Every student in this school deserves a lunchtime long enough to eat.", c:["cont"] },
@@ -293,7 +293,7 @@ const SAMPLES = {
   },
   /* --- mentor text, quoted in short extracts and attributed --- */
   cm16: {
-    title:"The Courier Mail — paragraphs 16–19",
+    title:"The Courier Mail: paragraphs 16–19",
     src:"Eleni Paneras, “Why delaying social media is the best gift we can give our children”, The Courier Mail, 23 November 2025. Extract. Full text: reading copy 05.1r.",
     chunks:[
       { t:"That’s why I support Australia’s decision to delay social media access for kids under 16 – not ban it, delay it.", c:["cont"] },
@@ -304,7 +304,7 @@ const SAMPLES = {
     ]
   },
   cm27: {
-    title:"The Courier Mail — paragraphs 27–28",
+    title:"The Courier Mail: paragraphs 27–28",
     src:"Eleni Paneras, The Courier Mail, 23 November 2025. Extract. Full text: reading copy 05.1r.",
     chunks:[
       { t:"Parents are fighting an unwinnable battle against trillion-dollar tech companies whose business models depend on keeping users – including our children – hooked.", c:["claim","incl"] },
@@ -321,7 +321,7 @@ const SAMPLES = {
 const POOL = [
  /* ---- contention / claim / fact, from 06.1w Part 3 ---- */
  { id:"s1", type:"sort", rule:"claimfact", stim:"Parents cannot win against tech companies that design apps to keep children hooked.",
-   a:"claim", why:"A reason she gives for her position — and one you could argue with." },
+   a:"claim", why:"A reason she gives for her position, and one you could argue with." },
  { id:"s2", type:"sort", rule:"claimfact", stim:"The writer's son is eight years old.",
    a:"fact", why:"Checkable, and nobody would argue about it. It supports her story, but it isn't a reason." },
  { id:"s3", type:"sort", rule:"claimfact", stim:"Social media makes young people measure their worth in likes and views.",
@@ -331,11 +331,11 @@ const POOL = [
  { id:"s5", type:"sort", rule:"claimfact", stim:"We would never give children alcohol or cigarettes, so we should not give them social media either.",
    a:"claim", why:"A reason, built by comparison. Disagreeing with it is possible, which is what makes it a claim." },
  { id:"s6", type:"sort", rule:"contclaim", stim:"Under-16s should not be allowed to have social media accounts.",
-   a:"cont", why:"It names what should happen. That is the position itself, not a reason for it." },
+   a:"cont", why:"It names what should happen. That is the position itself rather than a reason for it." },
  { id:"s7", type:"sort", rule:"contclaim", stim:"Gaming late at night stops students from getting enough sleep.",
    a:"claim", why:"A reason. It would sit underneath a contention about limiting gaming." },
  { id:"s8", type:"sort", rule:"claimfact", stim:"Sixty-eight per cent of Year 7 students throw food away at lunch.",
-   a:"fact", why:"A number from a survey. Evidence for a claim, not the claim itself." },
+   a:"fact", why:"A number from a survey. Evidence for a claim rather than the claim itself." },
  { id:"s9", type:"sort", rule:"contclaim", stim:"Lunchtime should be 20 minutes longer.",
    a:"cont", why:"It says what should happen and takes a side." },
  { id:"s10", type:"sort", rule:"claimfact", stim:"Students who eat properly concentrate better in afternoon classes.",
@@ -428,7 +428,7 @@ const GRAM_TERMS = {
   Interrogative:{ parts:[["inter-","between"],["rog","to ask"],["-ative","tending to"]],
     m:"A question. The subject sits inside the verb group: <i>Are we prepared…</i>" },
   Imperative  :{ parts:[["imper","to command"],["-ative","tending to"]],
-    m:"A command. The subject is not written down — it is you, the reader." },
+    m:"A command. The subject is not written down. It is you, the reader." },
   Modal       :{ parts:[["mod","measure, manner"],["-al","to do with"]],
     m:"A verb added in front of another verb to measure how certain a claim is: might, could, should, will, must." },
   Fragment    :{ parts:[["frag","to break"],["-ment","the result of"]],
@@ -568,7 +568,7 @@ function idSubmit(){
   const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
   $("ef").textContent = f?"":"We need your first name.";
   $("el").textContent = l?"":"We need your last name.";
-  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right — check your student code and try again.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
   if(!f||!l||s.length<4||s.length>8) return;
   S.fname=f; S.lname=l; S.sid=s; S.startedAt=S.startedAt||Date.now(); save(); writeProfile();
   go("home");
@@ -646,7 +646,7 @@ const WORDS = [
          "What time does lunch start?",
          "Lunchtime should be longer.",
          "Students are hungry and miserable."],
-   a:0, ex:"Asked to make a point, not to get an answer. The second one genuinely wants an answer." },
+   a:0, ex:"Asked to make a point rather than to get an answer. The second one genuinely wants an answer." },
  { w:"Emotive", pos:"adjective", eg:`The article calls the platforms “predatory”, which is <b>emotive</b> language.`, note:`Latin <i>emovere</i>, to <b>move out</b>: an emotion is a feeling that moves through you, and emotive language moves the reader. Same <i>mot/mov</i> in <b>motion</b>, <b>motor</b>, <b>promote</b> and <b>remote</b>.`, m:"Describes words chosen to make the reader feel something.", parts:[["e-","out"],["mot","to move"],["-ive","tending to"]],
    decoys:[["em-","in"],["mod","measure"],["-ous","full of"]],
    q:"Which one uses emotive language?",
@@ -654,7 +654,7 @@ const WORDS = [
          "Lunch runs from 1.10pm to 1.30pm.",
          "Lunchtime should be 20 minutes longer.",
          "Most students eat in the quadrangle."],
-   a:0, ex:"Words picked to make you feel something — the same point could be made flatly." },
+   a:0, ex:"Words picked to make you feel something. The same point could be made flatly." },
  { w:"Inclusive", pos:"adjective", eg:`“<b>We</b> all know what it feels like to be rushed” uses <b>inclusive</b> language.`, note:`Latin <i>includere</i>, to <b>shut in</b>: <i>in-</i> (in) + <i>claudere</i> (to close). Same <i>clud/clus</i> in <b>include</b>, <b>exclude</b> (shut out), <b>conclude</b> and <b>seclusion</b>. Inclusive language shuts the reader in on the writer’s side.`, m:"Describes words that pull the reader onto the writer's side: we, us, our.", parts:[["in-","in"],["clus","to shut, to close"],["-ive","tending to"]],
    decoys:[["ex-","out"],["cord","heart"],["-able","able to be"]],
    q:"Which one uses inclusive language?",
@@ -799,8 +799,8 @@ const GRAM = {
     implied:"We are not prepared to trust something when we don't understand how it works.",
     build:{ tail:"to trust something when we don't understand how it works.",
       subj:[["We",1],
-            ["Something",0,"“Something” is what we would be trusting, not the one doing the trusting."],
-            ["Nobody",0,"The question is about us in particular, not about everyone."]],
+            ["Something",0,"“Something” is what we would be trusting rather than the one doing the trusting."],
+            ["Nobody",0,"The question is about us in particular rather than about everyone."]],
       verb:[["are not prepared",1],
             ["are prepared",0,"The question implies the answer <i>no</i>, so the verb has to be negative."],
             ["were not prepared",0,"The question is about now, so keep the present tense."]] },
@@ -1054,7 +1054,7 @@ function gramModalPick(m,k){
 /* ====================== STEP 3 · THE DECK ================================
    A card leaves the deck after two correct answers in a row. A wrong answer
    sends it back down the deck, resets its streak, and pulls in a different
-   card testing the same rule — so the way out is the rule, not the item. */
+   card testing the same rule — so the way out is the rule rather than the item. */
 const SESSION_SIZE = 16;
 const RETIRE_STREAK = 2;
 const PENALTY_GAP = 4;
@@ -1224,26 +1224,26 @@ function judgeWrite(txt, want, stim){
   const t=(txt||"").trim(), low=t.toLowerCase(), f=[];
   const words=t.split(/\s+/).filter(Boolean);
   if(!t) return [{r:"Nothing typed yet."}];
-  if(words.length<5) f.push({r:"Too short to be a sentence.", d:"A contention or claim is a full sentence — give it a subject and a verb."});
+  if(words.length<5) f.push({r:"Too short to be a sentence.", d:"A contention or claim is a full sentence: give it a subject and a verb."});
   if(/\?\s*$/.test(t)) f.push({r:"That's a question.", d:"A contention is a statement. Turn it round: say what should happen."});
   if(low.replace(/[^a-z ]/g,"").trim()===stim.toLowerCase().replace(/[^a-z ]/g,"").trim())
     f.push({r:"That's the same sentence.", d:"Change it so it takes a side and says what should happen."});
   if(/\b(some people .* (and )?(some|others))|\bit depends\b|\bmaybe\b|\bsort of\b|\bkind of\b/.test(low))
     f.push({r:"It sits on the fence.", d:"Pick one side. 'Some people… and some people…' is not a position."});
   if(/^\s*i (want|like|love|hate|reckon|feel)\b/.test(low))
-    f.push({r:"That says what you want.", d:"A contention says what SHOULD happen, not what you'd like."});
+    f.push({r:"That says what you want.", d:"A contention says what SHOULD happen rather than what you'd like."});
   if(want==="cont"){
     if(!/\b(should|shouldn't|should not|must|mustn't|must not|ought|need(s)? to|has to|have to|deserve[sd]?|allow(ed)?|ban(ned)?|stop|start|require[sd]?)\b/.test(low))
-      f.push({r:"It doesn't take a side.", d:"A contention names what should happen — should, must, ought to, needs to, should not be allowed."});
+      f.push({r:"It doesn't take a side.", d:"A contention names what should happen: should, must, ought to, needs to, should not be allowed."});
     if(/^(social media|homework|phones?|lunchtime|gambling|school)\s+(is|are)\s+(bad|good|great|terrible|annoying|rubbish|awful|fine)\s*\.?$/.test(low))
       f.push({r:"Still too vague.", d:"Bad how, and what should happen about it? Name the change you want."});
     if(/^(lots of|many|most|some|a lot of|there (is|are))\b/.test(low) &&
        !/\b(should|must|ought|need)\b/.test(low))
-      f.push({r:"That's a fact, not a position.", d:"Nobody can disagree with it. Say what should change."});
+      f.push({r:"That's a fact rather than a position.", d:"Nobody can disagree with it. Say what should change."});
   }
   if(want==="claim"){
     if(!/\b(because|since|so|stops?|helps?|makes?|means?|leads? to|gives?|takes?|prevents?|lets?|causes?|costs?)\b/.test(low))
-      f.push({r:"It doesn't give a reason yet.", d:"A claim says what happens as a result — it stops, it means, it helps, because…"});
+      f.push({r:"It doesn't give a reason yet.", d:"A claim says what happens as a result. It stops, it means, it helps, because…"});
   }
   return f;
 }
@@ -1264,7 +1264,7 @@ function ansFix(){
   recFirst(c.id, ok);
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   const notJudged = `<div class="notjudged">Checked: it takes a side, it is specific, it is a statement, it is a full sentence.
-    Not checked: whether it is true, and whether it is your strongest point — your teacher reads that.</div>`;
+    Not checked: whether it is true, and whether it is your strongest point, your teacher reads that.</div>`;
   if(ok){
     fb.innerHTML=`<span class="rule">That works as a ${c.want==="cont"?"contention":"claim"}.</span>
       <div class="stim" style="margin:8px 0 0">${esc(tidy.out)}</div>`+
@@ -1327,7 +1327,7 @@ function ansSpot(){
   const isWhat=i=>{
     const cs=s.chunks[i].c.filter(x=>x!==c.want);
     return cs.length ? cs.map(named).join(" and ")
-                     : "none of the six — it carries the story along";
+                     : "none of the six. It carries the story along";
   };
   let lines="";
   missed.forEach(i=>{ lines+=`<li>Missed: “${snip(i)}”</li>`; });
@@ -1493,7 +1493,7 @@ function renderSend(){
   ${gramRows()?`<h3>Grammar — first attempt</h3>
   <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>${gramRows()}</table>`:""}
 
-  <h3>The deck — first attempt</h3>
+  <h3>The deck, first attempt</h3>
   <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>
   ${Object.keys(rules).length
     ? Object.keys(rules).map(r=>`<tr><td>${esc(RULE_LABEL[r]||r)}</td><td><b>${rules[r].got} / ${rules[r].total}</b></td></tr>`).join("")
@@ -1508,7 +1508,7 @@ function renderSend(){
   <table class="rpt"><tr>${CAT_ORDER.map(k=>`<th>${esc(CATS[k].label)}</th>`).join("")}<th>Words</th></tr>
     <tr>${CAT_ORDER.map(k=>`<td><b>${n[k]}</b></td>`).join("")}<td><b>${wordsN}</b></td></tr></table>
   <p class="dim" style="font-size:12.5px">Marked by the student. The colours report what they labelled, not whether the label is right.</p>
-  <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span> — changes if the name, code, draft or any score changes.</p>`;
+  <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span>, changes if the name, code, draft or any score changes.</p>`;
   $("body").innerHTML=h;
 }
 
