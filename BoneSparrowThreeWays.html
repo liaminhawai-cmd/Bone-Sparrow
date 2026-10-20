@@ -100,33 +100,33 @@ const ROUTES=[
   given:{kind:"ev", label:"THE LINE", text:"“My throat is as dry as the dirt”"},
   steps:[
    {kind:"verb", ask:"What does the line do?", opts:[
-     {t:"reveals", q:"good", why:"An analytical verb — the writing uncovers something that wasn't said."},
-     {t:"shows",   q:"ok",   why:"True, but flat. 'Shows' is the Level 5 verb — swap it up when you rewrite."},
+     {t:"reveals", q:"good", why:"An analytical verb: the writing uncovers something that wasn't said."},
+     {t:"shows",   q:"ok",   why:"True, but flat. 'Shows' is the Level 5 verb: swap it up when you rewrite."},
      {t:"is",      q:"weak", why:"'Is' tells us what something equals. Pick a verb that says what the writing does."}]},
    {kind:"idea", ask:"What is it about?", opts:[
-     {t:"the fear in the camp",   q:"good", why:"A broad idea the whole scene carries — the body answers before Subhi does."},
+     {t:"the fear in the camp",   q:"good", why:"A broad idea the whole scene carries. The body answers before Subhi does."},
      {t:"that Subhi is thirsty",  q:"weak", why:"That reads the line as information. The dry throat is fear, not thirst."},
      {t:"who has the power here", q:"good", why:"Beaver hasn't touched him, and Subhi's body already obeys."}]},
    {kind:"eff", ask:"What does it do to the reader?", opts:[
      {t:"which makes the reader feel the danger before Subhi names it", q:"good", why:"Says what the reader gets, and when."},
-     {t:"which makes the reader feel sorry for him",                    q:"ok",   why:"A general feeling — the Level 5 ending. Name what the reader feels and why."},
-     {t:"which makes the sentence more interesting",                    q:"weak", why:"That's about the sentence, not the reader."}]}],
+     {t:"which makes the reader feel sorry for him",                    q:"ok",   why:"A general feeling: the Level 5 ending. Name what the reader feels and why."},
+     {t:"which makes the sentence more interesting",                    q:"weak", why:"That's about the sentence rather than the reader."}]}],
   build:p=>`<em class="hl-ev">“My throat is as dry as the dirt”</em> <em class="hl-verb">${p[0]}</em> <em class="hl-idea">${p[1]}</em>, <em class="hl-eff">${p[2]}</em>.`
 },
 { id:"idea", name:"From the idea",
   given:{kind:"idea", label:"THE IDEA", text:"power"},
   steps:[
    {kind:"ev", ask:"Which line proves it?", opts:[
-     {t:"“I asked you a question”",    q:"good", why:"A question that is really an order — power in six words."},
+     {t:"“I asked you a question”",    q:"good", why:"A question that is really an order: power in six words."},
      {t:"“my feet leave the ground”",  q:"good", why:"Beaver moves Subhi's body without permission."},
-     {t:"“the dirt outside turns into a beautiful ocean”", q:"weak", why:"A real line — from Chapter 1, the Night Sea. Wrong scene for this idea."}]},
+     {t:"“the dirt outside turns into a beautiful ocean”", q:"weak", why:"A real line, from Chapter 1, the Night Sea. Wrong scene for this idea."}]},
    {kind:"verb", ask:"What does the writing do with the idea?", opts:[
      {t:"is exposed when",  q:"good", why:"Exposed says the scene strips something bare."},
-     {t:"is shown when",    q:"ok",   why:"Works, but flat — the Level 5 verb again."},
+     {t:"is shown when",    q:"ok",   why:"Works, but flat: the Level 5 verb again."},
      {t:"is mentioned when",q:"weak", why:"Nothing here is mentioned. The scene acts it out."}]},
    {kind:"eff", ask:"What does it do to the reader?", opts:[
-     {t:"which positions the reader to fear Beaver before he is described", q:"good", why:"Positions is the Level 8 move — the writing steers where you stand."},
-     {t:"which makes the reader understand how little control a child has", q:"good", why:"Understand, not just feel — the Level 7 move."},
+     {t:"which positions the reader to fear Beaver before he is described", q:"good", why:"Positions is the Level 8 move: the writing steers where you stand."},
+     {t:"which makes the reader understand how little control a child has", q:"good", why:"Understand, not just feel: the Level 7 move."},
      {t:"which makes the reader keep reading",                              q:"weak", why:"True of any page of any book."}]}],
   build:p=>`<em class="hl-idea">The issue of power</em> <em class="hl-verb">${p[1]}</em> we read <em class="hl-ev">${p[0]}</em>, <em class="hl-eff">${p[2]}</em>.`
 },
@@ -134,15 +134,15 @@ const ROUTES=[
   given:{kind:"eff", label:"THE PURPOSE", text:"make the reader feel how little control a child has"},
   steps:[
    {kind:"feat", ask:"Which writing does it?", opts:[
-     {t:"Beaver shoving Subhi",               q:"good", why:"Subhi's body is simply moved — no answer possible."},
+     {t:"Beaver shoving Subhi",               q:"good", why:"Subhi's body is simply moved: no answer possible."},
      {t:"questions with no right answer",     q:"good", why:"Every reply is wrong before it's spoken."},
      {t:"the Night Sea",                      q:"weak", why:"That's Chapter 1 — Subhi's imagination, not Beaver's power."}]},
    {kind:"ev", ask:"Which line carries it?", opts:[
-     {t:"“my feet leave the ground”",         q:"good", why:"The moment control is gone — his own feet aren't his."},
+     {t:"“my feet leave the ground”",         q:"good", why:"The moment control is gone: his own feet aren't his."},
      {t:"“I asked you a question”",           q:"good", why:"An order dressed as a question."},
-     {t:"“as red as the sun and as deep as the sky”", q:"weak", why:"The Night Sea again — beautiful, and in the wrong chapter."}]},
+     {t:"“as red as the sun and as deep as the sky”", q:"weak", why:"The Night Sea again: beautiful, and in the wrong chapter."}]},
    {kind:"verb", ask:"What does Fraillon do?", opts:[
-     {t:"writes",    q:"good", why:"Plain and strong — the author made this happen on purpose."},
+     {t:"writes",    q:"good", why:"Plain and strong: the author made this happen on purpose."},
      {t:"describes", q:"ok",   why:"Fine, but describing is the Level 6 verb."},
      {t:"has",       q:"weak", why:"'Has Beaver shoving' hides that this is the author's choice."}]}],
   build:p=>`To <em class="hl-eff">make the reader feel how little control a child has</em>, Fraillon <em class="hl-verb">${p[2]}</em> <em class="hl-feat">${p[0]}</em> until <em class="hl-ev">${p[1]}</em>.`

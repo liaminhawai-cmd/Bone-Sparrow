@@ -104,7 +104,7 @@ function submit1(){
   const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
   $("ef").textContent = f ? "" : "We need your first name.";
   $("el").textContent = l ? "" : "We need your last name.";
-  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right — check your student code and try again.";
+  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right: check your student code and try again.";
   if(!f || !l || sid.length<4 || sid.length>8) return;
   P.fname=f; P.lname=l; P.sid=sid; writeProfile(P);
   step=2; render();
@@ -147,7 +147,7 @@ function renderStep2(){
 
   <div class="secondary">
     <a class="card" href="WritingFolioVocabHub.html">
-      <div class="t">Writing Folio vocab — all sets<span class="arrow"> →</span></div>
+      <div class="t">Writing Folio vocab, all sets<span class="arrow"> →</span></div>
       <div class="d">Procedural, persuasive, evaluative and micro-fiction.</div></a>
     <a class="card" href="ContentionClaims.html#gram">
       <div class="t">Grammar for this lesson<span class="arrow"> →</span></div>

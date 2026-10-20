@@ -188,7 +188,7 @@ function railHtml(now){
 /* ---------------- STEP 1 — who are you ---------------- */
 function renderStep1(){
   $("app").innerHTML = railHtml(1) + `
-  <h1>The Bone Sparrow — Year 7 English</h1>
+  <h1>The Bone Sparrow: Year 7 English</h1>
   <p class="sub">Zana Fraillon · Units 5–6. Everything you do saves on this device under your name and student code, so use the same computer where you can.</p>
   <h2>First, who are you?</h2>
   <p class="lead">These details go on the report you hand to your teacher, so use the name and code your school knows you by.</p>
@@ -205,7 +205,7 @@ function submit1(){
   const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
   $("ef").textContent = f ? "" : "We need your first name.";
   $("el").textContent = l ? "" : "We need your last name.";
-  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right — check your student code and try again.";
+  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right: check your student code and try again.";
   if(!f || !l || sid.length<4 || sid.length>8) return;
   P.fname=f; P.lname=l; P.sid=sid; writeProfile(P);
   step=2; render();
@@ -293,7 +293,7 @@ const DIRECTORY = [
  { g:"Writing the analysis", items:[
    {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]},
  { g:"Writing Folio (next unit)", items:[
-   {u:"WritingFolio.html", t:"Writing Folio", d:"its own front door — start there"},
+   {u:"WritingFolio.html", t:"Writing Folio", d:"its own front door: start there"},
    {u:"ContentionClaims.html", t:"Contention and claims", d:"the deck, then your draft"},
    {u:"WritingFolioVocabHub.html", t:"Writing Folio Vocab Hub", d:"lessons 01–08, words and sentence types"} ]}
 ];
@@ -374,7 +374,7 @@ function scoreBand(got,total){
   const p=got/total;
   return p>=0.85 ? "band4" : p>=0.7 ? "band3" : p>=0.5 ? "band2" : "band1";
 }
-function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">—</span>`; }
+function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">: </span>`; }
 function vcode(str){
   let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
   return "V-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
@@ -388,7 +388,7 @@ function renderReports(){
   const first=R.first||{}; let rrows="", rGot=0, rTot=0, rAny=false;
   READING_MODULES.forEach(([id,label])=>{
     const ks=Object.keys(first).filter(k=>k.split(".")[0]===id);
-    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim">—</td><td class="dim">not started</td></tr>`; return; }
+    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim">: </td><td class="dim">not started</td></tr>`; return; }
     rAny=true;
     const got=ks.filter(k=>first[k]).length;
     rGot+=got; rTot+=ks.length;
@@ -423,11 +423,11 @@ function renderReports(){
   const attempted=[5,6,7,8,9].filter(n=>first["wk.build.L"+n]!==undefined);
   if(attempted.length){
     climbBlock = climbed
-      ? `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
+      ? `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
           <div class="catlv">Level ${climbed}${P.eal&&EAL_BANDS[climbed]?` <span class="dim">· EAL ${EAL_BANDS[climbed]}</span>`:""}</div>
           <div class="catvic">“${esc(VIC_LEVELS[climbed])}”</div>
           <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:"."}</div></div>`
-      : `<div class="cattest"><div class="catlab">Against the CAT rubric — analysis writing</div>
+      : `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
           <div class="catlv dim">Not yet reached</div>
           <div class="catvic">Working towards “${esc(VIC_LEVELS[5])}”</div></div>`;
   }
@@ -439,7 +439,7 @@ function renderReports(){
     <button class="btn btn-ghost" id="backRep">← back to my tasks</button>
     <button class="btn btn-primary" onclick="window.print()">Print / save as PDF</button>
   </div>
-  <h1 style="margin-bottom:2px">The Bone Sparrow — my report</h1>
+  <h1 style="margin-bottom:2px">The Bone Sparrow, my report</h1>
   <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
   <p class="sub">One report for everything. Every score is a <b>first attempt</b>.</p>
 

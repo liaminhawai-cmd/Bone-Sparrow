@@ -125,10 +125,10 @@ const ACTS=[
      {t:"makes the reader feel the danger before Subhi names it",ok:1},
      {t:"makes the reader feel how little control a child has",ok:1},
      {t:"makes the reader laugh",ok:0,why:"Nobody is laughing at this fence."},
-     {t:"makes the sentence more interesting",ok:0,why:"That's about the sentence, not the reader."}]}],
+     {t:"makes the sentence more interesting",ok:0,why:"That's about the sentence rather than the reader."}]}],
   frame:a=>[
    {chip:"c"},
-   {slot:[{t:"reveals",q:1},{t:"shows",q:1},{t:"is",q:0,why:"'Is' says what something equals — pick a verb that says what the writing does."}],k:"verb"},
+   {slot:[{t:"reveals",q:1},{t:"shows",q:1},{t:"is",q:0,why:"'Is' says what something equals: pick a verb that says what the writing does."}],k:"verb"},
    {chip:0},
    {slot:[{t:", which",q:1},{t:". Also it",q:0,why:"That snaps one thought into two sentences."},{t:"and stuff like",q:0,why:"Chat, not analysis."}]},
    {chip:1},
@@ -153,7 +153,7 @@ const ACTS=[
    {chip:"c"},
    {slot:[{t:"is exposed when",q:1},{t:"is shown when",q:1},{t:"is mentioned when",q:0,why:"Nothing here is mentioned. The scene acts it out."}],k:"verb"},
    {chip:0},
-   {slot:[{t:", which",q:1},{t:", and also it",q:0,why:"Loose — 'which' ties the effect to the line."},{t:". Then",q:0,why:"That breaks the sentence in half."}]},
+   {slot:[{t:", which",q:1},{t:", and also it",q:0,why:"Loose: 'which' ties the effect to the line."},{t:". Then",q:0,why:"That breaks the sentence in half."}]},
    {chip:1},
    {slot:[{t:".",q:1},{t:"?",q:0,why:"You are telling the reader, not asking them."},{t:"…",q:0,why:"Finish the thought."}]}],
   sent:(a,s)=>`The issue of <em class="hl-idea">${a.centre.text}</em> <em class="hl-verb">${s[0]}</em> <em class="hl-ev">${a.picks[0].t}</em>${s[1]} <em class="hl-eff">${a.picks[1].t}</em>${s[2]}`
@@ -165,8 +165,8 @@ const ACTS=[
      {t:"“my feet leave the ground”",ok:1,lead:"Beaver shoving Subhi until"},
      {t:"“I asked you a question”",ok:1,lead:"Beaver demanding"},
      {t:"“I can’t say a single thing”",ok:1,lead:"Subhi silenced:"},
-     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"The Night Sea is Subhi in control of his own world — the opposite."},
-     {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4 — about what the camp gives, not this scene."}]},
+     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"The Night Sea is Subhi in control of his own world: the opposite."},
+     {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4 — about what the camp gives rather than this scene."}]},
    {kind:"idea", nodes:[
      {t:"power",ok:1},{t:"fear",ok:1},{t:"a body someone else controls",ok:1},
      {t:"imagination",ok:0,why:"That's the Night Sea's idea, not Beaver's fence."},
@@ -178,7 +178,7 @@ const ACTS=[
    {slot:[{t:"writes",q:1},{t:"describes",q:1},{t:"does",q:0,why:"'Does' says nothing about the writing."}],k:"verb"},
    {text:a.picks[0].lead},
    {chip:0},
-   {slot:[{t:", exposing",q:1},{t:", and it shows",q:0,why:"Flat — let one strong word do it."},{t:". Then",q:0,why:"That breaks the sentence in half."}],k:"verb"},
+   {slot:[{t:", exposing",q:1},{t:", and it shows",q:0,why:"Flat: let one strong word do it."},{t:". Then",q:0,why:"That breaks the sentence in half."}],k:"verb"},
    {chip:1},
    {slot:[{t:".",q:1},{t:"!",q:0,why:"The sentence is already loud enough."},{t:"…",q:0,why:"Finish the thought."}]}],
   sent:(a,s)=>`To <em class="hl-eff">${a.centre.text}</em>, Fraillon <em class="hl-verb">${s[0]}</em> ${a.picks[0].lead} <em class="hl-ev">${a.picks[0].t}</em><em class="hl-verb">${s[1]}</em> <em class="hl-idea">${a.picks[1].t}</em>${s[2]}`
