@@ -4144,7 +4144,10 @@ function teachRails(){
 }
 
 /* ---------- REPORT ---------- */
-function vcode(str){ let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return "V-"+Math.abs(h).toString(16).toUpperCase().slice(0,6); }
+function vcode(str){
+  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
+  return "V-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
+}
 const MISS_LABELS={qr1:"Quickread: the Night Sea",qr2:"Quickread: caught by Beaver",fig:"Figurative → literal",voice:"Voice fingerprint",ev:"Evidence builder",wk:"Analysis workshop",
   qr3:"Quickread: lucky",qr4:"Quickread: what Alpha does to a person",qr5:"Quickread: the bone sparrow",
   qr6:"Quickread: a story from just Outside",qr7:"Quickread: Aussie Boy",qr8:"Quickread: Jimmie wants to know"};
