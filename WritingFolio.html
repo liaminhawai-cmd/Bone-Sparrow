@@ -126,6 +126,14 @@ function pmStatus(){
   if(!S || !S.first) return "";
   return S.first["pwordsdone"] ? "words done" : "";
 }
+function csStatus(){
+  const S = readJSON("writingfolio.contention.v1");
+  if(!S) return "";
+  if(S.concession && S.concession.text) return "written";
+  if(S.first && S.first["csdeckdone"]) return "cards done";
+  if(S.first && S.first["cswordsdone"]) return "words done";
+  return "";
+}
 function vocabStatus(){
   const V = readJSON("writingfolio.vocabhub.v1");
   if(!V || !V.lessons) return "";
@@ -134,7 +142,7 @@ function vocabStatus(){
 }
 
 function renderStep2(){
-  const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus();
+  const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus(), cs = csStatus();
   $("app").innerHTML = `
   <h1>Hi, ${esc(P.fname)}.</h1>
   <div class="whoami">
@@ -155,6 +163,9 @@ function renderStep2(){
     <div class="d">Build each word from its parts, then use it.</div></a>
 
   <div class="secondary">
+    <a class="card" href="ConcessionSentences.html">
+      <div class="t">Complex sentences for concession ${cs?`<span class="st">${esc(cs)}</span>`:""}<span class="arrow"> →</span></div>
+      <div class="d">Extension: give ground to the other side, then take it back.</div></a>
     <a class="card" href="WritingFolioVocabHub.html">
       <div class="t">Writing Folio vocab, all sets<span class="arrow"> →</span></div>
       <div class="d">Procedural, persuasive, evaluative and micro-fiction.</div></a>

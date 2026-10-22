@@ -114,6 +114,7 @@ textarea{line-height:1.6;resize:vertical}
 
 /* ---- the taxonomy ---- */
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 12px;font-size:12px;color:var(--muted)}
+.legend span{white-space:nowrap}
 .legend .sw{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-2px;margin-right:5px}
 .sw.cont{background:var(--cont-bg);border:1px solid var(--cont-tx)}
 .sw.claim{background:var(--claim-bg);border:1px solid var(--claim-tx)}
@@ -174,6 +175,9 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 .metword .pos{font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:400;font-style:italic;color:var(--muted);margin-left:6px}
 .metm{font-size:15.5px;line-height:1.6;margin:6px 0 12px}
 .metnote{font-size:13px;line-height:1.65;color:var(--muted);background:var(--bg);border-radius:8px;padding:11px 14px;margin:12px 0 0}
+.boardrow{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.boardrow:last-of-type{border-bottom:0}
+.boardrow .eg{font-family:Georgia,serif;font-size:15.5px;line-height:1.55;color:var(--muted)}
 .mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:12px}
 .mlegend i{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:5px}
 .slotline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
@@ -214,6 +218,7 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
       font-family:inherit;cursor:pointer;background:#fff;color:var(--ink)}
 .mbtn.on{outline:2px solid var(--ink);outline-offset:1px}
 .mbtn .b{margin-left:6px;font-size:11.5px;font-weight:800;color:var(--muted)}
+.pgap{display:block;height:.85em}
 .tok.flat{cursor:default}
 .tok.flat:hover{box-shadow:none}
 .tok.lay{cursor:pointer;border-radius:3px;padding:1px 2px;margin:0 2px;
@@ -535,7 +540,7 @@ const PKEY = "bonesparrow.profile.v1";
 let store = localStorage;
 function blank(){ return { fname:"", lname:"", sid:"", first:{}, deckDone:false,
   draft:{ text:"", marks:[] }, pron:{}, mod:{}, tries:{}, done:{},
-  exported:false, startedAt:null }; }
+  concession:{ text:"" }, exported:false, startedAt:null }; }
 function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
 let S = load();
 function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
@@ -663,70 +668,77 @@ const WORDS = [
          "Gaming should be limited to one hour on school nights.",
          "Video games.",
          "Minecraft was released in 2011."],
-   a:0, ex:"A reason that sits underneath a contention. The second option is the contention; the last is a fact." },
+   a:0, ex:"A reason that sits underneath a contention. “Gaming should be limited to one hour on school nights” is the contention, and the release date is a fact." },
  { w:"Evidence", pos:"noun", eg:`Hard <b>evidence</b> makes a claim logical: numbers, dates, a quote from an expert.`, note:`Latin <i>evidens</i>, <b>seen out</b> clearly, obvious. Same <i>vid/vis</i> in <b>video</b>, <b>visible</b>, <b>evident</b> and <b>provide</b>. Evidence is what lets the reader see the claim for themselves.`, m:"Something checkable that backs a claim up.", parts:[["e-","out"],["vid","to see"],["-ence","the state of"]],
    decoys:[["ex-","former"],["voc","voice"],["-ment","the result of"]],
    q:"Which one is evidence?",
    opts:["A school survey found 68 per cent of students throw food away.",
-         "Lunchtime is far too short for anyone.",
-         "Lunchtime should be 20 minutes longer.",
-         "Why do we rush children through their food?"],
+         "Lunchtime is far too short for anyone to eat a proper meal.",
+         "Lunchtime should be at least 20 minutes longer than it is.",
+         "Why do we rush growing children through the one meal they get?"],
    a:0, ex:"Something checkable that backs a claim up. The others are emotive language, a contention and a rhetorical question." },
  { w:"Rhetorical", pos:"adjective", eg:`“Who could say no to that?” is a <b>rhetorical</b> question: the answer is meant to be obvious.`, note:`In ancient Greece a <i>rhētōr</i> was a trained public speaker, and <b>rhetoric</b> was the art of persuading a crowd. A rhetorical device is any speaker’s trick. The spelling trap is the silent <i>h</i> after the <i>r</i>.`, m:"Describes a question asked to make a point rather than to get an answer.", parts:[["rhetor","public speaker"],["-ical","to do with"]],
    decoys:[["rhino","nose"],["-ology","the study of"]],
    q:"Which one is a rhetorical question?",
    opts:["Is that really enough time for a growing teenager?",
-         "What time does lunch start?",
-         "Lunchtime should be longer.",
-         "Students are hungry and miserable."],
-   a:0, ex:"Asked to make a point rather than to get an answer. The second one genuinely wants an answer." },
+         "What time does the canteen stop serving at lunch?",
+         "Lunchtime should be twenty minutes longer than it is.",
+         "Students are hungry, rushed and miserable by period five."],
+   a:0, ex:"Asked to make a point rather than to get an answer. “What time does the canteen stop serving?” genuinely wants one." },
  { w:"Emotive", pos:"adjective", eg:`The article calls the platforms “predatory”, which is <b>emotive</b> language.`, note:`Latin <i>emovere</i>, to <b>move out</b>: an emotion is a feeling that moves through you, and emotive language moves the reader. Same <i>mot/mov</i> in <b>motion</b>, <b>motor</b>, <b>promote</b> and <b>remote</b>.`, m:"Describes words chosen to make the reader feel something.", parts:[["e-","out"],["mot","to move"],["-ive","tending to"]],
    decoys:[["em-","in"],["mod","measure"],["-ous","full of"]],
    q:"Which one uses emotive language?",
    opts:["Children are left hungry, rushed and miserable.",
-         "Lunch runs from 1.10pm to 1.30pm.",
-         "Lunchtime should be 20 minutes longer.",
-         "Most students eat in the quadrangle."],
+         "Lunch runs from 1.10pm to 1.30pm every weekday.",
+         "Lunchtime should be 20 minutes longer than it is.",
+         "Most students eat their lunch out in the quadrangle."],
    a:0, ex:"Words picked to make you feel something. The same point could be made flatly." },
  { w:"Inclusive", pos:"adjective", eg:`“<b>We</b> all know what it feels like to be rushed” uses <b>inclusive</b> language.`, note:`Latin <i>includere</i>, to <b>shut in</b>: <i>in-</i> (in) + <i>claudere</i> (to close). Same <i>clud/clus</i> in <b>include</b>, <b>exclude</b> (shut out), <b>conclude</b> and <b>seclusion</b>. Inclusive language shuts the reader in on the writer’s side.`, m:"Describes words that pull the reader onto the writer's side: we, us, our.", parts:[["in-","in"],["clus","to shut, to close"],["-ive","tending to"]],
    decoys:[["ex-","out"],["cord","heart"],["-able","able to be"]],
    q:"Which one uses inclusive language?",
    opts:["We all know what it feels like to be rushed.",
-         "Students are rushed at lunchtime.",
-         "The school rushes its students.",
-         "Lunch is twenty minutes long."],
+         "Students are rushed through lunch every single day.",
+         "The school rushes its students through the one break.",
+         "Lunch is twenty minutes long from bell to bell."],
    a:0, ex:"<i>We</i> and <i>us</i> put the reader on the writer's side before they have agreed to anything." }
 ];
 let W = null;
+function nword(n){ return ["no","one","two","three","four","five","six","seven","eight"][n]||String(n); }
 function renderWords(){
-  W = W || { i:0, phase:"meet", picked:[], tried:{} };
+  W = W || { board:true, order:shuffle(WORDS.map((_,k)=>k)), at:0, picked:[], tried:{} };
+  if(!W.order) W.order = WORDS.map((_,k)=>k);
+  if(W.at===undefined) W.at=0;
+  if(W.i===undefined) W.i=W.order[W.at];
+  if(!W.phase) W.phase="build";
+
+  if(W.board){
+    $("body").innerHTML = topbar()+`<h2>The words</h2>
+      <p class="lead">Read all ${nword(WORDS.length)} before you start.</p>
+      <div class="cardbox">
+        ${WORDS.map(w=>`<div class="boardrow">
+          <div class="metword" style="font-size:21px">${esc(w.w)} <span class="pos">${esc(w.pos||"")}</span></div>
+          <p class="metm" style="margin:3px 0 6px;font-size:14.5px">${esc(w.m)}</p>
+          <div class="eg">${w.eg}</div></div>`).join("")}
+        <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.board=false;renderWords()">Start →</button></div>
+      </div>`;
+    return;
+  }
+
   const item = WORDS[W.i];
-  if(!item){
+  if(W.at>=W.order.length || !item){
     recFirst("wordsdone", true);
     $("body").innerHTML = topbar()+`<h2>The words</h2>
-      <div class="fb ok on">All six met, built and used.</div>
+      <div class="fb ok on">All ${nword(WORDS.length)} words built and used.</div>
       <div class="btnrow"><button class="btn btn-primary" onclick="go('gram')">Grammar →</button>
       <button class="btn btn-ghost" onclick="W=null;go('words')">Again</button>
       <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>`;
     return;
   }
-  const phaseN = {meet:0, build:1, use:2}[W.phase] || 0;
+  const phaseN = (W.phase==="use") ? 1 : 0;
   let h=topbar()+`<h2>The words</h2>
-    <div class="deckbar"><b>${W.i+1} of ${WORDS.length}</b>
-      <span class="meter"><i style="width:${Math.round(100*(W.i+phaseN/3)/WORDS.length)}%"></i></span>
-      <span>${["meet it","build it","use it"][phaseN]}</span></div>`;
-
-  if(W.phase==="meet"){
-    h+=`<div class="cardbox">
-      <div class="metword">${esc(item.w)} <span class="pos">${esc(item.pos||"")}</span></div>
-      <p class="metm">${esc(item.m)}</p>
-      <div class="stim">${item.eg}</div>
-      <p class="metnote">${item.note}</p>
-      <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.phase='build';W.picked=[];renderWords()">Build it →</button></div>
-    </div>`;
-    $("body").innerHTML=h;
-    return;
-  }
+    <div class="deckbar"><b>${W.at+1} of ${WORDS.length}</b>
+      <span class="meter"><i style="width:${Math.round(100*(W.at+phaseN/2)/WORDS.length)}%"></i></span>
+      <span>${["build it","use it"][phaseN]}</span></div>`;
 
   if(W.phase==="build"){
     const tiles = shuffle(item.parts.concat(item.decoys));
@@ -754,6 +766,7 @@ function renderWords(){
   const opts = W.optOrder || (W.optOrder = shuffle(item.opts.map((t,i)=>({t,i}))));
   h+=`<div class="cardbox">
     <p class="prompt">${esc(item.q)}</p>
+    ${item.stim?`<div class="stim">${esc(item.stim)}</div>`:""}
     <div class="opts">${opts.map((o,k)=>`<button class="opt" id="o${k}" onclick="wordAnswer(${o.i},${k})">${esc(o.t)}</button>`).join("")}</div>
     <div class="fb" id="fb"></div></div>`;
   $("body").innerHTML=h;
@@ -761,8 +774,7 @@ function renderWords(){
 function wordTile(i){
   const item=WORDS[W.i], t=window.__tiles[i];
   W.picked.push(t);
-  const want = item.parts;
-  const n = W.picked.length;
+  const want = item.parts, n = W.picked.length;
   if(W.picked[n-1][0] !== want[n-1][0]){
     if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("w.build."+item.w, false); }
     W.picked.pop();
@@ -777,7 +789,7 @@ function wordTile(i){
     const fb=$("fb"); fb.className="fb ok on";
     fb.innerHTML=`<b>${esc(item.w)}</b> = `+want.map(p=>
       `<span class="mchip ${classifyMorph(p[0])}" style="animation:none;opacity:1;transform:none"><b>${esc(p[0])}</b><small>${esc(p[1])}</small></span>`)
-      .join(`<span class="mplus"> + </span>`);
+      .join(`<span class="mplus"> + </span>`)+`<div class="metnote" style="margin-top:10px">${item.note}</div>`;
     return;
   }
   renderWords();
@@ -788,10 +800,12 @@ function wordAnswer(i,k){
   document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
   $("o"+k).classList.add(ok?"right":"wrong");
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
-  fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+item.ex+
-    `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Try the next word →"}</button></div>`;
+  fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+glossify(item.ex)+
+    `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Keep going →"}</button></div>`;
 }
-function wordNext(){ W.i++; W.phase="meet"; W.picked=[]; W.optOrder=null; renderWords(); }
+function wordNext(){
+  W.at++; W.i=W.order[W.at]; W.phase="build"; W.picked=[]; W.optOrder=null; renderWords();
+}
 
 /* ====================== GRAMMAR · SESSIONS 08-10 ========================= */
 const GRAM = {
@@ -1517,23 +1531,21 @@ function renderMark(){
   const mode=MK.mode||"cat";
   let h=topbar()+`<h2>Mark it up</h2>
   <div class="modes noprint">
-    <button class="mbtn ${mode==="cat"?"on":""}" onclick="setMode('cat')">Colours</button>
+    <button class="mbtn ${mode==="cat"?"on":""}" onclick="setMode('cat')">Claims and techniques</button>
     ${["pron","mod"].map(k=>{ const d=layDone(k);
       return `<button class="mbtn ${mode===k?"on":""}" onclick="setMode('${k}')">${esc(LAYERS[k].label)}${
         d.total?`<span class="b">${d.did}/${d.total}</span>`:""}</button>`; }).join("")}
-  </div>`;
-  if(mode==="cat"){
-    h+=`<p class="lead">Click the first word of a part, then the last word, then the colour it belongs to. Click a coloured part to take the colour off.</p>
-    <div class="palette noprint">${CAT_ORDER.map(k=>
-      `<button class="pbtn m-${CATS[k].cls} ${MK.cat===k?"on":""}" onclick="MK.cat='${k}';MK.anchor=null;renderMark()">${esc(CATS[k].label)}</button>`).join("")}</div>
-    <div class="canvasdoc" id="doc">${markHtml(toks,true)}</div>`;
-    h+=coverage();
-  } else {
-    h+=`<p class="lead">${glossify(`Click a highlighted ${LAYERS[mode].one}, then ${mode==="pron"?"say what person it is in":"say how strong it is"}.`)}</p>
-    ${layLegend(mode)}
-    <div class="canvasdoc" id="doc">${layerDoc(toks,mode)}</div>
-    ${layPanel(mode)}`;
-  }
+  </div>
+  <p class="lead">${mode==="cat"
+    ? "Click the first word of a part, then the last word, then the colour it belongs to. Click a coloured part to take the colour off."
+    : glossify(`Click a highlighted ${LAYERS[mode].one}, then ${mode==="pron"?"say what person it is in":"say how strong it is"}.`)}</p>
+  <div class="palette noprint">${CAT_ORDER.map(k=>
+    `<button class="pbtn m-${CATS[k].cls} ${(mode==="cat"&&MK.cat===k)?"on":""}" onclick="MK.cat='${k}';setMode('cat')">${esc(CATS[k].label)}</button>`).join("")}</div>
+  ${findLayer("pron").length?layLegend("pron"):""}
+  ${findLayer("mod").length?layLegend("mod"):""}
+  <div class="canvasdoc" id="doc">${docHtml(toks,mode)}</div>
+  ${mode==="cat"?"":layPanel(mode)}`;
+  h+=coverage();
   h+=doneList();
   h+=`<div class="btnrow noprint">
     <button class="btn btn-primary" onclick="go('send')">Send it to your teacher →</button>
@@ -1553,36 +1565,6 @@ function layLegend(kind){
     ? PRON_ORDER.map(k=>`<span><b class="lt" style="vertical-align:0">${esc(PRON_TYPES[k].tag)}</b> ${esc(PRON_TYPES[k].label.toLowerCase())}</span>`)
     : RUNGS.slice(1).map((r,i)=>`<span><b class="lt" style="vertical-align:0">${i+1}</b> ${esc(r.toLowerCase())}</span>`);
   return `<div class="legend">${bits.join("")}</div>`;
-}
-/* kind "pron" or "mod" is live and tappable; "both" is the printed draft,
-   where the two layers show side by side and nothing is clickable. */
-function layerDoc(toks, kind){
-  const kinds = kind==="both" ? ["pron","mod"] : [kind];
-  const start={}, cover={};
-  kinds.forEach(kd=>findLayer(kd).forEach(it=>{
-    start[it.i]={ it:it, kd:kd }; for(let k=1;k<it.n;k++) cover[it.i+k]=1; }));
-  const live = kind!=="both";
-  let h="";
-  for(let i=0;i<toks.length;i++){
-    if(cover[i]) continue;
-    const e=start[i], span=e?e.it.n:1;
-    const m=markAt(i), run=!!(m && markAt(i+span)===m);
-    const bg=m?` mk m-${CATS[m.c].cls}`:"";
-    const word=esc(toks.slice(i,i+span).map(t=>t.w).join(" "));
-    const tail=run?" ":"", gap=run?"":" ";
-    if(e){
-      const ans=bagOf(e.kd)[String(i)];
-      const tg=ans?(e.kd==="pron"?(PRON_TYPES[ans.v]||{tag:"?"}).tag:String(ans.v)):"";
-      const tag=ans?`<sup class="lt">${esc(tg)}</sup>`:"";
-      const cls=`tok lay ${ans?"done":"open"}${bg}${(live&&LY.sel===i)?" sel":""}`;
-      h+= live
-        ? `<span class="${cls}" tabindex="0" title="${esc(LAYERS[e.kd].one)}" onclick="layTap(${i})" onkeydown="layKey(event,${i})">${word}${tag}${tail}</span>${gap}`
-        : `<span class="${cls}">${word}${tag}${tail}</span>${gap}`;
-    } else {
-      h+=`<span class="tok flat${bg}">${word}${tail}</span>${gap}`;
-    }
-  }
-  return h;
 }
 function layTap(i){ LY.sel=i; LY.fb=null; renderMark(); }
 function layKey(ev,i){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); layTap(i); } }
@@ -1665,18 +1647,52 @@ function doneList(){
 }
 function toggleDone(k){ S.done=S.done||{}; S.done[k]=!S.done[k]; save(); renderMark(); }
 function markAt(i){ return (S.draft.marks||[]).find(m=>i>=m.a && i<=m.b); }
-function markHtml(toks, live){
-  let h="", i=0;
-  while(i<toks.length){
-    const m=markAt(i);
-    if(m){
-      const txt=toks.slice(m.a,m.b+1).map(t=>t.w).join(" ");
-      h+=`<span class="tok mk m-${CATS[m.c].cls}" ${live?`onclick="unmark(${m.a})"`:""} title="${esc(CATS[m.c].label)}">${esc(txt)}</span> `;
-      i=m.b+1;
-    } else {
-      h+=`<span class="tok ${MK.anchor===i?"anchor":""}" ${live?`onclick="tapTok(${i})"`:""}>${esc(toks[i].w)}</span> `;
-      i++;
+/* Where the student pressed Enter. The marks are word positions, so the line
+   endings have to be read back out of the text between two words. */
+function breakAfter(toks, next){
+  if(next<=0 || next>=toks.length) return "";
+  const gap=(S.draft.text||"").slice(toks[next-1].e, toks[next].s);
+  const nl=(gap.match(/\n/g)||[]).length;
+  return nl>=2 ? `<span class="pgap"></span>` : (nl===1 ? `<br>` : "");
+}
+/* One rendering for every mode. The colours, the pronoun boxes and the modal
+   boxes are all drawn whatever the tab says; the tab only decides which of
+   them a click lands on. "both" is the printed draft, where nothing is live.
+   A two-word item is drawn as one box except under the colours tab, where
+   every word has to stay separately clickable. */
+function docHtml(toks, mode){
+  const live = mode!=="both", group = mode!=="cat";
+  const own={};
+  ["pron","mod"].forEach(kd=>findLayer(kd).forEach(it=>{
+    for(let k=0;k<it.n;k++) own[it.i+k]={ it:it, kd:kd, first:k===0 }; }));
+  let h="";
+  for(let i=0;i<toks.length;i++){
+    const e=own[i];
+    if(group && e && !e.first) continue;
+    const span=(group && e)?e.it.n:1;
+    const m=markAt(i), run=!!(m && markAt(i+span)===m);
+    const word=esc(toks.slice(i,i+span).map(t=>t.w).join(" "));
+    const tail=run?" ":"", gap=run?"":" ";
+    let cls="tok", attr="", tag="";
+    if(m) cls+=" mk m-"+CATS[m.c].cls;
+    if(e){
+      const ans=bagOf(e.kd)[String(e.it.i)];
+      cls+=" lay "+(ans?"done":"open");
+      if(ans && e.first) tag=`<sup class="lt">${esc(e.kd==="pron"?(PRON_TYPES[ans.v]||{tag:"?"}).tag:String(ans.v))}</sup>`;
+      if(live && mode===e.kd){
+        if(LY.sel===e.it.i) cls+=" sel";
+        attr=` tabindex="0" title="${esc(LAYERS[e.kd].one)}" onclick="layTap(${e.it.i})" onkeydown="layKey(event,${e.it.i})"`;
+      }
     }
+    if(live && mode==="cat"){
+      if(m) attr=` onclick="unmark(${m.a})" title="${esc(CATS[m.c].label)}"`;
+      else {
+        if(MK.anchor===i) cls+=" anchor";
+        attr=` onclick="tapTok(${i})"`;
+      }
+    } else if(!attr) cls+=" flat";
+    h+=`<span class="${cls}"${attr}>${word}${tag}${tail}</span>${gap}${breakAfter(toks,i+span)}`;
+    i+=span-1;
   }
   return h;
 }
@@ -1733,6 +1749,23 @@ function wordRows(){
     return `<tr><td>${esc(label)}</td><td><b>${ks.filter(k=>S.first[k]).length} / ${ks.length}</b></td></tr>`;
   }).join("");
 }
+/* Extension work, done on its own page and written into this record so one
+   PDF covers the task. The labels are a copy of that page's: an id whose rule
+   is not listed prints its own key rather than vanishing. */
+const CS_LABEL = { words:"The words", main:"Finding the main clause",
+  join:"Choosing the conjunction", prep:"Despite or although",
+  comma:"Where the comma goes", order:"Which half to give away", build:"Building one" };
+function csRows(){
+  const by={};
+  Object.keys(S.first).forEach(k=>{
+    const p=k.split(".");
+    const r = p[0]==="csw" ? "words" : (p[0]==="cs" && p.length>2 ? p[1] : null);
+    if(!r) return;
+    const a=by[r]=by[r]||{got:0,total:0}; a.total++; if(S.first[k]) a.got++;
+  });
+  return Object.keys(by).map(r=>
+    `<tr><td>${esc(CS_LABEL[r]||r)}</td><td><b>${by[r].got} / ${by[r].total}</b></td></tr>`).join("");
+}
 function pronRows(){
   const items=findLayer("pron"), bag=bagOf("pron"), agg={};
   items.forEach(it=>{ const a=agg[it.a]=agg[it.a]||{n:0,did:0,first:0};
@@ -1765,7 +1798,7 @@ function renderSend(){
   const wordsN=toks.length;
   const code=vcode(JSON.stringify(S.first)+"|"+S.fname+"|"+S.lname+"|"+S.sid+"|"+(S.draft.text||"")
     +"|"+JSON.stringify(S.draft.marks||[])+"|"+JSON.stringify(S.pron||{})+"|"+JSON.stringify(S.mod||{})
-    +"|"+JSON.stringify(S.done||{}));
+    +"|"+JSON.stringify(S.done||{})+"|"+((S.concession&&S.concession.text)||""));
   const dt=new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
   let h=topbar()+`
   <div class="btnrow noprint" style="margin:0 0 14px">
@@ -1795,7 +1828,7 @@ function renderSend(){
   <h3>The draft</h3>
   <div class="legend">${CAT_ORDER.map(k=>`<span><i class="sw ${CATS[k].cls}"></i>${esc(CATS[k].label)}</span>`).join("")}</div>
   ${wordsN?layLegend("pron")+layLegend("mod"):""}
-  ${wordsN?`<div class="canvasdoc">${layerDoc(toks,"both")}</div>`:`<div class="panel dim">No draft written.</div>`}
+  ${wordsN?`<div class="canvasdoc">${docHtml(toks,"both")}</div>`:`<div class="panel dim">No draft written.</div>`}
   <table class="rpt"><tr>${CAT_ORDER.map(k=>`<th>${esc(CATS[k].label)}</th>`).join("")}<th>Words</th></tr>
     <tr>${CAT_ORDER.map(k=>`<td><b>${n[k]}</b></td>`).join("")}<td><b>${wordsN}</b></td></tr></table>
   <p class="dim" style="font-size:12.5px">The colours were chosen by the student. They report what was labelled, not whether the label is right.</p>
@@ -1805,6 +1838,11 @@ function renderSend(){
   ${modRows()?`<h3>Modal verbs in the draft</h3>
   <table class="rpt"><tr><th>Modal</th><th>Strength</th><th>Used</th><th>Rated right, first go</th></tr>${modRows()}</table>
   <p class="dim" style="font-size:12.5px">Strength is the scale from the lesson. Whether each one suits the evidence behind it is your call.</p>`:""}
+
+  ${csRows()?`<h3>Concession sentences</h3>
+  <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>${csRows()}</table>`:""}
+  ${(S.concession&&S.concession.text)?`<div class="panel">${esc(S.concession.text)}</div>
+  <p class="dim" style="font-size:12.5px">Checked for a concession word, two halves and the comma. Whether the second half answers the first is your call.</p>`:""}
 
   <h3>Done</h3>
   <table class="rpt"><tr><th>Part</th><th>Ticked</th><th>Counted</th></tr>${doneRows()}</table>
