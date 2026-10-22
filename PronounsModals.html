@@ -93,6 +93,9 @@ input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8p
 .metword .pos{font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:400;font-style:italic;color:var(--muted);margin-left:6px}
 .metm{font-size:15.5px;line-height:1.6;margin:6px 0 12px}
 .metnote{font-size:13px;line-height:1.65;color:var(--muted);background:var(--bg);border-radius:8px;padding:11px 14px;margin:12px 0 0}
+.boardrow{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.boardrow:last-of-type{border-bottom:0}
+.boardrow .eg{font-family:Georgia,serif;font-size:15.5px;line-height:1.55;color:var(--muted)}
 .mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:12px}
 .mlegend i{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:5px}
 .slotline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
@@ -299,27 +302,37 @@ function idSubmit(){
 
 /* ====================== THE WORDS, ONE AT A TIME ========================= */
 let W = null;
+function nword(n){ return ["no","one","two","three","four","five","six","seven","eight"][n]||String(n); }
 function renderWords(){
-  W = W || { i:0, phase:"meet", picked:[], tried:{} };
-  const item = WORDS[W.i];
-  if(!item){ recFirst("pwordsdone", true); go("next"); return; }
-  const phaseN = {meet:0, build:1, use:2}[W.phase] || 0;
-  let h=topbar()+`<h2>The words</h2>
-    <div class="deckbar"><b>${W.i+1} of ${WORDS.length}</b>
-      <span class="meter"><i style="width:${Math.round(100*(W.i+phaseN/3)/WORDS.length)}%"></i></span>
-      <span>${["meet it","build it","use it"][phaseN]}</span></div>`;
+  W = W || { board:true, order:shuffle(WORDS.map((_,k)=>k)), at:0, picked:[], tried:{} };
+  if(!W.order) W.order = WORDS.map((_,k)=>k);
+  if(W.at===undefined) W.at=0;
+  if(W.i===undefined) W.i=W.order[W.at];
+  if(!W.phase) W.phase="build";
 
-  if(W.phase==="meet"){
-    h+=`<div class="cardbox">
-      <div class="metword">${esc(item.w)} <span class="pos">${esc(item.pos||"")}</span></div>
-      <p class="metm">${esc(item.m)}</p>
-      <div class="stim">${item.eg}</div>
-      <p class="metnote">${glossify(item.note)}</p>
-      <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.phase='build';W.picked=[];renderWords()">Build it →</button></div>
-    </div>`;
-    $("body").innerHTML=h;
+  if(W.board){
+    $("body").innerHTML = topbar()+`<h2>The words</h2>
+      <p class="lead">Read all ${nword(WORDS.length)} before you start.</p>
+      <div class="cardbox">
+        ${WORDS.map(w=>`<div class="boardrow">
+          <div class="metword" style="font-size:21px">${esc(w.w)} <span class="pos">${esc(w.pos||"")}</span></div>
+          <p class="metm" style="margin:3px 0 6px;font-size:14.5px">${esc(w.m)}</p>
+          <div class="eg">${w.eg}</div></div>`).join("")}
+        <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.board=false;renderWords()">Start →</button></div>
+      </div>`;
     return;
   }
+
+  const item = WORDS[W.i];
+  if(W.at>=W.order.length || !item){
+    recFirst("pwordsdone", true); go("next");
+    return;
+  }
+  const phaseN = (W.phase==="use") ? 1 : 0;
+  let h=topbar()+`<h2>The words</h2>
+    <div class="deckbar"><b>${W.at+1} of ${WORDS.length}</b>
+      <span class="meter"><i style="width:${Math.round(100*(W.at+phaseN/2)/WORDS.length)}%"></i></span>
+      <span>${["build it","use it"][phaseN]}</span></div>`;
 
   if(W.phase==="build"){
     const tiles = shuffle(item.parts.concat(item.decoys));
@@ -355,8 +368,7 @@ function renderWords(){
 function wordTile(i){
   const item=WORDS[W.i], t=window.__tiles[i];
   W.picked.push(t);
-  const want = item.parts;
-  const n = W.picked.length;
+  const want = item.parts, n = W.picked.length;
   if(W.picked[n-1][0] !== want[n-1][0]){
     if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("pw.build."+item.w, false); }
     W.picked.pop();
@@ -371,7 +383,7 @@ function wordTile(i){
     const fb=$("fb"); fb.className="fb ok on";
     fb.innerHTML=`<b>${esc(item.w)}</b> = `+want.map(p=>
       `<span class="mchip ${classifyMorph(p[0])}" style="animation:none;opacity:1;transform:none"><b>${esc(p[0])}</b><small>${esc(p[1])}</small></span>`)
-      .join(`<span class="mplus"> + </span>`);
+      .join(`<span class="mplus"> + </span>`)+`<div class="metnote" style="margin-top:10px">${item.note}</div>`;
     return;
   }
   renderWords();
@@ -385,7 +397,9 @@ function wordAnswer(i,k){
   fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+glossify(item.ex)+
     `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Keep going →"}</button></div>`;
 }
-function wordNext(){ W.i++; W.phase="meet"; W.picked=[]; W.optOrder=null; renderWords(); }
+function wordNext(){
+  W.at++; W.i=W.order[W.at]; W.phase="build"; W.picked=[]; W.optOrder=null; renderWords();
+}
 
 /* ====================== BACK TO THE DRAFT ================================
    The draft and its mark-up live in the contention module. This card reads
