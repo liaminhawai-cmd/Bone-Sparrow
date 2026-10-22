@@ -208,6 +208,34 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
          color:var(--muted);padding-top:11px}
 .railsent{font-family:Georgia,serif;font-size:17px;line-height:1.6;background:var(--bg);
           border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 15px;margin:4px 0 0}
+/* ---- the two layers the page finds for itself ---- */
+.modes{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.mbtn{border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;
+      font-family:inherit;cursor:pointer;background:#fff;color:var(--ink)}
+.mbtn.on{outline:2px solid var(--ink);outline-offset:1px}
+.mbtn .b{margin-left:6px;font-size:11.5px;font-weight:800;color:var(--muted)}
+.tok.flat{cursor:default}
+.tok.flat:hover{box-shadow:none}
+.tok.lay{cursor:pointer;border-radius:3px;padding:1px 2px;margin:0 2px;
+         outline:1.5px solid var(--accent);outline-offset:1px}
+.tok.lay.done{outline-color:var(--correct)}
+.tok.lay.sel{outline:3px solid var(--ink)}
+.lt{font-size:9.5px;font-weight:800;letter-spacing:.3px;color:var(--accent);vertical-align:5px;margin-left:1px}
+.tok.lay.done .lt{color:var(--correct)}
+.selword{font-family:Georgia,serif;font-size:21px;font-weight:700;margin:0 0 10px}
+.donelist{display:flex;flex-direction:column;gap:7px;margin:0 0 4px}
+.drow{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:9px;padding:10px 13px;font-family:inherit;
+      font-size:14px;color:inherit;cursor:pointer}
+.drow:hover{border-color:var(--accent)}
+.drow.auto{cursor:default;background:var(--bg)}
+.drow .box{flex:0 0 22px;height:22px;border:1px solid var(--line);border-radius:5px;background:var(--paper);
+           display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--correct)}
+.drow.on .box{background:var(--okbg);border-color:var(--correct)}
+.drow .t{font-weight:600}
+.drow .c{margin-left:auto;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+         color:var(--muted);white-space:nowrap}
+a.step{text-decoration:none}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media screen and (max-width:860px){ .container{padding:16px} }
@@ -429,6 +457,8 @@ const GRAM_TERMS = {
     m:"A question. The subject sits inside the verb group: <i>Are we prepared…</i>" },
   Imperative  :{ parts:[["imper","to command"],["-ative","tending to"]],
     m:"A command. The subject is not written down. It is you, the reader." },
+  Person      :{ parts:[["persona","a mask an actor spoke through"]],
+    m:"Whether the words point at the writer, at the reader, or at somebody else." },
   Modal       :{ parts:[["mod","measure, manner"],["-al","to do with"]],
     m:"A verb added in front of another verb to measure how certain a claim is: might, could, should, will, must." },
   Fragment    :{ parts:[["frag","to break"],["-ment","the result of"]],
@@ -504,7 +534,8 @@ const KEY = "writingfolio.contention.v1";
 const PKEY = "bonesparrow.profile.v1";
 let store = localStorage;
 function blank(){ return { fname:"", lname:"", sid:"", first:{}, deckDone:false,
-  draft:{ text:"", marks:[] }, exported:false, startedAt:null }; }
+  draft:{ text:"", marks:[] }, pron:{}, mod:{}, tries:{}, done:{},
+  exported:false, startedAt:null }; }
 function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
 let S = load();
 function save(){ try{ store.setItem(KEY, JSON.stringify(S)); }catch(e){} }
@@ -595,7 +626,9 @@ function renderHome(){
       tag:S.deckDone?"done":(sc.total?`${sc.got}/${sc.total} first go`:""), done:S.deckDone, go:"deck" },
     { t:"Your draft", d:"Write your persuasive piece.",
       tag:words?`${words} words`:"", done:words>40, go:"draft" },
-    { t:"Mark it up", d:"Colour your contention, claims, facts and techniques.",
+    { t:"Pronoun and modal words", d:"Pronoun, modal, obligation.",
+      tag:S.first["pwordsdone"]?"done":"", done:!!S.first["pwordsdone"], u:"PronounsModals.html" },
+    { t:"Mark it up", d:"Colour the parts, name the pronouns, rate the modals.",
       tag:marks?`${marks} marked`:"", done:marks>=4, go:"mark" },
     { t:"Send it to your teacher", d:"Save the PDF and email it.",
       tag:S.exported?"sent":"", done:!!S.exported, go:"send" }
@@ -603,10 +636,10 @@ function renderHome(){
   let h=topbar()+`<h1>Contention and claims</h1>
   <p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
   steps.forEach((st,i)=>{
-    h+=`<button class="step ${st.done?"done":""}" onclick="go('${st.go}')">
-      <span class="num">${st.done?"✓":i+1}</span>
+    const open = st.u ? `<a class="step ${st.done?"done":""}" href="${st.u}">` : `<button class="step ${st.done?"done":""}" onclick="go('${st.go}')">`;
+    h+=open+`<span class="num">${st.done?"✓":i+1}</span>
       <span><span class="t">${esc(st.t)}</span><br><span class="d">${esc(st.d)}</span></span>
-      <span class="tag">${esc(st.tag)}</span></button>`;
+      <span class="tag">${esc(st.tag)}</span>`+(st.u?`</a>`:`</button>`);
   });
   $("body").innerHTML=h;
 }
@@ -1362,8 +1395,10 @@ function ansMatch(k,i){
 
 /* ====================== STEP 4 · DRAFT =================================== */
 function renderDraft(){
+  const held=(S.draft.marks||[]).length+Object.keys(S.pron||{}).length+Object.keys(S.mod||{}).length;
   $("body").innerHTML=topbar()+`<h2>Your draft</h2>
   <p class="lead">Write your persuasive piece. One contention, at least three claims, and the evidence and techniques that back them up.</p>
+  ${held?`<div class="fb warn on">Changing a word here clears the colours and the pronoun and modal answers on your mark-up.</div>`:""}
   <textarea id="draftIn" rows="16" placeholder="Start typing.">${esc(S.draft.text||"")}</textarea>
   <div class="btnrow">
     <button class="btn btn-primary" onclick="saveDraft(true)">Save and mark it up →</button>
@@ -1371,11 +1406,17 @@ function renderDraft(){
   </div>
   <div class="fb" id="fb"></div>`;
   $("draftIn").addEventListener("input", ()=>{ clearTimeout(window.__dt);
-    window.__dt=setTimeout(()=>{ S.draft.text=$("draftIn").value; save(); }, 700); });
+    window.__dt=setTimeout(()=>{ setDraftText($("draftIn").value); save(); }, 700); });
+}
+/* Every mark, pronoun and modal is held as a word position in this text, so
+   changing the text has to drop them. Autosave goes through here too: a mark
+   left pointing at a word that has moved is wrong on screen and in the PDF. */
+function setDraftText(t){
+  if(t===S.draft.text) return;
+  S.draft.text=t; S.draft.marks=[]; S.pron={}; S.mod={}; S.tries={}; S.done={};
 }
 function saveDraft(move){
-  const t=$("draftIn").value;
-  if(t!==S.draft.text){ S.draft.text=t; S.draft.marks=[]; }
+  setDraftText($("draftIn").value);
   save();
   if(move) go("mark");
   else { const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Saved."; }
@@ -1384,13 +1425,87 @@ function saveDraft(move){
 /* ====================== STEP 5 · MARK IT UP ==============================
    Click the first word of a span, then the last, then a colour. Tagging by
    word runs from a single phrase up to a whole sentence with one mechanic. */
-let MK = { cat:"cont", anchor:null };
+let MK = { cat:"cont", anchor:null, mode:"cat" };
+let LY = { sel:null, fb:null };
 function tokens(){
   const t=S.draft.text||"";
   const out=[]; const re=/\S+/g; let m;
   while((m=re.exec(t))!==null) out.push({ s:m.index, e:m.index+m[0].length, w:m[0] });
   return out;
 }
+
+/* ---- the two layers the page finds for itself --------------------------
+   Which words are pronouns and which are modals is a closed list, so the
+   page looks them up rather than asking. What kind of pronoun, and how
+   strong a modal, are the questions left for the student. */
+const PRON_GROUPS = {
+  i   : ["i","me","my","mine","myself","i'm","i've","i'll","i'd"],
+  we  : ["we","us","our","ours","ourselves","we're","we've","we'll","we'd","let's"],
+  you : ["you","your","yours","yourself","yourselves","you're","you've","you'll","you'd"],
+  they: ["he","him","his","himself","he's","she","her","hers","herself","she's",
+         "they","them","their","theirs","themselves","they're","they've","they'll","they'd"]
+};
+const PRON_ORDER = ["i","we","you","they"];
+const PRON_TYPES = {
+  i   : { tag:"1st",  label:"First person, writer alone",    use:"stands in for the writer and nobody else." },
+  we  : { tag:"1st+", label:"First person, reader included", use:"takes the reader in with the writer." },
+  you : { tag:"2nd",  label:"Second person",                 use:"points straight at the reader." },
+  they: { tag:"3rd",  label:"Third person",                  use:"points at somebody outside the conversation." }
+};
+const PRON_LOOK = (function(){ const o={}; PRON_ORDER.forEach(k=>PRON_GROUPS[k].forEach(w=>{ o[w]=k; })); return o; })();
+
+/* The scale is the one from the lesson: might, could, should, will, must. The
+   words that were not drilled sit on the rung they share with one that was. */
+const RUNGS = ["","Uncertain","Possible","Recommended","Certain","Necessary"];
+const MOD_RUNG = {
+  "might":1,"may":1,"might not":1,"mightn't":1,"may not":1,
+  "could":2,"can":2,"could not":2,"couldn't":2,"cannot":2,"can't":2,
+  "should":3,"ought to":3,"should not":3,"shouldn't":3,
+  "will":4,"will not":4,"won't":4,
+  "must":5,"must not":5,"mustn't":5,"need to":5,"needs to":5,"have to":5,"has to":5
+};
+const MOD_NOTE = (function(){
+  const o={
+    "may":"“May” sits with “might” at the weak end of the scale.",
+    "can":"“Can” says something is possible, which is the rung “could” sits on.",
+    "ought to":"“Ought to” recommends, which is the rung “should” sits on.",
+    "need to":"“Need to” states a necessity, which is the rung “must” sits on.",
+    "won't":"“Won't” is “will” with a <i>not</i> in it: the writer is certain it will not happen.",
+    "must not":"“Must not” forbids, and forbidding is as strong as demanding.",
+    "should not":"“Should not” recommends against something, so it sits where “should” sits.",
+    "could not":"“Could not” is the negative of “could”.",
+    "might not":"“Might not” is the negative of “might”.",
+    "cannot":"“Cannot” is the negative of “can”."
+  };
+  o["will not"]=o["won't"]; o["mustn't"]=o["must not"]; o["shouldn't"]=o["should not"];
+  o["couldn't"]=o["could not"]; o["mightn't"]=o["may not"]=o["might not"]; o["can't"]=o["cannot"];
+  o["have to"]=o["has to"]=o["needs to"]=o["need to"];
+  return o;
+})();
+const LAYERS = {
+  pron:{ tab:PRON_LOOK, one:"pronoun",   many:"pronouns",   verb:"name", label:"Pronouns", bag:"pron" },
+  mod :{ tab:MOD_RUNG,  one:"modal verb",many:"modal verbs",verb:"rate", label:"Modals",   bag:"mod" }
+};
+function cleanW(w){ return w.toLowerCase().replace(/[‘’ʼ]/g,"'").replace(/^[^a-z']+/,"").replace(/[^a-z']+$/,""); }
+function dispW(it){ return String(it.w).replace(/^[^\w'’]+/,"").replace(/[^\w'’]+$/,""); }
+function findLayer(kind){
+  const toks=tokens(), tab=LAYERS[kind].tab, out=[];
+  for(let i=0;i<toks.length;i++){
+    const a=cleanW(toks[i].w); if(!a) continue;
+    if(i+1<toks.length){
+      const two=a+" "+cleanW(toks[i+1].w);
+      if(tab[two]!==undefined){ out.push({ i:i, n:2, w:toks[i].w+" "+toks[i+1].w, a:tab[two] }); i++; continue; }
+    }
+    if(tab[a]!==undefined) out.push({ i:i, n:1, w:toks[i].w, a:tab[a] });
+  }
+  return out;
+}
+function bagOf(kind){ const b=LAYERS[kind].bag; S[b]=S[b]||{}; return S[b]; }
+function layDone(kind){
+  const items=findLayer(kind), bag=bagOf(kind);
+  return { total:items.length, did:items.filter(it=>bag[String(it.i)]).length };
+}
+
 function renderMark(){
   const toks=tokens();
   if(!toks.length){
@@ -1399,17 +1514,156 @@ function renderMark(){
       <div class="btnrow"><button class="btn btn-primary" onclick="go('draft')">Write your draft →</button></div>`;
     return;
   }
+  const mode=MK.mode||"cat";
   let h=topbar()+`<h2>Mark it up</h2>
-  <p class="lead">Click the first word of a part, then the last word, then the colour it belongs to. Click a coloured part to take the colour off.</p>
-  <div class="palette noprint">${CAT_ORDER.map(k=>
-    `<button class="pbtn m-${CATS[k].cls} ${MK.cat===k?"on":""}" onclick="MK.cat='${k}';MK.anchor=null;renderMark()">${esc(CATS[k].label)}</button>`).join("")}</div>
-  <div class="canvasdoc" id="doc">${markHtml(toks,true)}</div>`;
-  h+=coverage();
+  <div class="modes noprint">
+    <button class="mbtn ${mode==="cat"?"on":""}" onclick="setMode('cat')">Colours</button>
+    ${["pron","mod"].map(k=>{ const d=layDone(k);
+      return `<button class="mbtn ${mode===k?"on":""}" onclick="setMode('${k}')">${esc(LAYERS[k].label)}${
+        d.total?`<span class="b">${d.did}/${d.total}</span>`:""}</button>`; }).join("")}
+  </div>`;
+  if(mode==="cat"){
+    h+=`<p class="lead">Click the first word of a part, then the last word, then the colour it belongs to. Click a coloured part to take the colour off.</p>
+    <div class="palette noprint">${CAT_ORDER.map(k=>
+      `<button class="pbtn m-${CATS[k].cls} ${MK.cat===k?"on":""}" onclick="MK.cat='${k}';MK.anchor=null;renderMark()">${esc(CATS[k].label)}</button>`).join("")}</div>
+    <div class="canvasdoc" id="doc">${markHtml(toks,true)}</div>`;
+    h+=coverage();
+  } else {
+    h+=`<p class="lead">${glossify(`Click a highlighted ${LAYERS[mode].one}, then ${mode==="pron"?"say what person it is in":"say how strong it is"}.`)}</p>
+    ${layLegend(mode)}
+    <div class="canvasdoc" id="doc">${layerDoc(toks,mode)}</div>
+    ${layPanel(mode)}`;
+  }
+  h+=doneList();
   h+=`<div class="btnrow noprint">
     <button class="btn btn-primary" onclick="go('send')">Send it to your teacher →</button>
     <button class="btn btn-ghost" onclick="go('draft')">Back to the draft</button></div>`;
   $("body").innerHTML=h;
 }
+function setMode(m){
+  MK.mode=m; MK.anchor=null; LY.sel=null; LY.fb=null;
+  if(m!=="cat"){
+    const bag=bagOf(m), nx=findLayer(m).find(it=>!bag[String(it.i)]);
+    LY.sel = nx ? nx.i : null;
+  }
+  renderMark();
+}
+function layLegend(kind){
+  const bits = kind==="pron"
+    ? PRON_ORDER.map(k=>`<span><b class="lt" style="vertical-align:0">${esc(PRON_TYPES[k].tag)}</b> ${esc(PRON_TYPES[k].label.toLowerCase())}</span>`)
+    : RUNGS.slice(1).map((r,i)=>`<span><b class="lt" style="vertical-align:0">${i+1}</b> ${esc(r.toLowerCase())}</span>`);
+  return `<div class="legend">${bits.join("")}</div>`;
+}
+/* kind "pron" or "mod" is live and tappable; "both" is the printed draft,
+   where the two layers show side by side and nothing is clickable. */
+function layerDoc(toks, kind){
+  const kinds = kind==="both" ? ["pron","mod"] : [kind];
+  const start={}, cover={};
+  kinds.forEach(kd=>findLayer(kd).forEach(it=>{
+    start[it.i]={ it:it, kd:kd }; for(let k=1;k<it.n;k++) cover[it.i+k]=1; }));
+  const live = kind!=="both";
+  let h="";
+  for(let i=0;i<toks.length;i++){
+    if(cover[i]) continue;
+    const e=start[i], span=e?e.it.n:1;
+    const m=markAt(i), run=!!(m && markAt(i+span)===m);
+    const bg=m?` mk m-${CATS[m.c].cls}`:"";
+    const word=esc(toks.slice(i,i+span).map(t=>t.w).join(" "));
+    const tail=run?" ":"", gap=run?"":" ";
+    if(e){
+      const ans=bagOf(e.kd)[String(i)];
+      const tg=ans?(e.kd==="pron"?(PRON_TYPES[ans.v]||{tag:"?"}).tag:String(ans.v)):"";
+      const tag=ans?`<sup class="lt">${esc(tg)}</sup>`:"";
+      const cls=`tok lay ${ans?"done":"open"}${bg}${(live&&LY.sel===i)?" sel":""}`;
+      h+= live
+        ? `<span class="${cls}" tabindex="0" title="${esc(LAYERS[e.kd].one)}" onclick="layTap(${i})" onkeydown="layKey(event,${i})">${word}${tag}${tail}</span>${gap}`
+        : `<span class="${cls}">${word}${tag}${tail}</span>${gap}`;
+    } else {
+      h+=`<span class="tok flat${bg}">${word}${tail}</span>${gap}`;
+    }
+  }
+  return h;
+}
+function layTap(i){ LY.sel=i; LY.fb=null; renderMark(); }
+function layKey(ev,i){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); layTap(i); } }
+function layPanel(kind){
+  const items=findLayer(kind), bag=bagOf(kind), L=LAYERS[kind];
+  if(!items.length) return `<div class="panel dim">No ${L.many} in your draft.</div>`;
+  const it=items.find(x=>x.i===LY.sel);
+  if(!it){
+    const left=items.filter(x=>!bag[String(x.i)]).length;
+    return `<div class="panel">${left?`${left} of ${items.length} still to ${L.verb}.`:`All ${items.length} done.`}</div>`;
+  }
+  const picker = kind==="pron"
+    ? `<div class="opts">${PRON_ORDER.map(k=>`<button class="opt" data-v="${k}" onclick="layPick('pron','${k}')">${esc(PRON_TYPES[k].label)}</button>`).join("")}</div>`
+    : `<div class="chips">${RUNGS.slice(1).map((r,i)=>`<button class="opt" data-v="${i+1}" onclick="layPick('mod',${i+1})">${i+1} · ${esc(r.toLowerCase())}</button>`).join("")}</div>`;
+  const ansd=bag[String(it.i)], fb=(LY.fb&&LY.fb.i===it.i)?LY.fb:null;
+  let body="";
+  if(fb){
+    body=`<div class="fb ${fb.ok?"ok":"bad"} on">${fb.html}</div>`;
+    body+= fb.ok
+      ? `<div class="btnrow"><button class="btn btn-primary nextb" onclick="layNext('${kind}')">Next →</button></div>`
+      : picker;
+  } else if(ansd){
+    const lab = kind==="pron" ? (PRON_TYPES[ansd.v]||{label:"?"}).label : `${ansd.v} · ${RUNGS[ansd.v].toLowerCase()}`;
+    body=`<div class="fb ok on">You named it ${esc(lab)}.
+      <div class="btnrow"><button class="btn btn-primary nextb" onclick="layNext('${kind}')">Next →</button></div></div>`;
+  } else {
+    body=picker;
+  }
+  return `<div class="panel"><div class="selword">“${esc(dispW(it))}”</div>${body}</div>`;
+}
+function layPick(kind, v){
+  const it=findLayer(kind).find(x=>x.i===LY.sel); if(!it) return;
+  const ok=(String(v)===String(it.a)), key=String(it.i), bag=bagOf(kind);
+  S.tries=S.tries||{};
+  const tk=kind+"."+key;
+  if(S.tries[tk]===undefined) S.tries[tk]=ok;
+  if(ok) bag[key]={ v:v, first:!!S.tries[tk] };
+  save();
+  LY.fb={ i:it.i, ok:ok, html:(kind==="pron"?pronFb(it,v,ok):modFb(it,v,ok)) };
+  renderMark();
+}
+function layNext(kind){
+  const bag=bagOf(kind), nx=findLayer(kind).find(it=>!bag[String(it.i)]);
+  LY.sel = nx?nx.i:null; LY.fb=null; renderMark();
+}
+function pronFb(it, v, ok){
+  const right=PRON_TYPES[it.a], chose=PRON_TYPES[v], w=esc(dispW(it));
+  if(ok) return glossify(`<span class="rule">${esc(right.label)}.</span>“${w}” ${esc(right.use)}`);
+  return glossify(`<span class="rule">Not that one.</span>A word that ${esc(chose.use.replace(/\.$/,""))} is `+
+    `${esc(chose.label.toLowerCase())}. Read the sentence again and work out who “${w}” points at.`);
+}
+function modFb(it, v, ok){
+  const w=esc(dispW(it)), r=it.a, key=cleanW(it.w);
+  if(ok) return `<span class="rule">${r} · ${esc(RUNGS[r].toLowerCase())}.</span>`+
+    (MOD_NOTE[key] || `“${w}” sits at ${r} on the scale.`);
+  return `<span class="rule">Not ${v}.</span>${v} is ${esc(RUNGS[v].toLowerCase())}. The scale runs `+
+    RUNGS.slice(1).map((x,i)=>`${i+1} ${esc(x.toLowerCase())}`).join(", ")+`. Where does “${w}” sit on it?`;
+}
+function doneList(){
+  const n=counts();
+  const rows=[
+    { k:"cont",  t:"Contention marked",           n:n.cont },
+    { k:"claim", t:"Claims marked",               n:n.claim },
+    { k:"tech",  t:"Facts and techniques marked", n:n.fact+n.rhetq+n.emot+n.incl }
+  ];
+  let h=`<h3>Done</h3><div class="donelist noprint">`;
+  rows.forEach(r=>{
+    const on=!!(S.done&&S.done[r.k]);
+    h+=`<button class="drow ${on?"on":""}" onclick="toggleDone('${r.k}')">
+      <span class="box">${on?"✓":""}</span><span class="t">${esc(r.t)}</span>
+      <span class="c">${r.n} coloured</span></button>`;
+  });
+  ["pron","mod"].forEach(kind=>{
+    const d=layDone(kind), on=d.total>0 && d.did===d.total;
+    h+=`<div class="drow auto ${on?"on":""}"><span class="box">${on?"✓":""}</span>
+      <span class="t">${kind==="pron"?"Pronouns named":"Modals rated"}</span>
+      <span class="c">${d.total?`${d.did} of ${d.total}`:"none in your draft"}</span></div>`;
+  });
+  return h+`</div>`;
+}
+function toggleDone(k){ S.done=S.done||{}; S.done[k]=!S.done[k]; save(); renderMark(); }
 function markAt(i){ return (S.draft.marks||[]).find(m=>i>=m.a && i<=m.b); }
 function markHtml(toks, live){
   let h="", i=0;
@@ -1441,18 +1695,12 @@ function counts(){
   (S.draft.marks||[]).forEach(m=>{ n[m.c]=(n[m.c]||0)+1; });
   return n;
 }
-function modalsUsed(){
-  const t=(S.draft.text||"").toLowerCase();
-  return GRAM.scale.concat(["may","need to","can"]).filter(m=>new RegExp("\\b"+m+"\\b").test(t));
-}
 function coverage(){
   const n=counts();
-  const mods=modalsUsed();
   return `<div class="cov">${CAT_ORDER.map(k=>
     `<div class="covcell"><div class="n m-${CATS[k].cls}" style="display:inline-block;padding:0 8px;border-radius:6px">${n[k]}</div>
      <div class="l">${esc(CATS[k].label)}</div></div>`).join("")}</div>
-   <p class="dim" style="font-size:12.5px;margin:0 0 6px">Counts only. Whether each part does its job is your teacher's call.</p>
-   ${mods.length?`<p class="dim" style="font-size:12.5px;margin:0 0 10px">Modal verbs in your draft: ${mods.map(m=>`<b>${esc(m)}</b>`).join(", ")}. Each one tells the reader how certain you are.</p>`:""}`;
+   <p class="dim" style="font-size:12.5px;margin:0 0 10px">Counts only. Whether each part does its job is your teacher's call.</p>`;
 }
 
 /* ====================== STEP 6 · SEND ==================================== */
@@ -1474,11 +1722,50 @@ function gramRows(){
   return Object.keys(out).map(p=>
     `<tr><td>${esc(GRAM_LABEL[p]||p)}</td><td><b>${out[p].got} / ${out[p].total}</b></td></tr>`).join("");
 }
+function wordRows(){
+  const pair=[["build","Building a word from its parts"],["use","Using the word in a sentence"]];
+  return pair.map(([kind,label])=>{
+    const ks=Object.keys(S.first).filter(k=>{
+      const p=k.split(".");
+      return (p[0]==="w" || p[0]==="pw") && p[1]===kind;
+    });
+    if(!ks.length) return "";
+    return `<tr><td>${esc(label)}</td><td><b>${ks.filter(k=>S.first[k]).length} / ${ks.length}</b></td></tr>`;
+  }).join("");
+}
+function pronRows(){
+  const items=findLayer("pron"), bag=bagOf("pron"), agg={};
+  items.forEach(it=>{ const a=agg[it.a]=agg[it.a]||{n:0,did:0,first:0};
+    a.n++; const ans=bag[String(it.i)]; if(ans){ a.did++; if(ans.first) a.first++; } });
+  return PRON_ORDER.filter(k=>agg[k]).map(k=>
+    `<tr><td>${esc(PRON_TYPES[k].label)}</td><td><b>${agg[k].n}</b></td><td><b>${agg[k].first} / ${agg[k].n}</b></td></tr>`).join("");
+}
+function modRows(){
+  const items=findLayer("mod"), bag=bagOf("mod"), agg={};
+  items.forEach(it=>{ const w=cleanW(it.w); const a=agg[w]=agg[w]||{n:0,first:0,r:it.a};
+    a.n++; const ans=bag[String(it.i)]; if(ans&&ans.first) a.first++; });
+  return Object.keys(agg).sort((x,y)=>agg[x].r-agg[y].r||x.localeCompare(y)).map(w=>
+    `<tr><td>${esc(w)}</td><td>${agg[w].r} · ${esc(RUNGS[agg[w].r].toLowerCase())}</td>
+     <td><b>${agg[w].n}</b></td><td><b>${agg[w].first} / ${agg[w].n}</b></td></tr>`).join("");
+}
+function doneRows(){
+  const n=counts(), d=S.done||{};
+  const self=[["Contention marked",d.cont,n.cont],["Claims marked",d.claim,n.claim],
+              ["Facts and techniques marked",d.tech,n.fact+n.rhetq+n.emot+n.incl]];
+  let h=self.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]?"✓":"—"}</td><td>${r[2]} coloured</td></tr>`).join("");
+  h+=["pron","mod"].map(kind=>{ const q=layDone(kind);
+    return `<tr><td>${kind==="pron"?"Pronouns named":"Modals rated"}</td>
+      <td>${(q.total&&q.did===q.total)?"✓":"—"}</td>
+      <td>${q.total?`${q.did} of ${q.total}`:"none in the draft"}</td></tr>`; }).join("");
+  return h;
+}
 function renderSend(){
   const n=counts(), toks=tokens(), rules=byRule();
   const sc=deckScore();
   const wordsN=toks.length;
-  const code=vcode(JSON.stringify(S.first)+"|"+S.fname+"|"+S.lname+"|"+S.sid+"|"+(S.draft.text||"")+"|"+JSON.stringify(S.draft.marks||[]));
+  const code=vcode(JSON.stringify(S.first)+"|"+S.fname+"|"+S.lname+"|"+S.sid+"|"+(S.draft.text||"")
+    +"|"+JSON.stringify(S.draft.marks||[])+"|"+JSON.stringify(S.pron||{})+"|"+JSON.stringify(S.mod||{})
+    +"|"+JSON.stringify(S.done||{}));
   const dt=new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
   let h=topbar()+`
   <div class="btnrow noprint" style="margin:0 0 14px">
@@ -1490,7 +1777,10 @@ function renderSend(){
   <h1>Contention and claims</h1>
   <p class="sub"><b>${esc(S.fname)} ${esc(S.lname)}</b> · ${esc(S.sid)} · ${esc(dt)}</p>
 
-  ${gramRows()?`<h3>Grammar — first attempt</h3>
+  ${wordRows()?`<h3>The words, first attempt</h3>
+  <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>${wordRows()}</table>`:""}
+
+  ${gramRows()?`<h3>Grammar, first attempt</h3>
   <table class="rpt"><tr><th>What it tested</th><th>First go</th></tr>${gramRows()}</table>`:""}
 
   <h3>The deck, first attempt</h3>
@@ -1504,10 +1794,21 @@ function renderSend(){
 
   <h3>The draft</h3>
   <div class="legend">${CAT_ORDER.map(k=>`<span><i class="sw ${CATS[k].cls}"></i>${esc(CATS[k].label)}</span>`).join("")}</div>
-  ${wordsN?`<div class="canvasdoc">${markHtml(toks,false)}</div>`:`<div class="panel dim">No draft written.</div>`}
+  ${wordsN?layLegend("pron")+layLegend("mod"):""}
+  ${wordsN?`<div class="canvasdoc">${layerDoc(toks,"both")}</div>`:`<div class="panel dim">No draft written.</div>`}
   <table class="rpt"><tr>${CAT_ORDER.map(k=>`<th>${esc(CATS[k].label)}</th>`).join("")}<th>Words</th></tr>
     <tr>${CAT_ORDER.map(k=>`<td><b>${n[k]}</b></td>`).join("")}<td><b>${wordsN}</b></td></tr></table>
-  <p class="dim" style="font-size:12.5px">Marked by the student. The colours report what they labelled, not whether the label is right.</p>
+  <p class="dim" style="font-size:12.5px">The colours were chosen by the student. They report what was labelled, not whether the label is right.</p>
+
+  ${pronRows()?`<h3>Pronouns in the draft</h3>
+  <table class="rpt"><tr><th>Type</th><th>Used</th><th>Named right, first go</th></tr>${pronRows()}</table>`:""}
+  ${modRows()?`<h3>Modal verbs in the draft</h3>
+  <table class="rpt"><tr><th>Modal</th><th>Strength</th><th>Used</th><th>Rated right, first go</th></tr>${modRows()}</table>
+  <p class="dim" style="font-size:12.5px">Strength is the scale from the lesson. Whether each one suits the evidence behind it is your call.</p>`:""}
+
+  <h3>Done</h3>
+  <table class="rpt"><tr><th>Part</th><th>Ticked</th><th>Counted</th></tr>${doneRows()}</table>
+  <p class="dim" style="font-size:12.5px">The first three are the student's own tick. The last two are counted by the page.</p>
   <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span>, changes if the name, code, draft or any score changes.</p>`;
   $("body").innerHTML=h;
 }
@@ -1516,6 +1817,7 @@ function renderSend(){
 (function boot(){
   if(!idOk()){ go("id"); return; }
   const m=(location.hash||"").replace("#","");
+  if(m==="pron" || m==="mod"){ go("mark"); if(screen==="mark") setMode(m); return; }
   go(["words","gram","deck","draft","mark","send"].includes(m) ? m : "home");
 })();
 </script>

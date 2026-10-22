@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pronoun choice and modal verbs — Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* Morphemes keep the colours they have in the vocab hub and in the
+     contention module, so a part of a word means the same thing everywhere. */
+  --mpre:#2c6fa8; --mpre-bg:#e5eef5;
+  --mroot:#9a5518; --mroot-bg:#f5e7d8;
+  --msuf:#3f7a4a; --msuf-bg:#e6f1e8;
+  --mcon:#6c6353; --mcon-bg:#ece7db;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:18px 12px 60px}
+.container{width:100%;max-width:880px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 10px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.55}
+p.lead{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 14px}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 16px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:9px 14px;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.deckbar b{color:var(--ink)}
+.meter{flex:1;min-width:120px;height:7px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:0 0 14px}
+.prompt{font-size:14px;font-weight:700;margin:0 0 10px}
+.stim{font-family:Georgia,serif;font-size:17px;line-height:1.6;background:var(--bg);
+      border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 15px;margin:0 0 14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px 14px;
+     font-size:14.5px;font-family:inherit;color:inherit;cursor:pointer;line-height:1.5}
+.opt:hover{border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--okbg);border-color:var(--correct)}
+.opt.wrong{background:var(--wrongbg);border-color:var(--wrong)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips .opt{flex:0 1 auto}
+.fb{border-radius:9px;padding:12px 15px;margin:14px 0 0;font-size:13.5px;line-height:1.6;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb.warn{background:var(--warnbg);border:1px solid var(--warn)}
+.fb .rule{display:block;font-weight:700;margin-bottom:3px}
+
+/* key words, tappable wherever they appear */
+.kw{cursor:help;padding:0 1px;border-radius:3px;border-bottom:2px dotted var(--accent)}
+.kw:hover,.kw:focus-visible{background:#fff;box-shadow:0 0 0 2px #fff,0 2px 10px rgba(40,30,10,.25);outline:none}
+.kwpop{position:fixed;z-index:80;width:min(330px,calc(100vw - 24px));background:#fff;border:1px solid var(--line);
+       border-radius:12px;box-shadow:0 12px 34px rgba(40,30,10,.3);padding:13px 15px}
+.kwpop .gx{position:absolute;top:5px;right:8px;border:0;background:none;color:var(--muted);font-size:19px;cursor:pointer;line-height:1}
+.kwpop .kww{font-family:Georgia,serif;font-size:19px;font-weight:700;margin-bottom:7px}
+.kwparts{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:0 0 8px}
+.mchip{display:inline-flex;flex-direction:column;align-items:center;border:1px solid transparent;
+       border-radius:8px;padding:3px 9px;line-height:1.25;opacity:0;transform:translateY(10px) scale(.6);
+       animation:chipIn .45s cubic-bezier(.2,.85,.3,1.25) forwards}
+.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.opt.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.opt.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.opt.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.opt.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.metword{font-family:Georgia,serif;font-size:27px;font-weight:700;line-height:1.2}
+.metword .pos{font-family:'Segoe UI',sans-serif;font-size:12.5px;font-weight:400;font-style:italic;color:var(--muted);margin-left:6px}
+.metm{font-size:15.5px;line-height:1.6;margin:6px 0 12px}
+.metnote{font-size:13px;line-height:1.65;color:var(--muted);background:var(--bg);border-radius:8px;padding:11px 14px;margin:12px 0 0}
+.mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;font-size:12px}
+.mlegend i{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:5px}
+.slotline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
+.mslot{min-width:62px;min-height:38px;border:1px dashed var(--line);border-radius:8px;background:#fff;
+       display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 8px;line-height:1.2}
+.mslot b{font-size:14px} .mslot small{font-size:9.5px;opacity:.85}
+.mslot.mp{background:var(--mpre-bg); color:var(--mpre); border-color:var(--mpre)}
+.mslot.mr{background:var(--mroot-bg);color:var(--mroot);border-color:var(--mroot)}
+.mslot.ms{background:var(--msuf-bg); color:var(--msuf); border-color:var(--msuf)}
+.mslot.mc{background:var(--mcon-bg); color:var(--mcon); border-color:var(--mcon)}
+.mchip b{font-size:13.5px} .mchip small{font-size:10px;opacity:.85}
+.mplus{font-weight:800;color:var(--muted)}
+.kwm{font-size:13px;line-height:1.55}
+@keyframes chipIn{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ .mchip{animation:none;opacity:1;transform:none} }
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:16px} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+
+<script>
+/* ============================================================================
+   Lesson 05 of the writing folio: the words for pronoun choice and modal
+   verbs, then back to the draft started in the contention module. Progress is
+   written into that module's record, under its own prefix, so one report
+   covers the whole folio task.
+   ========================================================================== */
+const KEY = "writingfolio.contention.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store = localStorage;
+function blank(){ return { fname:"", lname:"", sid:"", first:{}, deckDone:false,
+  draft:{ text:"", marks:[] }, pron:{}, mod:{}, done:{}, exported:false, startedAt:null }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
+let S = load();
+/* Read, change, write: the contention module may be open in another tab, so
+   this page never saves a record it loaded minutes ago. */
+function bump(fn){
+  const cur=load(); fn(cur);
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p) return;
+  if(S.fname && S.sid) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; });
+})();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function recFirst(id, ok){ if(S.first[id]===undefined) bump(c=>{ if(c.first[id]===undefined) c.first[id]=!!ok; }); }
+
+/* ====================== THE WORDS ======================================== */
+const WORDS = [
+ { w:"Pronoun", pos:"noun",
+   eg:`Teenagers scroll for hours because the apps are built to hold <b>them</b>.`,
+   note:`Latin <i>pronomen</i>: <i>pro</i> (in place of) + <i>nomen</i> (name). Same <i>nomen</i> in <b>nominate</b>, <b>nominal</b> and <b>denomination</b>. A pronoun saves you repeating the noun, and it decides who the writing points at.`,
+   m:"A short word that stands in for something already named.",
+   parts:[["pro-","in place of"],["noun","a naming word"]],
+   decoys:[["pre-","before"],["-ation","the act of"]],
+   q:"Which word is the pronoun?",
+   stim:"The council closed the skate park last winter without asking us.",
+   opts:["us","council","skate park","winter"],
+   a:0, ex:"“Us” stands in place of a group of people, and it puts the reader inside that group." },
+ { w:"Modal", pos:"noun",
+   eg:`Governments <b>must</b> act before the situation worsens.`,
+   note:`Latin <i>modus</i>, a <b>measure</b> or a manner. Same <i>mod</i> in <b>mode</b>, <b>model</b>, <b>moderate</b> and <b>modify</b>. A modal is an auxiliary verb, which means an extra verb put in front of another one, and what it measures is certainty.`,
+   m:"A verb that measures how certain or how necessary something is.",
+   parts:[["mod","measure, manner"],["-al","to do with"]],
+   decoys:[["mot","to move"],["-ive","tending to"]],
+   q:"Which sentence makes the strongest claim?",
+   opts:["Governments must act before the situation worsens.",
+         "Governments should act before the situation worsens.",
+         "Governments could act before the situation worsens.",
+         "Governments might act before the situation worsens."],
+   a:0, ex:"“Must” leaves no room to argue, so only strong evidence earns it." },
+ { w:"Obligation", pos:"noun",
+   eg:`A strong modal puts an <b>obligation</b> on the reader.`,
+   note:`Latin <i>obligare</i>, to <b>bind towards</b>. Same <i>lig</i> in <b>ligament</b>, which binds bone to bone, and in <b>oblige</b> and <b>league</b>. An obligation is a tie you cannot walk away from.`,
+   m:"Something you are bound to do.",
+   parts:[["ob-","towards"],["lig","to bind"],["-ation","the act of"]],
+   decoys:[["ab-","away from"],["loc","place"],["-ible","able to be"]],
+   q:"Which sentence puts an obligation on the reader?",
+   opts:["You must speak up before the law changes.",
+         "You might speak up before the law changes.",
+         "Some people speak up when laws change.",
+         "Will anybody speak up before the law changes?"],
+   a:0, ex:"“Must” is the modal that binds the reader to the action. The others leave them free to walk away." }
+];
+const GRAM_TERMS = {
+  Auxiliary :{ parts:[["aux","to grow, to help"],["-iliary","to do with"]],
+    m:"An extra verb put in front of another one. Every modal is an auxiliary." },
+  Certainty :{ parts:[["certain","sure, settled"],["-ty","the state of"]],
+    m:"How sure the writer is. The modal is how the reader hears it." }
+};
+let TERMS = null;
+function terms(){
+  if(TERMS) return TERMS;
+  TERMS={};
+  WORDS.forEach(w=>{ TERMS[w.w]={ parts:w.parts, m:w.m }; });
+  Object.keys(GRAM_TERMS).forEach(k=>{ TERMS[k]=GRAM_TERMS[k]; });
+  return TERMS;
+}
+/* Only called on static text. A key word is a span, never a button: a button
+   inside the feedback box swallows the click that moves the student on. */
+function glossify(html){
+  const T=terms(), keys=Object.keys(T).sort((a,b)=>b.length-a.length);
+  const re=new RegExp("\\b("+keys.join("|")+")(s|es)?\\b","gi");
+  const seen={};
+  return String(html).split(/(<[^>]*>)/).map(part=>{
+    if(part.charAt(0)==="<") return part;
+    return part.replace(re,(m)=>{
+      const base=keys.find(k=>k.toLowerCase()===m.toLowerCase().replace(/(es|s)$/,"")
+                             || k.toLowerCase()===m.toLowerCase());
+      if(!base || seen[base]) return m;
+      seen[base]=1;
+      return `<span class="kw" role="button" tabindex="0" data-w="${base}" onclick="termPop(event)"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();termPop(event);}"
+        title="What does this word mean?">${m}</span>`;
+    });
+  }).join("");
+}
+function classifyMorph(piece){
+  if(/^-.*-$/.test(piece)) return "mc";
+  if(/^-/.test(piece)) return "ms";
+  if(/-$/.test(piece)) return "mp";
+  return "mr";
+}
+const MORPH_LEGEND = `<div class="mlegend">
+  <span style="color:var(--mpre)"><i style="background:var(--mpre)"></i>prefix</span>
+  <span style="color:var(--mroot)"><i style="background:var(--mroot)"></i>root</span>
+  <span style="color:var(--msuf)"><i style="background:var(--msuf)"></i>suffix</span></div>`;
+function termPop(ev){
+  ev.stopPropagation(); ev.preventDefault();
+  termPopClose();
+  const w=ev.currentTarget.dataset.w, t=terms()[w]; if(!t) return;
+  const d=document.createElement("div"); d.className="kwpop"; d.id="kwpop";
+  d.innerHTML=`<button class="gx" onclick="termPopClose()" aria-label="close">×</button>
+    <div class="kww">${esc(w)}</div>
+    <div class="kwparts">${t.parts.map((x,i)=>
+      `<span class="mchip ${classifyMorph(x[0])}" style="animation-delay:${90+i*150}ms"><b>${esc(x[0])}</b><small>${esc(x[1])}</small></span>`)
+      .join(`<span class="mplus">+</span>`)}</div>
+    <div class="kwm">${t.m}</div>`;
+  document.body.appendChild(d);
+  const r=d.getBoundingClientRect();
+  d.style.left=Math.min(Math.max(8,ev.clientX-r.width/2), window.innerWidth-r.width-8)+"px";
+  d.style.top=(ev.clientY+r.height+16>window.innerHeight ? Math.max(8,ev.clientY-r.height-14) : ev.clientY+14)+"px";
+  setTimeout(()=>document.addEventListener("pointerdown", termPopAway),0);
+}
+function termPopAway(e){
+  const pp=$("kwpop");
+  if(!pp){ document.removeEventListener("pointerdown", termPopAway); return; }
+  if(!pp.contains(e.target)){ pp.remove(); document.removeEventListener("pointerdown", termPopAway); }
+}
+function termPopClose(){ const pp=$("kwpop"); if(pp) pp.remove(); }
+
+/* ====================== ROUTER =========================================== */
+let screen="words";
+function go(s){
+  if(!idOk() && s!=="id") s="id";
+  screen=s;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(s==="id") renderId();
+  else if(s==="words") renderWords();
+  else renderNext();
+}
+function topbar(){
+  return `<div class="topbar noprint">
+    <span class="sp">
+      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+    </span></div>`;
+}
+
+/* ====================== IDENTITY ========================================= */
+function renderId(){
+  $("body").innerHTML=`<h1>Pronoun choice and modal verbs</h1>
+  <p class="sub">Your work saves on this device under your name and student code.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile();
+  go(S.first["pwordsdone"] ? "next" : "words");
+}
+
+/* ====================== THE WORDS, ONE AT A TIME ========================= */
+let W = null;
+function renderWords(){
+  W = W || { i:0, phase:"meet", picked:[], tried:{} };
+  const item = WORDS[W.i];
+  if(!item){ recFirst("pwordsdone", true); go("next"); return; }
+  const phaseN = {meet:0, build:1, use:2}[W.phase] || 0;
+  let h=topbar()+`<h2>The words</h2>
+    <div class="deckbar"><b>${W.i+1} of ${WORDS.length}</b>
+      <span class="meter"><i style="width:${Math.round(100*(W.i+phaseN/3)/WORDS.length)}%"></i></span>
+      <span>${["meet it","build it","use it"][phaseN]}</span></div>`;
+
+  if(W.phase==="meet"){
+    h+=`<div class="cardbox">
+      <div class="metword">${esc(item.w)} <span class="pos">${esc(item.pos||"")}</span></div>
+      <p class="metm">${esc(item.m)}</p>
+      <div class="stim">${item.eg}</div>
+      <p class="metnote">${glossify(item.note)}</p>
+      <div class="btnrow"><button class="btn btn-primary nextb" onclick="W.phase='build';W.picked=[];renderWords()">Build it →</button></div>
+    </div>`;
+    $("body").innerHTML=h;
+    return;
+  }
+
+  if(W.phase==="build"){
+    const tiles = shuffle(item.parts.concat(item.decoys));
+    h+=`<div class="cardbox">
+      <p class="prompt">Build the word that means this, part by part, in order:</p>
+      <div class="stim" style="font-family:'Segoe UI',sans-serif;font-size:15px">${esc(item.m)}</div>
+      ${MORPH_LEGEND}
+      <div class="stim"><div class="slotline" id="slot">${
+        item.parts.map((p,i)=>{
+          const got=W.picked[i];
+          return got
+            ? `<span class="mslot ${classifyMorph(got[0])}" style="border-style:solid"><b>${esc(got[0])}</b><small>${esc(got[1])}</small></span>`
+            : `<span class="mslot"></span>`;
+        }).join(`<span class="mplus">+</span>`)}</div></div>
+      <div class="chips" id="tiles">
+        ${tiles.map((t,i)=>`<button class="opt ${classifyMorph(t[0])}" data-i="${i}" onclick="wordTile(${i})">${esc(t[0])} <small style="opacity:.8">${esc(t[1])}</small></button>`).join("")}
+      </div>
+      <div class="btnrow"><button class="btn btn-ghost" onclick="W.picked=[];renderWords()">Clear</button></div>
+      <div class="fb" id="fb"></div></div>`;
+    $("body").innerHTML=h;
+    window.__tiles = tiles;
+    return;
+  }
+  /* phase: use */
+  const opts = W.optOrder || (W.optOrder = shuffle(item.opts.map((t,i)=>({t,i}))));
+  h+=`<div class="cardbox">
+    <p class="prompt">${esc(item.q)}</p>
+    ${item.stim?`<div class="stim">${esc(item.stim)}</div>`:""}
+    <div class="opts">${opts.map((o,k)=>`<button class="opt" id="o${k}" onclick="wordAnswer(${o.i},${k})">${esc(o.t)}</button>`).join("")}</div>
+    <div class="fb" id="fb"></div></div>`;
+  $("body").innerHTML=h;
+}
+function wordTile(i){
+  const item=WORDS[W.i], t=window.__tiles[i];
+  W.picked.push(t);
+  const want = item.parts;
+  const n = W.picked.length;
+  if(W.picked[n-1][0] !== want[n-1][0]){
+    if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("pw.build."+item.w, false); }
+    W.picked.pop();
+    renderWords();
+    const fb=$("fb"); fb.className="fb bad on";
+    fb.innerHTML=`<span class="rule">Not that part, or not yet.</span>${esc(t[0])} means “${esc(t[1])}”. ${n===1?"Start with the part that comes first in the word.":"The part you need next comes straight after “"+esc(want[n-2][0])+"”."}`;
+    return;
+  }
+  if(W.picked.length===want.length){
+    if(!W.tried["b"+W.i]){ W.tried["b"+W.i]=true; recFirst("pw.build."+item.w, true); }
+    W.phase="use"; W.optOrder=null; renderWords();
+    const fb=$("fb"); fb.className="fb ok on";
+    fb.innerHTML=`<b>${esc(item.w)}</b> = `+want.map(p=>
+      `<span class="mchip ${classifyMorph(p[0])}" style="animation:none;opacity:1;transform:none"><b>${esc(p[0])}</b><small>${esc(p[1])}</small></span>`)
+      .join(`<span class="mplus"> + </span>`);
+    return;
+  }
+  renderWords();
+}
+function wordAnswer(i,k){
+  const item=WORDS[W.i], ok = (i===item.a);
+  if(!W.tried["u"+W.i]){ W.tried["u"+W.i]=true; recFirst("pw.use."+item.w, ok); }
+  document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+  $("o"+k).classList.add(ok?"right":"wrong");
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  fb.innerHTML = (ok?"":`<span class="rule">Not that one.</span>`)+glossify(item.ex)+
+    `<div class="btnrow"><button class="btn btn-primary nextb" onclick="wordNext()">${ok?"Next →":"Keep going →"}</button></div>`;
+}
+function wordNext(){ W.i++; W.phase="meet"; W.picked=[]; W.optOrder=null; renderWords(); }
+
+/* ====================== BACK TO THE DRAFT ================================
+   The draft and its mark-up live in the contention module. This card reads
+   that record and sends the student to the step they are actually up to. */
+function renderNext(){
+  const txt=(S.draft&&S.draft.text||"").trim();
+  const words=txt?txt.split(/\s+/).filter(Boolean).length:0;
+  const marks=(S.draft&&S.draft.marks||[]).length;
+  let h=topbar()+`<h2>Your draft</h2>`;
+  if(!words){
+    h+=`<div class="fb warn on" style="display:block">There's no draft saved on this computer yet.</div>
+      <div class="btnrow">
+        <a class="btn btn-primary" href="ContentionClaims.html#draft">Write your draft →</a>
+        <button class="btn btn-ghost" onclick="W=null;go('words')">The words again</button>
+      </div>`;
+  } else {
+    h+=`<p class="lead">${words} words saved, ${marks} ${marks===1?"part":"parts"} coloured in. ${
+      glossify("Every pronoun and every modal in it is already highlighted for you.")}</p>
+      <div class="btnrow">
+        <a class="btn btn-primary" href="ContentionClaims.html#pron">Open your draft →</a>
+        <button class="btn btn-ghost" onclick="W=null;go('words')">The words again</button>
+      </div>`;
+  }
+  $("body").innerHTML=h;
+}
+
+/* ---- boot ---- */
+(function boot(){
+  if(!idOk()){ go("id"); return; }
+  const m=(location.hash||"").replace("#","");
+  if(m==="next"){ go("next"); return; }
+  if(m==="words"){ go("words"); return; }
+  go(S.first["pwordsdone"] ? "next" : "words");
+})();
+</script>
+</body>
+</html>

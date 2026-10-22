@@ -121,6 +121,11 @@ function ccStatus(){
   if(S.first && Object.keys(S.first).length) return "in progress";
   return "";
 }
+function pmStatus(){
+  const S = readJSON("writingfolio.contention.v1");
+  if(!S || !S.first) return "";
+  return S.first["pwordsdone"] ? "words done" : "";
+}
 function vocabStatus(){
   const V = readJSON("writingfolio.vocabhub.v1");
   if(!V || !V.lessons) return "";
@@ -129,13 +134,17 @@ function vocabStatus(){
 }
 
 function renderStep2(){
-  const cc = ccStatus(), vs = vocabStatus();
+  const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus();
   $("app").innerHTML = `
   <h1>Hi, ${esc(P.fname)}.</h1>
   <div class="whoami">
     <span><b>${esc(P.fname)} ${esc(P.lname)}</b> · ${esc(P.sid)}</span>
     <span style="margin-left:auto"><button class="linkbtn" id="editMe">Not you?</button></span>
   </div>
+
+  <a class="card" href="PronounsModals.html">
+    <div class="t">Pronoun choice and modal verbs ${pm?`<span class="st">${esc(pm)}</span>`:""}<span class="arrow"> →</span></div>
+    <div class="d">Three words, then back to your draft to name the pronouns and rate the modals.</div></a>
 
   <a class="card" href="ContentionClaims.html">
     <div class="t">Contention and claims ${cc?`<span class="st">${esc(cc)}</span>`:""}<span class="arrow"> →</span></div>
