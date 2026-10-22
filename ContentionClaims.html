@@ -1148,18 +1148,30 @@ function missCard(entry){
     D.queue.splice(Math.min(at+1,D.queue.length),0,{id:sib,streak:0});
     D.total++;
   }
+  refreshBar();
 }
 function hitCard(entry){
   entry.streak++;
   D.queue.shift();
   if(entry.streak>=RETIRE_STREAK){ D.retired++; }
   else { D.queue.splice(Math.min(PENALTY_GAP+2, D.queue.length),0,entry); }
+  refreshBar();
 }
+/* Right answers banked towards clearing, not cards cleared: two in a row
+   retires a card, so counting only retirements leaves the bar on nothing for
+   the first half dozen answers. */
 function deckBar(){
   const left=D.queue.length;
+  let got=D.retired*RETIRE_STREAK;
+  D.queue.forEach(q=>{ got+=Math.min(q.streak,RETIRE_STREAK); });
+  const need=Math.max(1,D.total*RETIRE_STREAK);
   return `<div class="deckbar"><b>${left}</b> card${left===1?"":"s"} to clear
-    <span class="meter"><i style="width:${Math.round(100*D.retired/Math.max(1,D.total))}%"></i></span>
+    <span class="meter"><i style="width:${Math.round(100*got/need)}%"></i></span>
     <span>two in a row clears a card</span></div>`;
+}
+function refreshBar(){
+  const b=document.querySelector(".deckbar");
+  if(b) b.outerHTML=deckBar();
 }
 function renderCard(){
   if(!D.queue.length) return deckDone();

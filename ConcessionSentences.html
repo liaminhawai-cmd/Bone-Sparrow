@@ -625,17 +625,30 @@ function missCard(entry){
   const rule=card(entry.id).rule;
   const sib=POOL.find(c=>c.rule===rule && c.id!==entry.id && !D.queue.some(q=>q.id===c.id));
   if(sib) D.queue.splice(Math.min(at+1,D.queue.length),0,{ id:sib.id, streak:0 });
+  refreshBar();
 }
 function hitCard(entry){
   entry.streak++;
   D.queue.shift();
   if(entry.streak<RETIRE_STREAK) D.queue.splice(Math.min(PENALTY_GAP+1,D.queue.length),0,entry);
+  refreshBar();
 }
+/* A card needs two right answers in a row, so counting only the cards that
+   have gone leaves the bar on nothing for the first half dozen answers. It
+   counts right answers banked towards clearing instead, and a card whose
+   streak is broken hands its share back. */
 function deckBar(){
   const retired=POOL.length-new Set(D.queue.map(q=>q.id)).size;
+  let got=retired*RETIRE_STREAK;
+  D.queue.forEach(q=>{ got+=Math.min(q.streak,RETIRE_STREAK); });
+  const need=POOL.length*RETIRE_STREAK;
   return `<div class="deckbar"><b>${D.queue.length} in the deck</b>
-    <span class="meter"><i style="width:${Math.round(100*retired/POOL.length)}%"></i></span>
+    <span class="meter"><i style="width:${Math.round(100*got/need)}%"></i></span>
     <span>${retired} of ${POOL.length} gone for good</span></div>`;
+}
+function refreshBar(){
+  const b=document.querySelector(".deckbar");
+  if(b) b.outerHTML=deckBar();
 }
 function renderCard(){
   if(!D.queue.length){ deckDone(); return; }
