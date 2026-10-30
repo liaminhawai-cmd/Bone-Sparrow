@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Micro-fiction: Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* "Say or hint" and "hint only" keep one colour each, with the words on the
+     chip as well, so colour is never the only signal. */
+  --keep-bg:#cfe0f5; --keep-tx:#17406e;
+  --hint-bg:#e6dcf7; --hint-tx:#4a2f7d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:12px 12px 12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.55}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 12px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block;min-height:40px}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.step{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 10px;
+      font-family:inherit;font-size:15px;color:inherit;cursor:pointer;transition:border-color .15s}
+.step:hover{border-color:var(--accent)}
+.step .num{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+           display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.step .t{font-weight:700}
+.step .d{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.5}
+.step .tag{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;
+           letter-spacing:.4px;color:var(--muted);white-space:nowrap;padding-top:4px}
+
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:8px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+.deckbar b{color:var(--ink)}
+.pips{display:flex;gap:6px}
+.pip{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:12px;
+     font-weight:800;cursor:pointer;font-family:inherit;color:var(--muted)}
+.pip.on{border-color:var(--accent);color:var(--accent);background:#fff}
+.pip.done{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+/* One view on a school laptop: each column scrolls inside itself rather than
+   pushing the page past the bottom of the screen. */
+.cols>.cardbox{max-height:calc(100vh - 130px);overflow:auto}
+.passage.long{font-size:16px;line-height:1.85}
+.prompt{font-size:14.5px;font-weight:700;margin:0 0 10px;line-height:1.5}
+.passage{font-family:Georgia,serif;font-size:18px;line-height:2.05;background:var(--bg);
+         border-radius:8px;padding:12px 15px;margin:0 0 10px}
+.ck{border-radius:4px;padding:3px 2px;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ck:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.ck.cut{text-decoration:line-through;color:#a49d8e}
+.ck.sw{border-bottom:2px dotted var(--accent)}
+.ck.swapped{border-bottom:2px solid var(--accent);color:var(--accent)}
+.ck.sel{background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+.swaprow{background:var(--bg);border-radius:8px;padding:10px 12px;margin:0 0 10px}
+.swaprow .lab{font-size:12px;font-weight:700;color:var(--muted);margin:0 0 7px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 13px;min-height:40px;
+     font-size:14.5px;font-family:inherit;color:inherit;cursor:pointer;line-height:1.4}
+.opt:hover{border-color:var(--accent)}
+.opt.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);font-weight:700}
+.opt:disabled{cursor:default}
+.yours{font-family:Georgia,serif;font-size:16px;line-height:1.6;border-left:3px solid var(--accent);
+       padding:6px 12px;margin:0;background:#fff}
+.yourslab{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted);margin:0 0 4px}
+.wc.over{color:var(--wrong)}
+.facts{list-style:none;margin:0;padding:0}
+.facts li{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line-soft);font-size:14px;line-height:1.45}
+.facts li:last-child{border-bottom:0}
+.want{flex:0 0 auto;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;
+      border-radius:99px;padding:2px 8px;margin-top:1px;white-space:nowrap}
+.want.keep{background:var(--keep-bg);color:var(--keep-tx);border:1px solid var(--keep-tx)}
+.want.hint{background:var(--hint-bg);color:var(--hint-tx);border:1px solid var(--hint-tx)}
+.fb{border-radius:9px;padding:11px 14px;margin:12px 0 0;font-size:13.5px;line-height:1.6;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.fb li{margin:3px 0}
+.fb .rule{display:block;font-weight:700;margin-bottom:3px}
+
+.wd{font:inherit;color:inherit;background:none;border:0;border-radius:4px;padding:2px 3px;cursor:pointer;min-height:32px}
+.wd:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.wd.right{background:var(--okbg);box-shadow:inset 0 0 0 1px var(--correct);color:var(--correct);font-weight:700}
+.wd.wrong{background:var(--wrongbg);box-shadow:inset 0 0 0 1px var(--wrong);color:var(--wrong)}
+.wd:disabled{cursor:default}
+.factq{font-size:17px;font-weight:700;font-family:Georgia,serif;margin:0 0 10px}
+.qlist{list-style:none;margin:0;padding:0;font-size:13.5px}
+.qlist li{padding:5px 0;border-bottom:1px solid var(--line-soft);color:var(--muted)}
+.qlist li.now{color:var(--ink);font-weight:700}
+.qlist li .mk{display:inline-block;width:18px;font-weight:800}
+.qlist li.ok .mk{color:var(--correct)} .qlist li.no .mk{color:var(--wrong)}
+
+table.rpt{width:100%;border-collapse:collapse;font-size:13px;margin:0 0 10px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+.dim{color:#97907f;font-size:12.5px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:16px} .cols{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+
+<script>
+/* ============================================================================
+   CONTENT. Two stories. Each card is either an edit card (cut or swap parts
+   until the listed facts are kept or hinted, under a word limit) or an unpack
+   card (click the word that hints a fact, or say nothing does).
+
+   Edit card parts:
+     t       the words as they first appear
+     states  facts these words say outright
+     clue    facts these words hint at without saying
+     src     words from the published story, which must stay
+     swap    other words the student can put in instead, each with its own
+             states / clue, or wrong: the reason it changes the story, and
+             breaks: the facts that reason already covers
+   Facts: want "keep" passes if the fact is said or hinted; want "hint"
+   passes only if it is hinted and nothing left says it.
+   ========================================================================== */
+const STORIES = [
+ { id:"shoes", title:"For sale: baby shoes, never worn",
+   d:"From a paragraph down to six words, then what each word hints.",
+   cards:[
+   { id:"shoes.1", type:"edit", short:"Cut to the facts",
+     goal:"Cut the sentences that none of these facts need.",
+     limit:40,
+     facts:[ {id:"baby", name:"Shoes were bought for a baby", want:"keep"},
+             {id:"died", name:"The baby died", want:"keep"},
+             {id:"worn", name:"The shoes were never worn", want:"keep"},
+             {id:"sold", name:"The shoes are being sold", want:"keep"} ],
+     parts:[
+       {t:"Mara and Tom waited six years for a baby."},
+       {t:"Before their daughter was born, Mara bought her a pair of tiny white shoes.", states:["baby"]},
+       {t:"She kept them on the shelf above the cot."},
+       {t:"Their daughter died three days after she was born.", states:["died"]},
+       {t:"She never wore the shoes.", states:["worn"], clue:["died"]},
+       {t:"Tom could not stand to look at them any more."},
+       {t:"Mara wrote an ad for the paper to sell them.", states:["sold"]} ] },
+
+   { id:"shoes.2", type:"edit", short:"Hint the death",
+     goal:"Make “the baby died” a hint, not something the story says.",
+     limit:30,
+     facts:[ {id:"died", name:"The baby died", want:"hint"},
+             {id:"baby", name:"Shoes were bought for a baby", want:"keep"},
+             {id:"worn", name:"The shoes were never worn", want:"keep"},
+             {id:"sold", name:"The shoes are being sold", want:"keep"} ],
+     parts:[
+       {t:"Before their daughter was born,"},
+       {t:"Mara bought her a pair of tiny white shoes.", states:["baby"]},
+       {t:"Their daughter died three days after she was born.", states:["died"]},
+       {t:"She never wore the shoes.", states:["worn"], clue:["died"],
+        swap:[ {t:"She grew out of the shoes.", wrong:"Growing out of shoes means she lived and got bigger. That is a different story.", breaks:["died","worn"]} ]},
+       {t:"Mara wrote an ad for the paper to sell them.", states:["sold"]} ] },
+
+   { id:"shoes.3", type:"edit", short:"Make it an ad",
+     goal:"Swap each dotted part until the whole story is six words.",
+     limit:6,
+     facts:[ {id:"sold", name:"Someone is selling the shoes", want:"hint"},
+             {id:"parent", name:"It is the baby's parent", want:"hint"},
+             {id:"baby", name:"The shoes were for a baby", want:"keep"},
+             {id:"died", name:"The baby died", want:"hint"},
+             {id:"worn", name:"The shoes were never worn", want:"keep"} ],
+     parts:[
+       {t:"Mara wrote an ad to sell", states:["sold","parent"],
+        swap:[ {t:"For sale:", clue:["sold"]},
+               {t:"Mara is selling", states:["sold","parent"]},
+               {t:"Wanted:", wrong:"“Wanted:” is an ad for buying. Mara would be getting shoes, not giving them up.", breaks:["sold"]} ]},
+       {t:"a pair of tiny white shoes she bought before her daughter was born.", states:["baby","parent"],
+        swap:[ {t:"baby shoes,", states:["baby"], clue:["parent"]},
+               {t:"shoes,"},
+               {t:"children's shoes,", wrong:"Children's shoes could belong to a ten-year-old. Nothing then says the child was a baby.", breaks:["baby","parent"]} ]},
+       {t:"Her daughter never wore them.", states:["worn","parent"], clue:["died"],
+        swap:[ {t:"never worn.", states:["worn"], clue:["died"]},
+               {t:"barely worn.", wrong:"“Barely worn” means they were used. The baby lived, and the sale is an ordinary one.", breaks:["died","worn"]},
+               {t:"brand new.", states:["worn"]} ]} ] },
+
+   { id:"shoes.4", type:"unpack", short:"What each word hints",
+     text:"For sale: baby shoes, never worn.",
+     qs:[
+       { f:"The baby died.", a:["never","worn"],
+         why:"Shoes bought for a baby, never worn, and now sold. The reader works out why." },
+       { f:"The baby was a girl.", a:[],
+         why:"The long version said “daughter”. The six words dropped it, and the story still works." },
+       { f:"A parent is giving the shoes up.", a:["for","sale"],
+         near:{ baby:"“Baby” says who the shoes were for. Giving them up is in “For sale”." },
+         why:"Who else would be selling a baby's shoes?" },
+       { f:"The shoes are white.", a:[],
+         why:"That detail was cut in the first card. Nothing in the six words says it." },
+       { f:"Strangers will read this.", a:["for","sale"],
+         why:"“For sale:” is how a newspaper ad starts, and an ad is written for strangers." } ] } ] },
+
+ { id:"beach", title:"Day at the Beach",
+   d:"Cut the added sentences, then what each word hints.",
+   cards:[
+   { id:"beach.1", type:"edit", short:"Cut the added sentences",
+     goal:"Four sentences were added to say what the story only hints. Cut them.",
+     limitFromSrc:true,
+     facts:[ {id:"over", name:"They are not together any more", want:"hint"},
+             {id:"rare", name:"They hardly ever had a whole day together", want:"hint"},
+             {id:"lip", name:"The mark is lipstick", want:"hint"},
+             {id:"found", name:"Someone saw the mark", want:"hint"} ],
+     parts:[
+       {t:"It hadn't always been blue for me and you.", src:true, clue:["over"]},
+       {t:"We are not together any more, and I miss you.", states:["over"]},
+       {t:"Remember that crisp autumn morning we tumbled out of bed, down the stairs and hopped a train to Brighton Beach?", src:true},
+       {t:"We were giddy at the sight of the station's clock: ten whole hours together.", src:true, clue:["rare"]},
+       {t:"We hardly ever got a whole day, because you always had to go home to your wife.", states:["rare"]},
+       {t:"On the pier, you slung your arm over my shoulder and I fell into step with you, training my body to match your low, slow rhythm.", src:true},
+       {t:"Your cuff brushed my lip and I revelled at leaving my crimson mark.", src:true, clue:["lip"]},
+       {t:"My red lipstick had rubbed off onto your white shirt.", states:["lip"]},
+       {t:"Had I known then how damaging that mark would become, might I have been more careful?", src:true, clue:["found"]},
+       {t:"Your wife saw the lipstick, and that was the end of us.", states:["found","over"]} ] },
+
+   { id:"beach.2", type:"unpack", short:"What each word hints",
+     text:"It hadn't always been blue for me and you. Remember that crisp autumn morning we tumbled out of bed, down the stairs and hopped a train to Brighton Beach? We were giddy at the sight of the station's clock: ten whole hours together. On the pier, you slung your arm over my shoulder and I fell into step with you, training my body to match your low, slow rhythm. Your cuff brushed my lip and I revelled at leaving my crimson mark. Had I known then how damaging that mark would become, might I have been more careful?",
+     qs:[
+       { f:"They hardly ever had a whole day together.", a:["whole"],
+         near:{ ten:"“Ten hours” is only a length of time. “Whole” is the word that makes it sound rare.",
+                hours:"“Ten hours” is only a length of time. “Whole” is the word that makes it sound rare." },
+         why:"You only say “ten whole hours” about time you don't usually get." },
+       { f:"They went to the beach in summer.", a:[],
+         near:{ autumn:"It says “autumn”, so summer is wrong." },
+         why:"It says “autumn”. Summer is not in the text." },
+       { f:"The mark is lipstick.", a:["crimson","lip"],
+         near:{ mark:"“Mark” on its own could be anything. “Lip” and “crimson” tell you what made it." },
+         why:"A crimson mark, left by a lip, on a cuff." },
+       { f:"They had a fight on the pier.", a:[],
+         why:"On the pier they walk in step. Nothing says they fought." },
+       { f:"Someone saw the mark later, and it caused trouble.", a:["damaging"],
+         near:{ careful:"“Careful” tells you she regrets it. “Damaging” is the word that says the mark did harm." },
+         why:"“Damaging” says the mark did harm after that day." },
+       { f:"They are not together any more.", a:["blue","hadn't","always"],
+         why:"“It hadn't always been blue” means it is blue now: sad, and over." } ] } ] }
+];
+/* ========================== END OF CONTENT ================================ */
+
+const KEY = "writingfolio.microfiction.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store = localStorage;
+function blank(){ return { fname:"", lname:"", sid:"", first:{}, edits:{}, done:{}, startedAt:null, lastAt:null }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
+let S = load();
+/* Read, change, write: another folio page may be open in a second tab. */
+function bump(fn){
+  const cur=load(); fn(cur); cur.lastAt=Date.now();
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
+})();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+function story(id){ return STORIES.find(s=>s.id===id); }
+function wordsIn(t){ return String(t).split(/\s+/).filter(w=>/[A-Za-z0-9]/.test(w)).length; }
+function cardDone(c){ return !!S.done[c.id]; }
+
+/* ====================== ROUTER =========================================== */
+let view = { screen:"home" };
+function go(screen, sid, at){
+  if(!idOk() && screen!=="id") screen="id";
+  view = { screen, sid, at:at||0, sel:null, uq:0, picked:null };
+  window.scrollTo({top:0});
+  if(screen==="id") renderId();
+  else if(screen==="home") renderHome();
+  else if(screen==="story") renderCard();
+  else if(screen==="report") renderReport();
+}
+function topbar(){
+  return `<div class="topbar"><span class="sp">
+      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
+    </span></div>`;
+}
+function renderId(){
+  $("body").innerHTML=`<h1>Micro-fiction</h1>
+  <p class="sub">Your work saves on this device under your name and student code.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile();
+  go("home");
+}
+
+function renderHome(){
+  let h=topbar()+`<h1>Micro-fiction</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
+  STORIES.forEach((st,i)=>{
+    const n=st.cards.filter(cardDone).length, all=n===st.cards.length;
+    h+=`<button class="step ${all?"done":""}" onclick="go('story','${st.id}')">
+      <span class="num">${all?"✓":i+1}</span>
+      <span><span class="t">${esc(st.title)}</span><br><span class="d">${esc(st.d)}</span></span>
+      <span class="tag">${n?`${n} of ${st.cards.length} done`:""}</span></button>`;
+  });
+  h+=`<button class="step" onclick="go('report')"><span class="num">${STORIES.length+1}</span>
+      <span><span class="t">Report for your teacher</span><br><span class="d">One row to copy and send.</span></span></button>`;
+  $("body").innerHTML=h;
+}
+
+function storyBar(st){
+  return `<div class="deckbar"><b>${esc(st.title)}</b>
+    <span class="pips">${st.cards.map((c,i)=>`<button class="pip ${i===view.at?"on":""} ${cardDone(c)?"done":""}"
+      onclick="go('story','${st.id}',${i})" aria-label="Card ${i+1}: ${esc(c.short)}">${i+1}</button>`).join("")}</span>
+    <span>${esc(st.cards[view.at].short)}</span>
+    <span style="margin-left:auto;display:flex;gap:14px">
+      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="#" onclick="go('home');return false;">All steps</a></span></div>`;
+}
+function renderCard(){
+  const st=story(view.sid), c=st.cards[view.at];
+  const h=storyBar(st)+(c.type==="edit"?editHtml(c):unpackHtml(c));
+  $("body").innerHTML=h;
+}
+function nextCard(){
+  const st=story(view.sid);
+  if(view.at+1<st.cards.length) go("story", st.id, view.at+1);
+  else{
+    const i=STORIES.indexOf(st);
+    if(i+1<STORIES.length) go("story", STORIES[i+1].id, 0); else go("report");
+  }
+}
+
+/* ====================== EDIT CARDS =======================================
+   An edit is "cut", or the index of a swap. Edits are saved as they are
+   made, and a failed check never undoes them. */
+function edits(c){ return (S.edits[c.id]||{}); }
+function setEdit(c, i, v){
+  bump(s=>{ const e=s.edits[c.id]||(s.edits[c.id]={}); if(v===undefined) delete e[i]; else e[i]=v; });
+}
+function active(c){
+  const e=edits(c), out=[];
+  c.parts.forEach((p,i)=>{
+    if(e[i]==="cut") return;
+    const o = (typeof e[i]==="number" && p.swap) ? p.swap[e[i]] : null;
+    out.push({ i, t:o?o.t:p.t, states:(o?o.states:p.states)||[], clue:(o?o.clue:p.clue)||[], wrong:o&&o.wrong, breaks:(o&&o.breaks)||[] });
+  });
+  return out;
+}
+function limitOf(c){
+  if(!c.limitFromSrc) return c.limit;
+  return wordsIn(c.parts.filter(p=>p.src).map(p=>p.t).join(" "));
+}
+function judge(c){
+  const act=active(c), e=edits(c), issues=[], broken={};
+  c.parts.forEach((p,i)=>{ if(p.src && e[i]==="cut") issues.push({k:"src", t:p.t}); });
+  act.forEach(a=>{ if(a.wrong){ issues.push({k:"wrong", t:a.wrong}); a.breaks.forEach(f=>broken[f]=1); } });
+  c.facts.forEach(f=>{
+    if(broken[f.id]) return;
+    const says=act.filter(a=>a.states.includes(f.id)), hints=act.filter(a=>a.clue.includes(f.id));
+    if(f.want==="hint" && says.length){
+      const same=issues.find(x=>x.k==="stated" && x.t===says[0].t);
+      if(same) same.also.push(f); else issues.push({k:"stated", f, t:says[0].t, also:[]});
+    }
+    else if(!says.length && !hints.length){
+      const was=c.parts.filter((p,i)=>(e[i]!==undefined) && ((p.clue||[]).includes(f.id)||(p.states||[]).includes(f.id)));
+      issues.push({k:"lost", f, t:was.length?was[0].t:""});
+    }
+  });
+  const n=wordsIn(act.map(a=>a.t).join(" ")), L=limitOf(c);
+  if(n>L) issues.push({k:"long", n, L});
+  return issues;
+}
+function issueLine(x){
+  if(x.k==="src") return `“${esc(x.t)}” is in the published story. Put it back.`;
+  if(x.k==="wrong") return esc(x.t);
+  const low=f=>f.name.charAt(0).toLowerCase()+f.name.slice(1), that = x.f ? low(x.f) : "";
+  if(x.k==="stated") return `“${esc(x.t)}” says outright that ${[x.f].concat(x.also).map(f=>`<b>${esc(low(f))}</b>`).join(" and that ")}. Cut or swap it, and keep a word that hints it.`;
+  if(x.k==="lost") return `Nothing left hints that <b>${esc(that)}</b>.${x.t?` “${esc(x.t)}” was carrying it.`:""}`;
+  if(x.k==="long") return `It is ${x.n} words. The limit is ${x.L}.`;
+  return "";
+}
+function editHtml(c){
+  const e=edits(c), act=active(c), n=wordsIn(act.map(a=>a.t).join(" ")), L=limitOf(c);
+  const hasSwap=c.parts.some(p=>p.swap);
+  /* A long passage already shows its cuts struck through, so a second copy
+     of it would only push the page off the screen. */
+  const long=wordsIn(c.parts.map(p=>p.t).join(" "))>60;
+  let passage=c.parts.map((p,i)=>{
+    const v=e[i], cut=v==="cut", o=(typeof v==="number"&&p.swap)?p.swap[v]:null;
+    const cls=["ck"]; if(cut) cls.push("cut"); if(p.swap) cls.push(o?"swapped":"sw"); if(view.sel===i) cls.push("sel");
+    /* A span, not a button: a button cannot wrap across lines, so every
+       sentence would sit on a line of its own. */
+    return `<span class="${cls.join(" ")}" role="button" tabindex="0" onclick="clickPart(${i})"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();clickPart(${i});}"
+      aria-label="${p.swap?"Swap or cut: ":cut?"Put back: ":"Cut: "}${esc(o?o.t:p.t)}">${esc(o?o.t:p.t)}</span>`;
+  }).join(" ");
+  let swaprow="";
+  if(view.sel!==null && c.parts[view.sel] && c.parts[view.sel].swap){
+    const p=c.parts[view.sel], v=e[view.sel];
+    swaprow=`<div class="swaprow"><p class="lab">Swap “${esc(p.t)}” for:</p><div class="chips">
+      <button class="opt ${v===undefined?"on":""}" onclick="pickSwap(undefined)">${esc(p.t)}</button>
+      ${p.swap.map((o,k)=>`<button class="opt ${v===k?"on":""}" onclick="pickSwap(${k})">${esc(o.t)}</button>`).join("")}
+      <button class="opt ${v==="cut"?"on":""}" onclick="pickSwap('cut')"><s>Cut it</s></button></div></div>`;
+  }
+  return `<div class="cols"><div class="cardbox">
+      <p class="prompt">${esc(c.goal)}</p>
+      <div class="passage ${long?"long":""}">${passage}</div>
+      ${swaprow}
+      <div class="yourslab"><span>${long?"":"Your version"}</span><span class="wc ${n>L?"over":""}">${n} words · limit ${L}</span></div>
+      ${long?"":`<p class="yours">${esc(act.map(a=>a.t).join(" "))||"&nbsp;"}</p>`}
+      <p class="dim" style="margin:8px 0 0">Click a part to cut it. Click it again to put it back.${hasSwap?" A dotted part can be swapped.":""}</p>
+    </div>
+    <div class="cardbox">
+      <p class="prompt">The facts</p>
+      <ul class="facts">${c.facts.map(f=>`<li><span class="want ${f.want}">${f.want==="hint"?"hint only":"say or hint"}</span><span>${esc(f.name)}</span></li>`).join("")}</ul>
+      <div class="btnrow"><button class="btn btn-primary" onclick="checkEdit()">Check</button>
+        <button class="btn btn-ghost" onclick="resetEdit()">Start again</button></div>
+      <div class="fb" id="fb"></div>
+    </div></div>`;
+}
+function clickPart(i){
+  const c=story(view.sid).cards[view.at], p=c.parts[i];
+  if(p.swap){ view.sel = (view.sel===i)?null:i; renderCard(); return; }
+  setEdit(c, i, edits(c)[i]==="cut"?undefined:"cut");
+  view.sel=null; renderCard();
+}
+function pickSwap(v){
+  const c=story(view.sid).cards[view.at];
+  if(view.sel===null) return;
+  setEdit(c, view.sel, v); renderCard();
+}
+function resetEdit(){
+  const c=story(view.sid).cards[view.at];
+  bump(s=>{ delete s.edits[c.id]; }); view.sel=null; renderCard();
+}
+function checkEdit(){
+  const c=story(view.sid).cards[view.at], issues=judge(c), ok=!issues.length;
+  if(S.first[c.id]===undefined) bump(s=>{ s.first[c.id]={ ok, issues:issues.map(x=>({k:x.k, f:x.f?x.f.name:""})) }; });
+  if(ok) bump(s=>{ s.done[c.id]=true; });
+  renderCard();
+  const fb=$("fb");
+  if(ok){
+    fb.className="fb ok on";
+    fb.innerHTML=`<span class="rule">Every fact is there, and each “hint only” fact is hinted.</span>
+      <div class="btnrow"><button class="btn btn-primary" onclick="nextCard()">Next →</button></div>`;
+  }else{
+    fb.className="fb bad on";
+    fb.innerHTML=`<span class="rule">Not yet.</span><ul>${issues.map(x=>`<li>${issueLine(x)}</li>`).join("")}</ul>`;
+  }
+}
+
+/* ====================== UNPACK CARDS =====================================
+   One fact at a time. The student points at the word that hints it, or says
+   nothing does. The first answer to each fact is the one reported. */
+function norm(w){ return w.toLowerCase().replace(/[^a-z']/g,""); }
+function unpackHtml(c){
+  const q=c.qs[view.uq], toks=c.text.split(/(\s+)/);
+  const answered=view.picked!==null;
+  let k=0;
+  const passage=toks.map(t=>{
+    if(/^\s+$/.test(t)) return t;
+    const w=norm(t), idx=k++;
+    let cls="wd";
+    if(answered && q && q.a.includes(w)) cls+=" right";
+    if(answered && view.picked===idx && !(q.a.includes(w))) cls+=" wrong";
+    return `<button class="${cls}" ${answered?"disabled":""} onclick="pickWord(${idx})">${esc(t)}</button>`;
+  }).join("");
+  const firsts=c.qs.map((_,i)=>S.first[c.id+"."+i]);
+  return `<div class="cols"><div class="cardbox">
+      <p class="prompt">Click the word that tells you this. If no word does, click “Nothing says this”.</p>
+      ${q?`<p class="factq">${esc(q.f)}</p>`:""}
+      <div class="passage ${wordsIn(c.text)>60?"long":""}">${passage}</div>
+      ${q?`<div class="btnrow" style="margin-top:4px"><button class="btn ${answered?"":"btn-ghost"}" ${answered?"disabled":""} onclick="pickWord(-1)">Nothing says this</button></div>`:""}
+      <div class="fb" id="fb"></div>
+    </div>
+    <div class="cardbox"><p class="prompt">${view.uq+1>c.qs.length?c.qs.length:view.uq+1} of ${c.qs.length}</p>
+      <ul class="qlist">${c.qs.map((x,i)=>{
+        const r=firsts[i];
+        return `<li class="${i===view.uq?"now":""} ${r?(r.ok?"ok":"no"):""}"><span class="mk">${r?(r.ok?"✓":"✗"):""}</span>${esc(x.f)}</li>`; }).join("")}</ul>
+    </div></div>`;
+}
+function wordAt(c, idx){ return norm(c.text.split(/\s+/).filter(Boolean)[idx]||""); }
+function pickWord(idx){
+  const c=story(view.sid).cards[view.at], q=c.qs[view.uq];
+  const w=idx<0?null:wordAt(c, idx);
+  const ok = q.a.length ? (w!==null && q.a.includes(w)) : (w===null);
+  const kind = ok ? "" : (!q.a.length ? "over" : (w===null ? "missed" : "word"));
+  const key=c.id+"."+view.uq;
+  if(S.first[key]===undefined) bump(s=>{ s.first[key]={ ok, k:kind, pick:w||"nothing" }; });
+  view.picked=idx; renderCard();
+  const shown=q.a.filter((x,i,a)=>a.indexOf(x)===i).map(x=>`“${esc(x)}”`).join(" and ");
+  let msg="";
+  if(ok) msg=esc(q.why);
+  else if(w && q.near && q.near[w]) msg=esc(q.near[w]);
+  else if(kind==="missed") msg=`Something does: ${shown}. ${esc(q.why)}`;
+  else if(kind==="over") msg=`“${esc(w)}” doesn't say that. ${esc(q.why)}`;
+  else msg=`“${esc(w)}” doesn't carry that. Look at ${shown}. ${esc(q.why)}`;
+  const last=view.uq+1>=c.qs.length;
+  if(last) bump(s=>{ s.done[c.id]=true; });
+  const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
+  fb.innerHTML=(ok?"":`<span class="rule">Not that.</span>`)+msg+
+    `<div class="btnrow"><button class="btn btn-primary" onclick="${last?"nextCard()":"nextQ()"}">Next →</button></div>`;
+}
+function nextQ(){ view.uq++; view.picked=null; renderCard(); }
+
+/* ====================== REPORT ===========================================
+   One tab-separated row. First tries only. Misses are named and rolled up by
+   what went wrong, not counted. */
+const MISS = {
+  stated:"Left it said outright", lost:"Lost a fact", wrong:"Swap changed the story",
+  long:"Over the word limit", src:"Cut the published story",
+  over:"Read in something not there", missed:"Missed a hint", word:"Pointed at the wrong word"
+};
+function reportData(){
+  let eT=0,eOk=0,uT=0,uOk=0; const miss={}, note=(k,item)=>{ (miss[k]=miss[k]||[]).push(item); };
+  STORIES.forEach(st=>st.cards.forEach(c=>{
+    if(c.type==="edit"){
+      const r=S.first[c.id]; if(!r) return;
+      eT++; if(r.ok){ eOk++; return; }
+      const seen={};
+      r.issues.forEach(x=>{ const item=c.short+(x.f?` (${x.f.toLowerCase()})`:""); if(seen[x.k+item]) return; seen[x.k+item]=1; note(x.k, item); });
+    }else c.qs.forEach((q,i)=>{
+      const r=S.first[c.id+"."+i]; if(!r) return;
+      uT++; if(r.ok){ uOk++; return; }
+      note(r.k, `“${q.f.replace(/\.$/,"")}” (${r.pick})`);
+    });
+  }));
+  const mins = (S.startedAt&&S.lastAt) ? Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)) : "";
+  const misses = Object.keys(MISS).filter(k=>miss[k]).map(k=>`${MISS[k]}: ${miss[k].join("; ")}`).join(" | ");
+  const d=new Date();
+  return { cols:["Date","First name","Last name","Code","Minutes","Cut and swap, first go","Hints found, first go","Misses"],
+           row:[ d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
+                 S.fname, S.lname, S.sid, String(mins), `${eOk}/${eT}`, `${uOk}/${uT}`, misses||"none" ] };
+}
+function renderReport(){
+  const r=reportData();
+  $("body").innerHTML=topbar()+`<h2>Report for your teacher</h2>
+    <table class="rpt"><tr>${r.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr>
+      <tr>${r.row.map(v=>`<td>${esc(v)}</td>`).join("")}</tr></table>
+    <p class="dim">First tries only. It can't tell whether you can hint instead of say in your own 99-word story. That is on paper.</p>
+    <div class="btnrow"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
+      <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
+    <div class="fb" id="fb"></div>`;
+}
+function copyRow(){
+  const tsv=reportData().row.map(v=>String(v).replace(/[\t\n]/g," ")).join("\t");
+  const done=()=>{ const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Copied. Paste it into the class sheet."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, ()=>fallback(tsv,done));
+  else fallback(tsv,done);
+}
+function fallback(t, done){
+  const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); done(); }catch(e){} a.remove();
+}
+
+/* ---- boot ---- */
+(function boot(){
+  if(!idOk()){ go("id"); return; }
+  const m=(location.hash||"").replace("#","");
+  if(m==="report") go("report");
+  else if(story(m)) go("story", m, 0);
+  else go("home");
+})();
+</script>
+</body>
+</html>

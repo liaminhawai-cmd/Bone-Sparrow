@@ -134,6 +134,12 @@ function csStatus(){
   if(S.first && S.first["cswordsdone"]) return "words done";
   return "";
 }
+function mfStatus(){
+  const S = readJSON("writingfolio.microfiction.v1");
+  if(!S || !S.done) return "";
+  const n = Object.keys(S.done).length;
+  return n ? n+" of 6 cards" : "";
+}
 function vocabStatus(){
   const V = readJSON("writingfolio.vocabhub.v1");
   if(!V || !V.lessons) return "";
@@ -142,7 +148,7 @@ function vocabStatus(){
 }
 
 function renderStep2(){
-  const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus(), cs = csStatus();
+  const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus(), cs = csStatus(), mf = mfStatus();
   $("app").innerHTML = `
   <h1>Hi, ${esc(P.fname)}.</h1>
   <div class="whoami">
@@ -161,6 +167,10 @@ function renderStep2(){
   <a class="card" href="WritingFolioVocabHub.html#set-04">
     <div class="t">Persuasive writing words ${vs?`<span class="st">${esc(vs)}</span>`:""}<span class="arrow"> →</span></div>
     <div class="d">Build each word from its parts, then use it.</div></a>
+
+  <a class="card" href="MicroFiction.html">
+    <div class="t">Micro-fiction ${mf?`<span class="st">${esc(mf)}</span>`:""}<span class="arrow"> →</span></div>
+    <div class="d">Cut and swap a story until it hints instead of says.</div></a>
 
   <div class="secondary">
     <a class="card" href="ConcessionSentences.html">

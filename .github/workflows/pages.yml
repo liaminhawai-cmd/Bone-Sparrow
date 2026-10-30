@@ -16,6 +16,7 @@ on:
       - "ContentionClaims.html"
       - "PronounsModals.html"
       - "ConcessionSentences.html"
+      - "MicroFiction.html"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -69,6 +70,7 @@ jobs:
           cp ContentionClaims.html dist/
           cp PronounsModals.html dist/
           cp ConcessionSentences.html dist/
+          cp MicroFiction.html dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/
