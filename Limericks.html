@@ -51,7 +51,8 @@ textarea{resize:vertical;line-height:1.5}
            display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
 .step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
 .step .t{font-weight:700}
-.step .d{color:var(--muted);font-size:13px;margin-top:2px;line-height:1.45}
+.step .d{color:var(--muted);font-size:13px;line-height:1.45;margin-left:8px}
+.step .tx{align-self:center}
 .step .tag{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;
            letter-spacing:.4px;color:var(--muted);white-space:nowrap;padding-top:4px}
 
@@ -112,6 +113,32 @@ textarea{resize:vertical;line-height:1.5}
 .toggles{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
 .nm{display:block;width:100%;font-family:Georgia,serif;font-size:15.5px;margin:0 0 6px}
 .preview .pl{min-height:30px;padding:3px 0}
+
+/* ---- build ---- */
+.bslot{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.bslot.short{padding-left:36px}
+.bnum{flex:0 0 28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:12px;font-weight:800;
+      display:inline-flex;align-items:center;justify-content:center}
+.bcard{display:block;width:100%;text-align:left;font-family:Georgia,serif;font-size:15.5px;line-height:1.35;min-height:44px;
+       padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:grab;margin:0 0 6px}
+.bslot .bcard{margin:0;flex:1}
+.bcard:hover{border-color:var(--accent)}
+.bcard.sel{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(44,95,124,.2);font-weight:700}
+.bcard.sel::after{content:"  (selected)";font:700 12px 'Segoe UI',Tahoma,sans-serif;color:var(--accent)}
+.bcard.placed{background:var(--bg)}
+.bempty{flex:1;min-height:44px;border:2px dashed var(--line);border-radius:9px;background:var(--bg);cursor:pointer;
+        font:600 13px 'Segoe UI',Tahoma,sans-serif;color:var(--accent)}
+.bslot.over .bempty,.bslot.over .bcard,.bgap.over,.bgapw.over .bcard,.bbank.over{border-color:var(--accent);border-style:solid}
+.bslot .x,.bgapw .x{width:40px;height:40px;border-radius:50%;border:0;background:transparent;cursor:pointer;font-size:18px;color:var(--muted);flex:0 0 40px;font-family:inherit}
+.bslot .x:hover,.bgapw .x:hover{background:rgba(0,0,0,.06)}
+.bbank{min-height:60px;border:2px dashed transparent;border-radius:10px}
+.bbank.words{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.bcard.word{display:inline-block;width:auto;margin:0;padding:8px 16px}
+.bgap{display:inline-block;vertical-align:middle;min-width:96px;min-height:40px;border:2px dashed var(--accent);border-radius:7px;
+      background:#fff;cursor:pointer;font:600 13px 'Segoe UI',Tahoma,sans-serif;color:var(--accent);margin:0 2px}
+.bgapw{display:inline-flex;align-items:center;vertical-align:middle;margin:0 2px}
+.bgapw .bcard{display:inline-block;width:auto;margin:0;font-weight:700;padding:6px 12px;min-height:40px}
+.bpoem .pl>span{line-height:2.4}
 .preview .blank{color:#a49d8e}
 
 /* ---- rhyme bank ---- */
@@ -279,7 +306,54 @@ const STARTERS = [
   ["So everyone ___"]
 ];
 
-const SOUND_HELP = "https://liaminhawai-cmd.github.io/ELC-Pages/pronunciation.html";
+/* BUILD, round 1: LINE_SETS. Cards to drag into five slots. Five make a
+   limerick; the rest are near misses. Per card: t the line, end its rhyme
+   word, n its syllables (the check uses this, not the estimate), tag "who"
+   for a line that says who or where, "twist" for a punchline. The check
+   judges rules, not one answer: slots 1, 2 and 5 rhyme, 3 and 4 rhyme, 3 and
+   4 are shorter than 1, 2 and 5, slot 1 is a "who" line, slot 5 is the twist
+   and no twist comes earlier. Cards show in the order listed, so mix them.
+   BUILD, round 2: END_SETS. A limerick with each end word blank. Per line:
+   before (the words before the gap), after (the punctuation after it),
+   fits (the words that make sense in this gap) and ask (the question shown
+   when a word rhymes but is not in fits). words: the tub, which is the five
+   that fit plus distractors that make sense in a line but break the rhyme.
+   The check judges rhyme first, then sense against fits.
+   To add a set: copy a set from { to }, give it a new id, change the words,
+   and put it first in its list. The page uses the first set and keeps the
+   others for later. The content check stops the page and says what is wrong
+   if a set cannot be solved or a rhyme cannot be judged. */
+const LINE_SETS = [
+  { id:"june",
+    cards:[
+      {t:"It blocked out the sky,",                               end:"sky",     n:5},
+      {t:"So the loaf now floats round like a balloon.",          end:"balloon", n:9,  tag:"twist"},
+      {t:"There once was a baker named June,",                    end:"June",    n:8,  tag:"who"},
+      {t:"It filled the whole street,",                           end:"street",  n:5},
+      {t:"And now it is stuck to the moon.",                      end:"moon",    n:8,  tag:"twist"},
+      {t:"It swelled up so big that the birds could not fly,",    end:"fly",     n:11},
+      {t:"Who baked her best bread with a spoon.",                end:"spoon",   n:8},
+      {t:"It rose up so high,",                                   end:"high",    n:5}
+    ] }
+];
+const END_SETS = [
+  { id:"bush",
+    lines:[
+      {before:"A girl from the bush had a",     after:",", fits:["dog"],
+       ask:"what could go for a walk with her and chase a cat?"},
+      {before:"Who went for a walk in the",     after:".", fits:["fog"],
+       ask:"what can you walk in?"},
+      {before:"It chased a wet",                after:",", fits:["cat"],
+       ask:"what would a dog chase?"},
+      {before:"Then sat on her",                after:",", fits:["hat"],
+       ask:"what of hers could a dog sit on?"},
+      {before:"And slept the whole day like a", after:".", fits:["log","dog"],
+       ask:"what lies still all day?"}
+    ],
+    words:["rain","cat","log","lap","dog","rock","hat","fog"] }
+];
+
+const SOUND_HELP ="https://liaminhawai-cmd.github.io/ELC-Pages/pronunciation.html";
 /* ========================== END OF CONTENT ================================ */
 
 const KEY = "writingfolio.limerick.v1";
@@ -288,7 +362,7 @@ let store;
 try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
 function blank(){ return { fname:"", lname:"", sid:"", first:{}, done:{}, plan:{who:"",twist:"",aud:""},
   bank:{A:{w:"",list:[]},B:{w:"",list:[]}}, lines:["","","","",""], adj:[0,0,0,0,0], starters:false, purpose:"",
-  startedAt:null, lastAt:null }; }
+  build:{lines:{},ends:{}}, startedAt:null, lastAt:null }; }
 function load(){
   try{ const s=JSON.parse(store.getItem(KEY)); if(!s||typeof s!=="object") return blank();
     const b=blank(), o=Object.assign(b,s);
@@ -297,6 +371,7 @@ function load(){
     ["A","B"].forEach(k=>{ o.bank[k]=Object.assign({w:"",list:[]}, o.bank[k]||{}); });
     if(!Array.isArray(o.lines)||o.lines.length!==5) o.lines=blank().lines;
     if(!Array.isArray(o.adj)||o.adj.length!==5) o.adj=blank().adj;
+    o.build=Object.assign(blank().build, s.build||{});
     return o;
   }catch(e){ return blank(); }
 }
@@ -394,6 +469,7 @@ function familyOf(w){
   const r=parts(w).rime; if(ambiguous(r) || !RIME[r]) return null;
   const k=Object.keys(RIME[r]); return k.length===1?k[0]:null;
 }
+function heard(w){ if(IRREGULAR[w]===undefined) return w; const f=FAMILIES[IRREGULAR[w]].words; return f.length?norm(f[0]):w; }
 function sayEnd(c){ return c==="V"?"a vowel sound":`the sound “${c}”`; }
 function shortV(w,p){
   if(p.magic || p.stress.length!==1 || "aeiou".indexOf(p.stress)<0) return false;
@@ -403,7 +479,10 @@ function shortV(w,p){
   if(p.stress==="a" && /^l/.test(p.after)) return false;
   return ODDV.indexOf(w)<0;
 }
-function rhyme(a0, b0){
+/* The same pair always gets the same answer, so answers are kept. */
+const RHYMED = new Map();
+function rhyme(a0, b0){ const k=a0+"|"+b0; if(!RHYMED.has(k)) RHYMED.set(k, rhyme1(a0,b0)); return RHYMED.get(k); }
+function rhyme1(a0, b0){
   const a=norm(a0), b=norm(b0);
   if(!a||!b) return null;
   const A=String(a0).replace(/[^A-Za-z’']/g,""), B=String(b0).replace(/[^A-Za-z’']/g,"");
@@ -412,10 +491,12 @@ function rhyme(a0, b0){
   const yes={ r:"yes", why:`“${A}” and “${B}” rhyme.` };
   const unsure={ r:"unsure", why:`The checker can’t tell whether “${A}” and “${B}” rhyme. Say them aloud.` };
   if(FAM[a] && FAM[b]) return FAM[a]===FAM[b] ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${FAM[a]}, ${FAM[b]}).` };
-  const pa=parts(a), pb=parts(b);
+  /* An IRREGULAR word is heard through a regular word of its family (high
+     through sky), since its own spelling says nothing about its sound. */
+  const pa=parts(heard(a)), pb=parts(heard(b));
   if(pa.rime===pb.rime) return (ambiguous(pa.rime) || ODDV.indexOf(a)>=0 || ODDV.indexOf(b)>=0) ? unsure : yes;
   if(fa && fb) return fa===fb ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${fa}, ${fb}).` };
-  const ca=endSound(a,pa), cb=endSound(b,pb);
+  const ca=endSound(heard(a),pa), cb=endSound(heard(b),pb);
   if(ca && cb && ca!==cb) return { r:"no", why:`“${A}” ends with ${sayEnd(ca)} and “${B}” ends with ${sayEnd(cb)}.` };
   if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress===pb.stress) return yes;
   if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress!==pb.stress &&
@@ -457,6 +538,7 @@ function sylLine(s){ return String(s).split(/[\s\-–]+/).reduce((n,t)=>n+sylWor
 function lastWord(s){ const t=String(s).trim().split(/\s+/).filter(x=>/[A-Za-z]/.test(x)); return t.length?t[t.length-1].replace(/^[^A-Za-z]+|[^A-Za-z]+$/g,""):""; }
 
 /* ====================== CONTENT CHECK ==================================== */
+const BUILD_SOLUTIONS={};
 function contentErrors(){
   const e=[];
   if(!MODEL.lines || MODEL.lines.length!==5) e.push("MODEL needs exactly five lines.");
@@ -472,12 +554,41 @@ function contentErrors(){
   Object.keys(IRREGULAR).forEach(w=>{ if(!FAMILIES[IRREGULAR[w]]) e.push(`IRREGULAR: “${w}” points to ${IRREGULAR[w]}, which is not a family.`);
     if(seen[norm(w)]) e.push(`“${w}” is in FAMILIES and IRREGULAR.`); });
   if(STARTERS.length!==5) e.push("STARTERS needs five lists, one per line.");
+  /* Build sets: every rhyme the check could meet must be a clear yes or no,
+     and at least one way of filling the five places must pass. */
+  const perms=(n,f)=>{ const a=[], used=new Array(n).fill(false);
+    (function rec(){ if(a.length===5){ f(a.slice()); return; }
+      for(let i=0;i<n;i++) if(!used[i]){ used[i]=true; a.push(i); rec(); a.pop(); used[i]=false; } })(); };
+  const clear=(words,where)=>{ for(let i=0;i<words.length;i++) for(let j=i+1;j<words.length;j++){
+      const r=rhyme(words[i],words[j]); if(r && r.r==="unsure") e.push(`${where}: the checker cannot judge “${words[i]}” with “${words[j]}”.`); } };
+  const L=LINE_SETS[0], E=END_SETS[0];
+  if(!L || L.cards.length<5) e.push("LINE_SETS: the first set needs at least five cards.");
+  else{
+    L.cards.forEach((c,i)=>{ if(c.t.indexOf(c.end)<0) e.push(`LINE_SETS card ${i+1}: “${c.end}” is not in the line.`);
+      if(!(c.n>0)) e.push(`LINE_SETS card ${i+1} needs a syllable count, n.`); });
+    clear(L.cards.map(c=>c.end), "LINE_SETS");
+    let ok=0; perms(L.cards.length, a=>{ if(judgeLines(a).ok) ok++; });
+    BUILD_SOLUTIONS.lines=ok;
+    if(!ok) e.push("LINE_SETS: no way of filling the slots passes the check.");
+  }
+  if(!E || E.lines.length!==5 || E.words.length<5) e.push("END_SETS: the first set needs five lines and at least five words.");
+  else{
+    clear(E.words, "END_SETS");
+    E.lines.forEach((l,k)=>{
+      if(!Array.isArray(l.fits) || !l.fits.length) e.push(`END_SETS gap ${k+1} needs a fits list.`);
+      else l.fits.forEach(w=>{ if(E.words.indexOf(w)<0) e.push(`END_SETS gap ${k+1}: “${w}” is in fits but not in words.`); });
+      if(!l.ask) e.push(`END_SETS gap ${k+1} needs an ask question.`); });
+    let ok=0; perms(E.words.length, a=>{ if(judgeEnds(a).ok) ok++; });
+    BUILD_SOLUTIONS.ends=ok;
+    if(!ok) e.push("END_SETS: no way of filling the gaps passes both rhyme and sense.");
+  }
   return e;
 }
 
 /* ====================== ROUTER =========================================== */
 const STEPS = [
   { k:"model",   t:"The model",            d:"The Ealing limerick: rhyme, syllables, line jobs." },
+  { k:"build",   t:"Build",                d:"Put lines in order, then fill the end words." },
   { k:"plan",    t:"Plan",                 d:"Who it is about, the twist, who it is for." },
   { k:"bank",    t:"Rhyme bank",           d:"Test words against your two rhymes." },
   { k:"write",   t:"Write",                d:"Five lines, then check the rhyme and the length." },
@@ -486,6 +597,7 @@ const STEPS = [
 ];
 function stepDone(k){
   if(k==="model") return NEARMISS.every((_,i)=>S.done["nm."+i]);
+  if(k==="build") return !!(S.done["b1."+LSET().id] && S.done["b2."+ESET().id]);
   if(k==="plan") return !!(S.plan.who.trim() && S.plan.twist.trim() && S.plan.aud.trim());
   if(k==="bank") return S.bank.A.list.length>0;
   if(k==="write") return !!S.done.write;
@@ -501,12 +613,13 @@ function go(screen){
   view = { screen };
   if(screen==="model") MV.picked=null, MV.fb=null;
   if(screen==="write") WV.fb=null;
+  if(screen==="build") BL.sel=null, BL.fb1=null, BL.fb2=null;
   if(screen==="bank") BV={ fbA:null, fbB:null };
   window.scrollTo(0,0);
   render();
 }
 function render(){
-  ({ id:renderId, home:renderHome, model:renderModel, plan:renderPlan, bank:renderBank, write:renderWrite,
+  ({ id:renderId, home:renderHome, model:renderModel, build:renderBuild, plan:renderPlan, bank:renderBank, write:renderWrite,
      purpose:renderPurpose, report:renderReport })[view.screen]();
 }
 function links(){
@@ -556,9 +669,10 @@ function renderHome(){
     if(st.k==="model"){ const n=NEARMISS.filter((_,j)=>S.done["nm."+j]).length; if(n && !done) tag=`${n} of ${NEARMISS.length} done`; }
     if(st.k==="bank" && S.bank.A.list.length+S.bank.B.list.length) tag=`${S.bank.A.list.length+S.bank.B.list.length} words`;
     if(st.k==="write" && !done && S.lines.some(l=>l.trim())) tag="started";
+    if(st.k==="build" && !done && (S.done["b1."+LSET().id]||S.done["b2."+ESET().id])) tag="1 of 2 done";
     h+=`<button class="step ${done?"done":""}" onclick="go('${st.k}')">
       <span class="num">${done?"✓":i+1}</span>
-      <span><span class="t">${esc(st.t)}</span><br><span class="d">${esc(st.d)}</span></span>
+      <span class="tx"><span class="t">${esc(st.t)}</span><span class="d">${esc(st.d)}</span></span>
       <span class="tag">${esc(tag)}</span></button>`;
   });
   $("body").innerHTML=h;
@@ -605,7 +719,7 @@ function pickNM(i){
   MV.fb = ok
     ? { cls:"ok", html:`<span class="rule">Line ${i+1}.</span>${esc(it.why)}`+
         (nxt>=0?`<div class="btnrow"><button class="btn btn-primary" onclick="MV.item=${nxt};MV.picked=null;MV.fb=null;render()">Next →</button></div>`
-               :`<div class="btnrow"><button class="btn btn-primary" onclick="go('plan')">Plan →</button></div>`) }
+               :`<div class="btnrow"><button class="btn btn-primary" onclick="go('build')">Build →</button></div>`) }
     : { cls:"bad", html:`<span class="rule">Not line ${i+1}.</span>${esc(fitsWhy(it,i))}` };
   render();
   /* Keep the keyboard where it was: on Next after a right answer, on the
@@ -613,7 +727,140 @@ function pickNM(i){
   const nb=document.querySelector("#fb button"); (nb||document.querySelectorAll(".nm")[i]).focus();
 }
 
-/* ====================== STEP 2 · PLAN ==================================== */
+/* ====================== STEP 2 · BUILD ===================================
+   Round 1 puts line cards in five slots; round 2 puts words in five end
+   gaps. Drag, or click an item and then a slot: the click route is the one
+   keyboards and touch screens use. Placing on a full slot swaps, or sends
+   the old item back to the bank. Placements save as they are made, and a
+   failed check leaves them where they are. The first check with all five
+   filled is the one reported. */
+let BL = { round:1, sel:null, fb1:null, fb2:null };
+const LSET=()=>LINE_SETS[0], ESET=()=>END_SETS[0];
+function bKey(r){ return r===1?"lines":"ends"; }
+function bId(r){ return r===1?LSET().id:ESET().id; }
+function bSlots(r){ const a=(S.build[bKey(r)]||{})[bId(r)]; return (Array.isArray(a)&&a.length===5)?a.slice():[null,null,null,null,null]; }
+function bSave(r,a){ bump(s=>{ s.build[bKey(r)][bId(r)]=a; }); }
+function bItem(r,i){ return r===1?LSET().cards[i].t:ESET().words[i]; }
+function bCount(r){ return r===1?LSET().cards.length:ESET().words.length; }
+function bPlace(r, item, slot){
+  const a=bSlots(r), from=a.indexOf(item), occ=a[slot];
+  if(from===slot) return;
+  a[slot]=item; if(from>=0) a[from]=occ;
+  bSave(r,a);
+}
+function bFocus(id){ const e=$(id); if(e) e.focus(); }
+function bankClick(i){ BL.sel=(BL.sel===i)?null:i; renderBuild(); bFocus(`bb${i}`); }
+function slotClick(k){
+  const a=bSlots(BL.round);
+  if(BL.sel!==null){ bPlace(BL.round, BL.sel, k); BL.sel=null; }
+  else if(a[k]!==null) BL.sel=a[k];
+  renderBuild(); bFocus(`bs${k}`);
+}
+function bReturn(k){ const a=bSlots(BL.round); if(a[k]===BL.sel) BL.sel=null; a[k]=null; bSave(BL.round,a); renderBuild(); bFocus(`bs${k}`); }
+function bDrag(e,i){ e.dataTransfer.setData("text/plain", String(i)); e.dataTransfer.effectAllowed="move"; }
+function bOver(e){ e.preventDefault(); e.currentTarget.classList.add("over"); }
+function bLeave(e){ e.currentTarget.classList.remove("over"); }
+function bDrop(e,k){ e.preventDefault(); const i=parseInt(e.dataTransfer.getData("text/plain"),10); if(isNaN(i)) return;
+  BL.sel=null; if(k<0){ const a=bSlots(BL.round), at=a.indexOf(i); if(at>=0){ a[at]=null; bSave(BL.round,a); } } else bPlace(BL.round,i,k);
+  renderBuild(); }
+
+function counted(list){ const u=[...new Set(list)].sort((a,b)=>a-b); return u.length>1?u.slice(0,-1).join(", ")+" and "+u[u.length-1]:String(u[0]); }
+function judgeLines(a){
+  const set=LSET(), empty=a.map((x,k)=>x===null?k+1:null).filter(Boolean);
+  if(empty.length) return { empty, ok:false, items:[], miss:[] };
+  const C=a.map(i=>set.cards[i]), n=C.map(c=>c.n), items=[], miss=[];
+  const P=rhymePattern(C.map(c=>c.end),"Slot");
+  items.push(...P.rh); miss.push(...P.miss.map(m=>"rhyme: "+m));
+  const longs=[0,1,4], shorts=[2,3], said={};
+  const minL=Math.min(...longs.map(j=>n[j])), maxL=Math.max(...longs.map(j=>n[j]));
+  shorts.forEach(i=>{
+    if(n[i]<minL) return;
+    if(n[i]>=maxL){ if(said["s"+i]) return; said["s"+i]=1;
+      items.push(`<span class="k">Slot ${i+1} is too long for a short line:</span> ${n[i]} syllables, the long lines have ${counted(longs.map(j=>n[j]))}.`);
+      miss.push(`length: slot ${i+1} too long (${n[i]})`); }
+    else longs.filter(j=>n[j]<=n[i]).forEach(j=>{ if(said["l"+j]) return; said["l"+j]=1;
+      items.push(`<span class="k">Slot ${j+1} is too short for a long line:</span> ${n[j]} syllables, the other long lines have ${counted(longs.filter(m=>m!==j).map(m=>n[m]))}.`);
+      miss.push(`length: slot ${j+1} too short (${n[j]})`); });
+  });
+  if(C[0].tag!=="who"){ items.push(`<span class="k">Slot 1 does not say who or where.</span> Line 1 introduces the subject.`); miss.push("opener: slot 1"); }
+  [0,1,2,3].forEach(i=>{ if(C[i].tag==="twist"){ items.push(`<span class="k">Slot ${i+1} gives the punchline away early.</span> The twist belongs in line 5.`); miss.push(`twist early: slot ${i+1}`); } });
+  if(C[4].tag!=="twist"){ items.push(`<span class="k">Slot 5 is not the twist.</span> The last line gives the punchline.`); miss.push("twist: not in slot 5"); }
+  return { empty, ok:!items.length, items, miss };
+}
+function judgeEnds(a){
+  const set=ESET(), empty=a.map((x,k)=>x===null?k+1:null).filter(Boolean);
+  if(empty.length) return { empty, ok:false, items:[], miss:[] };
+  const W=a.map(i=>set.words[i]), P=rhymePattern(W,"Gap");
+  if(P.rv!=="yes") return { empty, ok:false, items:P.rh, miss:P.miss.map(m=>"rhyme: "+m) };
+  /* Rhyme first. Only a rhyming fill is read for sense, against the words
+     the author listed as making sense in each gap. */
+  const items=[], miss=[];
+  set.lines.forEach((l,k)=>{ if((l.fits||[]).indexOf(W[k])<0){
+    items.push(`<span class="k">Gap ${k+1}: “${esc(W[k])}” rhymes,</span> but read the line again: ${esc(l.ask)}`);
+    miss.push(`sense: gap ${k+1} (${W[k]})`); } });
+  return { empty, ok:!items.length, items, miss };
+}
+function renderBuild(){
+  const r=BL.round, a=bSlots(r), placed=new Set(a.filter(x=>x!==null));
+  const d1=!!S.done["b1."+LSET().id], d2=!!S.done["b2."+ESET().id];
+  const sel=i=>BL.sel===i;
+  const card=(i,id,click,extra)=>`<button class="bcard ${sel(i)?"sel":""} ${extra||""}" id="${id}" draggable="true" ondragstart="bDrag(event,${i})"
+      onclick="${click}" aria-pressed="${sel(i)}">${esc(bItem(r,i))}</button>`;
+  const bank=[...Array(bCount(r)).keys()].filter(i=>!placed.has(i)).map(i=>card(i,`bb${i}`,`bankClick(${i})`, r===2?"word":"")).join("");
+  const fb=r===1?BL.fb1:BL.fb2;
+  let left;
+  if(r===1){
+    left=`<p class="prompt">Put five lines in the slots</p>
+      <p class="dim" style="margin:0 0 10px">Drag a line into a slot, or click a line and then a slot.</p>
+      ${a.map((x,k)=>`<div class="bslot ${k===2||k===3?"short":""}" ondragover="bOver(event)" ondragleave="bLeave(event)" ondrop="bLeave(event);bDrop(event,${k})">
+        <span class="bnum" aria-hidden="true">${k+1}</span>
+        ${x!==null ? card(x,`bs${k}`,`slotClick(${k})`,"placed")+`<button class="x" onclick="bReturn(${k})" aria-label="Slot ${k+1}: back to the lines">×</button>`
+                   : `<button class="bempty" id="bs${k}" onclick="slotClick(${k})" aria-label="Slot ${k+1}, empty">${BL.sel!==null?"Put it here":""}</button>`}
+      </div>`).join("")}`;
+  }else{
+    const L=ESET().lines;
+    left=`<p class="prompt">Fill the end of each line</p>
+      <p class="dim" style="margin:0 0 10px">Drag a word into a gap, or click a word and then a gap.</p>
+      <div class="poem bpoem">${L.map((l,k)=>{ const x=a[k];
+        const gap = x!==null
+          ? `<span class="bgapw" ondragover="bOver(event)" ondragleave="bLeave(event)" ondrop="bLeave(event);bDrop(event,${k})">${card(x,`bs${k}`,`slotClick(${k})`,"word placed")}<button class="x" onclick="bReturn(${k})" aria-label="Gap ${k+1}: back to the words">×</button></span>`
+          : `<button class="bgap" id="bs${k}" onclick="slotClick(${k})" ondragover="bOver(event)" ondragleave="bLeave(event)" ondrop="bLeave(event);bDrop(event,${k})" aria-label="Gap ${k+1}, empty">${BL.sel!==null?"here":""}</button>`;
+        return `<div class="pl ${k===2||k===3?"short":""}"><span>${esc(l.before)} ${gap}${esc(l.after)}</span></div>`; }).join("")}</div>`;
+  }
+  $("body").innerHTML=bar()+`<div class="cols"><div class="cardbox">
+      <div class="toggles">
+        <button class="opt" aria-pressed="${r===1}" onclick="BL.round=1;BL.sel=null;renderBuild()">${d1?"✓ ":""}Lines</button>
+        <button class="opt" aria-pressed="${r===2}" onclick="BL.round=2;BL.sel=null;renderBuild()">${d2?"✓ ":""}End words</button>
+        <span style="margin-left:auto">${soundLink()}</span></div>
+      ${left}
+    </div>
+    <div class="cardbox"><p class="prompt">${r===1?"Lines":"Words"}</p>
+      <div class="bbank ${r===2?"words":""}" ondragover="bOver(event)" ondragleave="bLeave(event)" ondrop="bLeave(event);bDrop(event,-1)">${bank}</div>
+      <div class="btnrow"><button class="btn btn-primary" id="bcheck" onclick="checkBuild()">Check</button></div>
+      <div class="fb ${fb?fb.cls+" on":""}" id="fb">${fb?fb.html:""}</div>
+    </div></div>`;
+}
+function checkBuild(){
+  const r=BL.round, a=bSlots(r), j=r===1?judgeLines(a):judgeEnds(a), key=(r===1?"b1.":"b2.")+bId(r);
+  let f;
+  if(j.empty.length){
+    const U=r===1?"Slot":"Gap";
+    f={ cls:"bad", html:`<span class="k">${j.empty.length===1?`${U} ${j.empty[0]} is`:`${U}s ${j.empty.slice(0,-1).join(", ")} and ${j.empty[j.empty.length-1]} are`} empty.</span>` };
+  }else{
+    if(S.first[key]===undefined) bump(s=>{ s.first[key]={ ok:j.ok, miss:j.miss }; });
+    if(j.ok) bump(s=>{ s.done[key]=true; });
+    const next = r===1 ? `<button class="btn btn-primary" onclick="BL.round=2;BL.sel=null;BL.fb2=null;renderBuild()">End words →</button>`
+                       : `<button class="btn btn-primary" onclick="go('plan')">Plan →</button>`;
+    f = j.ok
+      ? { cls:"ok", html:`<span class="rule">${r===1?"Slots 1, 2 and 5 rhyme, and 3 and 4 rhyme. Lines 3 and 4 are the short ones. Line 1 says who, line 5 is the twist.":"Gaps 1, 2 and 5 rhyme, gaps 3 and 4 rhyme, and each word fits its line."}</span><div class="btnrow">${next}</div>` }
+      : { cls:"bad", html:`<ul>${j.items.map(x=>`<li>${x}</li>`).join("")}</ul>` };
+  }
+  if(r===1) BL.fb1=f; else BL.fb2=f;
+  renderBuild();
+  $("fb").scrollIntoView({block:"nearest"}); bFocus("bcheck");
+}
+
+/* ====================== STEP 3 · PLAN ==================================== */
 function renderPlan(){
   const f=(k,lab,note)=>`<div style="margin:0 0 14px"><label for="p_${k}">${lab}</label>
     <textarea id="p_${k}" rows="2" oninput="setPlan('${k}',this.value)">${esc(S.plan[k])}</textarea>${note?`<p class="dim" style="margin-top:3px">${note}</p>`:""}</div>`;
@@ -627,7 +874,7 @@ function renderPlan(){
 }
 function setPlan(k,v){ bump(s=>{ s.plan[k]=v; }); refreshPips(); }
 
-/* ====================== STEP 3 · RHYME BANK ==============================
+/* ====================== STEP 4 · RHYME BANK ==============================
    Every word is kept, whatever the checker says. The status is worked out
    again on every render, so changing the rhyme word re-judges the bank. */
 function bankCard(k){
@@ -682,7 +929,7 @@ function addWord(k){
 }
 function dropWord(k,i){ bump(s=>{ s.bank[k].list.splice(i,1); }); BV["fb"+k]=null; renderBank(); $("bt"+k).focus(); }
 
-/* ====================== STEP 4 · WRITE ===================================
+/* ====================== STEP 5 · WRITE ===================================
    Lines save as they are typed. Check judges rhyme and length only; rhythm
    and humour go to a person. A failed check never changes the text. */
 function counts(){ return S.lines.map((l,i)=>l.trim()?Math.max(1, sylLine(l)+(S.adj[i]||0)):0); }
@@ -727,24 +974,31 @@ function useStarter(i,j){
   bump(s=>{ s.lines[i]=STARTERS[i][j]; }); renderWrite();
   const el=$("ln"+i); el.focus(); el.setSelectionRange(el.value.length, el.value.length);
 }
-function judgeWrite(){
-  const L=S.lines.map(l=>l.trim()), E=L.map(lastWord), c=counts();
-  const empty=L.map((l,i)=>l?null:i+1).filter(Boolean);
-  const rh=[], len=[], rmiss=[], lmiss=[];
+/* The AABBA rhyme judgement, shared by Write and both Build rounds. E holds
+   the five end words; U names the unit in the feedback (Line, Slot, Gap). */
+function rhymePattern(E, U){
+  const u=U.toLowerCase(), rh=[], miss=[];
   let rv="yes";
   const pair=(x,y)=>(E[x]&&E[y])?rhyme(E[y],E[x]):null;
   const r12=pair(0,1), r15=pair(0,4), r25=pair(1,4), r34=pair(2,3), r13=pair(0,2);
   const say=(n,m,r)=>{
     if(!r) return;
-    if(r.r==="no"){ rv="no"; rh.push(`<span class="k">Line ${n} does not rhyme with line ${m}:</span> ${esc(r.why)}`); rmiss.push(`line ${n} with line ${m} (${E[m-1]}, ${E[n-1]})`); }
-    else if(r.r==="same"){ rv="no"; rh.push(`<span class="k">Line ${n} ends with the same word as line ${m}.</span> ${esc(r.why)}`); rmiss.push(`line ${n} repeats line ${m} (${E[n-1]})`); }
-    else if(r.r==="unsure"){ if(rv==="yes") rv="not sure"; rh.push(`<span class="k">Lines ${m} and ${n}:</span> ${esc(r.why.charAt(0).toLowerCase()+r.why.slice(1))}`); rmiss.push(`not sure: line ${n} with line ${m} (${E[m-1]}, ${E[n-1]})`); }
+    if(r.r==="no"){ rv="no"; rh.push(`<span class="k">${U} ${n} does not rhyme with ${u} ${m}:</span> ${esc(r.why)}`); miss.push(`${u} ${n} with ${u} ${m} (${E[m-1]}, ${E[n-1]})`); }
+    else if(r.r==="same"){ rv="no"; rh.push(`<span class="k">${U} ${n} ends with the same word as ${u} ${m}.</span> ${esc(r.why)}`); miss.push(`${u} ${n} repeats ${u} ${m} (${E[n-1]})`); }
+    else if(r.r==="unsure"){ if(rv==="yes") rv="not sure"; rh.push(`<span class="k">${U}s ${m} and ${n}:</span> ${esc(r.why.charAt(0).toLowerCase()+r.why.slice(1))}`); miss.push(`not sure: ${u} ${n} with ${u} ${m} (${E[m-1]}, ${E[n-1]})`); }
   };
   if(r12 && r15 && r25 && r12.r==="no" && r15.r==="no" && r25.r==="yes"){
-    rv="no"; rh.push(`<span class="k">Line 1 does not rhyme with lines 2 and 5:</span> ${esc(rhyme(E[0],E[1]).why)}`); rmiss.push(`line 1 with lines 2 and 5 (${E[0]}, ${E[1]})`);
+    rv="no"; rh.push(`<span class="k">${U} 1 does not rhyme with ${u}s 2 and 5:</span> ${esc(rhyme(E[0],E[1]).why)}`); miss.push(`${u} 1 with ${u}s 2 and 5 (${E[0]}, ${E[1]})`);
   } else { say(2,1,r12); say(5,1,r15); }
   say(4,3,r34);
-  if(r13 && r13.r==="yes" && r34 && r34.r!=="no"){ rv="no"; rh.push(`<span class="k">Lines 3 and 4 use the same rhyme as lines 1, 2 and 5.</span> The short lines need a second rhyme.`); rmiss.push("one rhyme for all five lines"); }
+  if(r13 && r13.r==="yes" && r34 && r34.r!=="no"){ rv="no"; rh.push(`<span class="k">${U}s 3 and 4 use the same rhyme as ${u}s 1, 2 and 5.</span> The short lines need a second rhyme.`); miss.push("one rhyme for all five"); }
+  return { rv, rh, miss };
+}
+function judgeWrite(){
+  const L=S.lines.map(l=>l.trim()), E=L.map(lastWord), c=counts();
+  const empty=L.map((l,i)=>l?null:i+1).filter(Boolean);
+  const P=rhymePattern(E,"Line"), rh=P.rh, rmiss=P.miss, len=[], lmiss=[];
+  const rv=P.rv;
   let lv="yes";
   [2,3].forEach(i=>{
     if(!c[i]) return;
@@ -777,7 +1031,7 @@ function checkWrite(){
   refreshPips();
 }
 
-/* ====================== STEP 5 · PURPOSE AND AUDIENCE ==================== */
+/* ====================== STEP 6 · PURPOSE AND AUDIENCE ==================== */
 function renderPurpose(){
   $("body").innerHTML=bar()+`<div class="cols"><div class="cardbox">
       <p class="prompt">Who is this limerick for, and what should it make them do or feel?</p>
@@ -798,6 +1052,8 @@ function reportData(){
   const nm=NEARMISS.map((it,k)=>({it, r:S.first["nm."+k]})).filter(x=>x.r);
   const nmOk=nm.filter(x=>x.r.ok).length;
   const nmMiss=nm.filter(x=>!x.r.ok).map(x=>`${x.it.name}: picked line ${x.r.pick}`);
+  const b1=S.first["b1."+LSET().id], b2=S.first["b2."+ESET().id];
+  const bv=x=>x?(x.ok?"yes":"no: "+x.miss.join("; ")):"not tried";
   const model = nm.length ? `${nmOk}/${NEARMISS.length}`+(nm.length<NEARMISS.length?` (${nm.length} tried)`:"")+(nmMiss.length?`; ${nmMiss.join("; ")}`:"") : "not tried";
   let words=0, unsure=0;
   ["A","B"].forEach(k=>{ const b=S.bank[k]; words+=b.list.length;
@@ -807,16 +1063,16 @@ function reportData(){
   const lc = W ? (W.length==="yes"?"yes":`no: ${W.lmiss.join("; ")}`) : "not tried";
   const mins = (S.startedAt&&S.lastAt) ? Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)) : "";
   const d=new Date();
-  return { cols:["Date","First name","Last name","Code","Minutes","Model, first go","Rhyme bank words","Not sure","Rhyme check, first go",
+  return { cols:["Date","First name","Last name","Code","Minutes","Model, first go","Build lines, first go","Build end words, first go","Rhyme bank words","Not sure","Rhyme check, first go",
                  "Length check, first go","Limerick","About","Twist","For","Purpose"],
            row:[ d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
-                 S.fname, S.lname, S.sid, String(mins), model, String(words), String(unsure), rc, lc,
+                 S.fname, S.lname, S.sid, String(mins), model, bv(b1), bv(b2), String(words), String(unsure), rc, lc,
                  S.lines.map(l=>l.trim()).join(" / "), S.plan.who.trim(), S.plan.twist.trim(), S.plan.aud.trim(), S.purpose.trim() ] };
 }
 function renderReport(){
   const r=reportData();
   $("body").innerHTML=bar()+`<div class="rptwrap"><table class="rpt">${r.cols.map((c,i)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[i])}</td></tr>`).join("")}</table></div>
-    <p class="dim" style="margin-top:0">First tries only. Syllable counts are estimates. It cannot tell whether the rhythm works or whether the limerick is funny: hear it read aloud.</p>
+    <p class="dim" style="margin-top:0">First tries only. Syllable counts in Write are estimates. It cannot tell whether the student's own limerick has the rhythm or is funny: hear it read aloud.</p>
     <div class="btnrow" style="margin-top:8px"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
       <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
     <div class="fb" id="fb"></div>`;
