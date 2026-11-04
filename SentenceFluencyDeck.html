@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentence fluency: projector</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  /* The grammar session decks' colours, exactly. Each also has its own
+     weight, slant or underline and a printed label, so colour is never the
+     only signal. */
+  --subj:#A24800; --verb:#0F6E4D; --prep:#1F5FA8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;flex-direction:column}
+
+/* ---- top bar ---- */
+#bar{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:8px 14px;flex-wrap:wrap}
+#count{font-size:15px;font-weight:700;color:var(--ink);min-width:44px}
+#phase{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+#bar .sp{flex:1}
+.btn{padding:9px 16px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;min-height:40px;min-width:40px}
+.btn:disabled{opacity:.4;cursor:default}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none;font-size:14px;padding:10px 6px;
+          min-height:40px;display:inline-flex;align-items:center}
+.menulink:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* ---- the slide ---- */
+#stage{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;margin:0 14px;background:var(--paper);
+       border:1px solid var(--line);border-radius:12px}
+#wrap{margin:auto;width:100%;padding:2vh 5vw}
+.sent{font-family:Georgia,'Times New Roman',serif;line-height:1.9;margin:0;color:var(--ink)}
+.src{font-size:15px;color:var(--muted);margin:6px 0 0}
+.ans{display:flex;flex-wrap:wrap;gap:10px;margin-top:2.6vh}
+.ans span.chip{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 16px;
+               font-size:clamp(17px,1.9vw,27px);line-height:1.3}
+.ans.hide{visibility:hidden}
+.ask{font-size:clamp(18px,2vw,28px);font-weight:700;margin:2vh 0 0}
+
+/* coloured runs: in sentences (ruby, with a label under each run) and in answer chips */
+ruby{ruby-position:under;-webkit-ruby-position:after}
+rt{font:700 clamp(12px,1.15vw,17px)/1 'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-style:normal;
+   letter-spacing:.03em;text-decoration:none;padding-top:2px}
+.k-s .b{color:var(--subj);font-weight:700}
+.k-v .b{color:var(--verb);font-weight:700;font-style:italic}
+.k-p .b{color:var(--prep);font-weight:700}
+.k-c .b{color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-thickness:.08em;
+        text-underline-offset:.14em}
+.k-s rt{color:var(--subj)} .k-v rt{color:var(--verb)} .k-p rt{color:var(--prep)} .k-c rt{color:var(--ink)}
+.rev .sent,.rev .ans{animation:fade .25s ease}
+@keyframes fade{from{opacity:.25}to{opacity:1}}
+
+/* title slide */
+.ttl{font-family:Georgia,'Times New Roman',serif;font-size:clamp(28px,3.4vw,48px);margin:0 0 4vh;color:var(--muted);font-weight:700}
+.rule{font-family:Georgia,'Times New Roman',serif;line-height:1.35;margin:0 0 5vh}
+.key{font-size:clamp(20px,2.4vw,34px);margin:0;line-height:1.5}
+.key b{display:inline-block;min-width:1.6em}
+
+/* length slide */
+.len{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:4vw;align-items:end}
+.pass{font-family:Georgia,'Times New Roman',serif;line-height:1.55;margin:0}
+.pass .s{border-radius:4px;padding:0 2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.pass sup{font-family:'Segoe UI',Tahoma,sans-serif;font-size:.5em;font-weight:800;color:var(--muted);margin-right:3px}
+.rev .pass .s.hit{background:#fff;box-shadow:inset 0 0 0 2px var(--ink);text-decoration:underline;
+                  text-decoration-thickness:.07em;text-underline-offset:.15em}
+.bars{display:flex;align-items:flex-end;gap:14px;height:min(40vh,330px)}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.col .num{font-size:15px;font-weight:800;color:var(--muted);margin-bottom:4px}
+.col .barbox{width:100%;flex:1;display:flex;align-items:flex-end}
+.col .bar{width:100%;background:var(--accent);border-radius:6px 6px 0 0;border:3px solid transparent}
+.rev .col.hit .bar{border-color:var(--ink);background:#1d4258}
+.col .wc{font-size:clamp(18px,1.9vw,26px);font-weight:700;margin-top:6px;white-space:nowrap}
+.col .wc small{font-size:.6em;font-weight:600;color:var(--muted)}
+.col .tag{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;height:18px;visibility:hidden}
+.rev .col.hit .tag{visibility:visible}
+
+/* ---- footer: finger key or colour legend ---- */
+#foot{flex:0 0 auto;min-height:44px;display:flex;justify-content:center;align-items:center;gap:18px;
+      padding:6px 14px;font-size:clamp(15px,1.5vw,20px);flex-wrap:wrap}
+#foot .lg{display:inline-flex;align-items:center}
+#foot .sep{color:var(--muted)}
+
+/* ---- teacher notes ---- */
+#notes{flex:0 0 auto;display:none;max-height:36vh;overflow:auto;background:#fff;border-top:1px solid var(--line);
+       padding:10px 18px 12px;font-size:15px;line-height:1.5}
+body.notes #notes{display:block}
+.nrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.nrow:last-child{border-bottom:0}
+.nrow b{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-top:2px}
+.broken{color:#a83232;font-size:18px;white-space:pre-wrap}
+
+@media screen and (max-width:860px){
+  .len{grid-template-columns:minmax(0,1fr)}
+  .bars{height:26vh}
+  .nrow{grid-template-columns:minmax(0,1fr);gap:2px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rev .sent,.rev .ans{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="bar">
+  <span id="count" aria-live="polite"></span>
+  <span id="phase"></span>
+  <span class="sp"></span>
+  <button class="btn" id="bBack" type="button">&larr; Back</button>
+  <button class="btn btn-primary" id="bReveal" type="button" aria-pressed="false">Reveal</button>
+  <button class="btn" id="bNext" type="button">Next &rarr;</button>
+  <button class="btn" id="bNotes" type="button" aria-pressed="false" aria-controls="notes">Notes</button>
+  <a class="menulink" href="SentenceFluency.html">Student module</a>
+</div>
+<main id="stage"><div id="wrap"></div></main>
+<div id="foot"></div>
+<aside id="notes" aria-label="Teacher notes"></aside>
+<script>
+"use strict";
+/* ======================= CONTENT: edit here =======================
+   Each sentence is written in a small markup:
+     [s:words]  subject        [v:words]  verb
+     [p:words]  prep phrase    [c:words]  conjunction
+   Anything outside brackets is plain. Take the brackets away and what is
+   left must be the source, word for word.
+   "ans" holds the reveal chips and may use the same markup.
+   "notes" is the teacher strip (N): each row is [label, text].
+   A "length" slide lists its sentences one by one; the bars and the word
+   counts are worked out from the text, so they cannot drift from it.
+   ================================================================== */
+const SLIDES = [
+ { kind:"title",
+   h:"Sentence fluency",
+   rule:"A clause is a [v:verb] plus [s:who is doing it].",
+   key:[["1","One finger per clause."],["0","A fist for none."]],
+   notes:[
+     ["Say","A clause is a verb plus who is doing it. For each sentence, count the clauses and hold up your fingers on my signal. One finger per clause. A fist if there are none."],
+     ["Timing","About 5 minutes. Under a minute per sentence: display, fingers up, scan the room, reveal and model."],
+     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes."] ] },
+
+ { kind:"sentence",
+   src:"Day at the Beach",
+   m:"[s:Your cuff] [v:brushed] my lip [c:and] [s:I] [v:revelled] [p:at leaving my crimson mark].",
+   ans:["2 clauses","joined by [c:and]: compound","leaving: no who of its own"],
+   notes:[
+     ["Display","Count the clauses. Fingers up on my signal. Scan the room before you reveal."],
+     ["Answer","2. brushed: who? Your cuff. revelled: who? I. Joined by and, so it is compound."],
+     ["Ask","“What is the verb? Who’s doing that?” Then: “Who’s doing the leaving?” It has no who of its own. It sits inside the prep phrase “at leaving my crimson mark”."],
+     ["If students disagree","Three fingers usually means leaving was counted. “What would need to change to make leaving a clause?” For example: “… and I revelled as I left my crimson mark.” Now left has its own who: I."],
+     ["Teaching point","And joins two clauses of equal weight. Two clauses joined that way make a compound sentence."] ] },
+
+ { kind:"sentence",
+   src:"Six-word story",
+   m:"[p:For sale]: baby shoes, never worn.",
+   ans:["Fist: 0 clauses","no verb with a who","worn describes the shoes","a fragment, on purpose"],
+   notes:[
+     ["Display","Count the clauses. A fist if there are none."],
+     ["Answer","A fist. 0 clauses. “For sale” is a prep phrase. “baby shoes” is a noun phrase. “worn” describes the shoes: nobody in the sentence does the wearing."],
+     ["Ask","“What is the verb? Who’s doing that?” There is no pair to find."],
+     ["If students disagree","One finger usually means worn was counted. “Who is doing the wearing? What would need to change to make it a clause?” For example: “The shoes were never worn.” Now were worn has a who: the shoes."],
+     ["Teaching point","A fragment is a choice when the form calls for it: an ad, a sign, an ingredients list. This one is written as a newspaper ad. Inside a paragraph of a review, the same thing reads as a mistake."] ] },
+
+ { kind:"sentence",
+   src:"Perfect Fudgy Brownies, inspiredtaste.net",
+   m:"[v:Add] the cold eggs, one [p:at a time], stirring vigorously [p:after each egg].",
+   ans:["1 clause","[v:Add]: who? you, not written","stirring: no who of its own","one at a time, after each egg: phrases"],
+   notes:[
+     ["Display","Count the clauses."],
+     ["Answer","1. Verb: Add. Who is doing it? You, the reader. It is an instruction (imperative), so the who is not written. “stirring” has no who of its own. “one at a time” and “after each egg” are phrases: no verb."],
+     ["Ask","“What is the verb? Who’s doing that?” For the imperative: “Who is doing this? It’s implied: you, the reader.”"],
+     ["If students disagree","Two fingers usually means stirring was counted. “Who is doing the stirring? What would need to change to make it a second clause?” For example: “Add the cold eggs, one at a time, and stir vigorously after each egg.” Now stir is a second verb, with the same unwritten you."],
+     ["Teaching point","An instruction still has a who. A recipe leaves it out because the reader is always the one doing it."] ] },
+
+ { kind:"sentence",
+   src:"Rolling Stone, review of 5 Seconds of Summer’s Everyone’s a Star!",
+   m:"[s:They] [v:may not be reinventing] the wheel [p:on Everyone’s a Star!] [c:but] [s:their humour and musical restlessness] [v:make] it a breezy listen.",
+   ans:["2 clauses","joined by [c:but]: coordinating","compound","left with: a breezy listen"],
+   notes:[
+     ["Display","Count the clauses."],
+     ["Answer","2. may not be reinventing: who? They (the band). make: who? their humour and musical restlessness. Joined by but, a coordinating conjunction, so it is compound. The reader is left with the clause after but: the album is a breezy listen."],
+     ["Watch for","Everyone’s a Star! is the album’s name. A name counts as one thing, like Dear Santa, and the ! belongs to the name. “Reinventing the wheel” means making something completely new."],
+     ["Ask","“What is the verb? Who’s doing that?” Then: “Which judgement does the reviewer leave you with?”"],
+     ["If students disagree","“What would need to change to make it complex?” For example: “Although they may not be reinventing the wheel on Everyone’s a Star!, their humour and musical restlessness make it a breezy listen.” Although is subordinating; the reader is still left with the breezy listen. Then swap the two clauses around but: which judgement wins now?"],
+     ["Teaching point","Put the judgement you want remembered last: after but, or in the main clause after an although clause."] ] },
+
+ { kind:"length",
+   src:"The Guardian, review of Dear Santa",
+   ask:"Which sentence lands hardest? Why?",
+   key:"Fingers: the number of the sentence.",
+   sentences:[
+     "We’re trapped between a sweet-natured kids movie full of life lessons about family and acceptance and a black-hearted adult comedy about a devil trying to steal the soul of a pre-teen.",
+     "Unsurprisingly, and less interestingly, the former wins out." ],
+   lands:1,
+   after:"the short one lands because of the long one before it",
+   notes:[
+     ["Display","“Which sentence lands hardest? Why?” Fingers up: the number of the sentence."],
+     ["Answer","Sentence 2. It lands because of the long sentence before it: the reader is carried through a long, crowded comparison, then the verdict arrives in a handful of words."],
+     ["Gloss","“the former” means the first of the two things just named: the sweet-natured kids movie."],
+     ["Ask","Read both sentences aloud. “What does the long one let the reviewer do? What does the short one do?”"],
+     ["If students disagree","“What would need to change to make sentence 2 land less?” Put it first, or stretch it with a reason."],
+     ["Choppy version","Read aloud, not on screen: “We’re trapped between two films. One is a sweet kids movie. One is a dark adult comedy. The kids movie wins.” Every sentence the same length, so none of them lands."],
+     ["Teaching point","Short sentences land a verdict. Long sentences allow nuance and analysis. The contrast does the work; a run of short sentences reads as choppy."] ] }
+];
+/* ===================== end of content ===================== */
+
+const TAGS = {s:"subject", v:"verb", p:"prep phrase", c:"conjunction"};
+const RUN = /\[([a-z]+):([^\[\]]*)\]/g;
+const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* The markup with the brackets taken away: the words as the source has them. */
+function plain(m){ return m.replace(RUN, (x,k,t) => t); }
+
+/* The markup as HTML. ruby=true puts the part's name under each run, for the
+   sentence on a reveal; ruby=false is the flat form used in chips. */
+function marked(m, ruby){
+  let out = "", last = 0;
+  m.replace(RUN, (x,k,t,at) => {
+    out += esc(m.slice(last, at));
+    out += ruby
+      ? `<ruby class="k-${k}"><span class="b">${esc(t)}</span><rt>${TAGS[k]}</rt></ruby>`
+      : `<span class="k-${k}"><span class="b">${esc(t)}</span></span>`;
+    last = at + x.length;
+    return x;
+  });
+  return out + esc(m.slice(last));
+}
+
+/* A word is any space-separated piece with a letter or digit in it, so a
+   hyphenated word or a contraction counts once and lone punctuation not at all. */
+function words(s){ return s.trim().split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w)).length; }
+
+/* Reveal chips for a length slide, built from the counts. */
+function lengthAns(sl){
+  const n = sl.sentences.map(words), i = sl.lands;
+  const before = n.slice(Math.max(0,i-2), i);
+  return [`Sentence ${i+1} lands: ${n[i]} words, after ${before.join(" and ")}`, sl.after];
+}
+
+/* Every problem a hand edit to the content block could cause. If there are
+   any, the deck shows them instead of a slide. */
+function problems(){
+  const out = [];
+  const look = (m, where) => {
+    m.replace(RUN, (x,k) => { if(!TAGS[k]) out.push(`${where}: unknown part "${k}"`); return x; });
+    const left = m.replace(RUN, "");
+    if(/[\[\]]/.test(left)) out.push(`${where}: a bracket is not closed or not opened`);
+  };
+  SLIDES.forEach((sl, i) => {
+    const w = "Slide " + (i+1);
+    if(sl.kind === "title") look(sl.rule, w);
+    else if(sl.kind === "sentence"){ look(sl.m, w); (sl.ans||[]).forEach(a => look(a, w + " answer")); }
+    else if(sl.kind === "length"){
+      if(!(sl.lands >= 0 && sl.lands < sl.sentences.length)) out.push(w + ": lands is not one of the sentences");
+      sl.sentences.forEach(s => { if(!words(s)) out.push(w + ": an empty sentence"); });
+    }
+    else out.push(w + ": unknown kind " + sl.kind);
+  });
+  return out;
+}
+
+/* ---------- state: in memory only, nothing is saved ---------- */
+const at = {i:0, rev:false};
+const $ = id => document.getElementById(id);
+const canReveal = i => SLIDES[i].kind !== "title";
+
+function forward(){
+  if(canReveal(at.i) && !at.rev) at.rev = true;
+  else if(at.i < SLIDES.length-1){ at.i++; at.rev = false; }
+  render();
+}
+function back(){
+  if(at.rev) at.rev = false;
+  else if(at.i > 0){ at.i--; at.rev = canReveal(at.i); }
+  render();
+}
+function next(){ if(at.i < SLIDES.length-1){ at.i++; at.rev = false; render(); } }
+function toggleReveal(){ if(canReveal(at.i)){ at.rev = !at.rev; render(); } }
+function toggleNotes(){
+  const on = document.body.classList.toggle("notes");
+  $("bNotes").setAttribute("aria-pressed", on);
+  fit();
+}
+
+function legend(){
+  return ["s","v","p","c"].map(k =>
+    `<span class="lg k-${k}"><span class="b">${TAGS[k][0].toUpperCase()+TAGS[k].slice(1)}</span></span>`
+  ).join(`<span class="sep">·</span>`);
+}
+
+function render(){
+  const sl = SLIDES[at.i], n = SLIDES.length;
+  $("count").textContent = `${at.i+1} / ${n}`;
+  $("phase").textContent = sl.kind === "title" ? "" : (at.rev ? "Reveal and model" : "Display");
+  $("bBack").disabled = at.i === 0 && !at.rev;
+  $("bNext").disabled = at.i === n-1;
+  $("bReveal").disabled = !canReveal(at.i);
+  $("bReveal").setAttribute("aria-pressed", at.rev);
+  $("stage").className = at.rev ? "rev" : "";
+
+  let html = "", foot = "";
+  if(sl.kind === "title"){
+    html = `<h1 class="ttl">${esc(sl.h)}</h1>
+      <p class="rule fitme">${marked(sl.rule, false)}</p>
+      <p class="key">${sl.key.map(k => `<b>${esc(k[0])}</b>${esc(k[1])}`).join("<br>")}</p>`;
+  } else if(sl.kind === "sentence"){
+    html = `<p class="sent fitme"></p><p class="src">${esc(sl.src)}</p>
+      <div class="ans">${sl.ans.map(a => `<span class="chip">${marked(a, false)}</span>`).join("")}</div>`;
+    foot = at.rev ? legend() : "One finger per clause · a fist for none";
+  } else if(sl.kind === "length"){
+    const counts = sl.sentences.map(words), max = Math.max(...counts);
+    html = `<div class="len">
+        <p class="pass fitme">${sl.sentences.map((s,j) =>
+          `<span class="s${j===sl.lands?" hit":""}"><sup>${j+1}</sup>${esc(s)}</span>`).join(" ")}</p>
+        <div class="bars" aria-label="Words per sentence">${counts.map((c,j) =>
+          `<div class="col${j===sl.lands?" hit":""}"><span class="tag">lands</span><span class="num">${j+1}</span>
+             <div class="barbox"><div class="bar" style="height:${(c/max*100).toFixed(1)}%"></div></div>
+             <span class="wc">${c} <small>words</small></span></div>`).join("")}</div>
+      </div>
+      <p class="src">${esc(sl.src)}</p>
+      <p class="ask">${esc(sl.ask)}</p>
+      <div class="ans">${lengthAns(sl).map(a => `<span class="chip">${marked(a, false)}</span>`).join("")}</div>`;
+    foot = at.rev ? "" : esc(sl.key);
+  }
+  $("wrap").innerHTML = html;
+  $("foot").innerHTML = foot;
+  $("notes").innerHTML = sl.notes.map(r =>
+    `<div class="nrow"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("");
+  fit();
+}
+
+/* Largest type that fits the slide in one view. A sentence slide is sized
+   with the reveal in place (bold runs, labels, chips), and the display state
+   keeps that size, so nothing jumps when the answer appears. The chips are
+   hidden, not removed, so their space is held without showing anything. */
+const SIZES = {title:[96,40], sentence:[84,40], length:[46,20]};
+function fit(){
+  const sl = SLIDES[at.i], el = document.querySelector(".fitme");
+  if(!el) return;
+  const sent = sl.kind === "sentence", ans = document.querySelector(".ans");
+  if(sent){ el.innerHTML = marked(sl.m, true); }
+  if(ans) ans.classList.remove("hide");
+  const stage = $("stage"), wrap = $("wrap");
+  const fits = () => wrap.offsetHeight <= stage.clientHeight && el.scrollWidth <= el.clientWidth + 1;
+  let [s, min] = SIZES[sl.kind];
+  el.style.fontSize = s + "px";
+  while(s > min && !fits()){ s -= 2; el.style.fontSize = s + "px"; }
+  if(sent && !at.rev) el.textContent = plain(sl.m);
+  if(ans && !at.rev) ans.classList.add("hide");
+}
+
+/* ---------- controls ---------- */
+$("bBack").addEventListener("click", back);
+$("bNext").addEventListener("click", next);
+$("bReveal").addEventListener("click", toggleReveal);
+$("bNotes").addEventListener("click", toggleNotes);
+/* A mouse click should not leave a button focused, or the next Space would
+   press it again instead of moving the deck on. Tab focus is unaffected. */
+document.querySelectorAll("#bar button").forEach(b =>
+  b.addEventListener("mousedown", e => e.preventDefault()));
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const onControl = /^(BUTTON|A)$/.test(e.target.tagName);
+  if(onControl && (e.key === " " || e.key === "Enter")) return;
+  if(e.key === "ArrowRight" || e.key === " " || e.key === "PageDown"){ e.preventDefault(); forward(); }
+  else if(e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); back(); }
+  else if(e.key === "n" || e.key === "N"){ e.preventDefault(); toggleNotes(); }
+  else if(e.key === "Home"){ e.preventDefault(); at.i = 0; at.rev = false; render(); }
+  else if(e.key === "End"){ e.preventDefault(); at.i = SLIDES.length-1; at.rev = false; render(); }
+});
+addEventListener("resize", fit);
+
+/* #4 opens on slide 4, #4r on its reveal, so a lesson plan can link straight in. */
+(function start(){
+  const bad = problems();
+  if(bad.length){
+    $("wrap").innerHTML = `<p class="broken">The content block has a problem, so the deck will not run:\n${esc(bad.join("\n"))}</p>`;
+    return;
+  }
+  const h = /^#(\d+)(r?)$/.exec(location.hash);
+  if(h){ const i = +h[1]-1; if(i >= 0 && i < SLIDES.length){ at.i = i; at.rev = !!h[2] && canReveal(i); } }
+  render();
+})();
+</script>
+</body>
+</html>

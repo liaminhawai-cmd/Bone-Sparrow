@@ -17,6 +17,7 @@ on:
       - "PronounsModals.html"
       - "ConcessionSentences.html"
       - "MicroFiction.html"
+      - "SentenceFluencyDeck.html"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -71,6 +72,7 @@ jobs:
           cp PronounsModals.html dist/
           cp ConcessionSentences.html dist/
           cp MicroFiction.html dist/
+          cp SentenceFluencyDeck.html dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/

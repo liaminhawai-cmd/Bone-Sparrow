@@ -24,7 +24,7 @@ This repository is public, and so is every branch in it. Classroom copies,
 mentor texts, CATs, rubrics, lesson plans, the grammar session decks and the
 department's unit folders (`Lesson Resources/`, `6. Writing Folio/`) live in
 the private repo `liaminhawai-cmd/Year-7-English`, never here. `.gitignore`
-blocks the usual folder names. A page here may quote a single sentence from
+blocks the usual folder names. A page here may quote a sentence or two from
 a mentor text inside original work, and names where it came from.
 
 Read `STYLE_GUIDE.md` first — the portable build principles behind everything
