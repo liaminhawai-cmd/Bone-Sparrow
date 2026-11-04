@@ -137,6 +137,7 @@ body.notes #notes{display:block}
 <div id="bar">
   <a class="menulink" href="index.html">&#8962; Year 7 English</a>
   <a class="menulink" href="SentenceFluency.html">Student module</a>
+  <a class="menulink" href="SentenceFluencyDeck.pptx" download>Download PowerPoint</a>
   <span class="sp"></span>
   <span id="count" aria-live="polite"></span>
   <button class="btn" id="bBack" type="button">&larr; Back</button>
@@ -167,6 +168,9 @@ body.notes #notes{display:block}
    "notes" is the teacher strip (N): each row is [label, text].
    A "length" slide lists its sentences one by one; the bars and the word
    counts are worked out from the text, so they cannot drift from it.
+   The PowerPoint copy, SentenceFluencyDeck.pptx, is built from this block
+   by tools/deck-pptx (extract.js, then build.ps1). After an edit here,
+   rebuild it so the two stay the same.
    ================================================================== */
 const SLIDES = [
  { kind:"title",
