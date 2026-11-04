@@ -478,7 +478,7 @@ const GRAM_STAGES = [
       <li><span class="ex">Jimmie found the notebook she kept it safe.</span> — two verbs (<u>found</u>, <u>kept</u>), two doers (<u>Jimmie</u>, <u>she</u>) → TWO clauses.</li>
       <li><span class="ex">Refugees leave behind homes, friends, and familiar streets.</span> — commas, but only ONE verb (<u>leave</u>) → ONE clause. It's just a list.</li>
       </ul>`,
-    optset:["One clause","Two clauses"],
+    optset:["One clause","Two clauses"], prompt:"How many clauses?",
     itemsA:[
       { id:"s1a1", q:"Subhi waits by the fence.", a:"One clause", explain:"One pair: <u>Subhi</u> <u>waits</u>. 'By the fence' is detail, not a clause." },
       { id:"s1a2", q:"Maá sleeps, and Queeny draws.", a:"Two clauses", explain:"Two pairs: <u>Maá sleeps</u> + <u>Queeny draws</u>." },
@@ -766,6 +766,8 @@ function esc(t){ const d=document.createElement("div"); d.textContent=t; return 
 function coreStages(){ return GRAM_STAGES.filter(st=>st.core!==false); }
 function extStageDef(){ return GRAM_STAGES.find(st=>st.core===false); }
 function coreItems(){ return coreStages().flatMap(st=>st.itemsA); }
+/* The stage an item belongs to, so a later round asks it with that stage's own options. */
+function stageOfItem(it){ return GRAM_STAGES.find(st=>st.itemsA.some(x=>x.id===it.id) || (st.itemsB||[]).some(x=>x.id===it.id)); }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 /* deal one task per word, fixed once dealt (refresh can't reroll) */
@@ -1103,7 +1105,7 @@ function gramStage(idx, isRetry){
     const shadow=isRetry?{}:null;
     runSet({ mount:"gram-body", progEl:"gram-prog", progLabel:`STEP 3 · STAGE ${idx+1}`,
       header:stagePath(idx), items, optset:st.optset,
-      promptText:"What type of sentence is this?",
+      promptText:st.prompt||"What type of sentence is this?",
       firstTracked:!isRetry, shadow,
       onDone:()=>{
         let got=0;
@@ -1164,9 +1166,9 @@ function consolidation(){
   document.getElementById("cons-go").onclick=()=>{
     const shadow={};
     runSet({ mount:"gram-body", progEl:"gram-prog", progLabel:"STEP 3 · CONSOLIDATION",
-      items:missed, firstTracked:false, shadow,
-      promptText:"What type of sentence is this?",
-      optset:["Simple sentence","Compound sentence","Run-on sentence"],
+      items:missed.map(it=>{ const st=stageOfItem(it);
+        return Object.assign({}, it, { opts:it.opts||st.optset, promptText:it.promptText||st.prompt||"What type of sentence is this?" }); }),
+      firstTracked:false, shadow,
       onDone:()=>{
         const cleared=missed.filter(it=>shadow[it.id]===true).length;
         S.consol={cleared, total:missed.length}; save();
