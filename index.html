@@ -19,7 +19,8 @@ body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-seri
 .container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
            border-radius:12px;padding:14px 24px 6px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 h1{font-family:Georgia,'Times New Roman',serif;font-size:26px;margin:0 0 6px}
-.strands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}
+.strands{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr);gap:18px;align-items:start}
+.strand.wide .cards{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:8px}
 .strand h2{font-family:Georgia,'Times New Roman',serif;font-size:19px;margin:0 0 7px;padding:0 0 7px;
            border-bottom:3px solid var(--c)}
 .strand h2 a{color:var(--c);text-decoration:none}
@@ -36,7 +37,7 @@ a.card.ext{background:var(--bg)}
 .teacher a:hover{text-decoration:underline;color:var(--ink)}
 :focus-visible{outline:3px solid var(--ink);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
-@media screen and (max-width:860px){ .strands{grid-template-columns:1fr} .container{padding:16px} }
+@media screen and (max-width:860px){ .strands{grid-template-columns:1fr} .strand.wide .cards{grid-template-columns:1fr} .container{padding:16px} }
 </style>
 </head>
 <body>
@@ -67,22 +68,24 @@ const STRANDS = [
     ["bonesparrowtrainer.html","Pre-reading trainer","The 17 unit words and sentence types."],
     ["BoneSparrowThreeWays.html","Three ways into a sentence","From the evidence, the idea or the effect."],
     ["GrammarHuboffline.html","Grammar Hub","Sentence structure."] ]},
-  { name:"Writing Folio", c:"--folio", door:"WritingFolio.html", items:[
+  { name:"Writing Folio", c:"--folio", door:"WritingFolio.html", wide:true, items:[
     ["WritingFolio.html","Start here","Sign in and the folio menu."],
     ["PronounsModals.html","Pronoun choice and modal verbs","Three words, then back to your draft."],
     ["ContentionClaims.html","Contention and claims","The deck, then your draft, then the PDF."],
     ["WritingFolioVocabHub.html#set-04","Persuasive writing words","Build each word from its parts, then use it."],
     ["SentenceFluency.html","Sentence fluency","Find the clauses, then join and split."],
     ["MicroFiction.html","Micro-fiction","Cut and swap a story until it hints."],
+    ["Limericks.html","Limericks","Plan, rhyme, write five lines."],
+    ["Ballads.html","Ballads","Rewrite a stanza of The Man from Ironbark."],
     ["ConcessionSentences.html","Complex sentences for concession","Extension.","ext"],
     ["WritingFolioVocabHub.html","Writing Folio vocab, all sets","","ext"] ]}
 ];
 function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
 document.getElementById("strands").innerHTML = STRANDS.map(s=>{
   const head = s.door ? `<a href="${s.door}">${esc(s.name)}</a>` : esc(s.name);
-  return `<section class="strand" style="--c:var(${s.c})"><h2>${head}</h2>`+
+  return `<section class="strand${s.wide?" wide":""}" style="--c:var(${s.c})"><h2>${head}</h2><div class="cards">`+
     s.items.map(it=>`<a class="card ${it[3]||""}" href="${it[0]}"><div class="t">${esc(it[1])}<span class="arrow"> →</span></div>${it[2]?`<div class="d">${esc(it[2])}</div>`:""}</a>`).join("")+
-    `</section>`;
+    `</div></section>`;
 }).join("");
 </script>
 </body>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ballads: Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* Rhyme pairs. Each badge also prints its letter, so colour is never the
+     only signal. */
+  --ra:#1f5fa8; --rabg:#e3ecf7; --rb:#6b3f7e; --rbbg:#efe5f3; --rc:#2f6a3e; --rcbg:#e5f1e7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.55}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 12px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none;padding:10px 0}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block;min-height:40px}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+textarea{resize:vertical;line-height:1.45}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.step{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 10px;
+      font-family:inherit;font-size:15px;color:inherit;cursor:pointer;transition:border-color .15s}
+.step:hover{border-color:var(--accent)}
+.step .num{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+           display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.step .t{font-weight:700}
+.step .d{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.5}
+.step .tag{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;
+           letter-spacing:.4px;color:var(--muted);white-space:nowrap;padding-top:4px}
+
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted);min-height:50px}
+.deckbar b{color:var(--ink)}
+.pips{display:flex;gap:6px;flex-wrap:wrap}
+.pip{min-width:40px;height:40px;border-radius:20px;border:1px solid var(--line);background:var(--bg);font-size:12px;
+     font-weight:800;cursor:pointer;font-family:inherit;color:var(--muted);padding:0 6px}
+.pip.on{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.pip.seen{color:var(--ink)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+/* One view on a school laptop: each column scrolls inside itself rather than
+   pushing the page past the bottom of the screen. */
+.cols>.cardbox{max-height:calc(100vh - 128px);overflow:auto}
+.lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:12px 0 4px}
+.lab:first-child{margin-top:0}
+.dim{color:#7d766a;font-size:12.5px}
+.broken{background:var(--wrongbg);border:1px solid var(--wrong);border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.6}
+
+/* ---- read ---- */
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 8px}
+.tg{min-height:40px;padding:6px 14px;border:1px solid var(--line);border-radius:20px;background:var(--bg);
+    font-family:inherit;font-weight:600;font-size:13.5px;line-height:1;color:var(--ink);cursor:pointer}
+.tg[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tg[aria-pressed="true"]::before{content:"\2713  "}
+.pl{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:baseline;padding:0 6px;border-radius:6px}
+.pl .n{font-size:11px;color:var(--muted);text-align:right}
+.pl .tx{font-family:Georgia,serif;font-size:17px;line-height:2.15}
+.cols.wide{grid-template-columns:minmax(0,2.5fr) minmax(0,1fr)}
+.cols.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.pl .notes{grid-column:2;display:flex;gap:4px;flex-wrap:wrap;margin:-5px 0 5px}
+.pl.speech{background:var(--warnbg);box-shadow:inset 3px 0 var(--warn)}
+.note{font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 6px;white-space:nowrap;background:#fff}
+.rk{font-size:11.5px;font-weight:800;border-radius:99px;padding:2px 8px;white-space:nowrap;border:1px solid}
+.rk.A{color:var(--ra);background:var(--rabg);border-color:var(--ra)}
+.rk.B{color:var(--rb);background:var(--rbbg);border-color:var(--rb)}
+.rk.C{color:var(--rc);background:var(--rcbg);border-color:var(--rc)}
+.vocab{font:inherit;color:inherit;background:none;border:0;border-bottom:2px dotted var(--accent);
+       padding:6px 1px 1px;margin:0;cursor:pointer;border-radius:3px 3px 0 0}
+.vocab:hover{background:var(--bg)}
+.vocab.on{background:#fff;box-shadow:inset 0 0 0 2px var(--accent);border-bottom-style:solid}
+.credit{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.gw{font-family:Georgia,serif;font-size:21px;font-weight:700;margin:0 0 6px}
+.gm{font-size:15px;line-height:1.55;margin:0}
+.parts{display:flex;flex-direction:column;gap:6px;margin:12px 0 0}
+.part{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13.5px;line-height:1.45;background:var(--paper)}
+.part b{font-size:15px}
+.part i{color:var(--muted);font-size:12px;margin:0 4px}
+.tr{font-size:18px;margin:12px 0 0;padding:8px 10px;border-left:3px solid var(--accent);background:var(--paper)}
+.glang{margin:12px 0 0;max-width:260px}
+
+/* ---- rewrite ---- */
+.rw{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:3px 8px;align-items:start;margin:0 0 9px}
+.rl{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin-top:5px;border:1px solid}
+.rl.A{color:var(--ra);background:var(--rabg);border-color:var(--ra)}
+.rl.B{color:var(--rb);background:var(--rbbg);border-color:var(--rb)}
+.rl.C{color:var(--rc);background:var(--rcbg);border-color:var(--rc)}
+.rt{font:16px/1.4 Georgia,serif;padding:7px 10px;min-height:40px}
+.under{grid-column:2 / 4;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.job{flex:1 1 200px;font-size:12.5px;color:var(--muted)}
+.met{font-size:12px;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:var(--muted);background:#fff}
+.met.good{color:var(--correct);background:var(--okbg);border-color:var(--correct)}
+.met.warn{color:var(--warn);background:var(--warnbg);border-color:var(--warn)}
+.met.bad{color:var(--wrong);background:var(--wrongbg);border-color:var(--wrong)}
+.fix{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.fix button{width:40px;height:40px;border:0;background:#fff;font-family:inherit;font-weight:800;font-size:16px;line-height:1;cursor:pointer;color:var(--ink)}
+.fix button+button{border-left:1px solid var(--line)}
+.rc{border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin:8px 0 0;font-size:13.5px;line-height:1.5}
+.rc .v{display:block;font-weight:800}
+.rc.ok{background:var(--okbg);border-color:var(--correct)} .rc.ok .v{color:var(--correct)}
+.rc.unsure{background:var(--warnbg);border-color:var(--warn)} .rc.unsure .v{color:var(--warn)}
+.rc.bad{background:var(--wrongbg);border-color:var(--wrong)} .rc.bad .v{color:var(--wrong)}
+.bankf{display:flex;gap:8px;margin:0 0 8px}
+.bankf input{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:99px;padding:0 0 0 11px;font-weight:700;font-size:14px;background:var(--paper);min-height:40px}
+.chip.fixed{padding-right:11px}
+.chip button{width:40px;height:38px;border:0;background:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:15px;line-height:1;color:var(--muted);border-radius:99px}
+.mine{font-family:Georgia,serif;font-size:15.5px;line-height:1.7;margin:0;padding:0;list-style:none}
+.mine li{display:flex;gap:8px;align-items:baseline}
+.mine .rk{flex:0 0 auto}
+
+table.rpt{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;width:190px}
+.copied{color:var(--correct);font-weight:700;font-size:13.5px}
+.rptbox{max-height:calc(100vh - 262px);overflow:auto;margin:0 0 8px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:14px} .cols{grid-template-columns:1fr} .cols>.cardbox{max-height:none} .rptbox{max-height:none} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+
+<script>
+/* ============================================================================
+   CONTENT. Banjo Paterson, "The Man from Ironbark" (The Bulletin, 1892),
+   checked line by line against Project Gutenberg #213, The Man from Snowy
+   River and Other Verses. The poem is the source: do not change its words.
+
+   stanzas[n].lines[k]
+     t        the line. [[key|words]] makes "words" tappable; key looks up
+              vocab below.
+     rhyme    A, B or C        end   the rhyme word
+     speech   true when the line is spoken by a character
+   stanzas[n].jobs   what each line does in the story, shown under the rewrite
+   lenses            notes beside stanza 1 only, one per line
+   swap              the word moved before the student starts rewriting
+   rhymeFamilies     words known to rhyme with each other. The checker says
+                     "rhymes" for two words in one family and "does not rhyme"
+                     for words in two different families. Anything else is
+                     "not sure".
+   syllables         counts for words the estimate gets wrong
+   vocab             w: the words shown, m: the meaning in plain English,
+                     parts: [part, prefix|root|suffix, meaning],
+                     tr: zh (Mandarin, simplified), yue (Cantonese,
+                     traditional), vi, fa. Parts and tr appear only when the
+                     shared profile has EAL support on.
+   parts             translations of each part, keyed "part|meaning"
+   ========================================================================== */
+const BALLAD = {
+ title:"The Man from Ironbark", author:"A. B. Paterson", year:1892,
+ swap:{ from:"Ironbark", to:"Kew" },
+ scheme:["A","A","B","B","C","C"],
+ stanzas:[
+  { title:"Arrival in Sydney",
+    lines:[
+     {"t":"It was the man from [[ironbark|Ironbark]] who [[struck|struck the Sydney town]],","rhyme":"A","end":"town","speech":false},
+     {"t":"He [[wandered|wandered]] over street and park, he wandered up and down.","rhyme":"A","end":"down","speech":false},
+     {"t":"He [[loitered|loitered]] here, he loitered there, till he was like to drop,","rhyme":"B","end":"drop","speech":false},
+     {"t":"Until at last in sheer [[despair|despair]] he [[sought|sought]] a barber’s shop.","rhyme":"B","end":"shop","speech":false},
+     {"t":"‘’Ere! shave my beard and [[whiskers|whiskers]] off, I’ll be a [[man-of-mark|man of mark]],","rhyme":"C","end":"mark","speech":true},
+     {"t":"I’ll go and do the Sydney [[toff|toff]] up home in Ironbark.’","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["Introduce the visitor and place.","Show the visitor moving around.","Build the problem.","Move the visitor into the barber shop.","Give the visitor a goal in direct speech.","Finish the set-up and name the home place."] },
+  { title:"The barber’s plan",
+    lines:[
+     {"t":"The barber man was small and [[flash|flash]], as barbers mostly are,","rhyme":"A","end":"are","speech":false},
+     {"t":"He wore a [[strike-your-fancy|strike-your-fancy]] sash, he smoked a huge cigar:","rhyme":"A","end":"cigar","speech":false},
+     {"t":"He was a [[humorist|humorist]] [[of-note|of note]] and [[keen|keen]] at [[repartee|repartee]],","rhyme":"B","end":"repartee","speech":false},
+     {"t":"He [[laid-odds|laid the odds]] and kept a [[tote|‘tote’]], whatever that may be,","rhyme":"B","end":"be","speech":false},
+     {"t":"And when he saw our friend arrive, he whispered ‘Here’s a [[lark|lark]]!","rhyme":"C","end":"lark","speech":true},
+     {"t":"Just watch me catch him all alive, this man from Ironbark.’","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["Introduce the barber and his style.","Add a detail: confident and flashy.","Show off his way with words.","Add a strange, mysterious habit.","He notices the visitor arrive.","State his plan: trick the visitor."] },
+  { title:"The joke is signalled",
+    lines:[
+     {"t":"There were some [[gilded|gilded]] youths that sat along the barber’s wall,","rhyme":"A","end":"wall","speech":false},
+     {"t":"Their eyes were [[dull|dull]], their heads were flat, they had no brains at all;","rhyme":"A","end":"all","speech":false},
+     {"t":"To them the barber [[passed-wink|passed the wink]], his [[dexter|dexter]] [[eyelid|eyelid]] shut,","rhyme":"B","end":"shut","speech":false},
+     {"t":"‘I’ll make this [[bloomin|bloomin’]] [[yokel|yokel]] think his bloomin’ throat is cut.’","rhyme":"B","end":"cut","speech":true},
+     {"t":"And as he soaped and rubbed it in he made a rude remark:","rhyme":"C","end":"remark","speech":false},
+     {"t":"‘I s’pose the flats is pretty [[green|green]] up there in Ironbark.’","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["Introduce the watching young men.","Describe them unkindly.","The barber signals the joke with a wink.","State the plan out loud, to the youths.","Start the shave: the joke begins.","Mock the visitor’s country home."] },
+  { title:"The fake cut",
+    lines:[
+     {"t":"A [[grunt|grunt]] was all reply he got; he shaved the [[bushman|bushman’s]] chin,","rhyme":"A","end":"chin","speech":false},
+     {"t":"Then made the water [[boiling|boiling hot]] and dipped the razor in.","rhyme":"A","end":"in","speech":false},
+     {"t":"He raised his hand, his [[black-brow|brow grew black]], he paused awhile to [[gloat|gloat]],","rhyme":"B","end":"gloat","speech":false},
+     {"t":"Then slashed the red-hot [[razor-back|razor-back]] across his [[victim|victim’s]] throat;","rhyme":"B","end":"throat","speech":false},
+     {"t":"Upon the newly shaven skin it made a [[livid|livid]] mark —","rhyme":"C","end":"mark","speech":false},
+     {"t":"No doubt it [[took-in|fairly took him in]] — the man from Ironbark.","rhyme":"C","end":"Ironbark","speech":false} ],
+    jobs:["Show his reaction: barely any.","Raise the danger: scalding water.","Build suspense before the trick.","The barber fakes the cut.","Describe the mark it leaves.","Confirm the trick has worked."] },
+  { title:"He believes the trick",
+    lines:[
+     {"t":"He [[fetched-yell|fetched a wild]] [[up-country|up-country]] yell might wake the dead to hear,","rhyme":"A","end":"hear","speech":false},
+     {"t":"And though his throat, he knew [[full-well|full well]], was cut from ear to ear,","rhyme":"A","end":"ear","speech":false},
+     {"t":"He struggled [[gamely|gamely]] to his feet, and faced the [[murderous|murd’rous]] foe:","rhyme":"B","end":"foe","speech":false},
+     {"t":"‘You’ve [[done-for|done for me]]! you dog, I’m beat! one hit before I go!","rhyme":"B","end":"go","speech":true},
+     {"t":"I only wish I had a knife, you [[blessed|blessed]] murdering [[shark|shark]]!","rhyme":"C","end":"shark","speech":true},
+     {"t":"But you’ll remember all your life, the man from Ironbark.’","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["He reacts in shock: it’s working.","Show he believes his throat is cut.","He fights on despite believing he’s dying.","His parting words, half beaten.","Wish for a weapon; name the ‘murderer’.","A last threat before the end."] },
+  { title:"The fight",
+    lines:[
+     {"t":"He lifted up his [[hairy-paw|hairy paw]], with one [[tremendous|tremendous]] [[clout|clout]]","rhyme":"A","end":"clout","speech":false},
+     {"t":"He landed on the barber’s jaw, and knocked the barber out.","rhyme":"A","end":"out","speech":false},
+     {"t":"He [[set-to-work|set to work]] with [[tooth-and-nail|tooth and nail]], he made the place a [[wreck|wreck]];","rhyme":"B","end":"wreck","speech":false},
+     {"t":"He grabbed the nearest [[gilded|gilded]] youth, and tried to break his neck.","rhyme":"B","end":"neck","speech":false},
+     {"t":"And all the while his throat he held to save his [[vital-spark|vital spark]],","rhyme":"C","end":"spark","speech":false},
+     {"t":"And ‘Murder! Bloody Murder!’ yelled the man from Ironbark.","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["He throws one huge punch.","Land the punch: the barber falls.","The fight wrecks the shop.","He turns on someone else nearby.","Show he still guards his ‘wound’.","He shouts for help, sure he’s dying."] },
+  { title:"The explanation",
+    lines:[
+     {"t":"A [[peeler|peeler]] man who heard the [[din|din]] came in to see the show;","rhyme":"A","end":"show","speech":false},
+     {"t":"He tried to [[run-in|run the bushman in]], but he refused to go.","rhyme":"A","end":"go","speech":false},
+     {"t":"And when at last the barber spoke, and said, ‘’Twas all in fun —","rhyme":"B","end":"fun","speech":true},
+     {"t":"’Twas just a little [[harmless|harmless]] joke, a [[trifle|trifle]] [[overdone|overdone]].’","rhyme":"B","end":"overdone","speech":true},
+     {"t":"‘A joke!’ he cried, ‘[[by-george|By George]], that’s fine; a lively sort of [[lark|lark]];","rhyme":"C","end":"lark","speech":true},
+     {"t":"I’d like to catch that [[murdering|murdering]] [[swine|swine]] some night in Ironbark.’","rhyme":"C","end":"Ironbark","speech":true} ],
+    jobs:["A police officer arrives.","He won’t be arrested without a fight.","The barber explains: only a joke.","Play the joke down as harmless.","React with disbelief and anger.","Vow revenge if the barber visits home."] },
+  { title:"The story returns home",
+    lines:[
+     {"t":"And now while round the [[shearing-floor|shearing floor]] the [[listening|list’ning]] [[shearers|shearers]] [[gape|gape]],","rhyme":"A","end":"gape","speech":false},
+     {"t":"He tells the story [[oer-and-oer|o’er and o’er]], and [[brags|brags]] of his [[escape|escape]].","rhyme":"A","end":"escape","speech":false},
+     {"t":"‘Them barber [[chaps|chaps]] what keeps a [[tote|tote]], By George, I’ve had enough,","rhyme":"B","end":"enough","speech":true},
+     {"t":"One tried to cut my bloomin’ throat, but thank the Lord it’s [[tough|tough]].’","rhyme":"B","end":"tough","speech":true},
+     {"t":"And whether he’s believed or no, there’s one thing to [[remark|remark]],","rhyme":"C","end":"remark","speech":false},
+     {"t":"That [[flowing-beards|flowing beards]] are [[all-the-go|all the go]] way up in Ironbark.","rhyme":"C","end":"Ironbark","speech":false} ],
+    jobs:["Set the new scene: back home.","He tells the story again and again.","His verdict on city barbers.","Boast that he survived, tough as ever.","The narrator adds a wry comment.","End with a joke about the town."] }
+ ],
+ lenses:{
+  Story:["visitor + place","movement","problem","decision","goal","plan"],
+  Rhythm:["about 7 beats","about 7 beats","about 7 beats","about 7 beats","about 7 beats","about 7 beats"],
+  Voice:["narrator","narrator","narrator","narrator","direct speech","direct speech"] },
+ rhymeFamilies:{
+  "own":["town","down","brown","crown","frown","gown"],
+  "op":["drop","shop","stop","top","hop","chop"],
+  "ark":["mark","Ironbark","bark","dark","lark","park","remark","shark","spark"],
+  "ar":["are","cigar","car","far","star"],
+  "ee":["repartee","be","see","free","tree"],
+  "all":["wall","all","call","fall","tall"],
+  "ut":["shut","cut","but","hut"],
+  "in":["chin","in","skin","thin","win"],
+  "oat":["gloat","throat","boat","coat","float"],
+  "ear":["hear","ear","near","fear","clear"],
+  "oh":["foe","go","know","show","slow"],
+  "out":["clout","out","shout","about"],
+  "eck":["wreck","neck","check","deck"],
+  "un":["fun","overdone","done","one","sun"],
+  "ape":["gape","escape","shape","tape"],
+  "uff":["enough","tough","rough","stuff"],
+  "oo":["Kew","you","do","too","two","through","threw","shoe","blue","new","true","glue","stew","zoo","flew","grew","crew","view","knew"] },
+ syllables:{"kew":1,"sydney":2,"ironbark":3,"barber":2,"whiskers":2,"wandered":2,"loitered":2,"despair":2,"shaven":2,"every":2,"different":3,"business":2,"visitor":3,"family":3,"chocolate":3,"gamely":2,"lively":2,"struggled":2},
+ vocab:{
+  "ironbark":{"w":"Ironbark","m":"A hard-barked Australian eucalyptus; here, also the name of the visitor’s bush town.","parts":[["iron","root","a hard metal"],["bark","root","the outer covering of a tree"]],"tr":{"zh":"铁皮桉；诗中的乡镇名","yue":"鐵皮桉；詩中的鄉鎮名","vi":"cây bạch đàn vỏ sắt; tên thị trấn trong bài thơ","fa":"درخت آیرون‌بارک؛ نام شهرک در شعر"}},
+  "struck":{"w":"struck the Sydney town","m":"Reached or arrived in Sydney.","parts":[],"tr":{"zh":"到达悉尼城","yue":"到達雪梨城","vi":"đến thành phố Sydney","fa":"به شهر سیدنی رسید"}},
+  "wandered":{"w":"wandered","m":"Moved around without a clear route or purpose.","parts":[["wander","root","move without a fixed route"],["ed","suffix","past tense"]],"tr":{"zh":"四处游荡","yue":"四處遊蕩","vi":"đi lang thang","fa":"بی‌هدف پرسه زد"}},
+  "loitered":{"w":"loitered","m":"Stayed or moved slowly in a place without an obvious purpose.","parts":[["loiter","root","wait or move around idly"],["ed","suffix","past tense"]],"tr":{"zh":"闲逛；逗留","yue":"閒逛；逗留","vi":"đi quanh quẩn; nấn ná","fa":"پرسه زد؛ بی‌هدف ماند"}},
+  "despair":{"w":"despair","m":"A complete loss of hope.","parts":[["de","prefix","away; without"],["spair","root","hope"]],"tr":{"zh":"绝望","yue":"絕望","vi":"sự tuyệt vọng","fa":"ناامیدی کامل"}},
+  "sought":{"w":"sought","m":"Looked for or tried to find.","parts":[],"tr":{"zh":"寻找；寻求","yue":"尋找；尋求","vi":"tìm kiếm","fa":"جست‌وجو کرد"}},
+  "whiskers":{"w":"whiskers","m":"Hair growing on a man’s cheeks or around the mouth; facial hair.","parts":[["whisker","root","a hair or group of facial hairs"],["s","suffix","more than one"]],"tr":{"zh":"胡须；络腮胡","yue":"鬍鬚；絡腮鬍","vi":"râu quai nón; ria","fa":"سبیل و موی صورت"}},
+  "man-of-mark":{"w":"man of mark","m":"A man who is noticeable, important or respected.","parts":[],"tr":{"zh":"有名望的人","yue":"有名望的人","vi":"người đàn ông có danh tiếng","fa":"مردی نامدار و مهم"}},
+  "toff":{"w":"toff","m":"An old mocking word for a fashionable upper-class person.","parts":[],"tr":{"zh":"衣着讲究的上流人士（旧俚语）","yue":"衣著講究的上流人士（舊俚語）","vi":"người thượng lưu ăn diện (tiếng lóng cũ)","fa":"آدم اشرافی و شیک‌پوش (عامیانهٔ قدیمی)"}},
+  "flash":{"w":"flash","m":"Showy, stylish and trying to attract attention.","parts":[],"tr":{"zh":"花哨而招摇的","yue":"花哨而招搖的","vi":"hào nhoáng; thích phô trương","fa":"پرزرق‌وبرق و خودنما"}},
+  "strike-your-fancy":{"w":"strike your fancy","m":"Catch your attention or strongly appeal to you.","parts":[],"tr":{"zh":"吸引你的注意；合你的意","yue":"吸引你的注意；合你的意","vi":"thu hút sự chú ý; hợp ý","fa":"توجه یا پسند کسی را جلب کردن"}},
+  "humorist":{"w":"humorist","m":"A person skilled at making people laugh, especially through stories or writing.","parts":[["humor","root","what is funny; comedy"],["ist","suffix","a person who practises or specialises"]],"tr":{"zh":"幽默家；爱讲笑话的人","yue":"幽默家；愛講笑話的人","vi":"nhà hài hước; người giỏi pha trò","fa":"طنزپرداز؛ شوخ‌طبع"}},
+  "of-note":{"w":"of note","m":"Important, well known or worth noticing.","parts":[],"tr":{"zh":"著名的；重要的","yue":"著名的；重要的","vi":"nổi tiếng; đáng chú ý","fa":"مشهور یا قابل‌توجه"}},
+  "keen":{"w":"keen","m":"Quick, sharp or highly skilled.","parts":[],"tr":{"zh":"敏锐的；擅长的","yue":"敏銳的；擅長的","vi":"sắc sảo; rất giỏi","fa":"تیز و ماهر"}},
+  "repartee":{"w":"repartee","m":"A quick exchange of clever, witty replies.","parts":[],"tr":{"zh":"机智的对答","yue":"機智的對答","vi":"đối đáp dí dỏm","fa":"جواب‌های سریع و شوخ‌طبعانه"}},
+  "laid-odds":{"w":"laid the odds","m":"Set or offered the betting odds.","parts":[],"tr":{"zh":"开出赔率","yue":"開出賠率","vi":"đưa ra tỷ lệ cá cược","fa":"ضریب شرط‌بندی تعیین کرد"}},
+  "tote":{"w":"tote","m":"A totalisator: a system that pools bets and calculates the payout.","parts":[],"tr":{"zh":"赛马总彩池系统（旧称）","yue":"賽馬總彩池系統（舊稱）","vi":"hệ thống cá cược chung (totalisator)","fa":"سامانهٔ شرط‌بندی تجمیعی"}},
+  "lark":{"w":"lark","m":"A prank, joke or playful adventure.","parts":[],"tr":{"zh":"恶作剧；玩笑","yue":"惡作劇；玩笑","vi":"trò đùa nghịch; trò tinh quái","fa":"شوخی یا شیطنت"}},
+  "gilded":{"w":"gilded","m":"Covered with a thin layer of gold; figuratively, rich-looking or showy.","parts":[["gild","root","cover with a thin layer of gold"],["ed","suffix","having been; described as"]],"tr":{"zh":"镀金的；表面华丽的","yue":"鍍金的；表面華麗的","vi":"mạ vàng; hào nhoáng bề ngoài","fa":"زراندود؛ ظاهراً پرزرق‌وبرق"}},
+  "dull":{"w":"dull","m":"Not sharp or lively; here, slow to think.","parts":[],"tr":{"zh":"迟钝的；乏味的","yue":"遲鈍的；乏味的","vi":"đần độn; buồn tẻ","fa":"کندذهن؛ کسل‌کننده"}},
+  "passed-wink":{"w":"passed the wink","m":"Gave a secret signal by winking.","parts":[],"tr":{"zh":"使眼色；暗中示意","yue":"使眼色；暗中示意","vi":"nháy mắt ra hiệu","fa":"با چشمک علامت مخفی داد"}},
+  "dexter":{"w":"dexter","m":"On the right-hand side.","parts":[],"tr":{"zh":"右边的；右手侧的","yue":"右邊的；右手側的","vi":"bên phải; thuộc tay phải","fa":"سمت راست؛ راست‌دست"}},
+  "eyelid":{"w":"eyelid","m":"The fold of skin that opens and closes over the eye.","parts":[["eye","root","the organ used for seeing"],["lid","root","a cover"]],"tr":{"zh":"眼皮","yue":"眼皮","vi":"mí mắt","fa":"پلک چشم"}},
+  "bloomin":{"w":"bloomin’","m":"An old mild intensifier meaning very or ‘that annoying …’.","parts":[],"tr":{"zh":"真是的；非常（旧式加强语）","yue":"真是的；非常（舊式加強語）","vi":"thật là; cực kỳ (từ nhấn mạnh kiểu cũ)","fa":"لعنتی؛ خیلی (تأکید قدیمی)"}},
+  "yokel":{"w":"yokel","m":"An insulting old word for a supposedly unsophisticated country person.","parts":[],"tr":{"zh":"乡巴佬（侮辱语）","yue":"鄉巴佬（侮辱語）","vi":"đồ nhà quê (mang tính xúc phạm)","fa":"دهاتی ساده‌لوح (توهین‌آمیز)"}},
+  "green":{"w":"green","m":"Inexperienced or easily fooled; literally, also the colour green.","parts":[],"tr":{"zh":"幼稚无经验的；绿色的","yue":"幼稚無經驗的；綠色的","vi":"non nớt; màu xanh","fa":"بی‌تجربه؛ سبز"}},
+  "grunt":{"w":"grunt","m":"A short, low sound made instead of speaking.","parts":[],"tr":{"zh":"咕哝声；哼声","yue":"咕噥聲；哼聲","vi":"tiếng càu nhàu; tiếng hừ","fa":"صدای خرخر یا نالهٔ کوتاه"}},
+  "bushman":{"w":"bushman","m":"A man who lives or works in the Australian bush or inland country.","parts":[["bush","root","rural Australian country"],["man","root","an adult male person"]],"tr":{"zh":"澳大利亚内陆乡下人","yue":"澳洲內陸鄉下人","vi":"người đàn ông vùng bụi rậm/nội địa Úc","fa":"مردِ نواحی بوته‌زار و روستایی استرالیا"}},
+  "boiling":{"w":"boiling hot","m":"Extremely hot; hot enough to boil.","parts":[["boil","root","heat a liquid until it bubbles"],["ing","suffix","ongoing action or resulting quality"],["hot","root","having a high temperature"]],"tr":{"zh":"滚烫的","yue":"滾燙的","vi":"nóng sôi; cực nóng","fa":"جوشان و بسیار داغ"}},
+  "black-brow":{"w":"his brow grew black","m":"His face became dark and threatening.","parts":[],"tr":{"zh":"他脸色阴沉下来","yue":"他臉色陰沉下來","vi":"sắc mặt ông ta trở nên dữ tợn","fa":"چهره‌اش تیره و تهدیدآمیز شد"}},
+  "gloat":{"w":"gloat","m":"Show pleasure at another person’s trouble or at your own expected success.","parts":[],"tr":{"zh":"幸灾乐祸地得意","yue":"幸災樂禍地得意","vi":"hả hê trước khó khăn của người khác","fa":"از گرفتاری دیگری با بدجنسی لذت بردن"}},
+  "razor-back":{"w":"razor-back","m":"The blunt back edge of a razor, not its sharp cutting edge.","parts":[["razor","root","a sharp tool used for shaving"],["back","root","the rear or blunt side"]],"tr":{"zh":"剃刀的刀背","yue":"剃刀的刀背","vi":"sống dao cạo (phần không sắc)","fa":"پشتِ کُندِ تیغ"}},
+  "victim":{"w":"victim","m":"A person harmed, attacked or deceived by someone or something.","parts":[],"tr":{"zh":"受害者","yue":"受害者","vi":"nạn nhân","fa":"قربانی"}},
+  "livid":{"w":"livid","m":"Bluish-grey or dark purple, like a bruise.","parts":[],"tr":{"zh":"青紫色的（像淤青）","yue":"青紫色的（像淤青）","vi":"tím tái; thâm như vết bầm","fa":"کبود و مایل به بنفش"}},
+  "took-in":{"w":"took him in","m":"Deceived or fooled him.","parts":[],"tr":{"zh":"骗过了他","yue":"騙過了他","vi":"đã lừa được ông ta","fa":"او را فریب داد"}},
+  "fetched-yell":{"w":"fetched a wild yell","m":"Let out or produced a loud, wild yell.","parts":[],"tr":{"zh":"发出一声狂野的叫喊","yue":"發出一聲狂野的叫喊","vi":"thét lên một tiếng dữ dội","fa":"فریادی وحشیانه سر داد"}},
+  "up-country":{"w":"up-country","m":"From a rural or inland area, away from the main city.","parts":[["up","root","away from the main city; inland"],["country","root","rural land or region"]],"tr":{"zh":"内陆乡下的","yue":"內陸鄉下的","vi":"thuộc vùng quê/nội địa","fa":"مربوط به نواحی دورافتاده و روستایی"}},
+  "full-well":{"w":"full well","m":"Very well; with complete certainty.","parts":[],"tr":{"zh":"非常清楚；完全知道","yue":"非常清楚；完全知道","vi":"rất rõ; hoàn toàn chắc chắn","fa":"کاملاً و به‌خوبی"}},
+  "gamely":{"w":"gamely","m":"Bravely and with determination, especially while hurt or losing.","parts":[["game","root","brave; willing to keep trying"],["ly","suffix","in this manner"]],"tr":{"zh":"勇敢顽强地","yue":"勇敢頑強地","vi":"gan dạ và kiên cường","fa":"شجاعانه و با سماجت"}},
+  "murderous":{"w":"murd’rous (murderous)","m":"Intending or seeming ready to kill.","parts":[["murder","root","unlawfully kill a person"],["ous","suffix","full of; having the quality of"]],"tr":{"zh":"杀气腾腾的；凶残的","yue":"殺氣騰騰的；兇殘的","vi":"có ý giết người; đầy sát khí","fa":"آدم‌کشانه؛ مرگبار"}},
+  "done-for":{"w":"done for me","m":"Killed or ruined me; made it impossible for me to survive.","parts":[],"tr":{"zh":"把我害死了；我完了","yue":"把我害死了；我完了","vi":"mày làm tao chết rồi; tao tiêu rồi","fa":"کارم را ساختی؛ مرا کشتی"}},
+  "blessed":{"w":"blessed","m":"A mild old intensifier used to strengthen annoyance.","parts":[["bless","root","declare holy; wish good for"],["ed","suffix","described as"]],"tr":{"zh":"该死的；真是的（委婉加强语）","yue":"該死的；真是的（委婉加強語）","vi":"đáng ghét; thật là (từ nhấn mạnh kiểu cũ)","fa":"لعنتی (تأکید ملایم قدیمی)"}},
+  "shark":{"w":"shark","m":"A ruthless or dishonest person.","parts":[],"tr":{"zh":"狠毒的人；恶棍","yue":"狠毒的人；惡棍","vi":"kẻ tàn nhẫn; đồ đểu","fa":"آدم بی‌رحم و درنده‌خو"}},
+  "hairy-paw":{"w":"hairy paw","m":"A comic, animal-like description of the bushman’s large hairy hand.","parts":[["hair","root","strands growing from skin"],["y","suffix","full of; having"],["paw","root","an animal’s foot; here, a rough hand"]],"tr":{"zh":"毛茸茸的大手（像爪子）","yue":"毛茸茸的大手（像爪子）","vi":"bàn tay đầy lông như một cái vuốt","fa":"دست پشمالو و پنجه‌مانند"}},
+  "tremendous":{"w":"tremendous","m":"Extremely large, powerful or great.","parts":[["tremend","root","cause awe or trembling; very great"],["ous","suffix","full of; having the quality of"]],"tr":{"zh":"巨大的；威力惊人的","yue":"巨大的；威力驚人的","vi":"cực lớn; mạnh khủng khiếp","fa":"بسیار بزرگ و نیرومند"}},
+  "clout":{"w":"clout","m":"A hard hit with the hand or fist.","parts":[],"tr":{"zh":"重重一击","yue":"重重一擊","vi":"một cú đánh mạnh","fa":"ضربهٔ محکم"}},
+  "set-to-work":{"w":"set to work","m":"Began doing something energetically and seriously.","parts":[],"tr":{"zh":"立即动手；卖力干起来","yue":"立即動手；賣力幹起來","vi":"bắt tay vào làm một cách quyết liệt","fa":"با جدیت شروع به کار کرد"}},
+  "tooth-and-nail":{"w":"tooth and nail","m":"With every possible effort; fiercely.","parts":[],"tr":{"zh":"拼命地；使尽全力地","yue":"拼命地；使盡全力地","vi":"quyết liệt; bằng mọi sức lực","fa":"با تمام توان و به‌شدت"}},
+  "wreck":{"w":"wreck","m":"A badly damaged or destroyed place or thing.","parts":[],"tr":{"zh":"被严重破坏的地方；废墟","yue":"被嚴重破壞的地方；廢墟","vi":"đống đổ nát; nơi bị phá tan","fa":"ویرانه؛ چیز به‌شدت خراب"}},
+  "vital-spark":{"w":"vital spark","m":"The life force that keeps a person alive.","parts":[],"tr":{"zh":"生命之火；生命力","yue":"生命之火；生命力","vi":"tia lửa sự sống; sinh lực","fa":"جرقهٔ حیات؛ نیروی زندگی"}},
+  "peeler":{"w":"peeler","m":"An old slang word for a police officer.","parts":[["Peel","root","the surname of Robert Peel"],["er","suffix","a person connected with"]],"tr":{"zh":"警察（旧俚语）","yue":"警察（舊俚語）","vi":"cảnh sát (tiếng lóng cũ)","fa":"پلیس (اصطلاح قدیمی)"}},
+  "din":{"w":"din","m":"A loud, unpleasant and continuing noise.","parts":[],"tr":{"zh":"喧闹声；嘈杂声","yue":"喧鬧聲；嘈雜聲","vi":"tiếng ồn inh tai","fa":"سروصدای بلند و آزاردهنده"}},
+  "run-in":{"w":"run someone in","m":"Arrest someone and take them to a police station.","parts":[],"tr":{"zh":"逮捕某人；把某人带到警局","yue":"逮捕某人；把某人帶到警局","vi":"bắt và giải ai về đồn","fa":"کسی را بازداشت کردن"}},
+  "harmless":{"w":"harmless","m":"Not able or likely to cause harm.","parts":[["harm","root","hurt or damage"],["less","suffix","without"]],"tr":{"zh":"无害的","yue":"無害的","vi":"vô hại","fa":"بی‌ضرر"}},
+  "trifle":{"w":"trifle","m":"A small or unimportant amount or thing.","parts":[],"tr":{"zh":"一点点；小事","yue":"一點點；小事","vi":"một chút; chuyện nhỏ","fa":"مقدار ناچیز؛ چیز کم‌اهمیت"}},
+  "overdone":{"w":"overdone","m":"Taken too far; done more than was sensible or acceptable.","parts":[["over","prefix","too much; beyond a limit"],["done","root","completed; carried out"]],"tr":{"zh":"做过头的；过分的","yue":"做過頭的；過分的","vi":"bị làm quá mức; quá đà","fa":"زیاده‌روی‌شده؛ بیش از حد"}},
+  "by-george":{"w":"By George!","m":"An old mild exclamation showing surprise or strong feeling.","parts":[],"tr":{"zh":"天哪！（旧式感叹语）","yue":"天哪！（舊式感嘆語）","vi":"trời đất ơi! (thán từ kiểu cũ)","fa":"عجب! به‌به! (تعجب قدیمی)"}},
+  "murdering":{"w":"murdering","m":"Murderous; behaving like a person who kills.","parts":[["murder","root","unlawfully kill a person"],["ing","suffix","doing; characterised by"]],"tr":{"zh":"杀人的；凶残的","yue":"殺人的；兇殘的","vi":"giết người; sát nhân","fa":"آدم‌کش؛ در حال کشتن"}},
+  "swine":{"w":"swine","m":"A pig; also an insulting word for a cruel or unpleasant person.","parts":[],"tr":{"zh":"猪；卑鄙的人（侮辱语）","yue":"豬；卑鄙的人（侮辱語）","vi":"lợn; đồ đê tiện (lời xúc phạm)","fa":"خوک؛ آدم پست (توهین)"}},
+  "shearing-floor":{"w":"shearing floor","m":"The work area in a shearing shed where wool is cut from sheep.","parts":[["shear","root","cut wool from a sheep"],["ing","suffix","the activity of"],["floor","root","the work surface of a room"]],"tr":{"zh":"剪羊毛棚的工作地面","yue":"剪羊毛棚的工作地面","vi":"sàn làm việc trong nhà xén lông cừu","fa":"محوطهٔ کارِ پشم‌چینی"}},
+  "listening":{"w":"list’ning (listening)","m":"Paying attention to sound or to someone speaking.","parts":[["listen","root","pay attention to sound"],["ing","suffix","ongoing action"]],"tr":{"zh":"正在听的","yue":"正在聽的","vi":"đang lắng nghe","fa":"در حال گوش دادن"}},
+  "shearers":{"w":"shearers","m":"Workers who cut wool from sheep.","parts":[["shear","root","cut wool from a sheep"],["er","suffix","a person who does an action"],["s","suffix","more than one"]],"tr":{"zh":"剪羊毛工人","yue":"剪羊毛工人","vi":"những người xén lông cừu","fa":"کارگران پشم‌چین"}},
+  "gape":{"w":"gape","m":"Stare with the mouth open in surprise.","parts":[],"tr":{"zh":"目瞪口呆地看","yue":"目瞪口呆地看","vi":"há hốc miệng nhìn","fa":"با دهان باز خیره شدن"}},
+  "oer-and-oer":{"w":"o’er and o’er","m":"Over and over; repeatedly.","parts":[],"tr":{"zh":"一遍又一遍","yue":"一遍又一遍","vi":"hết lần này đến lần khác","fa":"بارها و بارها"}},
+  "brags":{"w":"brags","m":"Talks with too much pride about an achievement.","parts":[["brag","root","speak too proudly"],["s","suffix","present tense with he/she/it"]],"tr":{"zh":"吹嘘；自夸","yue":"吹噓；自誇","vi":"khoe khoang; khoác lác","fa":"لاف می‌زند؛ پز می‌دهد"}},
+  "escape":{"w":"escape","m":"Getting free from danger, control or capture.","parts":[],"tr":{"zh":"逃脱；脱险","yue":"逃脫；脫險","vi":"sự thoát thân; trốn thoát","fa":"فرار؛ رهایی از خطر"}},
+  "chaps":{"w":"chaps","m":"Men or fellows; an old informal plural.","parts":[],"tr":{"zh":"那些家伙；男人们（旧口语）","yue":"那些傢伙；男人們（舊口語）","vi":"mấy gã; những người đàn ông (khẩu ngữ cũ)","fa":"مردها؛ آن یاروها (قدیمی)"}},
+  "tough":{"w":"tough","m":"Strong and difficult to cut, break or damage.","parts":[],"tr":{"zh":"坚韧的；难以割破的","yue":"堅韌的；難以割破的","vi":"dai và khó cắt; bền chắc","fa":"سفت و مقاوم؛ سخت‌بُر"}},
+  "remark":{"w":"remark","m":"Notice and point out; also, a spoken comment.","parts":[["re","prefix","again; closely"],["mark","root","notice; make a sign"]],"tr":{"zh":"注意到并指出；评论","yue":"注意到並指出；評論","vi":"nhận thấy và nói ra; nhận xét","fa":"توجه و اشاره کردن؛ اظهار نظر"}},
+  "flowing-beards":{"w":"flowing beards","m":"Long, full beards that hang down freely.","parts":[["flow","root","move smoothly; hang freely"],["ing","suffix","having an ongoing quality"],["beard","root","hair on the chin and cheeks"],["s","suffix","more than one"]],"tr":{"zh":"飘垂的长胡须","yue":"飄垂的長鬍須","vi":"những bộ râu dài rủ xuống","fa":"ریش‌های بلند و روان"}},
+  "all-the-go":{"w":"all the go","m":"Very fashionable or popular.","parts":[],"tr":{"zh":"非常流行；正时髦","yue":"非常流行；正時髦","vi":"rất thịnh hành; đang là mốt","fa":"کاملاً مُد و رایج"}} },
+ parts:{
+  "iron|a hard metal":{"zh":"铁（金属）","yue":"鐵（金屬）","vi":"sắt; kim loại cứng","fa":"آهن؛ فلز سخت"},
+  "bark|the outer covering of a tree":{"zh":"树皮","yue":"樹皮","vi":"vỏ cây","fa":"پوست درخت"},
+  "wander|move without a fixed route":{"zh":"漫无目的地走","yue":"漫無目的地走","vi":"đi không theo lộ trình cố định","fa":"بی‌هدف حرکت کردن"},
+  "ed|past tense":{"zh":"过去时","yue":"過去時","vi":"thì quá khứ","fa":"زمان گذشته"},
+  "loiter|wait or move around idly":{"zh":"闲逛；逗留","yue":"閒逛；逗留","vi":"nấn ná; đi quanh quẩn","fa":"بی‌هدف ماندن یا پرسه زدن"},
+  "de|away; without":{"zh":"离开；没有","yue":"離開；沒有","vi":"rời khỏi; không có","fa":"دور؛ بدون"},
+  "spair|hope":{"zh":"希望","yue":"希望","vi":"hy vọng","fa":"امید"},
+  "whisker|a hair or group of facial hairs":{"zh":"一根或一簇胡须","yue":"一根或一簇鬍鬚","vi":"một sợi hoặc chùm râu","fa":"یک یا چند موی صورت"},
+  "s|more than one":{"zh":"复数；不止一个","yue":"複數；不止一個","vi":"số nhiều","fa":"نشانهٔ جمع"},
+  "humor|what is funny; comedy":{"zh":"幽默；喜剧","yue":"幽默；喜劇","vi":"sự hài hước","fa":"طنز؛ شوخی"},
+  "ist|a person who practises or specialises":{"zh":"从事某事的人；专家","yue":"從事某事的人；專家","vi":"người chuyên về việc đó","fa":"فرد متخصص یا فعال"},
+  "gild|cover with a thin layer of gold":{"zh":"镀金","yue":"鍍金","vi":"mạ vàng","fa":"زراندود کردن"},
+  "ed|having been; described as":{"zh":"被……的；处于……状态","yue":"被……的；處於……狀態","vi":"đã được; mang đặc điểm","fa":"شده؛ دارای وصف"},
+  "eye|the organ used for seeing":{"zh":"眼睛","yue":"眼睛","vi":"mắt","fa":"چشم"},
+  "lid|a cover":{"zh":"盖子","yue":"蓋子","vi":"nắp","fa":"درپوش"},
+  "bush|rural Australian country":{"zh":"澳大利亚内陆乡野","yue":"澳洲內陸鄉野","vi":"vùng nông thôn nội địa Úc","fa":"مناطق روستایی استرالیا"},
+  "man|an adult male person":{"zh":"成年男子","yue":"成年男子","vi":"đàn ông trưởng thành","fa":"مرد بالغ"},
+  "boil|heat a liquid until it bubbles":{"zh":"加热至沸腾","yue":"加熱至沸騰","vi":"đun sôi","fa":"جوشاندن"},
+  "ing|ongoing action or resulting quality":{"zh":"正在进行的动作或形成的性质","yue":"正在進行的動作或形成的性質","vi":"hành động đang diễn ra hoặc đặc tính tạo thành","fa":"عمل در جریان یا صفت حاصل"},
+  "hot|having a high temperature":{"zh":"热的","yue":"熱的","vi":"nóng","fa":"داغ"},
+  "razor|a sharp tool used for shaving":{"zh":"剃刀","yue":"剃刀","vi":"dao cạo","fa":"تیغ اصلاح"},
+  "back|the rear or blunt side":{"zh":"后部；钝面","yue":"後部；鈍面","vi":"mặt sau; cạnh cùn","fa":"پشت یا لبهٔ کند"},
+  "up|away from the main city; inland":{"zh":"远离大城市；内陆","yue":"遠離大城市；內陸","vi":"xa thành phố chính; vào nội địa","fa":"دور از شهر اصلی؛ به داخل کشور"},
+  "country|rural land or region":{"zh":"乡村地区","yue":"鄉村地區","vi":"vùng nông thôn","fa":"ناحیهٔ روستایی"},
+  "game|brave; willing to keep trying":{"zh":"勇敢；愿意坚持","yue":"勇敢；願意堅持","vi":"gan dạ; sẵn sàng cố gắng","fa":"شجاع و آمادهٔ ادامه دادن"},
+  "ly|in this manner":{"zh":"以这种方式","yue":"以這種方式","vi":"theo cách này","fa":"به این شیوه"},
+  "murder|unlawfully kill a person":{"zh":"谋杀","yue":"謀殺","vi":"giết người","fa":"قتل کردن"},
+  "ous|full of; having the quality of":{"zh":"充满；具有……性质","yue":"充滿；具有……性質","vi":"đầy; có đặc tính","fa":"سرشار از؛ دارای ویژگی"},
+  "bless|declare holy; wish good for":{"zh":"祝福；祈福","yue":"祝福；祈福","vi":"ban phước; chúc lành","fa":"متبرک کردن؛ آرزوی خیر"},
+  "ed|described as":{"zh":"被描述为……；处于……状态","yue":"被描述為……；處於……狀態","vi":"được mô tả là","fa":"وصف‌شده به؛ در حالت"},
+  "hair|strands growing from skin":{"zh":"毛发","yue":"毛髮","vi":"lông; tóc","fa":"مو"},
+  "y|full of; having":{"zh":"充满；具有","yue":"充滿；具有","vi":"đầy; có","fa":"پر از؛ دارای"},
+  "paw|an animal’s foot; here, a rough hand":{"zh":"动物的爪；此处指粗大的手","yue":"動物的爪；此處指粗大的手","vi":"chân thú; ở đây là bàn tay thô","fa":"پنجهٔ حیوان؛ اینجا دست زمخت"},
+  "tremend|cause awe or trembling; very great":{"zh":"引起敬畏或颤抖；极大的","yue":"引起敬畏或顫抖；極大的","vi":"gây kinh sợ; rất lớn","fa":"هراس‌انگیز یا بسیار بزرگ"},
+  "Peel|the surname of Robert Peel":{"zh":"罗伯特·皮尔的姓氏","yue":"羅伯特·皮爾的姓氏","vi":"họ của Robert Peel","fa":"نام خانوادگی رابرت پیل"},
+  "er|a person connected with":{"zh":"与某事有关的人","yue":"與某事有關的人","vi":"người liên quan đến","fa":"فرد مرتبط با"},
+  "harm|hurt or damage":{"zh":"伤害；损害","yue":"傷害；損害","vi":"tổn hại","fa":"آسیب"},
+  "less|without":{"zh":"没有；不含","yue":"沒有；不含","vi":"không có","fa":"بدون"},
+  "over|too much; beyond a limit":{"zh":"过度；超过限度","yue":"過度；超過限度","vi":"quá mức","fa":"بیش از حد"},
+  "done|completed; carried out":{"zh":"完成；做完","yue":"完成；做完","vi":"đã làm xong","fa":"انجام‌شده"},
+  "ing|doing; characterised by":{"zh":"正在做；以……为特征","yue":"正在做；以……為特徵","vi":"đang làm; mang đặc điểm","fa":"در حال انجام؛ دارای ویژگی"},
+  "shear|cut wool from a sheep":{"zh":"剪羊毛","yue":"剪羊毛","vi":"xén lông cừu","fa":"پشم چیدن"},
+  "ing|the activity of":{"zh":"……活动；……行为","yue":"……活動；……行為","vi":"hoạt động","fa":"عملِ"},
+  "floor|the work surface of a room":{"zh":"房间或作业区的地面","yue":"房間或作業區的地面","vi":"sàn làm việc","fa":"سطح کارِ اتاق"},
+  "listen|pay attention to sound":{"zh":"听；留心声音","yue":"聽；留心聲音","vi":"lắng nghe","fa":"گوش دادن"},
+  "ing|ongoing action":{"zh":"正在进行的动作","yue":"正在進行的動作","vi":"hành động đang diễn ra","fa":"عمل در حال انجام"},
+  "er|a person who does an action":{"zh":"做某事的人","yue":"做某事的人","vi":"người thực hiện hành động","fa":"کسی که کاری انجام می‌دهد"},
+  "brag|speak too proudly":{"zh":"吹嘘；夸耀","yue":"吹噓；誇耀","vi":"khoe khoang","fa":"لاف زدن"},
+  "s|present tense with he/she/it":{"zh":"第三人称单数现在时","yue":"第三人稱單數現在時","vi":"dấu hiện tại ngôi thứ ba số ít","fa":"نشانهٔ سوم‌شخص مفرد حال"},
+  "re|again; closely":{"zh":"再次；仔细地","yue":"再次；仔細地","vi":"lại; kỹ","fa":"دوباره؛ با دقت"},
+  "mark|notice; make a sign":{"zh":"注意；做标记","yue":"注意；做標記","vi":"nhận thấy; đánh dấu","fa":"توجه کردن؛ علامت زدن"},
+  "flow|move smoothly; hang freely":{"zh":"流动；自由垂下","yue":"流動；自由垂下","vi":"chảy; buông rủ","fa":"روان شدن؛ آزاد آویختن"},
+  "ing|having an ongoing quality":{"zh":"具有持续的性质或状态","yue":"具有持續的性質或狀態","vi":"có đặc tính tiếp diễn","fa":"دارای حالت ادامه‌دار"},
+  "beard|hair on the chin and cheeks":{"zh":"胡须","yue":"鬍鬚","vi":"râu","fa":"ریش"} }
+};
+/* ========================== END OF CONTENT ================================ */
+
+const KEY = "writingfolio.ballad.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store;
+try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
+function blank(){ return { fname:"", lname:"", sid:"", startedAt:null, lastAt:null, seen:{}, at:0, rhymeOn:false, lens:{},
+  stanza:null, plan:{}, purpose:"", by:{}, bank:[BALLAD.swap.to], first:{}, last:{}, glossLang:"" }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
+let S = load();
+/* Read, change, write: another folio page may be open in a second tab. */
+function bump(fn){
+  const cur=load(); fn(cur); cur.lastAt=Date.now();
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
+})();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+const ST=BALLAD.stanzas, PAIRS=[[0,1,"A"],[2,3,"B"],[4,5,"C"]];
+
+/* ====================== POEM TEXT ======================================== */
+function strip(t){ return String(t).replace(/\[\[[^|\]]+\|([^\]]+)\]\]/g,"$1"); }
+function original(i){ return ST[i].lines.map(l=>strip(l.t)); }
+function startLines(i){ return original(i).map(t=>t.split(BALLAD.swap.from).join(BALLAD.swap.to)); }
+function marked(t){
+  return esc(t).replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g,(m,k,w)=>
+    `<button type="button" class="vocab" data-k="${k}" onclick="gloss('${k}')">${w}</button>`);
+}
+
+/* ====================== SYLLABLES AND RHYME ==============================
+   Syllables are an estimate from spelling: vowel groups, with -ed and -es
+   silent unless the stem needs its own syllable (wanted, boxes), a final
+   consonant + le counted, and a silent final e dropped. The student can
+   correct any line with - and +. */
+function normalWord(w){ return String(w||"").toLowerCase().replace(/[^a-z]/g,""); }
+function wordSyllables(raw){
+  let w=normalWord(raw); if(!w) return 0;
+  if(BALLAD.syllables[w]) return BALLAD.syllables[w];
+  if(w.length<=3) return 1;
+  if(/ed$/.test(w)){ const s=w.slice(0,-2); if(!/[td]$/.test(s)) w=s; }
+  else if(/es$/.test(w)){ const s=w.slice(0,-2); if(!/(?:[sxz]|ch|sh)$/.test(s)) w=s; }
+  let n=(w.match(/[aeiouy]+/g)||[]).length;
+  if(/[^aeiou]le$/.test(w)) n+=1;
+  if(/e$/.test(w) && !/[aeiou]e$/.test(w)) n-=1;
+  return Math.max(1,n);
+}
+function words(line){ return String(line||"").match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g)||[]; }
+function lineSyllables(line){ return words(line).reduce((t,w)=>t+wordSyllables(w),0); }
+function endWord(line){ const w=words(line); return w.length?w[w.length-1]:""; }
+
+const FAMILY={};
+Object.keys(BALLAD.rhymeFamilies).forEach(f=>BALLAD.rhymeFamilies[f].forEach(w=>{ FAMILY[normalWord(w)]=f; }));
+const SWAPFAM=FAMILY[normalWord(BALLAD.swap.to)];
+function inBank(w){ return S.bank.map(normalWord).includes(w); }
+function famOf(w){ return inBank(w)?SWAPFAM:FAMILY[w]; }
+function spellKey(w){ const c=w.replace(/e$/,""); const m=c.match(/([aeiouy]+[^aeiouy]*)$/); return m?m[1]:c.slice(-2); }
+/* Three answers only. "Does not rhyme" is given only when both words are in
+   known, different families, so the checker never says no to a rhyme it
+   cannot hear. */
+function rhymeStatus(x, y, i, j){
+  const a=normalWord(x), b=normalWord(y);
+  if(!a||!b) return { k:"bad", v:"Not finished", why:`Line ${!a?i+1:j+1} has no last word yet.` };
+  if(a===b) return { k:"bad", v:"Does not rhyme", why:`“${x}” ends both lines. A rhyme needs two different words with the same end sound.` };
+  const fa=famOf(a), fb=famOf(b);
+  if(fa && fb){
+    if(fa===fb) return { k:"ok", v:"Rhymes", why:inBank(a)&&inBank(b)
+      ? `Both are in the ${BALLAD.swap.to} rhyme bank.` : `Both end in the “-${fa}” sound.` };
+    return { k:"bad", v:"Does not rhyme", why:`“${x}” ends in “-${fa}” and “${y}” ends in “-${fb}”. A rhyme needs the same end sound.` };
+  }
+  if(spellKey(a)===spellKey(b)) return { k:"ok", v:"Rhymes, by the spelling", why:`Both end in “-${spellKey(a)}”. Say them aloud to be sure.` };
+  return { k:"unsure", v:"Not sure: say it aloud", why:`The checker can’t hear “${fa?y:x}”. Say “${x}” and “${y}” aloud. If the end sounds match, they rhyme.` };
+}
+
+/* ====================== STATE PER STANZA ================================= */
+function cur(){ return S.stanza==null?0:S.stanza; }
+function lines(i){ const b=S.by[i]; return (b&&Array.isArray(b.lines)&&b.lines.length===6)?b.lines:startLines(i); }
+function adj(i){ const b=S.by[i]; return (b&&Array.isArray(b.adj)&&b.adj.length===6)?b.adj:[0,0,0,0,0,0]; }
+function slot(c,i){ const b=c.by[i]; if(b&&Array.isArray(b.lines)&&b.lines.length===6&&Array.isArray(b.adj)) return b;
+  return (c.by[i]={ lines:startLines(i), adj:[0,0,0,0,0,0] }); }
+function changedCount(i){ const s=startLines(i); return lines(i).filter((l,k)=>l.trim()!==s[k].trim()).length; }
+function planOf(){ return Object.assign({ happens:"", narrator:"", audience:"" }, S.plan||{}); }
+
+/* ====================== EAL SUPPORT ======================================
+   Read from the shared profile. Off, or no profile: the gloss is English
+   only. On: word parts under the meaning, and a translation when the profile
+   names a language this poem has. On with no language: a select inside the
+   gloss, saved on this page only. */
+const LANGS=[["zh","中文（简体）· Mandarin","zh-Hans"],["yue","中文（繁體）· Cantonese","zh-Hant"],
+             ["vi","Tiếng Việt · Vietnamese","vi"],["fa","فارسی · Farsi","fa"]];
+const SUITE=["zh","yue","vi","ar","fa"];
+function eal(){
+  const p=readProfile(); if(!p || p.eal!==true) return null;
+  if(p.lang && SUITE.indexOf(p.lang)>=0) return { lang:p.lang, own:true };
+  return { lang:S.glossLang||"", own:false };
+}
+
+/* ====================== ROUTER =========================================== */
+let view = { screen:"home" };
+function go(screen){
+  if(!idOk() && screen!=="id") screen="id";
+  view = { screen, word:null, checked:null };
+  window.scrollTo({top:0});
+  ({ id:renderId, home:renderHome, read:renderRead, plan:renderPlan, rewrite:renderRewrite,
+     purpose:renderPurpose, report:renderReport })[screen]();
+}
+function links(){
+  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
+    <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`;
+}
+function topbar(){
+  return `<div class="topbar"><span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`}</span></div>`;
+}
+function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
+function stanzaPips(on, fn, seen){
+  return `<span class="pips">${ST.map((s,i)=>`<button class="pip ${i===on?"on":""} ${seen&&seen[i]?"seen":""}" onclick="${fn}(${i})"
+    aria-label="Stanza ${i+1}: ${esc(s.title)}" ${i===on?'aria-current="true"':""}>${i+1}</button>`).join("")}</span>`;
+}
+
+function renderId(){
+  $("body").innerHTML=topbar()+`<h1>Ballads</h1>
+  <p class="sub">Your work saves on this device under your name and student code.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile();
+  go("home");
+}
+
+function renderHome(){
+  const seen=Object.keys(S.seen).length, p=planOf();
+  const planN=[S.stanza!=null, p.happens.trim(), p.narrator.trim(), p.audience.trim()].filter(Boolean).length;
+  const st=cur(), ch=changedCount(st), last=S.last[st];
+  const steps=[
+    { s:"read", t:"Read", d:`${BALLAD.title}. Eight stanzas.`, tag:seen?`${seen} of ${ST.length} read`:"", done:seen===ST.length },
+    { s:"plan", t:"Plan", d:"Your stanza, what happens, who tells it, who it is for.", tag:planN?`${planN} of 4`:"", done:planN===4 },
+    { s:"rewrite", t:"Rewrite", d:`Six lines. ${BALLAD.swap.from} is now ${BALLAD.swap.to}.`,
+      tag:ch?`Stanza ${st+1} · ${ch} of 6 lines changed`:"", done:ch>0 && last && !last.bad },
+    { s:"purpose", t:"Purpose and audience", d:"Who it is for, and what it should do to them.", tag:S.purpose.trim()?"written":"", done:!!S.purpose.trim() }
+  ];
+  let h=topbar()+`<h1>Ballads</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
+  steps.forEach((x,i)=>{
+    h+=`<button class="step ${x.done?"done":""}" onclick="go('${x.s}')">
+      <span class="num">${x.done?"✓":i+1}</span>
+      <span><span class="t">${esc(x.t)}</span><br><span class="d">${esc(x.d)}</span></span>
+      <span class="tag">${esc(x.tag)}</span></button>`;
+  });
+  h+=`<button class="step" onclick="go('report')"><span class="num">${steps.length+1}</span>
+      <span><span class="t">Report for your teacher</span><br><span class="d">One row to copy and send.</span></span></button>`;
+  $("body").innerHTML=h;
+}
+
+/* ====================== READ ============================================= */
+function readAt(i){ bump(c=>{ c.at=i; c.seen[i]=1; }); view.word=null; renderRead(); }
+function toggleRhyme(){ bump(c=>{ c.rhymeOn=!c.rhymeOn; }); renderRead(); }
+function toggleLens(n){ bump(c=>{ c.lens=c.lens||{}; c.lens[n]=!c.lens[n]; }); renderRead(); }
+function renderRead(){
+  const i=Math.max(0,Math.min(ST.length-1,S.at||0));
+  if(!S.seen[i]) bump(c=>{ c.seen[i]=1; });
+  const s=ST[i], L=S.lens||{}, voice=i===0&&L.Voice;
+  const tools=`<div class="tools" role="group" aria-label="Show on the poem">
+      ${i===0?`<button class="tg" aria-pressed="${!!L.Story}" onclick="toggleLens('Story')">Story</button>`:""}
+      <button class="tg" aria-pressed="${!!S.rhymeOn}" onclick="toggleRhyme()">Rhyme letters</button>
+      ${i===0?["Rhythm","Voice"].map(n=>`<button class="tg" aria-pressed="${!!L[n]}" onclick="toggleLens('${n}')">${n}</button>`).join(""):""}</div>`;
+  const rows=s.lines.map((l,k)=>{
+    const notes=[];
+    if(i===0 && L.Story) notes.push(`<span class="note">${esc(BALLAD.lenses.Story[k])}</span>`);
+    if(S.rhymeOn) notes.push(`<span class="rk ${l.rhyme}">${l.rhyme} · ${esc(l.end)}</span>`);
+    if(i===0 && L.Rhythm) notes.push(`<span class="note">${esc(BALLAD.lenses.Rhythm[k])}</span>`);
+    if(voice) notes.push(`<span class="note">${esc(BALLAD.lenses.Voice[k])}</span>`);
+    return `<div class="pl ${voice&&l.speech?"speech":""}"><span class="n">${k+1}</span><span class="tx">${marked(l.t)}</span>${notes.length?`<span class="notes">${notes.join("")}</span>`:""}</div>`;
+  }).join("");
+  $("body").innerHTML=bar("Read", stanzaPips(i,"readAt",S.seen)+`<span>${esc(s.title)}</span>`)+
+    `<div class="cols wide"><div class="cardbox">${tools}${rows}
+      <div class="btnrow">${i<ST.length-1?`<button class="btn" onclick="readAt(${i+1})">Stanza ${i+2} →</button>`:`<button class="btn" onclick="go('plan')">Plan →</button>`}</div>
+      <p class="credit">${esc(BALLAD.title)}, ${esc(BALLAD.author)}, ${BALLAD.year}.</p></div>
+    <div class="cardbox" id="gloss" aria-live="polite"></div></div>`;
+  drawGloss();
+}
+function gloss(k){
+  view.word=k;
+  document.querySelectorAll(".vocab").forEach(b=>b.classList.toggle("on", b.dataset.k===k));
+  drawGloss();
+}
+function drawGloss(){
+  const box=$("gloss"); if(!box) return;
+  const v=view.word && BALLAD.vocab[view.word];
+  if(!v){ box.innerHTML=`<p class="dim">Tap an underlined word.</p>`; return; }
+  let h=`<p class="gw">${esc(v.w)}</p><p class="gm">${esc(v.m)}</p>`;
+  const e=eal();
+  if(e){
+    const L=LANGS.find(x=>x[0]===e.lang);
+    if(v.parts && v.parts.length) h+=`<div class="parts">${v.parts.map(([p,type,m])=>{
+      const t=L && BALLAD.parts[p+"|"+m] && BALLAD.parts[p+"|"+m][e.lang];
+      return `<span class="part"><b>${esc(p)}</b><i>${esc(type)}</i>${esc(m)}${t?` · <span lang="${L[2]}" dir="auto">${esc(t)}</span>`:""}</span>`; }).join("")}</div>`;
+    if(L && v.tr && v.tr[e.lang]) h+=`<p class="tr" lang="${L[2]}" dir="${e.lang==="fa"?"rtl":"auto"}">${esc(v.tr[e.lang])}</p>`;
+    if(!e.own) h+=`<select class="glang" aria-label="Translation language" onchange="setGlossLang(this.value)">
+      <option value="">No translation</option>${LANGS.map(x=>`<option value="${x[0]}" ${e.lang===x[0]?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`;
+  }
+  box.innerHTML=h;
+}
+function setGlossLang(v){ bump(c=>{ c.glossLang=v; }); drawGloss(); }
+
+/* ====================== PLAN ============================================= */
+function planStanza(i){ bump(c=>{ c.stanza=i; }); renderPlan(); }
+function savePlan(f, v){ bump(c=>{ c.plan=Object.assign({}, c.plan||{}); c.plan[f]=v; }); }
+function renderPlan(){
+  const p=planOf(), i=S.stanza;
+  const box=(f,lab,rows)=>`<label for="p_${f}" class="lab">${lab}</label>
+    <textarea id="p_${f}" rows="${rows}" oninput="savePlan('${f}',this.value)">${esc(p[f])}</textarea>`;
+  $("body").innerHTML=bar("Plan")+`<div class="cols even"><div class="cardbox">
+      <p class="lab">Your stanza</p>${stanzaPips(i,"planStanza")}
+      ${box("happens","What happens in your version",4)}
+      ${box("narrator","Who tells it",2)}
+      ${box("audience","Who it is for",2)}
+      <div class="btnrow"><button class="btn btn-primary" onclick="go('rewrite')">Rewrite →</button></div></div>
+    <div class="cardbox">${i==null?`<p class="dim">Choose a stanza.</p>`:
+      `<p class="lab">Stanza ${i+1} · ${esc(ST[i].title)}</p><ul class="mine">${ST[i].lines.map(l=>
+        `<li><span class="rk ${l.rhyme}">${l.rhyme}</span><span>${esc(strip(l.t))}</span></li>`).join("")}</ul>`}</div></div>`;
+}
+
+/* ====================== REWRITE ==========================================
+   Lines save as they are typed. Checking never changes them. The first
+   check after the stanza differs from the starting version is the one the
+   report keeps. */
+function rewriteAt(i){ bump(c=>{ c.stanza=i; }); renderRewrite(); }
+function renderRewrite(){
+  if(S.stanza==null) bump(c=>{ c.stanza=0; });
+  const i=cur(), ls=lines(i);
+  const rows=ls.map((t,k)=>{ const r=BALLAD.scheme[k];
+    return `<div class="rw"><span class="rl ${r}" aria-hidden="true">${r}</span>
+      <textarea class="rt" id="ln${k}" rows="1" aria-label="Line ${k+1}, rhyme ${r}" oninput="typeLine(${k},this.value)">${esc(t)}</textarea>
+      <span class="fix"><button type="button" onclick="nudge(${k},-1)" aria-label="Line ${k+1}: one syllable fewer">−</button><button type="button" onclick="nudge(${k},1)" aria-label="Line ${k+1}: one syllable more">+</button></span>
+      <div class="under"><span class="job">${k+1}. ${esc(ST[i].jobs[k])}</span>
+        <span class="met" id="end${k}"></span><span class="met" id="syl${k}"></span></div></div>`; }).join("");
+  $("body").innerHTML=bar("Rewrite", stanzaPips(i,"rewriteAt")+`<span>${esc(ST[i].title)}</span>`)+
+    `<div class="cols wide"><div class="cardbox">${rows}</div>
+    <div class="cardbox">
+      <button class="btn btn-primary" onclick="checkRhymes()">Check rhymes</button>
+      <div id="checks"></div>
+      <p class="dim">Syllable counts are estimates. Use − or + to correct one.</p>
+      <p class="lab"><label for="bankIn" style="margin:0;font-size:inherit">Rhymes with ${esc(BALLAD.swap.to)}</label></p>
+      <form class="bankf" onsubmit="addBank();return false;"><input id="bankIn" autocomplete="off"><button class="btn" type="submit">Add</button></form>
+      <div class="chips" id="bank"></div><p class="dim" id="bankMsg" role="status"></p>
+      <div class="btnrow"><button class="btn btn-ghost" onclick="restart()">Start this stanza again</button></div>
+    </div></div>`;
+  ls.forEach((_,k)=>{ metrics(k); fit($("ln"+k)); });
+  drawBank(); drawChecks();
+}
+function fit(el){ if(!el) return; el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
+function typeLine(k, v){
+  const i=cur();
+  bump(c=>{ const b=slot(c,i); b.lines[k]=v; b.adj[k]=0; if(c.stanza==null) c.stanza=i; });
+  fit($("ln"+k)); metrics(k);
+  if(view.checked){ view.checked=null; drawChecks(); }
+}
+function nudge(k, d){ const i=cur(); bump(c=>{ slot(c,i).adj[k]+=d; }); metrics(k); }
+function metrics(k){
+  const i=cur(), t=lines(i)[k], base=lineSyllables(original(i)[k]);
+  const n=Math.max(0,lineSyllables(t)+adj(i)[k]), d=n-base, a=Math.abs(d);
+  $("end"+k).textContent="ends: "+(endWord(t)||"nothing yet");
+  const m=$("syl"+k);
+  m.textContent=`≈ ${n} syllables · Paterson ≈ ${base} · `+(d===0?"same":`${a} ${d<0?"short":"long"}`);
+  m.className="met "+(a<=1?"good":a===2?"warn":"bad");
+}
+function restart(){
+  const i=cur();
+  if(!confirm(`Put Paterson’s stanza ${i+1} back, with only ${BALLAD.swap.from} changed? Your six lines for this stanza will be replaced.`)) return;
+  bump(c=>{ c.by[i]={ lines:startLines(i), adj:[0,0,0,0,0,0] }; });
+  renderRewrite();
+}
+function checkRhymes(){
+  const i=cur(), ls=lines(i);
+  const res=PAIRS.map(([a,b,L])=>{ const x=endWord(ls[a]), y=endWord(ls[b]); return Object.assign({ L, x, y }, rhymeStatus(x,y,a,b)); });
+  const sum={ ok:res.filter(r=>r.k==="ok").length, unsure:res.filter(r=>r.k==="unsure").length,
+    bad:res.filter(r=>r.k==="bad").length, miss:res.filter(r=>r.k!=="ok").map(r=>`${r.L} ${r.k==="bad"?"not ok":"not sure"} (${r.x||"?"} / ${r.y||"?"})`) };
+  const changed=changedCount(i)>0;
+  bump(c=>{ c.last[i]=sum; if(changed && !c.first[i]) c.first[i]=sum; });
+  view.checked=res; drawChecks();
+}
+function drawChecks(){
+  const box=$("checks"); if(!box) return;
+  box.innerHTML=(view.checked||[]).map(r=>`<div class="rc ${r.k}"><span class="v">${r.k==="ok"?"✓":r.k==="bad"?"✗":"?"} ${r.L} pair · ${esc(r.x||"?")} / ${esc(r.y||"?")}: ${esc(r.v)}</span>${esc(r.why)}</div>`).join("");
+}
+function drawBank(){
+  $("bank").innerHTML=S.bank.map((w,k)=>k===0?`<span class="chip fixed">${esc(w)}</span>`:
+    `<span class="chip">${esc(w)}<button type="button" onclick="dropBank(${k})" aria-label="Remove ${esc(w)}">×</button></span>`).join("");
+}
+function addBank(){
+  const w=endWord($("bankIn").value), msg=$("bankMsg");
+  if(!w){ msg.textContent="Type one word."; return; }
+  if(inBank(normalWord(w))){ msg.textContent=`“${w}” is already in the bank.`; return; }
+  bump(c=>{ c.bank=c.bank.concat([w]); });
+  $("bankIn").value=""; msg.textContent=""; drawBank();
+  if(view.checked) checkRhymes();
+}
+function dropBank(k){ bump(c=>{ c.bank=c.bank.filter((_,j)=>j!==k); }); drawBank(); if(view.checked) checkRhymes(); }
+
+/* ====================== PURPOSE AND AUDIENCE ============================= */
+function renderPurpose(){
+  const i=cur();
+  $("body").innerHTML=bar("Purpose and audience")+`<div class="cols even"><div class="cardbox">
+      <label for="purp" class="lab">Who is it for, and what should it do to them?</label>
+      <textarea id="purp" rows="4" oninput="bump(c=>{c.purpose=this.value})">${esc(S.purpose)}</textarea>
+      <div class="btnrow"><button class="btn btn-primary" onclick="go('report')">Report →</button></div></div>
+    <div class="cardbox"><p class="lab">Your stanza ${i+1}</p><ul class="mine">${lines(i).map((t,k)=>
+      `<li><span class="rk ${BALLAD.scheme[k]}">${BALLAD.scheme[k]}</span><span>${esc(t)}</span></li>`).join("")}</ul></div></div>`;
+}
+
+/* ====================== REPORT ===========================================
+   One tab-separated row. The rhyme check is the first check after the
+   stanza was changed. Writing is reported verbatim. */
+function ymd(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function reportData(){
+  const i=cur(), f=S.first[i], p=planOf();
+  const mins=(S.startedAt&&S.lastAt)?Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)):"";
+  const rhyme=f?`${f.ok} ok · ${f.unsure} not sure · ${f.bad} not ok`+(f.miss.length?` | ${f.miss.join("; ")}`:""):"not checked";
+  return { cols:["Date","First name","Last name","Code","Minutes","Stanza","Rhyme check, first try","Rewrite","Plan: what happens","Plan: who tells it","Plan: who it is for","Purpose and audience"],
+           row:[ ymd(), S.fname, S.lname, S.sid, String(mins),
+                 S.stanza==null?"none":`${i+1} (${ST[i].title})`, rhyme,
+                 lines(i).map(t=>t.trim()).join(" / "), p.happens.trim(), p.narrator.trim(), p.audience.trim(), S.purpose.trim() ] };
+}
+function renderReport(){
+  const r=reportData();
+  $("body").innerHTML=topbar()+`<h2>Report for your teacher</h2>
+    <div class="rptbox"><table class="rpt">${r.cols.map((c,k)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[k])||"&nbsp;"}</td></tr>`).join("")}</table></div>
+    <p class="dim">Rhyme check: the first check after the stanza was changed. The checker reads spelling, not sound. This row cannot tell whether the story works, whether the rhythm holds, or whether the voice suits the audience.</p>
+    <div class="btnrow"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
+      <button class="btn btn-ghost" onclick="go('home')">All steps</button><span class="copied" id="fb" role="status"></span></div>`;
+}
+function copyRow(){
+  const tsv=reportData().row.map(v=>String(v).replace(/[\t\n\r]+/g," ")).join("\t");
+  const done=()=>{ $("fb").textContent="Copied. Paste it into the class sheet."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, ()=>fallback(tsv,done));
+  else fallback(tsv,done);
+}
+function fallback(t, done){
+  const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); done(); }catch(e){} a.remove();
+}
+
+/* ---- boot ---- */
+function contentErrors(){
+  const bad=[];
+  if(BALLAD.scheme.length!==6) bad.push("scheme needs six letters.");
+  ST.forEach((s,i)=>{
+    if(s.lines.length!==6) bad.push(`Stanza ${i+1} needs six lines.`);
+    if(!s.jobs || s.jobs.length!==6) bad.push(`Stanza ${i+1} needs six jobs.`);
+    s.lines.forEach((l,k)=>(l.t.match(/\[\[([^|\]]+)\|/g)||[]).forEach(m=>{ const key=m.slice(2,-1);
+      if(!BALLAD.vocab[key]) bad.push(`Stanza ${i+1}, line ${k+1}: no vocab entry “${key}”.`); }));
+  });
+  if(!SWAPFAM) bad.push(`“${BALLAD.swap.to}” is not in any rhyme family.`);
+  return bad;
+}
+(function boot(){
+  const bad=contentErrors();
+  if(bad.length){
+    $("body").innerHTML=`<h1>Ballads</h1><div class="broken"><b>This page will not run until its content is fixed.</b>
+      <ul>${bad.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  if(!idOk()){ go("id"); return; }
+  const m=(location.hash||"").replace("#","");
+  go(["read","plan","rewrite","purpose","report"].indexOf(m)>=0 ? m : "home");
+})();
+</script>
+</body>
+</html>

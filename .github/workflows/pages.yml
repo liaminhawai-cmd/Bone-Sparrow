@@ -17,6 +17,8 @@ on:
       - "PronounsModals.html"
       - "ConcessionSentences.html"
       - "MicroFiction.html"
+      - "Limericks.html"
+      - "Ballads.html"
       - "SentenceFluency.html"
       - "SentenceFluencyDeck.html"
       - "SentenceFluencyDeck.pptx"
@@ -82,6 +84,8 @@ jobs:
           cp PronounsModals.html dist/
           cp ConcessionSentences.html dist/
           cp MicroFiction.html dist/
+          cp Limericks.html dist/
+          cp Ballads.html dist/
           cp SentenceFluency.html dist/
           cp SentenceFluencyDeck.html dist/
           cp SentenceFluencyDeck.pptx dist/
