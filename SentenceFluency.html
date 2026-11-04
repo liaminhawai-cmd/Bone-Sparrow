@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentence fluency: Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* The grammar session decks' colour key. Each colour also carries a
+     weight, a slant or an underline, so colour is never the only signal. */
+  --g-subj:#A24800; --g-verb:#0F6E4D; --g-prep:#1F5FA8; --g-conj:#1f1f1f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.55}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 12px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none;padding:10px 0}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block;min-height:40px}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.step{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 10px;
+      font-family:inherit;font-size:15px;color:inherit;cursor:pointer;transition:border-color .15s}
+.step:hover{border-color:var(--accent)}
+.step .num{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+           display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.step .t{font-weight:700}
+.step .d{color:var(--muted);font-size:13px;margin-top:3px;line-height:1.5}
+.step .tag{margin-left:auto;font-size:10.5px;font-weight:800;text-transform:uppercase;
+           letter-spacing:.4px;color:var(--muted);white-space:nowrap;padding-top:4px}
+
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:4px 14px;margin:0 0 12px;font-size:12.5px;color:var(--muted)}
+.deckbar b{color:var(--ink)}
+.pips{display:flex;gap:6px}
+.pip{min-width:40px;height:40px;border-radius:20px;border:1px solid var(--line);background:var(--bg);font-size:12px;
+     font-weight:800;cursor:pointer;font-family:inherit;color:var(--muted);padding:0 6px}
+.pip.on{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.pip.okf{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.pip.nof{background:var(--wrongbg);border-color:var(--wrong);color:var(--wrong)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+/* One view on a school laptop: each column scrolls inside itself rather than
+   pushing the page past the bottom of the screen. */
+.cols>.cardbox{max-height:calc(100vh - 128px);overflow:auto}
+.prompt{font-size:15px;font-weight:700;margin:0 0 2px;line-height:1.5}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:12px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 13px;min-height:40px;
+     font-size:14.5px;font-family:inherit;color:inherit;cursor:pointer;line-height:1.4}
+.opt:hover{border-color:var(--accent)}
+.opt.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);font-weight:700}
+.opt.right{background:var(--okbg);border-color:var(--correct);font-weight:700}
+.opt.wrong{background:var(--wrongbg);border-color:var(--wrong);text-decoration:line-through}
+.opt:disabled{cursor:default}
+.fb{border-radius:9px;padding:11px 14px;margin:10px 0 0;font-size:13.5px;line-height:1.6;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.fb li{margin:3px 0}
+.fb .rule{display:block;font-weight:700;margin-bottom:3px}
+.dim{color:#7d766a;font-size:12.5px}
+.src{margin:0 0 4px}
+
+/* ---- step 1: the sentence ---- */
+.sent{font-family:Georgia,serif;font-size:21px;line-height:1.8;background:var(--bg);border-radius:8px;padding:8px 12px;margin:0 0 6px}
+.wd{font:inherit;color:inherit;background:none;border:0;border-radius:4px;padding:2px 3px;cursor:pointer;min-height:40px}
+.wd:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.wd.sel{background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+.wd.now{background:#fff;box-shadow:inset 0 0 0 2px var(--g-verb)}
+.wd.miss{outline:2px dashed var(--g-verb);outline-offset:-2px}
+.wd.bad{background:var(--wrongbg);box-shadow:inset 0 0 0 1px var(--wrong);text-decoration:line-through}
+.wd:disabled{cursor:default}
+.ghost{font-weight:700}
+.g-subj{color:var(--g-subj)!important;font-weight:700}
+.g-verb{color:var(--g-verb)!important;font-weight:700;font-style:italic}
+.g-prep{color:var(--g-prep)!important;font-weight:700}
+.g-conj{color:var(--g-conj)!important;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.legend{font-size:13px;margin:0 0 8px;color:var(--muted)}
+.qlist{list-style:none;margin:0 0 8px;padding:0;font-size:13.5px}
+.qlist li{padding:4px 0;border-bottom:1px solid var(--line-soft);color:var(--muted)}
+.qlist li.now{color:var(--ink);font-weight:700}
+.qlist li .mk{display:inline-block;width:18px;font-weight:800}
+.qlist li.ok .mk{color:var(--correct)} .qlist li.no .mk{color:var(--wrong)}
+
+/* ---- steps 2 and 3: clickable passages ---- */
+.jp{font-family:Georgia,serif;font-size:17px;line-height:2.45;background:var(--bg);border-radius:8px;padding:6px 14px;margin:0 0 8px}
+.ck{border-radius:4px;padding:9px 2px;cursor:pointer;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ck:hover{background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.ck.sel{background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+.ck.sw{border-bottom:2px dotted var(--accent);padding:9px 3px}
+.ck.cut{text-decoration:line-through;color:#8f887a}
+.ck .stop{color:var(--accent);font-weight:800}
+.jw{font-weight:700;color:var(--accent)}
+.steps{margin:0;padding-left:24px;font-family:Georgia,serif;font-size:15.5px;line-height:1.5}
+.steps li{padding:2px 0}
+.yours{font-family:Georgia,serif;font-size:14.5px;line-height:1.55;border-left:3px solid var(--accent);
+       padding:4px 10px;margin:0 0 6px;background:#fff}
+
+/* ---- sentence-length bars ---- */
+.barsrow{display:flex;gap:22px;flex-wrap:wrap;margin:2px 0 0}
+.bars .bl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:0 0 2px}
+.bw{display:flex;align-items:flex-end;gap:4px;height:96px;padding-top:18px;border-bottom:1px solid var(--line);min-width:20px}
+.bar{display:block;width:16px;background:var(--accent);border-radius:3px 3px 0 0;position:relative}
+.bar i{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10.5px;font-style:normal;
+       font-weight:700;color:var(--muted);padding-bottom:1px}
+
+table.rpt{width:100%;border-collapse:collapse;font-size:13px;margin:0 0 10px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+.broken{background:var(--wrongbg);border:1px solid var(--wrong);border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.6}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:14px} .cols{grid-template-columns:1fr} .cols>.cardbox{max-height:none} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+
+<script>
+/* ============================================================================
+   CONTENT
+
+   Step 1, CARDS. Each card is one mentor sentence written in a small markup.
+     [words|s1|question]  a verb with a subject. "s1" names its subject, and
+                          "you" means the subject is not written. The
+                          question finishes "Who or what ...?"
+     [words|-|note]       a word that looks like a verb but has no subject of
+                          its own. The note is the feedback when it is clicked.
+     {words|s1}           the subject called s1.
+     (words|p)            a prepositional phrase.
+     <word|c>             a conjunction joining clauses as equals.
+     <word|s>             a conjunction starting a clause that cannot stand alone.
+     <word|j>             a conjunction joining words, not clauses.
+   The page checks every card when it loads: one clause is simple, clauses
+   joined only by |c are compound, only by |s complex, both compound-complex.
+   If "type" disagrees with the markup, the page refuses to run and says why.
+
+   Step 2, JOIN. Short sentences cut from one review. "links" has one entry
+   per gap between neighbouring sentences:
+     contrast  weight "second" (but, yet) or "first" (although)
+     reason    because (so is backwards)
+     result    so (because is backwards)
+     addition  and
+     apart     two different points: keep apart
+     verdict   the verdict stays on its own
+   "orig" is the reviewer's own sentence, shown once the join is right.
+   "cap:true" keeps a capital letter when the sentence is joined on.
+
+   Step 3, SPLIT. One run-on draft, in pieces. Plain text is plain text.
+     {w:"and", want:"split"}            a joining word that should go
+     {w:"until", want:"join", why:""}   a word that must stay joined
+     {you:"cut"}  /  {you:"keep", why:""}
+   "recipe" is the published method, shown once the split is right.
+   ========================================================================== */
+const CARDS = [
+ { id:"social", short:"Before social media…", src:"The Courier Mail",
+   t:"(Before social media|p), {happiness|s1} [was|s1|was mixtapes, bike rides and blanket forts] mixtapes, bike rides, <and|j> blanket forts.",
+   type:"simple",
+   why:"“Before social media” has no verb. It is a phrase that tells you when, so “social media” is not the subject." },
+ { id:"pier", short:"On the pier…", src:"Day at the Beach",
+   t:"(On the pier|p), {you|s1} [slung|s1|slung an arm] your arm (over my shoulder|p) <and|c> {I|s2} [fell|s2|fell into step] (into step|p) (with you|p), [training|-|“training” has no subject of its own. It starts a phrase that tells you how.] my body [to match|-|“to match” has no subject of its own. A “to” verb never does.] your low, slow rhythm.",
+   type:"compound",
+   why:"“training” and “to match” have no subject, so they add no clause. “and” joins “you slung” and “I fell” as equals." },
+ { id:"easy", short:"They are super easy…", src:"Perfect Fudgy Brownies (recipe)",
+   t:"{They|s1} [are|s1|is super easy to make] super easy [to make|-|“to make” has no subject of its own. It belongs to “easy”: easy to make.], [taste|s1|tastes like rich dark chocolate] (like rich dark chocolate|p), [have|s1|has the fudgiest middles] the fudgiest middles, <and|j> [have|s1|has crinkly, shiny tops] crinkly, shiny tops.",
+   type:"simple",
+   why:"One subject, “They”, does all four things, so it is one clause. This “and” adds the last verb to a list. It does not join two clauses." },
+ { id:"batter", short:"When the batter looks…", src:"Perfect Fudgy Brownies (recipe)",
+   t:"<When|s> {the batter|s1} [looks|s1|looks thick] thick <and|j> well [blended|-|“blended” describes the batter, like “thick”. It has no subject of its own.], [add|you|adds the flour] the flour.",
+   type:"complex",
+   why:"“When” starts a clause that cannot stand alone. The main clause, “add the flour”, is an instruction: its subject is the unwritten you, and it does not start the sentence." },
+ { id:"ants", short:"Everyone always has…", src:"Empire of the Ants review (IGN)",
+   t:"{Everyone|s1} always [has|s1|has the same set of ants] the same set (of workers, big-headed warriors, <and|j> “gunner” ants|p) (as their primary units|p), <and|c> {they all|s2} [counter|s2|counters each other] each other (in a straightforward rock-paper-scissors balance|p).",
+   type:"compound",
+   why:"The first “and” joins three kinds of ant, not two clauses. Only the second “and” joins one subject and verb to another." },
+ { id:"firm", short:"The brownies continue…", src:"Perfect Fudgy Brownies (recipe)",
+   t:"{The brownies|s1} [continue|s1|continues to firm up] [to firm up|-|“to firm up” has no subject of its own. A “to” verb never does.] <as|s> {they|s2} [cool|s2|cools], <so|c> <even though|s> {they|s3} [may look|s3|may look underdone] underdone, {they|s4} [will be|s4|will be perfect] perfect <when|j> [cooled|-|“cooled” has no subject of its own. Nothing in “when cooled” is doing the cooling.] (to room temperature|p).",
+   type:"compound-complex",
+   why:"“so” joins two main clauses as equals. “as” and “even though” each start a clause that cannot stand alone. “to firm up” and “when cooled” have no subject, so they add no clause." }
+];
+
+const JOIN = {
+  src:"Dear Santa review (The Guardian)",
+  sents:[
+    {t:"There is a smart little “what if” at the centre of Dear Santa."},
+    {t:"The question is far more interesting than the answer."},
+    {t:"Black’s energy is admirably high.", cap:true},
+    {t:"It is a little exhausting."},
+    {t:"The film has no clear idea of how to use Satan."},
+    {t:"His devilish tricks are not very inventive."},
+    {t:"The serious scenes about grief are hard to take."},
+    {t:"The rest of the film is full of toilet jokes."},
+    {t:"Dear Santa ends up as nothing.", cap:true}
+  ],
+  links:[
+    {k:"contrast", weight:"second",
+     orig:"But, as one has come to expect from other recent films based on neat, easily pitched loglines, the question is far more interesting than the answer."},
+    {k:"apart"},
+    {k:"contrast", weight:"first",
+     orig:"For something closer to a paycheque than a passion project, Black’s energy is admirably high, if a little exhaustingly so."},
+    {k:"apart"},
+    {k:"result",
+     orig:"There’s no clear idea of the best way to really use the character of Satan, even with him being in almost every scene, and so his devilish tricks either involve, sigh, more Post Malone or, sigh, giving someone the runs."},
+    {k:"apart"},
+    {k:"reason",
+     orig:"It leads to an awkward lurch into straight-faced seriousness involving grief over a dead brother, a level of emotional investment that’s hard for us to take in a film that is itself more invested in jokes about diarrhea."},
+    {k:"verdict",
+     orig:"Dear Santa is like watching Bad Santa slowly turn into Elf, an unsatisfying attempt to be both naughty and nice, ending up as nothing instead."}
+  ]
+};
+
+const SPLIT = {
+  src:"Perfect Fudgy Brownies (recipe)",
+  pieces:[
+    {you:"cut"}, "add the butter to a medium saucepan",
+    {w:"and then", want:"split"},
+    {you:"cut"}, "place over medium-low heat and cook",
+    {w:"until", want:"join", why:"“Until the butter melts completely.” cannot stand on its own: it is a fragment. “until” tells you how long to cook, so it stays with “cook”."},
+    "the butter melts completely",
+    {w:"and", want:"split"},
+    {you:"cut"}, "stir in the sugar, cocoa powder, vanilla",
+    {w:"and", want:"join", why:"“Salt.” has no verb: it is a fragment. This “and” joins two ingredients, not two steps."},
+    "salt",
+    {w:"and", want:"split"},
+    "once", {you:"keep", why:"“Once add the eggs” has lost its subject. This sentence is a tip: it says what will happen, not what to do. Keep “you”."},
+    "add the eggs, the brownie batter will become smooth",
+    {w:"so", want:"split"},
+    {you:"cut"}, "add the cold eggs, one at a time, stirring vigorously",
+    {w:"after", want:"join", why:"“After each egg.” has no verb: it is a fragment. “after each egg” tells you when to stir, so it stays."},
+    "each egg",
+    {w:"then", want:"split"},
+    {you:"cut"}, "cool completely",
+    {w:"before", want:"join", why:"“Before removing the brownies from the pan.” has no subject: it is a fragment. It tells you how long to cool, so it stays."},
+    "removing the brownies from the pan"
+  ],
+  recipe:[
+    "Add the butter to a medium saucepan.",
+    "Place over medium-low heat and cook until the butter melts completely, then turn off the heat.",
+    "While the butter is hot, stir in the sugar, cocoa powder, vanilla, and salt.",
+    "Once you add the eggs, the brownie batter will become smooth.",
+    "Add the cold eggs, one at a time, stirring vigorously after each egg.",
+    "Cool completely before removing the brownies from the pan (this step is essential and helps the brownies set)."
+  ]
+};
+/* ========================== END OF CONTENT ================================ */
+
+const KEY = "writingfolio.fluency.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store;
+try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
+function blank(){ return { fname:"", lname:"", sid:"", first:{}, done:{}, join:[], split:{}, startedAt:null, lastAt:null }; }
+function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
+let S = load();
+/* Read, change, write: another folio page may be open in a second tab. */
+function bump(fn){
+  const cur=load(); fn(cur); cur.lastAt=Date.now();
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
+})();
+
+function esc(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+/* The bars and the report count words the same way. */
+function wordsIn(t){ return String(t).split(/\s+/).filter(w=>/[A-Za-z0-9]/.test(w)).length; }
+function words(t){ return String(t).replace(/[.!?]$/,"").split(/\s+/).filter(Boolean); }
+function head(t,n){ const w=words(t); return w.slice(0,n).join(" ")+(w.length>n?"…":""); }
+function tail(t,n){ const w=words(t); return (w.length>n?"…":"")+w.slice(-n).join(" "); }
+function clean(w){ return String(w).replace(/^[^A-Za-z0-9]+/,"").replace(/[^A-Za-z0-9]+$/,""); }
+
+/* ====================== STEP 1 MARKUP ====================================
+   Characters are read one at a time. Brackets may nest (a conjunction inside
+   a phrase). Every character keeps the marks of the brackets around it, and
+   a word takes the marks of its first letter, so punctuation never shifts an
+   index. */
+const OPEN={"[":"]","{":"}","(":")","<":">"};
+function isYou(s){ return /^you\d*$/.test(s); }
+function parseCard(c){
+  const chars=[], stack=[], verbs=[], nfs=[], subjects={}, preps=[], conjs=[], errors=[];
+  const src=String(c.t||"");
+  function close(f){
+    const text=chars.slice(f.start,f.end).map(x=>x.ch).join("").replace(/\s+/g," ").trim();
+    const mark=(k,v)=>{ for(let j=f.start;j<f.end;j++) chars[j].a[k]=v; };
+    const parts=f.meta.split("|").map(x=>x.trim());
+    if(!text) errors.push("an empty "+f.open+f.close);
+    if(f.open==="["){
+      if(parts[0]==="-"){ const id="n"+(nfs.length+1); nfs.push({id,text,note:parts[1]||""}); mark("nf",id); if(!parts[1]) errors.push("“"+text+"” needs a note"); }
+      else { const id="v"+(verbs.length+1); verbs.push({id,text,subj:parts[0],ask:parts[1]||"",pos:f.start}); mark("verb",id); if(!parts[1]) errors.push("“"+text+"” needs a question"); }
+    } else if(f.open==="{"){
+      if(subjects[parts[0]]) errors.push("subject "+parts[0]+" is marked twice");
+      subjects[parts[0]]={id:parts[0],text}; mark("subj",parts[0]);
+    } else if(f.open==="("){
+      if(parts[0]!=="p") errors.push("(“"+text+"”) should end |p");
+      const id="p"+(preps.length+1); preps.push({id,text}); mark("prep",id);
+    } else {
+      if(!/^[csj]$/.test(parts[0])) errors.push("<“"+text+"”> should end |c, |s or |j");
+      const id="k"+(conjs.length+1); conjs.push({id,text,kind:parts[0]}); mark("conj",id);
+    }
+  }
+  for(let i=0;i<src.length;i++){
+    const ch=src[i], top=stack[stack.length-1];
+    if(top && top.meta!==null){ if(ch===top.close){ stack.pop(); close(top); } else top.meta+=ch; continue; }
+    if(OPEN[ch]){ stack.push({open:ch,close:OPEN[ch],start:chars.length,end:-1,meta:null}); continue; }
+    if(ch==="|"){ if(top){ top.meta=""; top.end=chars.length; } else errors.push("a | outside any brackets"); continue; }
+    if("]})>".indexOf(ch)>=0){ errors.push("“"+ch+"” closes before its |"); if(top && ch===top.close) stack.pop(); continue; }
+    chars.push({ch,a:{}});
+  }
+  if(stack.length) errors.push("a bracket is never closed");
+  const toks=[]; let cur=null;
+  chars.forEach(x=>{ if(/\s/.test(x.ch)){ cur=null; return; } if(!cur){ cur={t:"",cs:[]}; toks.push(cur); } cur.t+=x.ch; cur.cs.push(x); });
+  toks.forEach((tk,i)=>{ tk.i=i; const core=tk.cs.find(x=>/[A-Za-z0-9]/.test(x.ch))||tk.cs[0]; tk.a=core.a; delete tk.cs; });
+  verbs.sort((a,b)=>a.pos-b.pos);
+  const byId={}; verbs.forEach(v=>{ byId[v.id]=v; });
+  const firstTok={}; toks.forEach(tk=>{ const k=tk.a.verb||tk.a.nf; if(k && firstTok[k]===undefined) firstTok[k]=tk.i; });
+  verbs.forEach(v=>{ if(!isYou(v.subj) && !subjects[v.subj]) errors.push("“"+v.text+"” points at subject "+v.subj+", which is not marked"); });
+  Object.keys(subjects).forEach(k=>{ if(!verbs.some(v=>v.subj===k)) errors.push("subject “"+subjects[k].text+"” has no verb"); });
+  const clauseIds=[]; verbs.forEach(v=>{ if(clauseIds.indexOf(v.subj)<0) clauseIds.push(v.subj); });
+  const nc=conjs.filter(k=>k.kind==="c").length, ns=conjs.filter(k=>k.kind==="s").length, n=clauseIds.length;
+  if(n!==1+nc+ns) errors.push(n+" clause(s) need "+(n-1)+" joining conjunction(s), but "+(nc+ns)+" are marked |c or |s");
+  const type = n<=1 ? "simple" : (ns===0 ? "compound" : (nc===0 ? "complex" : "compound-complex"));
+  if(c.type!==type) errors.push("type says "+c.type+", the markup gives "+type);
+  const plain=chars.map(x=>x.ch).join("").replace(/\s+/g," ").trim();
+  return { id:c.id, toks, verbs, byId, nfs, subjects, preps, conjs, clauseIds, type, plain, firstTok, errors };
+}
+const MODELS={};
+function model(c){ return MODELS[c.id]||(MODELS[c.id]=parseCard(c)); }
+function contentErrors(){
+  const out=[];
+  CARDS.forEach(c=>model(c).errors.forEach(e=>out.push("Card “"+c.short+"”: "+e)));
+  if(JOIN.links.length!==JOIN.sents.length-1) out.push("Join: "+JOIN.sents.length+" sentences need "+(JOIN.sents.length-1)+" links");
+  JOIN.links.forEach((L,i)=>{ if(["contrast","reason","result","addition","apart","verdict"].indexOf(L.k)<0) out.push("Join link "+(i+1)+": unknown kind "+L.k);
+    if(L.k==="contrast" && L.weight!=="first" && L.weight!=="second") out.push("Join link "+(i+1)+": contrast needs weight first or second"); });
+  SPLIT.pieces.forEach((p,i)=>{ if(typeof p==="string") return;
+    if(p.w!==undefined && p.want!=="split" && p.want!=="join") out.push("Split piece "+(i+1)+": want must be split or join");
+    if(p.w===undefined && p.you!=="cut" && p.you!=="keep") out.push("Split piece "+(i+1)+": not a joining word or a you");
+    if((p.want==="join"||p.you==="keep") && !p.why) out.push("Split piece "+(i+1)+": needs a why"); });
+  return out;
+}
+
+/* ====================== STEP 1 JUDGING ===================================
+   Phase A: every verb with a subject, and nothing else.
+   Phase B: the subject of each verb in turn.
+   Phase C: the kind of sentence. */
+function keyOf(tk){ return tk.a.verb ? "v:"+tk.a.verb : (tk.a.nf ? "n:"+tk.a.nf : "t:"+tk.i); }
+function judgeA(m, sel){
+  const has=k=>sel.indexOf(k)>=0;
+  const missed=m.verbs.filter(v=>!has("v:"+v.id));
+  const nf=m.nfs.filter(x=>has("n:"+x.id));
+  const other=sel.filter(k=>k.indexOf("t:")===0).map(k=>m.toks[+k.slice(2)]);
+  return { ok:!missed.length && !nf.length && !other.length, missed, nf, other };
+}
+function subjOf(m,v){ return isYou(v.subj) ? "you" : m.subjects[v.subj].text; }
+function judgeB(m, v, pick){
+  const sub = isYou(v.subj) ? null : m.subjects[v.subj];
+  if(pick==="you"){
+    if(!sub) return {ok:true};
+    return {ok:false, k:"wrote", w:"you", msg:"The subject of “"+v.text+"” is written in the sentence: “"+sub.text+"”."};
+  }
+  const tk=m.toks[pick], w=clean(tk.t);
+  if(sub && tk.a.subj===v.subj) return {ok:true};
+  const owner = tk.a.subj ? m.verbs.find(x=>x.subj===tk.a.subj) : null;
+  const lead = owner ? "“"+w+"” goes with “"+owner.text+"”. " : "“"+w+"” is not doing “"+v.text+"”. ";
+  if(!sub) return {ok:false, k:"you", w, msg:lead+"Nobody is named for “"+v.text+"”: it is an instruction, so its subject is the unwritten you."};
+  if(!tk.a.subj && tk.a.prep){ const p=m.preps.find(x=>x.id===tk.a.prep);
+    return {ok:false, k:"phrase", w, msg:"“"+w+"” sits inside “"+p.text+"”, a phrase with no verb. The subject of “"+v.text+"” is “"+sub.text+"”."}; }
+  return {ok:false, k:"other", w, msg:lead+"The subject of “"+v.text+"” is “"+sub.text+"”."};
+}
+function judgeC(m, pick){ return pick===m.type; }
+const TYPES=[["simple","Simple"],["compound","Compound"],["complex","Complex"],["compound-complex","Compound-complex"]];
+const TYPE_RULE={
+  "simple":"One clause: simple.",
+  "compound":"Clauses joined as equals: compound.",
+  "complex":"A main clause and a clause that cannot stand alone: complex.",
+  "compound-complex":"Clauses joined as equals, plus a clause that cannot stand alone: compound-complex."
+};
+function typeName(t){ return (TYPES.find(x=>x[0]===t)||[t,t])[1]; }
+function clauseLine(m){
+  const n=m.clauseIds.length;
+  const list=m.clauseIds.map(id=>{
+    const vs=m.verbs.filter(v=>v.subj===id).map(v=>"“"+v.text+"”").join(", ");
+    return (isYou(id) ? "(you)" : "“"+m.subjects[id].text+"”")+" + "+vs;
+  }).join(" · ");
+  const c=m.conjs.filter(k=>k.kind==="c").map(k=>"“"+k.text+"”"), s=m.conjs.filter(k=>k.kind==="s").map(k=>"“"+k.text+"”");
+  let j="";
+  if(c.length) j+=" "+c.join(", ")+(c.length>1?" join":" joins")+" clauses as equals.";
+  if(s.length) j+=" "+s.join(", ")+(s.length>1?" each start":" starts")+" a clause that cannot stand alone.";
+  return "<b>"+n+" clause"+(n===1?"":"s")+"</b>: "+esc(list)+"."+esc(j);
+}
+
+/* ====================== ROUTER =========================================== */
+let view = { screen:"home" };
+function go(screen){
+  if(!idOk() && screen!=="id") screen="id";
+  view = { screen };
+  window.scrollTo(0,0);
+  if(screen==="id") renderId();
+  else if(screen==="home") renderHome();
+  else if(screen==="clauses") startClauses();
+  else if(screen==="join") renderJoin();
+  else if(screen==="split") renderSplit();
+  else if(screen==="report") renderReport();
+}
+function links(){
+  return `<a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+    <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`;
+}
+function topbar(deck){
+  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>`}</span></div>`;
+}
+function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
+
+function renderId(){
+  $("body").innerHTML=topbar(true)+`<h1>Sentence fluency</h1>
+  <p class="sub">Your work saves on this device under your name and student code.</p>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start →</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile();
+  go("home");
+}
+function renderHome(){
+  const n=CARDS.filter(c=>S.done["cl."+c.id]).length;
+  const steps=[
+    { t:"Find the clauses", d:"Verbs, subjects, then the kind of sentence.", tag:n?`${n} of ${CARDS.length} done`:"", done:n===CARDS.length, go:"clauses" },
+    { t:"Join", d:"A film review cut into short sentences.", tag:S.done.join?"done":"", done:!!S.done.join, go:"join" },
+    { t:"Split", d:"A brownie method written as one sentence.", tag:S.done.split?"done":"", done:!!S.done.split, go:"split" }
+  ];
+  let h=topbar(true)+`<h1>Sentence fluency</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
+  steps.forEach((st,i)=>{
+    h+=`<button class="step ${st.done?"done":""}" onclick="go('${st.go}')">
+      <span class="num">${st.done?"✓":i+1}</span>
+      <span><span class="t">${esc(st.t)}</span><br><span class="d">${esc(st.d)}</span></span>
+      <span class="tag">${esc(st.tag)}</span></button>`;
+  });
+  h+=`<button class="step" onclick="go('report')"><span class="num">${steps.length+1}</span>
+      <span><span class="t">Report for your teacher</span><br><span class="d">One row to copy and send.</span></span></button>`;
+  $("body").innerHTML=h;
+}
+
+/* ====================== STEP 1 · FIND THE CLAUSES ========================
+   A card is right first go only if all three phases were. A card missed
+   first go comes back once, two cards later. */
+let CV=null;
+let Q={ again:[], served:0 };
+function freshCard(at, again){
+  const id="cl."+CARDS[at].id;
+  return { at, again:!!again, firstRun:S.first[id+".C"]===undefined, phase:"A", sel:[], aDone:false,
+           b:0, bWait:false, bWrong:null, bMiss:[], bRes:[], shown:{}, cPick:null, fb:null };
+}
+function nextClause(){
+  const due=Q.again.find(e=>e.due<=Q.served);
+  if(due){ Q.again.splice(Q.again.indexOf(due),1); return {at:due.at, again:true}; }
+  const i=CARDS.findIndex(c=>!S.done["cl."+c.id]);
+  if(i>=0) return {at:i};
+  if(Q.again.length){ const e=Q.again.shift(); return {at:e.at, again:true}; }
+  return null;
+}
+function startClauses(at){
+  if(at!==undefined){ CV=freshCard(at); renderCard(); return; }
+  const n=nextClause();
+  if(!n){ renderClauseSummary(); return; }
+  CV=freshCard(n.at, n.again); renderCard();
+}
+function cardFirst(c){
+  const k="cl."+c.id, a=S.first[k+".A"], b=S.first[k+".B"], cc=S.first[k+".C"];
+  if(!a||!b||!cc) return null;
+  return a.ok && b.ok && cc.ok;
+}
+function pipsHtml(){
+  return `<span class="pips">${CARDS.map((c,i)=>{ const r=cardFirst(c);
+    return `<button class="pip ${CV&&i===CV.at?"on":""} ${r===null?"":(r?"okf":"nof")}" onclick="startClauses(${i})"
+      aria-label="Card ${i+1}${r===null?"":(r?", right first go":", missed first go")}">${i+1}${r===null?"":(r?" ✓":" ✗")}</button>`; }).join("")}</span>`;
+}
+const LEGEND=`<div class="legend"><span class="g-subj">Subject</span> · <span class="g-verb">Verb</span> · <span class="g-prep">Prep phrase</span> · <span class="g-conj">Conjunction</span></div>`;
+function tokHtml(m, tk){
+  const a=tk.a, cls=["wd"]; let pre="", dis=false;
+  const reveal = CV.phase==="C" && CV.cPick!==null;
+  if(CV.phase==="A" && !CV.aDone){ if(CV.sel.indexOf(keyOf(tk))>=0) cls.push("sel"); }
+  else {
+    if(a.verb) cls.push("g-verb");
+    if(CV.phase==="A"){ dis=true;
+      if(a.verb && CV.sel.indexOf(keyOf(tk))<0) cls.push("miss");
+      if(!a.verb && CV.sel.indexOf(keyOf(tk))>=0) cls.push("bad"); }
+    if(CV.phase==="B"){ const v=m.verbs[CV.b]; if(v && a.verb===v.id && !CV.bWait) cls.push("now"); if(CV.bWait){ dis=true; if(CV.bWrong===tk.i) cls.push("bad"); } }
+    if(CV.phase==="C") dis=true;
+    if(a.subj && (reveal || CV.shown[a.subj])) cls.push("g-subj");
+    if(reveal && !a.subj && !a.verb){ if(a.conj) cls.push("g-conj"); else if(a.prep) cls.push("g-prep"); }
+    if(a.verb && m.firstTok[a.verb]===tk.i){ const v=m.byId[a.verb];
+      if(isYou(v.subj) && (reveal || CV.shown[v.subj])) pre=`<span class="g-subj ghost">(you)</span> `; }
+  }
+  return pre+`<button class="${cls.join(" ")}" ${dis?"disabled":""} onclick="clauseTok(${tk.i})">${esc(tk.t)}</button>`;
+}
+function renderCard(){
+  const c=CARDS[CV.at], m=model(c);
+  const sent=m.toks.map(tk=>tokHtml(m,tk)).join(" ");
+  let prompt="", hint="", controls="";
+  if(CV.phase==="A"){
+    prompt="Click every verb that has a subject."; hint="Then press Check.";
+    if(!CV.aDone) controls=`<button class="btn btn-primary" onclick="checkA()">Check</button>
+      <button class="btn btn-ghost" onclick="CV.sel=[];renderCard()">Clear</button>`;
+  } else if(CV.phase==="B"){
+    const v=m.verbs[Math.min(CV.b, m.verbs.length-1)];
+    prompt="Who or what "+esc(v.ask)+"?"; hint="Click the main word of the subject.";
+    controls=`<button class="btn" ${CV.bWait?"disabled":""} onclick="pickB('you')">Not written: you</button>`;
+  } else {
+    prompt="What kind of sentence is it?"; hint="Pick one.";
+    controls=`<div class="chips">${TYPES.map(t=>{
+      let k=""; if(CV.cPick!==null){ if(t[0]===m.type) k="right"; else if(t[0]===CV.cPick) k="wrong"; }
+      return `<button class="opt ${k}" ${CV.cPick!==null?"disabled":""} onclick="pickC('${t[0]}')">${t[1]}</button>`; }).join("")}</div>`;
+  }
+  const phases=[["A","Verbs"],["B","Subjects"],["C","Sentence type"]].map(p=>{
+    const r=CV["res"+p[0]];
+    return `<li class="${CV.phase===p[0]?"now":""} ${r===undefined?"":(r?"ok":"no")}"><span class="mk">${r===undefined?"":(r?"✓":"✗")}</span>${p[1]}</li>`; }).join("");
+  const colours = CV.aDone || CV.phase!=="A";
+  $("body").innerHTML=bar("Find the clauses", pipsHtml()+(CV.again?`<span>Second go</span>`:""))+
+    `<div class="cols"><div class="cardbox">
+      <p class="prompt">${prompt}</p><p class="hint">${hint}</p>
+      <div class="sent">${sent}</div>
+      <p class="dim src">${esc(c.src)}</p>
+      <div class="btnrow" style="margin-top:6px">${controls}</div>
+    </div>
+    <div class="cardbox">
+      <ul class="qlist">${phases}</ul>
+      ${colours?LEGEND:""}
+      <div class="fb ${CV.fb?CV.fb.cls+" on":""}" id="fb">${CV.fb?CV.fb.html:""}</div>
+    </div></div>`;
+  const nb=$("nextBtn"); if(nb) nb.focus();
+}
+function clauseTok(i){
+  const m=model(CARDS[CV.at]), tk=m.toks[i];
+  if(CV.phase==="A" && !CV.aDone){
+    const k=keyOf(tk), j=CV.sel.indexOf(k);
+    if(j>=0) CV.sel.splice(j,1); else CV.sel.push(k);
+    renderCard(); return;
+  }
+  if(CV.phase==="B" && !CV.bWait) pickB(i);
+}
+function checkA(){
+  const c=CARDS[CV.at], m=model(c), r=judgeA(m, CV.sel), key="cl."+c.id+".A";
+  if(S.first[key]===undefined) bump(s=>{ s.first[key]={ ok:r.ok,
+    nf:r.nf.map(x=>x.text), missv:r.missed.map(v=>v.text), notverb:r.other.map(t=>clean(t.t)) }; });
+  CV.aDone=true; CV.resA=r.ok;
+  const all=m.verbs.map(v=>"“"+esc(v.text)+"”").join(", ");
+  const items=[];
+  r.nf.forEach(x=>items.push(esc(x.note)));
+  r.missed.forEach(v=>items.push("You missed “"+esc(v.text)+"”. It has a subject of its own."));
+  r.other.forEach(t=>{ const w=clean(t.t);
+    if(t.a.prep && !t.a.subj){ const p=m.preps.find(x=>x.id===t.a.prep); items.push("“"+esc(w)+"” sits inside “"+esc(p.text)+"”, a phrase with no verb."); }
+    else items.push("“"+esc(w)+"” is not a verb."); });
+  CV.fb = r.ok
+    ? {cls:"ok", html:`<span class="rule">Right.</span>The verbs with a subject: ${all}.${nextBtn("toB()","Subjects →")}`}
+    : {cls:"bad", html:`<span class="rule">Not quite.</span><ul>${items.map(x=>`<li>${x}</li>`).join("")}</ul>The verbs with a subject are marked: ${all}.${nextBtn("toB()","Subjects →")}`};
+  renderCard();
+}
+function nextBtn(fn, label){ return `<div class="btnrow"><button class="btn btn-primary" id="nextBtn" onclick="${fn}">${label}</button></div>`; }
+function toB(){ CV.phase="B"; CV.b=0; CV.fb=null; renderCard(); }
+function pickB(pick){
+  const c=CARDS[CV.at], m=model(c), v=m.verbs[CV.b];
+  if(!v || CV.bWait) return;
+  const r=judgeB(m, v, pick);
+  CV.shown[v.subj]=true;
+  if(r.ok){
+    CV.bRes[CV.b]=true;
+    CV.fb={cls:"ok", html:`<span class="rule">Right.</span>${isYou(v.subj)?"The unwritten you":"“"+esc(subjOf(m,v))+"”"} goes with “${esc(v.text)}”.`};
+    advanceB(); return;
+  }
+  CV.bRes[CV.b]=false; CV.bMiss.push({k:r.k, w:r.w, v:v.text});
+  CV.bWait=true; CV.bWrong=(pick==="you")?null:pick;
+  const last=CV.b+1>=m.verbs.length;
+  CV.fb={cls:"bad", html:`<span class="rule">Not that.</span>${esc(r.msg)}${nextBtn("CV.bWait=false;CV.bWrong=null;CV.fb=null;advanceB()", last?"Sentence type →":"Next verb →")}`};
+  renderCard();
+}
+function advanceB(){
+  const c=CARDS[CV.at], m=model(c);
+  CV.b++;
+  if(CV.b>=m.verbs.length){
+    const key="cl."+c.id+".B", ok=!CV.bMiss.length;
+    if(S.first[key]===undefined) bump(s=>{ s.first[key]={ ok, miss:CV.bMiss }; });
+    CV.resB=ok; CV.phase="C";
+  }
+  renderCard();
+}
+function pickC(t){
+  const c=CARDS[CV.at], m=model(c), ok=judgeC(m,t), key="cl."+c.id+".C";
+  if(S.first[key]===undefined) bump(s=>{ s.first[key]={ ok, pick:t }; });
+  CV.cPick=t; CV.resC=ok;
+  Q.served++;
+  bump(s=>{ s.done["cl."+c.id]=true; });
+  if(CV.firstRun && !CV.again && cardFirst(c)===false && !Q.again.some(e=>e.at===CV.at)) Q.again.push({at:CV.at, due:Q.served+2});
+  CV.fb={cls:ok?"ok":"bad", html:`<span class="rule">${ok?esc(TYPE_RULE[m.type]):"It is "+esc(typeName(m.type).toLowerCase())+", not "+esc(typeName(t).toLowerCase())+"."}</span>
+    ${clauseLine(m)}<div style="margin-top:6px">${esc(c.why)}</div>${nextBtn("startClauses()","Next card →")}`};
+  renderCard();
+}
+function renderClauseSummary(){
+  CV=null;
+  const got=CARDS.filter(c=>cardFirst(c)===true).length;
+  $("body").innerHTML=bar("Find the clauses", pipsHtml())+`<div class="cardbox">
+    <p class="prompt">First go: ${got} of ${CARDS.length}</p>
+    <ul class="qlist" style="margin-top:8px">${CARDS.map(c=>{ const r=cardFirst(c);
+      return `<li class="${r===null?"":(r?"ok":"no")}"><span class="mk">${r===null?"":(r?"✓":"✗")}</span>${esc(model(c).plain)}</li>`; }).join("")}</ul>
+    <div class="btnrow"><button class="btn btn-primary" id="nextBtn" onclick="go('join')">Join →</button>
+      <button class="btn btn-ghost" onclick="Q={again:CARDS.map((c,i)=>({at:i,due:0})),served:0};startClauses()">Again</button></div></div>`;
+  $("nextBtn").focus();
+}
+
+/* ====================== SENTENCE-LENGTH BARS ============================= */
+function barsHtml(before, now){
+  const max=Math.max(1, ...before, ...now);
+  const col=(arr,lab)=>`<div class="bars"><div class="bl">${lab}</div>
+    <div class="bw" role="img" aria-label="${lab}: ${arr.join(", ")} words">${arr.map(n=>
+      `<span class="bar" style="height:${Math.max(3,Math.round(74*n/max))}px"><i>${n}</i></span>`).join("")}</div></div>`;
+  return `<p class="lab">Words in each sentence</p><div class="barsrow">${col(before,"Before")}${col(now,"Now")}</div>`;
+}
+
+/* ====================== STEP 2 · JOIN ====================================
+   A join is null (two sentences) or one of the words in the box. Joins save
+   as they are made, and a failed check never undoes them. */
+const JOINWORDS=["and","but","yet","so","or","because","although",","];
+function joinState(raw){ const a=[]; for(let i=0;i<JOIN.sents.length-1;i++) a.push(raw && raw[i] ? raw[i] : null); return a; }
+function glue(w){ return w==="," ? ", " : (w==="because" ? " because " : ", "+w+" "); }
+function lowerFirst(s){ return s.cap ? s.t : s.t.charAt(0).toLowerCase()+s.t.slice(1); }
+function joinSentences(js){
+  const out=[]; let cur="";
+  JOIN.sents.forEach((s,i)=>{
+    if(i>0 && js[i-1]) cur=cur.replace(/[.!?]$/,"")+glue(js[i-1])+lowerFirst(s);
+    else { if(i>0) out.push(cur); cur=s.t; }
+  });
+  out.push(cur); return out;
+}
+function joinAt(i, w){
+  const A=JOIN.sents[i], B=JOIN.sents[i+1];
+  return w ? tail(A.t,3)+glue(w).replace(/\s+$/,"")+" "+head(lowerFirst(B),3) : tail(A.t,3)+". "+head(B.t,3);
+}
+function bare(s){ return lowerFirst(s).replace(/[.!?]$/,""); }
+function judgeJoin(js){
+  const issues=[];
+  JOIN.links.forEach((L,i)=>{
+    const w=js[i], A=JOIN.sents[i], B=JOIN.sents[i+1], at=joinAt(i,w);
+    const add=(k,msg)=>{ issues.push({i,k,w:w||"",at,msg}); };
+    const pair = L.k!=="apart" && L.k!=="verdict";
+    if(w===","){ add("splice","A comma on its own cannot join two sentences. That is a comma splice."+(pair?"":" These two stay apart.")); return; }
+    if(!pair){
+      if(w) add(L.k, L.k==="verdict" ? "Joined on, the verdict becomes one more detail. Leave it on its own."
+                                     : "These are two different points. Joined, one sentence carries two topics. Keep them apart.");
+      return;
+    }
+    if(!w){ add("left","These two are about the same thing. Join them."); return; }
+    if(w==="or"){ add("word","“or” offers a choice. The reviewer is not offering one."); return; }
+    const contrastW=["but","yet","although"];
+    if(L.k==="contrast"){
+      const right = L.weight==="first" ? ["although"] : ["but","yet"];
+      if(right.indexOf(w)>=0) return;
+      if(w==="and") return add("adds","“and” only adds. The second sentence pulls against the first.");
+      if(w==="although") return add("weight","“although” ranks the second clause underneath, so the weight falls on “"+bare(A).replace(/^./,ch=>ch.toUpperCase())+"”. The reviewer’s point is the second clause.");
+      if(w==="but"||w==="yet") return add("weight","“"+w+"” puts the weight on the second clause, so the sentence lands on “"+bare(B)+"”. The reviewer’s point is the first clause.");
+      return add("word","“"+w+"” makes one clause the "+(w==="because"?"reason for":"result of")+" the other. These two pull against each other.");
+    }
+    if(L.k==="reason"){
+      if(w==="because") return;
+      if(w==="so") return add("backwards","“so” runs it backwards: it makes “"+bare(B)+"” the result. It is the reason.");
+      if(w==="and") return add("adds","“and” only adds. The second sentence gives the reason for the first.");
+      return add("word","“"+w+"” sets up a contrast. The second sentence does not pull against the first: it explains it.");
+    }
+    if(L.k==="result"){
+      if(w==="so") return;
+      if(w==="because") return add("backwards","“because” runs it backwards: it makes “"+bare(B)+"” the reason. It is the result.");
+      if(w==="and") return add("adds","“and” only adds. The second sentence is what follows from the first.");
+      return add("word","“"+w+"” sets up a contrast. The second sentence follows from the first.");
+    }
+    if(L.k==="addition"){
+      if(w==="and") return;
+      if(contrastW.indexOf(w)>=0) return add("word","“"+w+"” sets up a contrast. Nothing in the second sentence pulls against the first.");
+      return add("word","“"+w+"” makes one clause the "+(w==="because"?"reason for":"result of")+" the other. The second sentence only adds.");
+    }
+  });
+  return issues;
+}
+let JV={ sel:[], fb:null };
+function renderJoin(){
+  const js=joinState(S.join), n=JOIN.sents.length;
+  let p="";
+  JOIN.sents.forEach((s,i)=>{
+    const prev=i>0 && js[i-1], next=i<n-1 && js[i];
+    let t = prev ? lowerFirst(s) : s.t;
+    if(next) t=t.replace(/[.!?]$/,"");
+    if(prev) p+=`<span class="jw">${esc(glue(js[i-1]).replace(/\s+$/,""))}</span> `;
+    else if(i>0) p+=" ";
+    p+=`<span class="ck ${JV.sel.indexOf(i)>=0?"sel":""}" role="button" tabindex="0" onclick="joinClick(${i})"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinClick(${i});}">${esc(t)}</span>`;
+  });
+  let box="";
+  if(JV.sel.length===2){
+    const k=JV.sel[0], cur=js[k];
+    box=`<p class="lab">Join with</p><div class="chips">${JOINWORDS.map(w=>
+      `<button class="opt ${cur===w?"on":""}" onclick="pickJoin('${w}')">${w===","?", (comma only)":w}</button>`).join("")}
+      <button class="opt ${cur?"":"on"}" onclick="pickJoin(null)">Keep apart</button></div>`;
+  }
+  const before=JOIN.sents.map(s=>wordsIn(s.t)), now=joinSentences(js).map(wordsIn);
+  $("body").innerHTML=bar("Join")+`<div class="cols"><div class="cardbox">
+      <p class="prompt">Click two sentences next to each other.</p>
+      <p class="hint">Then pick a joining word.</p>
+      <div class="jp">${p}</div>
+      <p class="dim src">${esc(JOIN.src)}</p>
+      ${box}
+    </div>
+    <div class="cardbox">
+      <div class="btnrow" style="margin-top:0"><button class="btn btn-primary" onclick="checkJoin()">Check</button>
+        <button class="btn btn-ghost" onclick="resetJoin()">Start again</button></div>
+      <div class="fb ${JV.fb?JV.fb.cls+" on":""}" id="fb">${JV.fb?JV.fb.html:""}</div>
+      ${barsHtml(before, now)}
+    </div></div>`;
+  const nb=$("nextBtn"); if(nb) nb.focus();
+}
+function joinClick(i){
+  if(JV.sel.length===1 && JV.sel[0]===i) JV.sel=[];
+  else if(JV.sel.length===1 && Math.abs(JV.sel[0]-i)===1) JV.sel=[Math.min(i,JV.sel[0]), Math.max(i,JV.sel[0])];
+  else JV.sel=[i];
+  renderJoin();
+}
+function pickJoin(w){
+  const k=JV.sel[0];
+  bump(s=>{ const a=joinState(s.join); a[k]=w; s.join=a; });
+  JV.sel=[]; JV.fb=null; renderJoin();
+}
+function resetJoin(){ bump(s=>{ s.join=[]; }); JV={sel:[], fb:null}; renderJoin(); }
+function checkJoin(){
+  const js=joinState(S.join), issues=judgeJoin(js), ok=!issues.length;
+  if(S.first.join===undefined) bump(s=>{ s.first.join={ ok, issues:issues.map(x=>({k:x.k, w:x.w, at:x.at})) }; });
+  if(ok) bump(s=>{ s.done.join=true; });
+  JV.sel=[];
+  if(ok){
+    const origs=JOIN.links.filter(L=>L.orig).map(L=>`<p class="yours">${esc(L.orig)}</p>`).join("");
+    JV.fb={cls:"ok", html:`<span class="rule">Every gap is right.</span><p class="lab" style="margin-top:6px">The reviewer wrote</p>${origs}${nextBtn("go('split')","Split →")}`};
+  } else {
+    JV.fb={cls:"bad", html:`<span class="rule">Not yet.</span><ul>${issues.map(x=>`<li><i>“${esc(x.at)}”</i>: ${esc(x.msg)}</li>`).join("")}</ul>`};
+  }
+  renderJoin();
+}
+
+/* ====================== STEP 3 · SPLIT ===================================
+   Splitting at "and", "then" or "so" drops the word. Splitting at a word
+   like "until" keeps it at the front of the new sentence, which is what
+   makes the fragment visible. */
+const STAYS=["until","after","before","when","while","once","because","as","if","although"];
+function tidySentence(t){
+  t=t.replace(/\s+/g," ").trim().replace(/\s+([,.])/g,"$1");
+  if(!t) return "";
+  t=t.charAt(0).toUpperCase()+t.slice(1);
+  if(!/[.!?]$/.test(t)) t+=".";
+  return t;
+}
+function splitSentences(st){
+  const out=[]; let cur=[];
+  SPLIT.pieces.forEach((p,i)=>{
+    if(typeof p==="string"){ cur.push(p); return; }
+    if(p.w!==undefined){
+      if(st[i]){ out.push(cur); cur=[]; if(STAYS.indexOf(p.w.toLowerCase())>=0) cur.push(p.w); }
+      else cur.push(p.w);
+      return;
+    }
+    if(!st[i]) cur.push("you");
+  });
+  out.push(cur);
+  return out.map(ws=>tidySentence(ws.join(" "))).filter(Boolean);
+}
+function nearText(i, dir){ for(let j=i+dir; j>=0 && j<SPLIT.pieces.length; j+=dir){ if(typeof SPLIT.pieces[j]==="string") return SPLIT.pieces[j]; } return ""; }
+function splitAt(i){
+  const p=SPLIT.pieces[i];
+  if(p.w!==undefined) return tail(nearText(i,-1),3)+" "+p.w+" "+head(nearText(i,1),3);
+  return "you "+head(nearText(i,1),3);
+}
+function judgeSplit(st){
+  const issues=[];
+  SPLIT.pieces.forEach((p,i)=>{
+    if(typeof p==="string") return;
+    const at=splitAt(i);
+    if(p.w!==undefined){
+      if(p.want==="split" && !st[i]) issues.push({i,k:"run",w:p.w,at,msg:"Two steps are still joined by “"+p.w+"”. Split there."});
+      if(p.want==="join" && st[i]) issues.push({i,k:"frag",w:p.w,at,msg:p.why});
+    } else {
+      if(p.you==="cut" && !st[i]) issues.push({i,k:"keptyou",w:"you",at,msg:"An instruction leaves its subject unwritten. Cut “you”."});
+      if(p.you==="keep" && st[i]) issues.push({i,k:"cutyou",w:"you",at,msg:p.why});
+    }
+  });
+  return issues;
+}
+let PV={ fb:null };
+function renderSplit(){
+  const st=S.split||{};
+  let h="", start=true;
+  SPLIT.pieces.forEach((p,i)=>{
+    if(typeof p==="string"){ h+=esc(p)+" "; start=false; return; }
+    const kd=`role="button" tabindex="0" onclick="splitClick(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();splitClick(${i});}"`;
+    if(p.w!==undefined){
+      const on=!!st[i], stays=STAYS.indexOf(p.w.toLowerCase())>=0;
+      h+=`<span class="ck sw" ${kd} aria-label="${on?"Join again at":"Split at"} ${esc(p.w)}">${on?`<b class="stop">.</b> ${stays?esc(p.w):`<s>${esc(p.w)}</s>`}`:esc(p.w)}</span> `;
+    } else {
+      const t=start?"You":"you";
+      h+=`<span class="ck sw ${st[i]?"cut":""}" ${kd} aria-label="${st[i]?"Put back":"Cut"} you">${t}</span> `;
+    }
+    start=false;
+  });
+  const now=splitSentences(st);
+  const before=splitSentences({}).map(wordsIn);
+  $("body").innerHTML=bar("Split")+`<div class="cols"><div class="cardbox">
+      <p class="prompt">Click a dotted joining word to split the sentence there.</p>
+      <p class="hint" style="margin:0">Click a dotted “you” to cut it.</p>
+      <p class="hint">Click again to undo.</p>
+      <div class="jp">${h}</div>
+      <p class="dim src">${esc(SPLIT.src)}</p>
+      <p class="lab">Your steps</p>
+      <ol class="steps">${now.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    </div>
+    <div class="cardbox">
+      <div class="btnrow" style="margin-top:0"><button class="btn btn-primary" onclick="checkSplit()">Check</button>
+        <button class="btn btn-ghost" onclick="resetSplit()">Start again</button></div>
+      <div class="fb ${PV.fb?PV.fb.cls+" on":""}" id="fb">${PV.fb?PV.fb.html:""}</div>
+      ${barsHtml(before, now.map(wordsIn))}
+    </div></div>`;
+  const nb=$("nextBtn"); if(nb) nb.focus();
+}
+function splitClick(i){ bump(s=>{ const o=Object.assign({}, s.split||{}); if(o[i]) delete o[i]; else o[i]=true; s.split=o; }); PV.fb=null; renderSplit(); }
+function resetSplit(){ bump(s=>{ s.split={}; }); PV.fb=null; renderSplit(); }
+function checkSplit(){
+  const issues=judgeSplit(S.split||{}), ok=!issues.length;
+  if(S.first.split===undefined) bump(s=>{ s.first.split={ ok, issues:issues.map(x=>({k:x.k, w:x.w, at:x.at})) }; });
+  if(ok) bump(s=>{ s.done.split=true; });
+  PV.fb = ok
+    ? {cls:"ok", html:`<span class="rule">Every step is a sentence, and every instruction starts with its verb.</span>
+        <p class="lab" style="margin-top:6px">The recipe says</p>${SPLIT.recipe.map(r=>`<p class="yours">${esc(r)}</p>`).join("")}${nextBtn("go('report')","Report →")}`}
+    : {cls:"bad", html:`<span class="rule">Not yet.</span><ul>${issues.map(x=>`<li><i>“${esc(x.at)}”</i>: ${esc(x.msg)}</li>`).join("")}</ul>`};
+  renderSplit();
+}
+
+/* ====================== REPORT ===========================================
+   One tab-separated row. First tries only. Misses are named and rolled up by
+   what went wrong, each with the sentence it happened in. */
+const MISS = {
+  nf:"Counted a verb with no subject", missv:"Missed a verb", notverb:"Clicked a word that is not a verb",
+  phrase:"Took a word in a phrase for the subject", other:"Picked the wrong subject",
+  you:"Missed the unwritten you", wrote:"Said “you” when the subject is written", type:"Sentence type",
+  splice:"Comma splice", adds:"“and” where the sentences do more than add", weight:"Weight on the wrong clause",
+  backwards:"Reason and result backwards", word:"Wrong joining word", verdict:"Joined the verdict on",
+  apart:"Joined two different points", left:"Left a pair apart",
+  run:"Left two steps joined", frag:"Split off a fragment", keptyou:"Left “you” on an instruction", cutyou:"Cut the “you” in a tip"
+};
+function reportData(){
+  const miss={}, note=(k,item)=>{ (miss[k]=miss[k]||[]).push(item); };
+  let tried=0, ok=0;
+  CARDS.forEach(c=>{
+    const k="cl."+c.id, a=S.first[k+".A"], b=S.first[k+".B"], cc=S.first[k+".C"], tag=" ("+c.short+")";
+    if(a){ (a.nf||[]).forEach(w=>note("nf","“"+w+"”"+tag)); (a.missv||[]).forEach(w=>note("missv","“"+w+"”"+tag)); (a.notverb||[]).forEach(w=>note("notverb","“"+w+"”"+tag)); }
+    if(b) (b.miss||[]).forEach(x=>note(x.k,"“"+x.w+"” for “"+x.v+"”"+tag));
+    if(cc && !cc.ok) note("type", typeName(cc.pick).toLowerCase()+" for "+model(c).type+tag);
+    const r=cardFirst(c); if(r!==null){ tried++; if(r) ok++; }
+  });
+  const J=S.first.join, P=S.first.split;
+  if(J) (J.issues||[]).forEach(x=>note(x.k,"“"+(x.w||"apart")+"” at “"+x.at+"”"));
+  if(P) (P.issues||[]).forEach(x=>note(x.k,"“"+x.w+"” at “"+x.at+"”"));
+  const mins = (S.startedAt&&S.lastAt) ? Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)) : "";
+  const misses = Object.keys(MISS).filter(k=>miss[k]).map(k=>`${MISS[k]}: ${miss[k].join("; ")}`).join(" | ");
+  const d=new Date();
+  return { cols:["Date","First name","Last name","Code","Minutes","Clauses, first go","Join, first go","Split, first go","Misses"],
+           row:[ d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
+                 S.fname, S.lname, S.sid, String(mins),
+                 `${ok}/${CARDS.length}`+(tried<CARDS.length?` (${tried} tried)`:""),
+                 J?(J.ok?"yes":"no"):"not tried", P?(P.ok?"yes":"no"):"not tried", misses||"none" ] };
+}
+function renderReport(){
+  const r=reportData();
+  $("body").innerHTML=topbar(false)+`<h2>Report for your teacher</h2>
+    <table class="rpt"><tr>${r.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr>
+      <tr>${r.row.map(v=>`<td>${esc(v)}</td>`).join("")}</tr></table>
+    <p class="dim">First tries only. It cannot tell whether you can do this in your own folio piece.</p>
+    <div class="btnrow"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
+      <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
+    <div class="fb" id="fb"></div>`;
+}
+function copyRow(){
+  const tsv=reportData().row.map(v=>String(v).replace(/[\t\n]/g," ")).join("\t");
+  const done=()=>{ const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Copied. Paste it into the class sheet."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, ()=>fallback(tsv,done));
+  else fallback(tsv,done);
+}
+function fallback(t, done){
+  const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); done(); }catch(e){} a.remove();
+}
+
+/* ---- boot ---- */
+(function boot(){
+  const m=(location.hash||"").replace("#","");
+  if(m==="deck"){ location.replace("SentenceFluencyDeck.html"); return; }
+  const bad=contentErrors();
+  if(bad.length){
+    $("body").innerHTML=`<h1>Sentence fluency</h1><div class="broken"><b>This page will not run until its content is fixed.</b>
+      <ul>${bad.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  if(!idOk()){ go("id"); return; }
+  go(["clauses","join","split","report"].indexOf(m)>=0 ? m : "home");
+})();
+</script>
+</body>
+</html>
