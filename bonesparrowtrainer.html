@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Bone Sparrow — Pre-reading Trainer</title>
+<title>The Bone Sparrow: Pre-reading Trainer</title>
 <style>
   /* Palette matches Grammar Hub / Aussie Phonics Trainer so the suite reads as one. */
   :root{
     --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
     --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
     --correct:#2f6a3e; --wrong:#a83232; --okbg:#eef5ee; --badbg:#f7ecec;
-    /* morpheme roles — same values as the Vocab Hub / Climb cards */
+    /* morpheme roles: same values as the Vocab Hub / Climb cards */
     --mpre:#2c6fa8; --mroot:#9a5518; --msuf:#3f7a4a; --mcon:#6c6353;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -149,12 +149,13 @@
   font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
   background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
 .hublink:hover{color:#0B447C;border-color:#0B447C}
+.hublink a{color:inherit;text-decoration:none}.hublink a:hover{text-decoration:underline}
 @media (max-width:1040px){body{padding-top:56px}}
 @media print{.hublink{display:none !important}}
 </style>
 </head>
 <body>
-<a class="hublink" href="BoneSparrow.html">⌂ Main menu</a>
+<span class="hublink"><a href="index.html">⌂ Year 7 English</a> <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span> <a href="BoneSparrow.html">The Bone Sparrow</a></span>
 <div class="container">
 
 <div class="screen active" id="scr-home">
@@ -170,10 +171,10 @@
 <div class="screen" id="scr-study">
   <div class="topbar noprint"><button class="linkbtn" onclick="go('home')">&larr; home</button><span class="progress">STEP 1 · STUDY</span></div>
   <h2>Unit vocabulary</h2>
-  <p class="muted" style="margin-bottom:14px">Read every word: its meaning, and how its <b>morphemes</b> (prefix + root + suffix) build that meaning. The tasks use close look-alike words — the morphemes are how you tell them apart.</p>
+  <p class="muted" style="margin-bottom:14px">Read every word: its meaning, and how its <b>morphemes</b> (prefix + root + suffix) build that meaning.</p>
   <div id="study-list"></div>
   <div class="nextrow noprint">
-    <button class="btn btn-primary" onclick="markStudied()">I've read them all — start the tasks &rarr;</button>
+    <button class="btn btn-primary" onclick="markStudied()">I've read them all. Start the tasks &rarr;</button>
   </div>
 </div>
 
@@ -196,10 +197,10 @@
 <script>
 "use strict";
 /* ============================================================
-   THE BONE SPARROW — PRE-READING TRAINER (standalone)
+   THE BONE SPARROW: PRE-READING TRAINER (standalone)
    Companion to the Lessons 01–03 pre-reading sequence.
 
-   STEP 1 · VOCABULARY — every student meets all 17 unit words,
+   STEP 1 · VOCABULARY: every student meets all 17 unit words,
      but each word arrives as ONE randomly assigned task: assemble
      it from its morphemes, match its meaning, answer a morpheme
      question, or complete a sentence. The mix and order differ
@@ -207,7 +208,7 @@
      refresh can't reroll it. Wrong answers loop until mastered;
      the report records first attempts.
 
-   STEP 2 · SENTENCE GYM — five core stages, easy to hard, each
+   STEP 2 · SENTENCE GYM: five core stages, easy to hard, each
      with a mini lesson: count clauses → simple vs compound →
      run-ons → clauses & conjunctions → fix the sentence.
      Under 80% on a stage = reteach + a fresh parallel set.
@@ -215,7 +216,7 @@
      complex-sentences extension; anyone else gets a consolidation
      round that re-tests exactly what they missed.
 
-   REPORT — available at any time; unfinished sections say so.
+   REPORT: available at any time; unfinished sections say so.
    Name + student ID + print-to-PDF for handing in.
    ============================================================ */
 
@@ -282,7 +283,7 @@ const BUILD = [
     meaning:"Having lost determination or confidence; discouraged.",
     tiles:[["dis-","removal, taking away"],["heart","courage, spirit"],["-en","verb: to make"],["-ed","adjective / past"]],
     decoys:[["-less","without"],["un-","not"]],
-    note:"The courage taken out of you: it's about how you <b>feel</b>. (Heartless — the decoy — means cruel, a different word.)" },
+    note:"The courage taken out of you: it's about how you <b>feel</b>. (Heartless, the decoy, means cruel: a different word.)" },
   { w:"Dispossessed", pos:"adjective",
     meaning:"Having had property, land, rights, or a sense of home taken away.",
     tiles:[["dis-","removal"],["possess","to own, occupy"],["-ed","adjective / past"]],
@@ -312,7 +313,7 @@ const BUILD = [
 
 /* ---------------- VOCAB QUIZ ITEM BANK ----------------
    Every distractor is a close look-alike. Items are dealt to words
-   via WORD_TASKS — each student sees each word exactly once. */
+   via WORD_TASKS: each student sees each word exactly once. */
 const QUIZ_ITEMS = [
   { id:"m1", kind:"mcq", q:"Hostility and ill-treatment, especially because of race, political or religious beliefs.",
     a:"persecution", opts:["persecution","prosecution","execution","preservation"],
@@ -380,9 +381,9 @@ const QUIZ_ITEMS = [
   { id:"g5", kind:"gap", before:"Holding people on Nauru while their claims are processed is called", after:".",
     a:"off-shore detention", opts:["off-shore detention","incarceration","immigration","dislocation","persecution"],
     explain:"Detention <b>away from the mainland</b> = off-shore detention. Incarceration is confinement generally: the question asks for the specific name." },
-  { id:"g6", kind:"gap", before:"Refugees are often", after:"— their land, homes and rights taken from them.",
+  { id:"g6", kind:"gap", before:"Refugees are often", after:": their land, homes and rights taken from them.",
     a:"dispossessed", opts:["dispossessed","disheartened","dislocated","repossessed","dispassionate"],
-    explain:"The dash defines the word: things TAKEN = <b>dispossessed</b>. Feeling discouraged = disheartened: a different fit." },
+    explain:"The colon defines the word: things TAKEN = <b>dispossessed</b>. Feeling discouraged = disheartened: a different fit." },
   { id:"g7", kind:"gap", before:"After the tenth rejected application, even Queeny grew", after:".",
     a:"disheartened", opts:["disheartened","dispossessed","dislocated","dispassionate","heartless"],
     explain:"Losing hope = <b>disheartened</b>: the heart (courage) taken out of you." },
@@ -395,7 +396,7 @@ const QUIZ_ITEMS = [
   { id:"g10", kind:"gap", before:"Her heart felt heavy with", after:"after her father died.",
     a:"grief", opts:["grief","grievance","gravity","relief"],
     explain:"<b>Grief</b> comes from gravis = heavy: the heaviness of sorrow. A grievance is a complaint." },
-  { id:"g11", kind:"gap", before:"The", after:"of his notebook — his only possession — hit Subhi hard.",
+  { id:"g11", kind:"gap", before:"The", after:"of his notebook, his only possession, hit Subhi hard.",
     a:"loss", opts:["loss","lose","loose","lost","grief"],
     explain:"The noun is <b>loss</b>. Lose = verb, lost = past, loose = not tight." },
   { id:"g12", kind:"gap", before:"Subhi has spent his whole life as an", after:"of the detention centre.",
@@ -485,15 +486,15 @@ const GRAM_STAGES = [
     reteach:`Find every action or state word, then ask <i>who or what does it?</i>
       <ul>
       <li><span class="ex">The rats run across the tent roof at night.</span>: one verb (<u>run</u>), one doer (<u>rats</u>) → ONE clause. "Across the tent roof at night" is extra detail rather than a clause.</li>
-      <li><span class="ex">Jimmie found the notebook she kept it safe.</span> — two verbs (<u>found</u>, <u>kept</u>), two doers (<u>Jimmie</u>, <u>she</u>) → TWO clauses.</li>
-      <li><span class="ex">Refugees leave behind homes, friends, and familiar streets.</span> — commas, but only ONE verb (<u>leave</u>) → ONE clause. It's just a list.</li>
+      <li><span class="ex">Jimmie found the notebook she kept it safe.</span>: two verbs (<u>found</u>, <u>kept</u>), two doers (<u>Jimmie</u>, <u>she</u>) → TWO clauses.</li>
+      <li><span class="ex">Refugees leave behind homes, friends, and familiar streets.</span>: commas, but only ONE verb (<u>leave</u>) → ONE clause. It's just a list.</li>
       </ul>`,
     optset:["One clause","Two clauses"],
     itemsA:[
       { id:"s1a1", q:"Subhi waits by the fence.", a:"One clause", explain:"One pair: <u>Subhi</u> <u>waits</u>. 'By the fence' is detail rather than a clause." },
       { id:"s1a2", q:"Maá sleeps, and Queeny draws.", a:"Two clauses", explain:"Two pairs: <u>Maá sleeps</u> + <u>Queeny draws</u>." },
       { id:"s1a3", q:"The rats run across the tent roof at night.", a:"One clause", explain:"One verb (<u>run</u>), one doer (<u>rats</u>). All the rest is detail." },
-      { id:"s1a4", q:"Jimmie found the notebook she kept it safe.", a:"Two clauses", explain:"<u>Jimmie found</u> + <u>she kept</u> — two pairs (and they've been crashed together — more on that soon!)." },
+      { id:"s1a4", q:"Jimmie found the notebook she kept it safe.", a:"Two clauses", explain:"<u>Jimmie found</u> + <u>she kept</u>: two pairs, crashed together with nothing joining them." },
       { id:"s1a5", q:"Refugees leave behind homes, friends, and familiar streets.", a:"One clause", explain:"Tricky! The commas are a LIST. Only one verb: <u>leave</u>." },
     ],
     itemsB:[
@@ -510,8 +511,8 @@ const GRAM_STAGES = [
       </ul>
       Count the clauses first, then look for the FANBOYS joiner.`,
     reteach:`      <ul>
-      <li>Q1 — how many subject–verb pairs? ONE → it's simple, stop there.</li>
-      <li>Q2 — if TWO, is there a FANBOYS word (for, and, nor, but, or, yet, so) joining them? Yes → compound.</li>
+      <li>Q1: how many subject–verb pairs? ONE → it's simple, stop there.</li>
+      <li>Q2: if TWO, is there a FANBOYS word (for, and, nor, but, or, yet, so) joining them? Yes → compound.</li>
       </ul>
       <span class="ex">Some families wait years for an answer.</span>: one pair (<u>families wait</u>) → simple, even though it's long.
       <br><span class="ex">Eli plans a protest, and Queeny joins him.</span>: <u>Eli plans</u> + <b>and</b> + <u>Queeny joins</u> → compound.
@@ -534,17 +535,17 @@ const GRAM_STAGES = [
   { id:"s3", title:"Spot the run-on", short:"Run-ons",
     teach:`A run-on has TWO clauses, but the writer forgot the full stop or the conjunction: the clauses crash into each other.
       <ul>
-      <li><span class="ex">Most refugees flee war they leave everything behind.</span> ✗ — <u>refugees flee</u> / <u>they leave</u>, nothing joining them.</li>
-      <li><b>A comma alone can't join clauses either:</b> <span class="ex">The camp is quiet, the rats come out.</span> ✗ — still a run-on (this one's called a <i>comma splice</i>).</li>
+      <li><span class="ex">Most refugees flee war they leave everything behind.</span> ✗ <u>refugees flee</u> / <u>they leave</u>: nothing joins them.</li>
+      <li><b>A comma alone can't join clauses either:</b> <span class="ex">The camp is quiet, the rats come out.</span> ✗ Still a run-on (this one's called a <i>comma splice</i>).</li>
       </ul>
       Two clauses need a full stop between them or a comma + FANBOYS.`,
     reteach:`      <ol>
       <li>Count the subject–verb pairs.</li>
       <li>One pair → <b>simple</b>. Done.</li>
       <li>Two pairs joined by comma + FANBOYS → <b>compound</b>.</li>
-      <li>Two pairs with NOTHING joining them — or only a comma — → <b>run-on</b>.</li>
+      <li>Two pairs with NOTHING joining them, or only a comma → <b>run-on</b>.</li>
       </ol>
-      <span class="ex">The fence is high it cuts them off.</span> — two pairs, no joiner → run-on.
+      <span class="ex">The fence is high it cuts them off.</span>: two pairs, no joiner → run-on.
       <br><span class="ex">Jimmie visits at night, she brings hot chocolate.</span>: two pairs, only a comma → still a run-on.`,
     optset:["Simple sentence","Compound sentence","Run-on sentence"],
     itemsA:[
@@ -569,7 +570,7 @@ const GRAM_STAGES = [
       <li><b>and</b> adds · <b>but / yet</b> contrast · <b>or</b> offers a choice · <b>so</b> shows a result · <b>for</b> gives a reason</li>
       </ul>
       <b>Your tasks:</b> click the conjunction, or pick out the clause. Watch out: words like <i>then</i>, <i>also</i> and <i>very</i> are NOT conjunctions.`,
-    reteach:`Cover the sentence with your hand and slide it right: the moment the words so far could stand alone as a sentence, you've finished clause 1 — the next little word is usually the conjunction.
+    reteach:`Cover the sentence with your hand and slide it right: the moment the words so far could stand alone as a sentence, you've finished clause 1. The next little word is usually the conjunction.
       <br><span class="ex">I need to bring the book to class</span> ← could stand alone → <b>, but</b> ← the hinge → <span class="ex">we might not read every lesson</span>.
       <br>Meaning check: <b>so</b> = therefore, <b>but/yet</b> = however, <b>or</b> = choice, <b>and</b> = plus.`,
     itemsA:[
@@ -584,7 +585,7 @@ const GRAM_STAGES = [
         explain:"The second clause is everything after the hinge: <u>Queeny</u> (subject) <u>draws</u> (verb) pictures." },
       { id:"s4a5", kind:"mcq", q:"Which conjunction fits best? <i>“Subhi wants to shout, ______ he stays silent.”</i>",
         a:"yet", opts:["yet","and","or","for"],
-        explain:"The two ideas clash — wanting to shout vs staying silent — so you need a contrast word: <b>yet</b> (or but)." },
+        explain:"The two ideas clash (wanting to shout vs staying silent), so you need a contrast word: <b>yet</b> (or but)." },
     ],
     itemsB:[
       { id:"s4b1", kind:"clickword", q:"I need to bring the book to class, but we might not read every lesson.", a:"but",
@@ -603,17 +604,17 @@ const GRAM_STAGES = [
   { id:"s5", title:"Fix the sentence", short:"Fixing",
     teach:`<b>Two ways to fix a run-on:</b>
       <ul>
-      <li><b>Full stop</b>, split it into two clean simple sentences. Punchy, keeps ideas separate.</li>
+      <li><b>Full stop</b>: split it into two clean simple sentences. Punchy, keeps ideas separate.</li>
       <li><b>Comma + FANBOYS</b>: one compound sentence that SHOWS how the ideas connect: <i>so</i> = result, <i>but</i> = contrast, <i>and</i> = addition.</li>
       </ul>
       <b>Traps in the wrong answers:</b> a comma alone (splice), the comma on the wrong side of the conjunction, and conjunctions whose meaning doesn't fit.`,
     reteach:`<b>Worked example.</b> Run-on: <span class="ex">The cover is blue this can represent sadness.</span>
       <ul>
-      <li>Step 1 — find the two clauses: <u>The cover is blue</u> | <u>this can represent sadness</u>.</li>
+      <li>Step 1: find the two clauses: <u>The cover is blue</u> | <u>this can represent sadness</u>.</li>
       <li>Fix A (full stop): <span class="ex">The cover is blue. This can represent sadness.</span> ✓</li>
       <li>Fix B (comma + conjunction): <span class="ex">The cover is blue<b>, and</b> this can represent sadness.</span> ✓</li>
-      <li>Still WRONG: <span class="ex">The cover is blue<b>,</b> this can represent sadness.</span> ✗ — a comma alone can't do the job.</li>
-      <li>Also WRONG: <span class="ex">The cover is blue and<b>,</b> this…</span> ✗ — the comma goes BEFORE the conjunction, not after.</li>
+      <li>Still WRONG: <span class="ex">The cover is blue<b>,</b> this can represent sadness.</span> ✗ A comma alone can't do the job.</li>
+      <li>Also WRONG: <span class="ex">The cover is blue and<b>,</b> this…</span> ✗ The comma goes BEFORE the conjunction, not after.</li>
       </ul>`,
     itemsA:[
       { id:"s5a1", kind:"mcq", q:"Fix the run-on: <i>“The cover shows a boy sitting alone the story is probably about loneliness.”</i>",
@@ -682,17 +683,16 @@ const GRAM_STAGES = [
               "Removing the second clause"],
         explain:"The full stop splits them cleanly. Comma + conjunction JOINS them instead: grammatical, but a different effect." },
     ]},
-  /* extension stage — only routed to students with a clean core run */
+  /* extension stage: only routed to students with a clean core run */
   { id:"s6", title:"Complex sentences", short:"Complex", core:false,
-    teach:`<b>The summit: complex sentences.</b>
-      <ul>
+    teach:`<ul>
       <li>An <b>independent clause</b> can stand alone: <span class="ex">Subhi listens.</span></li>
-      <li>A <b>dependent clause</b> has a subject and verb but CANNOT stand alone, it starts with a subordinating conjunction: <b>because, although, when, if, while, since</b>. <span class="ex">because the guards are fewer</span> ← feels unfinished.</li>
+      <li>A <b>dependent clause</b> has a subject and verb but CANNOT stand alone. It starts with a subordinating conjunction: <b>because, although, when, if, while, since</b>. <span class="ex">because the guards are fewer</span> ← feels unfinished.</li>
       <li><b>Complex sentence</b> = independent + dependent: <span class="ex">Jimmie visits at night <b>because</b> the guards are fewer.</span></li>
       <li>Dependent clause FIRST → comma after it: <span class="ex"><b>Although it was raining,</b> we went outside.</span></li>
       <li>A dependent clause left alone is a <b>fragment</b>. A new error to hunt: <span class="ex">Because Subhi was born in the camp.</span> ✗</li>
       </ul>`,
-    reteach:`<b>Telling the sentence types apart — the full map:</b>
+    reteach:`<b>Telling the sentence types apart:</b>
       <ul>
       <li>One clause → <b>simple</b>: <span class="ex">The duck talks.</span></li>
       <li>Two INDEPENDENT clauses + FANBOYS → <b>compound</b>: <span class="ex">The duck talks, and Subhi listens.</span></li>
@@ -700,7 +700,7 @@ const GRAM_STAGES = [
       <li>Two clauses, no joiner → <b>run-on</b>: <span class="ex">The duck talks Subhi listens.</span> ✗</li>
       <li>Dependent clause alone → <b>fragment</b>: <span class="ex">When the duck talks.</span> ✗</li>
       </ul>
-      Phrase trap: <span class="ex">After lights-out</span> has no verb — it's a phrase, not a clause, so it doesn't change the sentence type.`,
+      Phrase trap: <span class="ex">After lights-out</span> has no verb. It's a phrase, not a clause, so it doesn't change the sentence type.`,
     itemsA:[
       { id:"s6a1", kind:"mcq", q:"<i>“Although it was raining, we went outside.”</i>: what type of sentence?",
         a:"Complex sentence", opts:["Complex sentence","Compound sentence","Simple sentence","Run-on sentence"],
@@ -803,7 +803,7 @@ function morphCls(piece){
   if(/-$/.test(piece)) return "mp";       // prefix
   return "mr";                            // root / base
 }
-/* Rebuild the headword with each morpheme's own letters coloured by its role —
+/* Rebuild the headword with each morpheme's own letters coloured by its role:
    the same colours used on the morph line and in the legend above. */
 function colourWord(word, tiles){
   if(!tiles || !tiles.length) return esc(word);
@@ -849,10 +849,10 @@ function renderHome(){
     { t:"Study the vocabulary", d:"Read all 17 unit words first: meanings and the morphemes (prefix + root + suffix) that build them.",
       done:S.studied, locked:false, fn:()=>go("study"),
       tag: S.studied ? "READ" : "" },
-    { t:"Vocabulary tasks", d:"All 17 words, each arrives as a puzzle, a meaning match or a sentence to complete. Every student gets a different mix.",
+    { t:"Vocabulary tasks", d:"All 17 words. Each one is a puzzle, a meaning match or a sentence to complete.",
       done:S.done.vocab, locked:!S.studied, fn:()=>startVocab(),
       tag: S.done.vocab ? `${qGot}/${qE.length} QUIZ FIRST TRY` : (vM? `${vM}/${vN}` : "") },
-    { t:"Sentence gym", d:"Five stages, easy to hard: clauses → simple & compound → run-ons → conjunctions → fixing. Your results choose what comes next.",
+    { t:"Sentence gym", d:"Five stages, easy to hard: clauses → simple & compound → run-ons → conjunctions → fixing.",
       done:S.done.grammar, locked:!S.done.vocab, fn:()=>startGrammar(),
       tag: S.done.grammar ? `${gSc}/${coreItems().length} FIRST TRY${routeTag?" · "+routeTag:""}` : "" },
     { t:"My report", d:"Enter your name & student ID and save the PDF. You can do this at any point; unfinished sections will say so.",
@@ -897,7 +897,7 @@ function renderBuildTask(entry, queue){
 
   if(b.kind==="root"){
     mount.innerHTML=`${vocabDots(b.w)}
-      <div class="prompt">Root word: unlock it by knowing where it comes from</div>
+      <div class="prompt">Root word: where does it come from?</div>
       <div class="buildword">${esc(b.w)} <span class="muted">(${b.pos})</span></div>
       <div class="qtext" style="text-align:center">${b.rootQ}</div>
       <div class="opts chips" id="rootopts" style="justify-content:center"></div>
@@ -1003,7 +1003,6 @@ function renderQuizItem(mount, it, hooks){
   function finishItem(correct){
     fb.className="feedback "+(correct?"ok":"bad");
     fb.innerHTML=(correct?"<b>Correct.</b> ":`<b>Not quite. The answer is “${esc(it.a)}”.</b> `)+(it.explain||"");
-    if(!correct)
     nextBtn.style.display="inline-block";
     if(hooks.firstTracked && S.first[it.id]===undefined){ S.first[it.id]=correct; save(); }
     if(hooks.shadow && hooks.shadow[it.id]===undefined) hooks.shadow[it.id]=correct;
@@ -1030,7 +1029,7 @@ function renderQuizItem(mount, it, hooks){
     box.appendChild(w);
   } else {
     const isGap=kind==="gap";
-    box.innerHTML=`<div class="prompt">${isGap?"Choose the word that truly fits":(it.promptText||hooks.promptText||"Choose the best answer")}</div>`;
+    box.innerHTML=`<div class="prompt">${isGap?"Choose the word that fits":(it.promptText||hooks.promptText||"Choose the best answer")}</div>`;
     const qd=document.createElement("div"); qd.className="qtext";
     if(isGap) qd.innerHTML=`${esc(it.before)} <span class="gap">&nbsp;</span> ${esc(it.after)}`;
     else qd.innerHTML=it.q;
@@ -1102,7 +1101,7 @@ function gramStage(idx, isRetry){
   const mount=document.getElementById("gram-body");
   document.getElementById("gram-prog").textContent=`STEP 3 · STAGE ${idx+1} OF ${core.length}`;
   mount.innerHTML=`${stagePath(idx)}
-    <h2>Stage ${idx+1}: ${st.title}${isRetry?" — second look":""}</h2>
+    <h2>Stage ${idx+1}: ${st.title}${isRetry?" (second look)":""}</h2>
     <div class="teach">${isRetry?st.reteach:st.teach}</div>
     <div class="nextrow"><button class="btn btn-primary" id="st-go">${isRetry?"Fresh set →":"Quiz →"}</button></div>`;
   document.getElementById("st-go").onclick=()=>{
@@ -1185,7 +1184,7 @@ function extStage(isRetry){
   const st=extStageDef();
   const mount=document.getElementById("gram-body");
   document.getElementById("gram-prog").textContent="STEP 3 · EXTENSION";
-  mount.innerHTML=`<h2>Extension: ${st.title}${isRetry?" — second look":""}</h2>
+  mount.innerHTML=`<h2>Extension: ${st.title}${isRetry?" (second look)":""}</h2>
     <div class="teach">${isRetry?st.reteach:st.teach}</div>
     <div class="nextrow"><button class="btn btn-primary" id="ext-go">${isRetry?"Fresh set →":"Quiz →"}</button></div>`;
   document.getElementById("ext-go").onclick=()=>{
@@ -1246,7 +1245,7 @@ function renderReport(){
 
   /* vocabulary row */
   let vocabScore, vocabNote, vocabDone=!!S.done.vocab;
-  if(!S.assign){ vocabScore="—"; vocabNote="Not started"; }
+  if(!S.assign){ vocabScore=""; vocabNote="Not started"; }
   else {
     const qE=vocabQuizEntries();
     const answered=qE.filter(e=>S.first[e.task]!==undefined).length;
@@ -1266,10 +1265,10 @@ function renderReport(){
   const stageRows=coreStages().map((st,i)=>{
     const answered=st.itemsA.filter(it=>S.first[it.id]!==undefined).length;
     const got=st.itemsA.filter(it=>S.first[it.id]===true).length;
-    if(answered===0) return `<tr><td>Stage ${i+1} — ${st.title}</td><td class="score">—</td><td class="nf">Not started</td></tr>`;
+    if(answered===0) return `<tr><td>Stage ${i+1}: ${st.title}</td><td class="score"></td><td class="nf">Not started</td></tr>`;
     if(answered<st.itemsA.length) return `<tr><td>Stage ${i+1}: ${st.title}</td><td class="score">${got}/${answered}</td><td class="nf">Not finished</td></tr>`;
     const note=S.reteach[st.id]
-      ? `Reteach + fresh set (retry ${S.retryScores[st.id]!==undefined?S.retryScores[st.id]+"/"+st.itemsB.length:"—"})`
+      ? `Reteach + fresh set (retry ${S.retryScores[st.id]!==undefined?S.retryScores[st.id]+"/"+st.itemsB.length:"not finished"})`
       : "Passed first time";
     return `<tr><td>Stage ${i+1}: ${st.title}</td><td class="score">${got}/${st.itemsA.length}</td><td>${note}</td></tr>`;
   }).join("");
@@ -1277,18 +1276,18 @@ function renderReport(){
   /* routed follow-up row */
   let routeRow;
   if(!S.route){
-    routeRow=`<tr><td>Routed follow-up</td><td class="score">—</td><td class="nf">Not reached — decided by core results (clean run → extension; otherwise → consolidation)</td></tr>`;
+    routeRow=`<tr><td>Routed follow-up</td><td class="score"></td><td class="nf">Not reached. Decided by core results (clean run → extension; otherwise → consolidation)</td></tr>`;
   } else if(S.route==="extension"){
     const ext=extStageDef();
     const answered=ext.itemsA.filter(it=>S.first[it.id]!==undefined).length;
     const got=ext.itemsA.filter(it=>S.first[it.id]===true).length;
-    if(!answered) routeRow=`<tr><td>Extension — ${ext.title}</td><td class="score">—</td><td class="nf">Earned but not finished</td></tr>`;
+    if(!answered) routeRow=`<tr><td>Extension: ${ext.title}</td><td class="score"></td><td class="nf">Earned but not finished</td></tr>`;
     else if(!S.extDone) routeRow=`<tr><td>Extension: ${ext.title}</td><td class="score">${got}/${answered}</td><td class="nf">Not finished</td></tr>`;
     else routeRow=`<tr><td>Extension: ${ext.title}</td><td class="score">${got}/${ext.itemsA.length}</td><td>Earned by a clean core run${S.reteach[ext.id]?` · reteach used (retry ${S.retryScores[ext.id]}/${ext.itemsB.length})`:""}</td></tr>`;
   } else {
     routeRow=S.consol
       ? `<tr><td>Consolidation round</td><td class="score">${S.consol.total?`${S.consol.cleared}/${S.consol.total}`:"n/a"}</td><td>Second pass at first-attempt misses, after reteaching</td></tr>`
-      : `<tr><td>Consolidation round</td><td class="score">: </td><td class="nf">Routed here but not finished</td></tr>`;
+      : `<tr><td>Consolidation round</td><td class="score"></td><td class="nf">Routed here but not finished</td></tr>`;
   }
 
   /* totals & missed words */
@@ -1307,20 +1306,20 @@ function renderReport(){
       <span style="align-self:flex-end"><button class="btn btn-primary" onclick="saveIdAndPrint()">Save as PDF</button></span>
     </div>
     <p class="muted noprint" style="margin-bottom:14px">Type your name and ID, click <b>Save as PDF</b>, choose “Save as PDF” as the destination in the print box, then email the file to your teacher.</p>
-    <h2>The Bone Sparrow, Pre-reading Report</h2>
+    <h2>The Bone Sparrow: Pre-reading Report</h2>
     <p class="muted">${name?`<b>${esc(name)}</b>`:"<i>(name not entered)</i>"} · ID ${sid?`<b>${esc(sid)}</b>`:"<i>(not entered)</i>"} · ${dt}${mins?` · ~${mins} min active`:""}</p>
     <table class="repgrid">
       <tr><th>Section</th><th>First attempt</th><th>Notes</th></tr>
       <tr><td>Vocabulary, mixed tasks (17 words)</td><td class="score">${vocabScore}</td><td${vocabDone?"":" class='nf'"}>${vocabNote}</td></tr>
       ${stageRows}
       ${routeRow}
-      <tr><td><b>All quiz items attempted</b></td><td class="score"><b>${attempted.length?`${totGot}/${attempted.length}`:", "}</b></td><td>${attempted.length?`<b>${Math.round(100*totGot/attempted.length)}%</b> on first attempts — every attempted item then mastered via the retry loop`:"Nothing attempted yet"}</td></tr>
+      <tr><td><b>All quiz items attempted</b></td><td class="score"><b>${attempted.length?`${totGot}/${attempted.length}`:""}</b></td><td>${attempted.length?`<b>${Math.round(100*totGot/attempted.length)}%</b> on first attempts; every attempted item then mastered via the retry loop`:"Nothing attempted yet"}</td></tr>
     </table>
     <h3>Words missed on first try</h3>
-    <p class="muted">${missedWords.length?esc(missedWords.join(", ")):(S.assign?"None — no first-attempt vocabulary errors.":"—")}</p>
+    <p class="muted">${missedWords.length?esc(missedWords.join(", ")):(S.assign?"None.":"Not started.")}</p>
     <p class="muted">${S.route==="extension"?"Routed to the complex-sentences extension by a clean core run.":""}
     ${S.route==="support"?"Routed to a consolidation round: first-attempt misses were re-tested after reteaching.":""}
-    ${anyReteach?"Where a stage scored under 80%, a reteach was shown and a fresh parallel set attempted — both results appear above.":(S.done.grammar?"No stage needed reteaching.":"")}</p>
+    ${anyReteach?"Where a stage scored under 80%, a reteach was shown and a fresh parallel set attempted. Both results appear above.":(S.done.grammar?"No stage needed reteaching.":"")}</p>
     <p class="muted">Verification code: <span class="vcode">${code}</span> · The Bone Sparrow pre-reading trainer</p>`;
 }
 function saveIdAndPrint(){

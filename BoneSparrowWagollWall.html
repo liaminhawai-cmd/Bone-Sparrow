@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Bone Sparrow — the full WAGOLL wall</title>
+<title>The Bone Sparrow: the full WAGOLL wall</title>
 <meta name="description" content="The whole analytical writing wall, Levels 5 to 9: the model response at every level, what makes each one that level, and what unlocks and retires as you climb.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>BS</text></svg>">
 <style>
 /* ===========================================================================
-   THE FULL WAGOLL WALL — its own page, its own URL.
+   THE FULL WAGOLL WALL: its own page, its own URL.
 
    It holds NO wall text of its own. The wall and the rubric are read at load
    time out of BoneSparrowReadingHub.html, which stays the single source for
@@ -93,8 +93,9 @@ h1{font-size:clamp(24px,3.4vw,36px);line-height:1.1;margin-bottom:8px;color:var(
   <div class="top">
     <span>Year 7 English · The Bone Sparrow</span>
     <span class="sp"></span>
-    <a href="teacher/">⌂ Teacher hub</a>
-    <a href="BoneSparrow.html">Main menu</a>
+    <a href="index.html">⌂ Year 7 English</a>
+    <a href="teacher/">Teacher hub</a>
+    <a href="BoneSparrow.html">The Bone Sparrow</a>
     <a href="BoneSparrowReadingHub.html">Reading hub</a>
     <a href="BoneSparrowWagollSheets.html">Printable A3 sheets</a>
   </div>
@@ -139,7 +140,7 @@ function render(d){
     <span><i class="sw verb"></i>analytical verb</span>
     <span><i class="sw idea"></i>idea</span>
     <span><i class="sw ev"></i>evidence</span>
-    <span><i class="sw eff"></i>purpose — effect on the reader</span>
+    <span><i class="sw eff"></i>purpose: effect on the reader</span>
   </div>` +
   WK_WALL.levels.map((lv,i)=>{
     const r = WK_WALL.resps.find(x=>x.lvl===i);
@@ -159,9 +160,7 @@ function render(d){
         ${L.retires?`<div class="down"><b>retires</b>${esc(L.retires)}</div>`:""}
       </div>`:""}
     </section>`;
-  }).join("") +
-  `<p class="foot">The same ladder prints as one A3 sheet per level, Foundation to Level 10, in the
-   <a href="BoneSparrowWagollSheets.html">anchor sheets</a>.</p>`;
+  }).join("");
 }
 
 (async function boot(){
@@ -173,8 +172,8 @@ function render(d){
     <div class="gate">
       <h2>Couldn't read the wall</h2>
       <p>${esc(e.message)}</p>
-      <p>Open it from the class website rather than off a disk (a <code>file://</code> address),
-         or use the printable sheets.</p>
+      <p>Open this page from the class website, not from a <code>file://</code> address.
+         Or use the printable sheets.</p>
       <p><a class="btn" href="BoneSparrowWagollSheets.html">Printable A3 sheets →</a>
          <a class="btn ghost" href="${HUB}">Reading hub</a></p>
     </div>`;

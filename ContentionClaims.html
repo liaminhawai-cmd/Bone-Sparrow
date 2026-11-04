@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contention and claims — Writing Folio</title>
+<title>Contention and claims: Writing Folio</title>
 <style>
 :root{
   --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
@@ -266,8 +266,8 @@ a.step{text-decoration:none}
 
    Source material. The card sorts (Sets D and E) and the six sentences in the
    "which of these are her claims" task are the teacher's own wording from
-   06.1c and 06.1w. Where the mentor text itself is needed — because locating a
-   contention in real prose is the skill — short extracts are quoted and
+   06.1c and 06.1w. Where the mentor text itself is needed, because locating a
+   contention in real prose is the skill, short extracts are quoted and
    attributed, paragraph by paragraph, with the printed reading copy (05.1r)
    as the text students actually read from. The whole article is not
    reproduced here: this site is public.
@@ -479,7 +479,7 @@ function terms(){
   Object.keys(GRAM_TERMS).forEach(k=>{ TERMS[k]=GRAM_TERMS[k]; });
   return TERMS;
 }
-/* Wrap any key word in a span that can be tapped. Only called on static text —
+/* Wrap any key word in a span that can be tapped. Only called on static text,
    never on the clickable chunks of a sample, where a nested button would
    swallow the click the task depends on. */
 function glossify(html){
@@ -499,7 +499,7 @@ function glossify(html){
     });
   }).join("");
 }
-/* prefix, root, suffix or connector — the same test the vocab hub uses */
+/* prefix, root, suffix or connector: the same test the vocab hub uses */
 function classifyMorph(piece){
   if(/^-.*-$/.test(piece)) return "mc";
   if(/^-/.test(piece)) return "ms";
@@ -556,7 +556,7 @@ function esc(t){ const d=document.createElement("div"); d.textContent=t==null?""
 function $(id){ return document.getElementById(id); }
 function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-/* First attempt only, and never overwritten — a later miss cannot erase a
+/* First attempt only, and never overwritten: a later miss cannot erase a
    first-go success, and a later success cannot hide a first-go miss. */
 function recFirst(id, ok){ if(S.first[id]===undefined){ S.first[id]=!!ok; save(); } }
 function vcode(str){
@@ -583,7 +583,7 @@ function go(s){
 function topbar(){
   return `<div class="topbar noprint">
     <span class="sp">
-      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
       <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
     </span></div>`;
 }
@@ -627,7 +627,7 @@ function renderHome(){
       tag:S.first["wordsdone"]?"done":"", done:!!S.first["wordsdone"], go:"words" },
     { t:"Grammar", d:"After your teacher's lesson: fact or claim, rhetorical questions, modal verbs.",
       tag:S.first["gramdone"]?"done":"", done:!!S.first["gramdone"], go:"gram" },
-    { t:"The deck", d:"A card you get wrong goes back in, with another one like it.",
+    { t:"The deck", d:"Contention, claim or fact. Rewriting a weak one. Spotting them in a text. Which contention a claim supports.",
       tag:S.deckDone?"done":(sc.total?`${sc.got}/${sc.total} first go`:""), done:S.deckDone, go:"deck" },
     { t:"Your draft", d:"Write your persuasive piece.",
       tag:words?`${words} words`:"", done:words>40, go:"draft" },
@@ -884,7 +884,7 @@ const RHET_TYPES = { rhet:"Rhetorical question", gen:"Genuine question", decl:"D
 
 /* The sentence is the source of truth: the data says which words are the verb
    group, and the position is worked out from the sentence itself. A hand-
-   counted index is invisible when it is wrong — this one told a student the
+   counted index is invisible when it is wrong. This one told a student the
    verb of "…Year 7 students threw food away…" was "students". */
 function verbSpan(it){
   if(it._span!==undefined) return it._span;
@@ -1037,7 +1037,7 @@ function gramRail(kind,i){
   if(!o[1]) G.railWrong.push(o[2]||"");
   renderGram();
   if(G.pick.subj===undefined||G.pick.subj===null||G.pick.verb===undefined||G.pick.verb===null) return;
-  /* both halves chosen — judge the sentence they have built */
+  /* both halves chosen: judge the sentence they have built */
   const sub=G.order2.subj.find(x=>x[0]===G.pick.subj), vb=G.order2.verb.find(x=>x[0]===G.pick.verb);
   const ok=!!(sub&&sub[1]&&vb&&vb[1]);
   if(!G.tried["i"+G.i]){ G.tried["i"+G.i]=true; recFirst("g.implied."+G.i, ok); }
@@ -1101,7 +1101,7 @@ function gramModalPick(m,k){
 /* ====================== STEP 3 · THE DECK ================================
    A card leaves the deck after two correct answers in a row. A wrong answer
    sends it back down the deck, resets its streak, and pulls in a different
-   card testing the same rule — so the way out is the rule rather than the item. */
+   card testing the same rule, so the way out is the rule rather than the item. */
 const SESSION_SIZE = 16;
 const RETIRE_STREAK = 2;
 const PENALTY_GAP = 4;
@@ -1247,7 +1247,7 @@ function ansStrong(said){
     hitCard(entry);
     return;
   }
-  /* right that it isn't one — now say what is missing */
+  /* right that it isn't one: now say what is missing */
   D.phase="why";
   document.querySelectorAll(".opt").forEach(b=>b.disabled=true);
   $("oN").classList.add("right");
@@ -1323,7 +1323,7 @@ function ansFix(){
   recFirst(c.id, ok);
   const fb=$("fb"); fb.className="fb "+(ok?"ok":"bad")+" on";
   const notJudged = `<div class="notjudged">Checked: it takes a side, it is specific, it is a statement, it is a full sentence.
-    Not checked: whether it is true, and whether it is your strongest point, your teacher reads that.</div>`;
+    Not checked: whether it is true, and whether it is your strongest point. Your teacher reads that.</div>`;
   if(ok){
     fb.innerHTML=`<span class="rule">That works as a ${c.want==="cont"?"contention":"claim"}.</span>
       <div class="stim" style="margin:8px 0 0">${esc(tidy.out)}</div>`+
@@ -1797,10 +1797,10 @@ function doneRows(){
   const n=counts(), d=S.done||{};
   const self=[["Contention marked",d.cont,n.cont],["Claims marked",d.claim,n.claim],
               ["Facts and techniques marked",d.tech,n.fact+n.rhetq+n.emot+n.incl]];
-  let h=self.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]?"✓":"—"}</td><td>${r[2]} coloured</td></tr>`).join("");
+  let h=self.map(r=>`<tr><td>${esc(r[0])}</td><td>${r[1]?"✓":"no"}</td><td>${r[2]} coloured</td></tr>`).join("");
   h+=["pron","mod"].map(kind=>{ const q=layDone(kind);
     return `<tr><td>${kind==="pron"?"Pronouns named":"Modals rated"}</td>
-      <td>${(q.total&&q.did===q.total)?"✓":"—"}</td>
+      <td>${(q.total&&q.did===q.total)?"✓":"no"}</td>
       <td>${q.total?`${q.did} of ${q.total}`:"none in the draft"}</td></tr>`; }).join("");
   return h;
 }
@@ -1835,7 +1835,7 @@ function renderSend(){
     : `<tr><td colspan="2" class="dim">Deck not started.</td></tr>`}
   ${sc.total?`<tr><td><b>All cards</b></td><td><b>${sc.got} / ${sc.total}</b>${sc.total?` (${Math.round(100*sc.got/sc.total)}%)`:""}</td></tr>`:""}
   </table>
-  <p class="dim" style="font-size:12.5px">Every card was answered until it was right; the score above is the first attempt at each one.</p>
+  <p class="dim" style="font-size:12.5px">Every card was answered until it was right. The score above is the first attempt at each one.</p>
 
   <h3>The draft</h3>
   <div class="legend">${CAT_ORDER.map(k=>`<span><i class="sw ${CATS[k].cls}"></i>${esc(CATS[k].label)}</span>`).join("")}</div>
@@ -1859,7 +1859,7 @@ function renderSend(){
   <h3>Done</h3>
   <table class="rpt"><tr><th>Part</th><th>Ticked</th><th>Counted</th></tr>${doneRows()}</table>
   <p class="dim" style="font-size:12.5px">The first three are the student's own tick. The last two are counted by the page.</p>
-  <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span>, changes if the name, code, draft or any score changes.</p>`;
+  <p class="dim" style="font-size:12.5px">Verification code: <span class="vcode">${code}</span>. It changes if the name, code, draft or any score changes.</p>`;
   $("body").innerHTML=h;
 }
 

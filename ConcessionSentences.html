@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Complex sentences for concession — Writing Folio</title>
+<title>Complex sentences for concession: Writing Folio</title>
 <style>
 :root{
   --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
@@ -356,7 +356,7 @@ const POOL = [
    q:"Which word makes this a concession?",
    stim:"The platforms promise to check ages, ___ they have never managed it before.",
    opts:["though","because","so","and"], a:0,
-   why:"“And” only adds the second half on. “Although” ranks it underneath and turns it into the point the writer is arguing past." },
+   why:"“And” only adds the second half on. “Though” ranks it underneath and turns it into the point the writer is arguing past." },
 
  { id:"cs.prep.1", type:"pick", rule:"prep",
    q:"Which one is written correctly?",
@@ -438,7 +438,7 @@ function go(s){
 function topbar(){
   return `<div class="topbar">
     <span class="sp">
-      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
       <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
     </span></div>`;
 }
@@ -473,7 +473,7 @@ function renderHome(){
   const steps=[
     { t:"The words", d:"Concession, subordinate, complex.",
       tag:S.first["cswordsdone"]?"done":"", done:!!S.first["cswordsdone"], go:"words" },
-    { t:"The cards", d:"A card you get wrong goes back in, with another one like it.",
+    { t:"The cards", d:"Main clause, conjunction, despite or although, the comma, which half to give away.",
       tag:S.first["csdeckdone"]?"done":(sc.total?`${sc.got}/${sc.total} first go`:""),
       done:!!S.first["csdeckdone"], go:"deck" },
     { t:"Write one", d:"One concession sentence for your own piece.",

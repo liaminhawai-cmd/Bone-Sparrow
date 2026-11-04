@@ -17,21 +17,21 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
      display:flex;justify-content:center;padding:8px 12px}
 .container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
-           border-radius:12px;padding:14px 24px 8px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-h1{font-family:Georgia,'Times New Roman',serif;font-size:26px;margin:0 0 10px}
+           border-radius:12px;padding:14px 24px 6px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:26px;margin:0 0 6px}
 .strands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}
-.strand h2{font-family:Georgia,'Times New Roman',serif;font-size:19px;margin:0 0 9px;padding:0 0 7px;
+.strand h2{font-family:Georgia,'Times New Roman',serif;font-size:19px;margin:0 0 7px;padding:0 0 7px;
            border-bottom:3px solid var(--c)}
 .strand h2 a{color:var(--c);text-decoration:none}
 .strand h2 a:hover{text-decoration:underline}
 a.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);
-       border-left:4px solid var(--c);border-radius:9px;padding:9px 12px;margin:0 0 7px;transition:border-color .15s}
+       border-left:4px solid var(--c);border-radius:9px;padding:9px 12px;margin:0 0 5px;transition:border-color .15s}
 a.card:hover{border-color:var(--c)}
 a.card .t{font-weight:700;font-size:15px;line-height:1.35}
 a.card .t .arrow{color:var(--c)}
 a.card .d{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.45}
 a.card.ext{background:var(--bg)}
-.teacher{margin:6px 0 0;padding:4px 0 0;border-top:1px solid var(--line);font-size:13px;display:flex;gap:18px;flex-wrap:wrap}
+.teacher{margin:3px 0 0;padding:4px 0 0;border-top:1px solid var(--line);font-size:13px;display:flex;gap:18px;flex-wrap:wrap}
 .teacher a{color:var(--muted);font-weight:600;text-decoration:none;padding:8px 0}
 .teacher a:hover{text-decoration:underline;color:var(--ink)}
 :focus-visible{outline:3px solid var(--ink);outline-offset:1px}
@@ -60,14 +60,14 @@ const STRANDS = [
     ["EdwardSoundLighting.html","Sound and lighting","Name the shot, then fix the mistakes in three scenes."],
     ["EdwardSentenceBuilder.html","Sentence builder","Edward arrives at Peg’s house."] ]},
   { name:"The Bone Sparrow", c:"--bone", door:"BoneSparrow.html", items:[
-    ["BoneSparrow.html","Sign in and my tasks","Chapter, EAL settings and the report."],
+    ["BoneSparrow.html","Start here","Sign in, your chapter, your tasks and your report."],
     ["BoneSparrowVocabHub.html","Vocab Hub","Words, chapter by chapter."],
     ["BoneSparrowReadingHub.html","Reading and Evidence Hub","Quickreads, evidence, the analysis workshop."],
     ["bonesparrowtrainer.html","Pre-reading trainer","The 17 unit words and sentence types."],
     ["BoneSparrowThreeWays.html","Three ways into a sentence","From the evidence, the idea or the effect."],
-    ["BoneSparrowTeel.html","A TEEL paragraph",""],
     ["GrammarHuboffline.html","Grammar Hub","Sentence structure."] ]},
   { name:"Writing Folio", c:"--folio", door:"WritingFolio.html", items:[
+    ["WritingFolio.html","Start here","Sign in and the folio menu."],
     ["PronounsModals.html","Pronoun choice and modal verbs","Three words, then back to your draft."],
     ["ContentionClaims.html","Contention and claims","The deck, then your draft, then the PDF."],
     ["WritingFolioVocabHub.html#set-04","Persuasive writing words","Build each word from its parts, then use it."],

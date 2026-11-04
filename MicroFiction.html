@@ -304,7 +304,7 @@ function go(screen, sid, at){
 }
 function topbar(){
   return `<div class="topbar"><span class="sp">
-      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
       <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>
     </span></div>`;
 }
@@ -350,7 +350,7 @@ function storyBar(st){
       onclick="go('story','${st.id}',${i})" aria-label="Card ${i+1}: ${esc(c.short)}">${i+1}</button>`).join("")}</span>
     <span>${esc(st.cards[view.at].short)}</span>
     <span style="margin-left:auto;display:flex;gap:14px">
-      <a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+      <a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
       <a class="menulink" href="#" onclick="go('home');return false;">All steps</a></span></div>`;
 }
 function renderCard(){

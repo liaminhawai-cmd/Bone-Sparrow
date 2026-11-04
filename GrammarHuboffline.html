@@ -7,7 +7,7 @@
      Google Translate widget). The in-app EAL tool is the only sanctioned way to
      translate, so students can't one-click translate answers we withhold. -->
 <meta name="google" content="notranslate">
-<title>Grammar Hub — ELC</title>
+<title>Grammar Hub: ELC</title>
 <style>
   /* Palette deliberately matches the Aussie Phonics Trainer so the two
      tools read as one suite. The signature element here is the SEQUENCE
@@ -65,7 +65,7 @@
   .has-items{cursor:pointer}
   .has-items:hover{border-color:var(--accent)}
   /* cascade: mastered cell (bright green), levels below it (faint green),
-     and the next band up — the one you'll actually drill (accent ring). */
+     and the next band up: the one you'll actually drill (accent ring). */
   .matrix-cell.below{background:var(--okbg);border-color:var(--line-soft)}
   .matrix-cell.achieved{background:var(--correct);border-color:var(--correct)}
   .matrix-cell.achieved .cell-name{color:var(--paper)}
@@ -83,7 +83,7 @@
   /* ---- assessed marker ---- */
   .rowlabel.unassessed{opacity:.85}
   .unassessed-mark{color:var(--accent);font-weight:800;margin-left:2px}
-  /* non-EAL (year-level) view: a timeline — a shared F–10 year axis; each
+  /* non-EAL (year-level) view: a timeline: a shared F–10 year axis; each
      chunk is a bar spanning its years, so strands read left to right.
      No band columns, no curriculum codes on screen. */
   .vic-row{display:grid;grid-template-columns:128px repeat(11,1fr);gap:4px;min-width:680px;margin-bottom:4px}
@@ -456,12 +456,13 @@
   font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
   background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
 .hublink:hover{color:#0B447C;border-color:#0B447C}
+.hublink a{color:inherit;text-decoration:none}.hublink a:hover{text-decoration:underline}
 @media (max-width:1040px){body{padding-top:56px}}
 @media print{.hublink{display:none !important}}
 </style>
 </head>
 <body translate="no" class="notranslate">
-<a class="hublink" href="BoneSparrow.html">⌂ Main menu</a>
+<span class="hublink"><a href="index.html">⌂ Year 7 English</a> <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span> <a href="BoneSparrow.html">The Bone Sparrow</a></span>
 <!-- EAL translate bar: the engine fills the language list, shows it only in
      EAL mode, and wires tap-to-translate. Suppressed during meaning checks. -->
 <div id="translateBar" class="tbar" hidden>
@@ -627,12 +628,12 @@
 <!-- load order matters: content, glossary, then task types, then engine -->
 <script>
 /* ============================================================
-   GRAMMAR HUB — CONTENT
+   GRAMMAR HUB: CONTENT
    ------------------------------------------------------------
    This file is the data spine. The engine knows nothing about
    grammar; it only runs whatever is in SKILLS.
 
-   CANONICAL MAPPING = the Grammar Pre-Test Marking Grid (John's
+   CANONICAL MAPPING = the Grammar Pre-Test Marking Grid (the ELC
    paper). The pretest tests to that grid and teachers circle it,
    so the app's rubric MUST match it or the paper-to-app handoff
    breaks. Bands are C1, C2, C3, C4/C4+ (the grid merges C4 and
@@ -651,7 +652,7 @@
      band       "C1" | "C2" | "C3" | "C4/C4+"   (null for pools)
      name       the specific skill at this cell
      example    one canonical example sentence
-     introduced false for grid "—" cells (greyed, not drillable)
+     introduced false for cells left empty on the paper grid (greyed, not drillable)
      mode       "progression" | "pool"
      assessed   true if the current pretest covers it (drives the
                 paper-to-rubric handoff). The two NEW strands
@@ -664,11 +665,11 @@
 
    ITEM SHAPES (the `type` must match a key in TASK_TYPES):
 
-   identify  — multiple choice, name the feature
+   identify:  multiple choice, name the feature
      { type:"identify", prompt, sentence (with <b> around target),
        options:[...], answer, explain, tags:[...] }
 
-   gapfill   — type the correct form into a blank
+   gapfill:   type the correct form into a blank
      { type:"gapfill", prompt, before, after, cue, accept:[...],
        explain, tags:[...] }
 
@@ -828,7 +829,7 @@ window.SKILLS = [
     {term:"emphasis",def:"Drawing special attention to one part of a sentence.",example:"It was <b>the rain</b> that ruined the picnic."},
   ],
   worked:[
-    { text:"It was Mia who solved the problem.", note:"It was + <b>Mia</b> (focus) + who... — emphasises who did it." },
+    { text:"It was Mia who solved the problem.", note:"It was + <b>Mia</b> (focus) + who... This emphasises who did it." },
     { text:"It was the rain that ruined the picnic.", note:"Same frame, emphasising a thing instead of a person." },
     { text:"It was in Melbourne that they met.", note:"You can emphasise a place too." },
     { text:"What she wanted was a new phone.", note:"What ... was ... is another way to add emphasis." },
@@ -1441,8 +1442,8 @@ window.SKILLS = [
     prompt:"A word is missing. Decide which relative pronoun the blank needs.",
     zones:["who (people)","which (things)"],
     modelled:[
-      { text:"the woman ___ helped me", zone:"who (people)", explain:"The blank describes the woman — a person — so it needs who." },
-      { text:"the book ___ I read", zone:"which (things)", explain:"The blank describes the book — a thing — so it needs which." },
+      { text:"the woman ___ helped me", zone:"who (people)", explain:"The blank describes the woman, a person, so it needs who." },
+      { text:"the book ___ I read", zone:"which (things)", explain:"The blank describes the book, a thing, so it needs which." },
     ],
     items:[
       { text:"the man ___ called", zone:"who (people)" },
@@ -1744,20 +1745,20 @@ window.SKILLS = [
     prompt:"The question word is missing. Read the ANSWER, then choose the word the blank needs.",
     zones:["who (person)","what (thing)","where (place)","when (time)"],
     modelled:[
-      { text:"___ won the race? — Tom did.", zone:"who (person)", explain:"The answer is a person (Tom), so the question word is who." },
-      { text:"___ is in the box? — A present.", zone:"what (thing)", explain:"The answer is a thing (a present), so the question word is what." },
-      { text:"___ are my keys? — On the table.", zone:"where (place)", explain:"The answer is a place (on the table), so the question word is where." },
-      { text:"___ does the film start? — At 8 pm.", zone:"when (time)", explain:"The answer is a time (8 pm), so the question word is when." },
+      { text:"___ won the race? Answer: Tom did.", zone:"who (person)", explain:"The answer is a person (Tom), so the question word is who." },
+      { text:"___ is in the box? Answer: A present.", zone:"what (thing)", explain:"The answer is a thing (a present), so the question word is what." },
+      { text:"___ are my keys? Answer: On the table.", zone:"where (place)", explain:"The answer is a place (on the table), so the question word is where." },
+      { text:"___ does the film start? Answer: At 8 pm.", zone:"when (time)", explain:"The answer is a time (8 pm), so the question word is when." },
     ],
     items:[
-      { text:"___ called you? — My mum.", zone:"who (person)" },
-      { text:"___ did you buy? — A jacket.", zone:"what (thing)" },
-      { text:"___ do you live? — Near the school.", zone:"where (place)" },
-      { text:"___ is your birthday? — In June.", zone:"when (time)" },
-      { text:"___ helped you? — My neighbour.", zone:"who (person)" },
-      { text:"___ did she cook? — Fried rice.", zone:"what (thing)" },
-      { text:"___ did they meet? — At the station.", zone:"where (place)" },
-      { text:"___ does school finish? — At 3:30.", zone:"when (time)" },
+      { text:"___ called you? Answer: My mum.", zone:"who (person)" },
+      { text:"___ did you buy? Answer: A jacket.", zone:"what (thing)" },
+      { text:"___ do you live? Answer: Near the school.", zone:"where (place)" },
+      { text:"___ is your birthday? Answer: In June.", zone:"when (time)" },
+      { text:"___ helped you? Answer: My neighbour.", zone:"who (person)" },
+      { text:"___ did she cook? Answer: Fried rice.", zone:"what (thing)" },
+      { text:"___ did they meet? Answer: At the station.", zone:"where (place)" },
+      { text:"___ does school finish? Answer: At 3:30.", zone:"when (time)" },
     ],
   },
   items:[
@@ -1881,7 +1882,7 @@ window.CATEGORIES = [
 window.POOLS = ["Prepositions","Articles"];
 
 /* ===================================================================
-   GOALS — Learning Intention + Success Criteria per cell (teaching mode)
+   GOALS: Learning Intention + Success Criteria per cell (teaching mode)
    -------------------------------------------------------------------
    Teaching mode opens with an LI/SC slide. Success criteria split into:
      - a metalanguage goal ("I can recognise ..."), auto-built from the
@@ -1933,11 +1934,11 @@ window.GOALS = {
 </script>
 <script>
 /* ============================================================
-   GRAMMAR HUB — VICTORIAN CURRICULUM MAPPING (DRAFT, pending sign-off)
+   GRAMMAR HUB: VICTORIAN CURRICULUM MAPPING (DRAFT, pending sign-off)
    ------------------------------------------------------------
    The C1–C4/C4+ bands ARE the EAL curriculum and stay the app's grid.
    The Vic Curriculum toggle overlays, per cell, the VC2E content
-   description(s) that genuinely cover that cell's grammar — at whatever
+   description(s) that genuinely cover that cell's grammar, at whatever
    VC level they appear. The two schemes chunk grammar differently and
    are deliberately NOT aligned: e.g. VC treats every perfect/progressive
    form as one chunk ("elaborated tenses", VC2E6LA06), while the EAL
@@ -1959,7 +1960,7 @@ window.GOALS = {
    ============================================================ */
 
 /* ------------------------------------------------------------
-   VIC_CHUNKS — the non-EAL (mainstream) student view. Same skills, same
+   VIC_CHUNKS: the non-EAL (mainstream) student view. Same skills, same
    sequence underneath; the labels are ones non-EAL kids understand:
    YEAR LEVELS and plain titles, laid out on a shared F–10 timeline.
 
@@ -1967,7 +1968,7 @@ window.GOALS = {
    steps (it bundles all perfect/progressive forms as "elaborated
    tenses", names modality once, never names conditionals), the year
    placements are evidence-based interpolation from the acquisition
-   literature (see CURRICULUM-MAP.md, "Evidence base") — teacher-approved
+   literature (see CURRICULUM-MAP.md, "Evidence base"): teacher-approved
    approach, exact years draft until sign-off. RULE (checked by
    validate.js): within a strand, the year axis must never contradict the
    teaching order.
@@ -2026,7 +2027,7 @@ window.VIC_CHUNKS = {
 };
 
 window.VIC_MAP = {
-  /* Sentence Structure — VC ladder: simple (1) > compound (2) > complex (4)
+  /* Sentence Structure: VC ladder: simple (1) > compound (2) > complex (4)
      > for-effect (5) > embedded (6) > varied for effect (9). */
   "sentence-c1": [
     { code:"VC2EFLA06", label:"sentences are made up of groups of words that work together to make meaning" },
@@ -2044,7 +2045,7 @@ window.VIC_MAP = {
     { code:"VC2E5LA04", label:"the starting point of a sentence gives prominence to the message", approx:true },
   ],
 
-  /* Verb Tenses — VC chunks differently: basic tense at 3–4, then ALL
+  /* Verb Tenses: VC chunks differently: basic tense at 3–4, then ALL
      perfect/progressive forms live in one chunk, "elaborated tenses". */
   "tense-c1": [
     { code:"VC2E3LA08", label:"verbs are anchored in time through tense" },
@@ -2062,7 +2063,7 @@ window.VIC_MAP = {
     { code:"VC2E7LA06", label:"consistency of tense through verbs and verb groups" },
   ],
 
-  /* Modality — VC names it once as grammar (3LA09); gradation of force
+  /* Modality: VC names it once as grammar (3LA09); gradation of force
      sits in evaluation language; literary modality appears at 6LE02. */
   "modality-c1": [
     { code:"VC2E3LA09", label:"modal verbs indicate obligation, probability and possibility" },
@@ -2080,7 +2081,7 @@ window.VIC_MAP = {
     { code:"VC2E6LE02", label:"compare language choices: modality and emphasis", approx:true },
   ],
 
-  /* Conditionals — never named in VC. Their honest home is subordination:
+  /* Conditionals: never named in VC. Their honest home is subordination:
      4LA06 explicitly includes "relationships, such as time and causality". */
   "cond-c1": [
     { code:"VC2E4LA06", label:"subordination creating relationships of time and causality (if)", approx:true },
@@ -2097,7 +2098,7 @@ window.VIC_MAP = {
     { code:"VC2E8LA05", label:"a variety of clause structures adds information and expands ideas", approx:true },
   ],
 
-  /* Passive Voice — never named in VC. Nearest genuine chunks: reordering
+  /* Passive Voice: never named in VC. Nearest genuine chunks: reordering
      the sentence starting point, verb-group control, reported speech and
      nominalisation/condensing for impersonal reporting. */
   "passive-c1": [
@@ -2111,7 +2112,7 @@ window.VIC_MAP = {
     { code:"VC2E9LA04", label:"cohesive devices, including nominalisation, condense information", approx:true },
   ],
 
-  /* Relative Clauses — VC covers these well: expanded noun groups, then
+  /* Relative Clauses: VC covers these well: expanded noun groups, then
      embedded clauses, then clause variety. */
   "relative-c1": [
     { code:"VC2E5LA06", label:"noun groups expanded in a variety of ways for fuller description" },
@@ -2138,7 +2139,7 @@ window.VIC_MAP = {
     { code:"VC2E3LA06", label:"subject–verb agreement applied to collective and complex subjects", approx:true },
   ],
 
-  /* Questions & Negation — VC treats questioning as interaction rather than
+  /* Questions & Negation: VC treats questioning as interaction rather than
      syntax, except indirect speech, which is named at 4LA12. */
   "question-c1": [
     { code:"VC2E1LA01", label:"language for asking for and providing information, requesting", approx:true },
@@ -2159,7 +2160,7 @@ window.VIC_MAP = {
 </script>
 <script>
 /* ============================================================
-   GRAMMAR HUB — GLOSSARY
+   GRAMMAR HUB: GLOSSARY
    ------------------------------------------------------------
    A bank of plain-English definitions for the grammar terms the
    app uses. The engine auto-links any term that appears in a
@@ -2244,14 +2245,14 @@ window.VIC_MAP = {
 </script>
 <script>
 /* ============================================================
-   GRAMMAR HUB — TASK TYPES
+   GRAMMAR HUB: TASK TYPES
    ------------------------------------------------------------
    The registry the engine dispatches to. Each item in a skill
    has a `type`; the engine looks it up here and calls the
    interface below. Types are self-contained and never call each
    other (see DESIGN_RULES.md §1).
 
-   INTERFACE (SPEC.md §5) — a task type is one entry in
+   INTERFACE (SPEC.md §5): a task type is one entry in
    window.TASK_TYPES keyed by the item's `type`:
 
      label                  text shown in the task filter.
@@ -2409,7 +2410,7 @@ window.VIC_MAP = {
       },
     },
 
-    /* ===== roadmap stubs (SPEC.md §10) — wired but inert until built ===== *
+    /* ===== roadmap stubs (SPEC.md §10): wired but inert until built ===== *
        Each is ONE isolated type so adding it can't break the working banks.
        `produce` is also the engine's fallback for any unknown item type.   */
     /* ===== choose: MCQ, pick the correct sentence ===== */
@@ -2634,7 +2635,7 @@ window.VIC_MAP = {
     },
 
     /* ===== edit: change a sentence by taking a word out and putting the right
-       one in — or, with allowInsert, adding a word/comma in a chosen gap. Used
+       one in, or, with allowInsert, adding a word/comma in a chosen gap. Used
        two ways: "fix the error" and "change it from meaning A to meaning B".
        Tests spotting WHERE/WHAT to change and supplying it; graded on the final
        sentence, so it can't be gamed by length or position.
@@ -2855,10 +2856,10 @@ window.VIC_MAP = {
 </script>
 <script>
 /* ============================================================
-   GRAMMAR HUB — ENGINE
+   GRAMMAR HUB: ENGINE
    ------------------------------------------------------------
    Owns: the matrix selector, the teaching/revision loop, scoring,
-   and the report. Knows nothing about specific grammar — it
+   and the report. Knows nothing about specific grammar; it
    dispatches every item to TASK_TYPES[item.type].
 
    Screen flow:
@@ -2901,7 +2902,7 @@ window.VIC_MAP = {
   let savedName = "";     // remembered student name (survives refresh)
   let savedCode = "";     // remembered student code (survives refresh)
   // Label scheme: "eal" (C1–C4 bands, the default and source of truth) or
-  // "vic" (Victorian Curriculum codes overlaid — a DRAFT mapping, see
+  // "vic" (Victorian Curriculum codes overlaid: a DRAFT mapping, see
   // data/curriculum.js). Toggling relabels; it never changes the mechanics.
   let curriculum = "eal";
 
@@ -3010,7 +3011,7 @@ window.VIC_MAP = {
   /* ---------------- non-EAL (year-level) view ----------------
      Same skills, same sequence, labels a mainstream student understands:
      each strand is chunked however makes sense (Verb Tenses collapses to
-     2 chunks, Modality to 1) with year-level tags — NOT the four C-band
+     2 chunks, Modality to 1) with year-level tags, NOT the four C-band
      columns, and no curriculum codes on screen. Teaching mode: clicking a
      chunk targets its first cell and the normal cycle (vocab → skill →
      placement) walks the underlying sequence. Revision mode: clicking
@@ -3030,7 +3031,7 @@ window.VIC_MAP = {
   function bandLabel(i) { return curriculum === "vic" ? "Step " + (i + 1) : window.BANDS[i]; }
   function skillBandLabel(bandName) {
     const i = window.BANDS.indexOf(bandName);
-    return i < 0 ? bandName : bandLabel(i);   // pools have band "Pool" — pass through
+    return i < 0 ? bandName : bandLabel(i);   // pools have band "Pool": pass through
   }
   function chunkSkills(ch) { return ch.covers.map(skillById).filter((s) => s && s.introduced && s.items.length); }
   function buildVicMatrix(wrap) {
@@ -3108,7 +3109,7 @@ window.VIC_MAP = {
       wrap.appendChild(row);
     });
     $("matrixLegend").innerHTML =
-      `Topics sit where they usually appear in mainstream English, Foundation to Year 10 — work left to right. The practice sequence is the same as the EAL view underneath.`;
+      `Topics sit where they usually appear in mainstream English, Foundation to Year 10. Work left to right.`;
   }
 
   function buildMatrix() {
@@ -3154,7 +3155,7 @@ window.VIC_MAP = {
         cell.className = "matrix-cell";
         if (!skill || !skill.introduced) {
           cell.classList.add("empty");
-          cell.innerHTML = `<span class="dash">: </span>`;
+          cell.innerHTML = `<span class="dash">·</span>`;
           row.appendChild(cell);
           return;
         }
@@ -3279,7 +3280,7 @@ window.VIC_MAP = {
 
   // Audience toggle: EAL students see the C-level grid; non-EAL (mainstream)
   // students see the same skills chunked with year-level labels. Same
-  // sequence and mechanics underneath — only the labels change audience.
+  // sequence and mechanics underneath; only the labels change audience.
   function buildCurricToggle() {
     const wrap = $("curricToggle");
     if (!wrap) return;
@@ -3486,7 +3487,7 @@ window.VIC_MAP = {
   function renderVocabTeach() {
     const v = vocabQueue[vocabIdx];
     const total = vocabQueue.length;
-    setTranslateMode("unit");  // learning a word — translating the definition helps here
+    setTranslateMode("unit");  // learning a word: translating the definition helps here
     $("preteachPhase").textContent = "Vocabulary · I do";
     $("preteachProgress").textContent = `Word ${vocabIdx + 1} of ${total}`;
     $("preteachBar").style.width = Math.round(10 + ((vocabIdx + 1) / total) * 35) + "%";
@@ -3510,11 +3511,11 @@ window.VIC_MAP = {
   function renderVocabCheck() {
     const c = metaChecks[metaIdx];
     const total = metaChecks.length;
-    setTranslateMode("block"); // this IS the word-meaning test — no translating the answer
+    setTranslateMode("block"); // this IS the word-meaning test: no translating the answer
     $("preteachPhase").textContent = "Vocabulary · you do";
     $("preteachProgress").textContent = `Check ${metaIdx + 1} of ${total}`;
     $("preteachBar").style.width = Math.round(45 + ((metaIdx + 1) / total) * 30) + "%";
-    // On rails: there is no Next button here — you advance by answering right.
+    // On rails: there is no Next button here: you advance by answering right.
     $("preteachNextBtn").style.display = "none";
     $("preteachContent").innerHTML =
       `<div class="teach-phase">Which word is this?</div>` +
@@ -3551,7 +3552,7 @@ window.VIC_MAP = {
 
   /* ---------------- METALANGUAGE: select a clause inside a full sentence ----
      The whole sentence is shown as word chips and the learner must select
-     EVERY word of the part asked for, then press Check — sometimes one
+     EVERY word of the part asked for, then press Check. Sometimes one
      clause, sometimes the other, with the clause at the start in some items
      and at the end in others. No bucket label to word-match against and no
      single lucky tap: you have to know where the clause begins AND ends.
@@ -3618,7 +3619,7 @@ window.VIC_MAP = {
     const item = clauseBank[clauseIdx];
     $("preteachPhase").textContent = youdo ? "Clauses · you do" : "Clauses · we do";
     if (youdo) {
-      $("preteachProgress").textContent = "Keep your streak going";
+      $("preteachProgress").textContent = `Get ${YOUDO_TARGET} right in a row`;
       $("preteachBar").style.width = Math.round(58 + (Math.min(clauseStreak, YOUDO_TARGET) / YOUDO_TARGET) * 20) + "%";
     } else {
       $("preteachProgress").textContent = `Find ${clauseIdx + 1} of ${clauseBank.length}`;
@@ -3631,7 +3632,7 @@ window.VIC_MAP = {
       ? `<span class="clause-punct">${escapeHtmlE(w)}</span>`
       : `<button type="button" class="clause-word" data-i="${i}">${escapeHtmlE(w)}</button>`).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">"Your turn"</div>` +
+      `<div class="teach-phase">Your turn</div>` +
       `<div class="clause-ask">Select <b>every word</b> of ${clauseLabel(cp, item.find)}, then Check.</div>` +
       `<div class="clause-sentence" id="clauseRow">${chips}</div>` +
       `<div class="teach-feedback" id="clauseFb" aria-live="polite"></div>` +
@@ -3671,7 +3672,7 @@ window.VIC_MAP = {
         renderClausePick();
       }, 950);
     } else if (wrong.length) {
-      // Flash and drop the wrong picks, keep the right ones — no answer reveal.
+      // Flash and drop the wrong picks, keep the right ones: no answer reveal.
       wrong.forEach((i) => {
         const c = chips.find((x) => +x.dataset.i === i);
         c.classList.add("incorrect"); c.classList.remove("sel");
@@ -3711,7 +3712,7 @@ window.VIC_MAP = {
            <div class="li-text" style="font-size:17px">${linkifyGlossary(escapeHtmlE(g.skillGoal))}</div></div>` : "";
 
     // Worked examples model the structure across its variations and
-    // permutations — the richer modelling the single example can't show.
+    // permutations: the richer modelling the single example can't show.
     const worked = (target && target.worked && target.worked.length)
       ? target.worked
       : (target ? [{ text: target.example }] : []);
@@ -3749,7 +3750,7 @@ window.VIC_MAP = {
   }
 
   // Next-button dispatcher across the preteach sub-phases. The interactive
-  // phases (vocab-check, ml-wedo, ml-youdo) are excluded on purpose — they
+  // phases (vocab-check, ml-wedo, ml-youdo) are excluded on purpose; they
   // advance only when the learner answers/sorts correctly.
   function onPreteachNext() {
     const target = targetCell();
@@ -3879,7 +3880,7 @@ window.VIC_MAP = {
 
     $("preteachPhase").textContent = youdo ? "Sorting · you do" : "Sorting · we do";
     if (youdo) {
-      $("preteachProgress").textContent = "Keep your streak going";
+      $("preteachProgress").textContent = `Get ${YOUDO_TARGET} right in a row`;
       $("preteachBar").style.width = Math.round(58 + (Math.min(sortStreak, YOUDO_TARGET) / YOUDO_TARGET) * 20) + "%";
     } else {
       $("preteachProgress").textContent = `Sort ${sortIdx + 1} of ${sortBank.length}`;
@@ -3888,12 +3889,12 @@ window.VIC_MAP = {
     $("preteachNextBtn").style.display = "none";
 
     // Zones are real buttons: you can drag the tile onto them OR just tap/press
-    // one to place the tile there — so the task works with keyboard and touch,
+    // one to place the tile there, so the task works with keyboard and touch,
     // not only pointer drag.
     const zonesHtml = sort.zones.map((z) =>
       `<button type="button" class="zone" data-zone="${escapeHtmlE(z)}" aria-label="Put “${escapeHtmlE(item.text)}” in ${escapeHtmlE(z)}"><span class="zone-label">${escapeHtmlE(z)}</span></button>`).join("");
     $("preteachContent").innerHTML =
-      `<div class="teach-phase">"Your turn"</div>` +
+      `<div class="teach-phase">Your turn</div>` +
       `<div class="sort-prompt">${escapeHtmlE(sort.prompt)}</div>` +
       `<div class="sort-stage"><span class="sort-tile" id="sortTile">${escapeHtmlE(item.text)}</span></div>` +
       `<div class="sort-help">Drag the word into a box, or tap a box to put it there.</div>` +
@@ -4068,31 +4069,31 @@ window.VIC_MAP = {
     let msg = "";
 
     if (belowOk && targetOk && aboveOk) {
-      // mastered everything — jump up two if possible, else one
+      // mastered everything: jump up two if possible, else one
       const jump2 = nextDrillableAbove(category, bandIndex + 1);
       const jump1 = nextDrillableAbove(category, bandIndex);
       if (jump2 !== null) {
         nextBand = jump2;
-        msg = `Outstanding! You mastered all three levels. Moving to ${bandLabel(jump2)} with a review of ${bandLabel(bandIndex + 1)} first.`;
+        msg = `All three levels mastered. Moving to ${bandLabel(jump2)}, with a review of ${bandLabel(bandIndex + 1)} first.`;
       } else if (jump1 !== null) {
         nextBand = jump1;
-        msg = `Excellent! You mastered everything. Moving up to ${bandLabel(jump1)}.`;
+        msg = `Everything mastered. Moving up to ${bandLabel(jump1)}.`;
       } else {
         nextBand = null;
-        msg = `You've mastered the whole strand! Nothing higher to practise.`;
+        msg = `Whole strand mastered. Nothing higher to practise.`;
       }
     } else if (!belowOk) {
-      // failed the level below — drop down
+      // failed the level below: drop down
       const dropTo = bandIndex - 1;
       if (dropTo >= 0 && drillableAt(category, dropTo)) {
         nextBand = dropTo;
-        msg = `Let's strengthen the foundation. Dropping to ${bandLabel(dropTo)} to build up from there.`;
+        msg = `Dropping to ${bandLabel(dropTo)} to build up from there.`;
       } else {
         nextBand = bandIndex;
-        msg = `Some tricky spots. Let's try this level again with the preteach.`;
+        msg = `Trying this level again, with the preteach.`;
       }
     } else if (belowOk && targetOk && !aboveOk) {
-      // beat target but not above — move up one
+      // beat target but not above: move up one
       const up = nextDrillableAbove(category, bandIndex);
       if (up !== null) {
         nextBand = up;
@@ -4102,7 +4103,7 @@ window.VIC_MAP = {
         msg = `Top of the strand.`;
       }
     } else {
-      // target not mastered — stay
+      // target not mastered: stay
       nextBand = bandIndex;
       msg = `Repeating ${bandLabel(bandIndex)}.`;
     }
@@ -4142,7 +4143,7 @@ window.VIC_MAP = {
     window.BANDS.forEach((band, i) => {
       const skill = cellAt(category, i);
       if (!skill || !skill.introduced) {
-        rowHtml += `<div class="matrix-cell empty"><span class="dash">: </span></div>`;
+        rowHtml += `<div class="matrix-cell empty"><span class="dash">·</span></div>`;
         return;
       }
       const st = cellStatusFor(skill, bySkill);
@@ -4346,7 +4347,7 @@ window.VIC_MAP = {
         const skill = cellAt(cat, i);
         const cell = document.createElement("div");
         cell.className = "matrix-cell";
-        if (!skill || !skill.introduced) { cell.classList.add("empty"); cell.innerHTML = `<span class="dash">: </span>`; row.appendChild(cell); return; }
+        if (!skill || !skill.introduced) { cell.classList.add("empty"); cell.innerHTML = `<span class="dash">·</span>`; row.appendChild(cell); return; }
 
         const st = cellStatusFor(skill, bySkill);
         const isNext = (mode === "teaching")
@@ -4397,7 +4398,7 @@ window.VIC_MAP = {
       localStorage.setItem(STORE_KEY, JSON.stringify({
         v: 1, name: studentName(), code: savedCode, mode, curric: curriculum, rowLevel, drillTarget, selectedPools, history,
       }));
-    } catch (e) { /* private mode / quota — carry on without saving */ }
+    } catch (e) { /* private mode / quota: carry on without saving */ }
   }
   function restoreState() {
     let s = null;
@@ -4528,7 +4529,7 @@ window.VIC_MAP = {
 
   let teacherText = "";
   function buildTeacherExport(firstRight, total, totalAttempts, bySkill) {
-    let t = `GRAMMAR HUB — Teacher results\n`;
+    let t = `GRAMMAR HUB: Teacher results\n`;
     t += `First try: ${firstRight}/${total}   Total attempts: ${totalAttempts}\n\n`;
     t += `By skill (first try):\n`;
     Object.values(bySkill).forEach((s) => {
@@ -4537,7 +4538,7 @@ window.VIC_MAP = {
       if (tags.length > 1) tags.forEach(([tag, x]) => { t += `      - ${tag}: ${x.right}/${x.total}\n`; });
     });
     t += `\nItem log:\n`;
-    log.forEach((r) => { t += `  [r${r.round}] (${r.type}) ${r.skill} — "${r.response}" → ${r.result}\n`; });
+    log.forEach((r) => { t += `  [r${r.round}] (${r.type}) ${r.skill}: "${r.response}" → ${r.result}\n`; });
     teacherText = t;
   }
 
@@ -4614,19 +4615,19 @@ window.VIC_MAP = {
   /* ================= EAL TRANSLATE =================
      One word or sentence at a time. In EAL mode a language dropdown and a
      Translate toggle sit in the top bar. With the toggle on, tapping a
-     translatable unit — a grid cell name, the prompt, a stimulus sentence,
-     an instruction cue, or a taught word/definition — swaps its English for
+     translatable unit (a grid cell name, the prompt, a stimulus sentence,
+     an instruction cue, or a taught word/definition) swaps its English for
      the chosen language; tapping it again flips straight back. Nothing is
      stored: every re-render is English again, and only the chosen language
      is remembered between visits.
 
-     It is deliberately blocked where a word's MEANING is being tested — the
-     vocab "you do" check and any item flagged noTranslate — and answer
+     It is deliberately blocked where a word's MEANING is being tested (the
+     vocab "you do" check and any item flagged noTranslate) and answer
      options are never translatable, so it can never hand over an answer.
 
      PROVIDER: defaults to the free, key-less MyMemory endpoint so it works
-     from a plain static page today. For production — and to keep student
-     text inside the school's own Microsoft tenant — swap the body of
+     from a plain static page today. For production, and to keep student
+     text inside the school's own Microsoft tenant, swap the body of
      translateProvider for a fetch to an Azure Translator function. Nothing
      else changes. Tests override window.GH_TRANSLATE.provider. */
 
@@ -4694,10 +4695,10 @@ window.VIC_MAP = {
     }
   }
   // Mode per screen, set by the render paths:
-  //   "unit"  teaching screens — tap translates a whole word/sentence
-  //   "word"  question / assessed screens — tap translates ONE word only, so a
+  //   "unit"  teaching screens: tap translates a whole word/sentence
+  //   "word"  question / assessed screens: tap translates ONE word only, so a
   //           student can't translate a whole sentence into the answer
-  //   "block" word-meaning test — no translation at all
+  //   "block" word-meaning test: no translation at all
   function setTranslateMode(mode) {
     const b = document.body;
     b.classList.toggle("tr-block", mode === "block");
@@ -4947,7 +4948,7 @@ window.VIC_MAP = {
         `<tr class="prog-total"><td>Total</td><td class="num">${snap.attemptedItems}/${snap.totalItems}</td>` +
         `<td class="num">${snap.firstRight}</td><td class="num">${snap.mastered}/${snap.totalItems}</td></tr>` +
         `</table>` +
-        `<p class="muted">${mode === "teaching" ? "Teaching cycle" : "Revision session"} &mdash; “First try” is questions right on the very first attempt; “Mastered” is questions you got right in the end.</p>`;
+        `<p class="muted">${mode === "teaching" ? "Teaching cycle" : "Revision session"}. “First try” is questions right on the very first attempt; “Mastered” is questions you got right in the end.</p>`;
     } else {
       $("progSession").innerHTML = `<p class="prog-empty">No questions answered in this session yet.</p>`;
     }

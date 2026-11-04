@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Bone Sparrow — analytical writing anchor sheets</title>
+<title>The Bone Sparrow: analytical writing anchor sheets</title>
 <meta name="description" content="One A3 anchor sheet per level, Foundation to Level 10: a worked analytical paragraph about the Night Sea, what each marked phrase does, and the continuum wording for that level.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>BS</text></svg>">
 <style>
 /* ===========================================================================
-   THE BONE SPARROW — ANALYTICAL WRITING ANCHOR SHEETS
+   THE BONE SPARROW: ANALYTICAL WRITING ANCHOR SHEETS
    One A3 sheet per rung, Foundation to Level 10. Everything the sheets print
    is in the DATA block at the bottom of this file; the renderer under it holds
    no wall text of its own.
@@ -158,17 +158,18 @@ h1{font-size:calc(56pt * var(--paper-k));line-height:.95;color:var(--deep);lette
   font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
   background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
 .hublink:hover{color:#0B447C;border-color:#0B447C}
+.hublink a{color:inherit;text-decoration:none}.hublink a:hover{text-decoration:underline}
 @media (max-width:1040px){.hublink{position:static;margin:12px 0 0 12px}}
 @media print{.hublink{display:none !important}}
 </style>
 </head>
 <body>
-<a class="hublink" href="teacher/">⌂ Teacher hub</a>
+<span class="hublink"><a href="index.html">⌂ Year 7 English</a> <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span> <a href="teacher/">Teacher hub</a></span>
 <main id="out"></main>
 
 <script>
 /* ============================================================================
-   DATA — the only place the sheets' text lives.
+   DATA: the only place the sheets' text lives.
 
    THE ANCHOR PASSAGE is the opening of chapter 1, the Night Sea. It is chosen
    deliberately: the Analysis workshop on screen models its wall on chapter 5
@@ -237,8 +238,8 @@ const FOCUS = {
 /* EAL bands from the EAL analytical writing WAGOLL. The lower rungs sit below
    the C-band descriptions, so they are left blank rather than given a band
    the sheet invented. */
-const EAL = { "Level 5":"C2 — Describe", "Level 6":"C2/C3 — Describe in detail", "Level 7":"C3 — Explain",
-              "Level 8":"C4 — Analyse", "Level 9":"C4+: Interpret", "Level 10":"VCE 1 — Interpret" };
+const EAL = { "Level 5":"C2: Describe", "Level 6":"C2/C3: Describe in detail", "Level 7":"C3: Explain",
+              "Level 8":"C4: Analyse", "Level 9":"C4+: Interpret", "Level 10":"VCE 1: Interpret" };
 
 
 const EXAMPLES = {
@@ -370,7 +371,7 @@ const CONTINUUM = {
 
 
 /* ============================================================================
-   RENDERER — knows nothing about the novel.
+   RENDERER: knows nothing about the novel.
    ============================================================================ */
 const esc  = s => String(s).replace(/&(?!amp;|lt;|gt;|#\d+;|[a-z]+;)/g,"&amp;");
 const mark = s => esc(s).replace(/\{(\w+)\|([^}]*)\}/g,(_,k,t)=>`<span class="m m-${k}">${t}</span>`);

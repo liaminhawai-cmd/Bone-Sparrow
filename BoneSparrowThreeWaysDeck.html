@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Three ways in — projector</title>
+<title>Three ways in: projector</title>
 <style>
 :root{
   --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
@@ -141,7 +141,7 @@ const ACTS=[
    {kind:"ev", nodes:[
      {t:"“I asked you a question”",ok:1},{t:"“my feet leave the ground”",ok:1},
      {t:"“I can’t say a single thing”",ok:1},
-     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"Chapter 1 — the Night Sea, not this scene."},
+     {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"Chapter 1: the Night Sea, not this scene."},
      {t:"“her whole face shines like someone’s lit a candle in her cheeks”",ok:0,why:"Chapter 14, and a happy line."}]},
    {kind:"eff", nodes:[
      {t:"positions the reader to fear Beaver before he is described",ok:1},
@@ -166,7 +166,7 @@ const ACTS=[
      {t:"“I asked you a question”",ok:1,lead:"Beaver demanding"},
      {t:"“I can’t say a single thing”",ok:1,lead:"Subhi silenced:"},
      {t:"“the dirt outside turns into a beautiful ocean”",ok:0,why:"The Night Sea is Subhi in control of his own world: the opposite."},
-     {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4 — about what the camp gives rather than this scene."}]},
+     {t:"“There are only fourteen pairs of real shoes in this whole entire camp”",ok:0,why:"Chapter 4. It is about what the camp gives, not this scene."}]},
    {kind:"idea", nodes:[
      {t:"power",ok:1},{t:"fear",ok:1},{t:"a body someone else controls",ok:1},
      {t:"imagination",ok:0,why:"That's the Night Sea's idea, not Beaver's fence."},
@@ -194,7 +194,7 @@ function drawBar(){
   $("bar").innerHTML=ACTS.map((a,i)=>
     `<button class="${i===S.act?'on':''}" data-a="${i}">${i+1} · ${esc(a.name)}</button>`).join("")+
     `<span class="sp"></span><button id="restart">again</button>`+
-    `<a href="teacher/">⌂ Teacher hub</a>`;
+    `<a href="index.html">⌂ Year 7 English</a><a href="teacher/">Teacher hub</a>`;
   [...$("bar").querySelectorAll("button[data-a]")].forEach(b=>
     b.addEventListener("click",()=>startAct(+b.dataset.a)));
   $("restart").addEventListener("click",()=>startAct(S.act));

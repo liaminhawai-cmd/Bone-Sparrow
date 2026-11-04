@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Three ways into a sentence — The Bone Sparrow</title>
+<title>Three ways into a sentence: The Bone Sparrow</title>
 <style>
 :root{
   --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
@@ -80,15 +80,16 @@ em.hl-feat{background:#e7ddf6;color:#4b2f7a}
   font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
   background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
 .hublink:hover{color:#0B447C;border-color:#0B447C}
+.hublink a{color:inherit;text-decoration:none}.hublink a:hover{text-decoration:underline}
 @media (max-width:1040px){.hublink{position:static;margin:12px 0 0 12px}}
 @media print{.hublink{display:none !important}}
 </style>
 </head>
 <body>
-<a class="hublink" href="BoneSparrow.html">⌂ Main menu</a>
+<span class="hublink"><a href="index.html">⌂ Year 7 English</a> <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span> <a href="BoneSparrow.html">The Bone Sparrow</a></span>
 <main>
 <h1>Three ways into a sentence</h1>
-<p class="where">Chapter 5, page 33 — Beaver at the fence</p>
+<p class="where">Chapter 5, page 33: Beaver at the fence</p>
 <div class="routes" id="routes"></div>
 <div id="stage"></div>
 </main>
@@ -126,7 +127,7 @@ const ROUTES=[
      {t:"is mentioned when",q:"weak", why:"Nothing here is mentioned. The scene acts it out."}]},
    {kind:"eff", ask:"What does it do to the reader?", opts:[
      {t:"which positions the reader to fear Beaver before he is described", q:"good", why:"Positions is the Level 8 move: the writing steers where you stand."},
-     {t:"which makes the reader understand how little control a child has", q:"good", why:"Understand, not just feel: the Level 7 move."},
+     {t:"which makes the reader understand how little control a child has", q:"good", why:"Understand goes further than feel: the Level 7 move."},
      {t:"which makes the reader keep reading",                              q:"weak", why:"True of any page of any book."}]}],
   build:p=>`<em class="hl-idea">The issue of power</em> <em class="hl-verb">${p[1]}</em> we read <em class="hl-ev">${p[0]}</em>, <em class="hl-eff">${p[2]}</em>.`
 },
@@ -136,7 +137,7 @@ const ROUTES=[
    {kind:"feat", ask:"Which writing does it?", opts:[
      {t:"Beaver shoving Subhi",               q:"good", why:"Subhi's body is simply moved: no answer possible."},
      {t:"questions with no right answer",     q:"good", why:"Every reply is wrong before it's spoken."},
-     {t:"the Night Sea",                      q:"weak", why:"That's Chapter 1 — Subhi's imagination, not Beaver's power."}]},
+     {t:"the Night Sea",                      q:"weak", why:"That's Chapter 1. It is Subhi's imagination, not Beaver's power."}]},
    {kind:"ev", ask:"Which line carries it?", opts:[
      {t:"“my feet leave the ground”",         q:"good", why:"The moment control is gone: his own feet aren't his."},
      {t:"“I asked you a question”",           q:"good", why:"An order dressed as a question."},

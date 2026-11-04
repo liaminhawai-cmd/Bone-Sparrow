@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sentence builder &mdash; Edward arrives at Peg's house</title>
+<title>Sentence builder: Edward arrives at Peg's house</title>
 <style>
   :root{
     --ink:#1F2430; --muted:#6B6458; --accent:#8A1C1C;
@@ -159,7 +159,7 @@
 <section class="panel tight">
   <div class="canvas-wrap">
     <div class="canvas-label">
-      <span>Sentence 1 &mdash; about the <strong>theme</strong></span>
+      <span>Sentence 1: about the <strong>theme</strong></span>
       <span class="focus-echo" id="echoTheme">(pick a theme above)</span>
     </div>
     <div class="canvas" id="canvasTheme" data-canvas="theme">
@@ -170,7 +170,7 @@
 
   <div class="canvas-wrap" style="margin-top:10px;">
     <div class="canvas-label">
-      <span>Sentence 2 &mdash; about the <strong>character</strong></span>
+      <span>Sentence 2: about the <strong>character</strong></span>
       <span class="focus-echo" id="echoChar">(pick a character above)</span>
     </div>
     <div class="canvas" id="canvasChar" data-canvas="char">
@@ -195,7 +195,7 @@
 <section class="panel bank">
   <div class="bank-head">
     <h2 class="sec">Word bank</h2>
-    <span class="hint">Tiles stay in the bank when you drag &mdash; reuse them as many times as you need. Each bin scrolls.</span>
+    <span class="hint">Tiles stay in the bank. Use a tile as many times as you need. Each column scrolls.</span>
   </div>
   <div class="bins" id="binsArea"></div>
 </section>
@@ -648,12 +648,12 @@ function analyseSentence(arr){
     }
   });
   if(flaggedInstances.some(f=>f.level==='err')){
-    findings.push({sev:'err', text:'You\u2019ve used a vague subject (like \u201cthis\u201d, \u201cit\u201d, \u201cthe film\u201d, or \u201cthe scene\u201d). Replace it with a specific subject \u2014 a film technique (close-up, lighting, soundtrack) or a character.'});
+    findings.push({sev:'err', text:'You\u2019ve used a vague subject (like \u201cthis\u201d, \u201cit\u201d, \u201cthe film\u201d, or \u201cthe scene\u201d). Replace it with a specific subject: a film technique (close-up, lighting, soundtrack) or a character.'});
   }
 
   // Must have at least one subject
   if(counts.subj === 0){
-    findings.push({sev:'err', text:'There is no subject in this sentence. Drag a subject tile in \u2014 a specific film technique works best.'});
+    findings.push({sev:'err', text:'There is no subject in this sentence. Drag a subject tile in. A specific film technique works best.'});
   }
 
   // Must have at least one verb
@@ -664,7 +664,7 @@ function analyseSentence(arr){
   // ===== NUDGES =====
   // No prepositional phrase
   if(counts.prep === 0){
-    findings.push({sev:'warn', text:'Try adding a prepositional phrase (yellow) \u2014 a where, when or how tile makes the sentence land harder.'});
+    findings.push({sev:'warn', text:'Add a prepositional phrase (yellow): a tile that says where, when or how.'});
   }
 
   // Weak verb only
@@ -688,7 +688,7 @@ function analyseSentence(arr){
 
   // Effect clause missing
   if(counts.effect === 0){
-    findings.push({sev:'warn', text:'There\u2019s no effect-on-audience clause (pink). Add one to say what the technique makes the audience think or feel \u2014 that\u2019s where the analysis really lives.'});
+    findings.push({sev:'warn', text:'There\u2019s no effect-on-audience clause (pink). Add one to say what the technique makes the audience think or feel.'});
   } else {
     // Weak effect clause
     const hasGoodEffect = arr.some(rec=>{const t=TILES.find(t=>t.id===rec.tileId);return t.kind==='effect'&&t.quality==='good';});
@@ -751,7 +751,7 @@ function showFeedback(boxId, result, which){
   box.className = 'feedback show ' + result.level;
   const heads = {
     ok:   'Strong analytical sentence',
-    warn: 'A good start \u2014 here\u2019s how to lift it',
+    warn: 'Parts to improve',
     err:  'Something needs fixing'
   };
   const sentenceLabel = which==='theme' ? 'Sentence 1 (theme)' : 'Sentence 2 (character)';
@@ -761,7 +761,7 @@ function showFeedback(boxId, result, which){
     result.findings.forEach(f=>{ html += '<li>'+f.text+'</li>'; });
     html += '</ul>';
   } else {
-    html += '<div>Every part is there: specific subject, analytical verb, prepositional phrase, and an effect on the audience. This is the level you want to aim for in your CAT.</div>';
+    html += '<div>Every part is there: specific subject, analytical verb, prepositional phrase, and an effect on the audience.</div>';
   }
   box.innerHTML = html;
 }
@@ -802,7 +802,7 @@ function checkAll(){
   if(!state.character) missing.push('a character');
   if(missing.length){
     focusBox.className = 'feedback show warn';
-    focusBox.innerHTML = '<div>Heads up: you haven\u2019t picked '+missing.join(' or ')+' at the top of the page. Pick so the focus of each sentence is clear.</div>';
+    focusBox.innerHTML = '<div>You haven\u2019t picked '+missing.join(' or ')+' at the top of the page. Pick one so each sentence has a clear focus.</div>';
   } else {
     focusBox.className = 'feedback';
     focusBox.innerHTML = '';

@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Bone Sparrow — the climb, cut and paste</title>
+<title>The Bone Sparrow: the climb, cut and paste</title>
 <meta name="description" content="Part B of the Analysis workshop on paper. Levels 5 and 6 come done; students cut the sentence parts and join Level 7 and Level 8. One pack per theme.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231d3c34'/><text x='16' y='24' font-family='Georgia,serif' font-size='21' font-weight='700' fill='%23e8c46a' text-anchor='middle'>✂</text></svg>">
 <style>
 /* ===========================================================================
    THE CLIMB, ON PAPER WITH SCISSORS
-   The Analysis workshop's Part B — the sentence builder — as a cut-and-paste
+   The Analysis workshop's Part B (the sentence builder) as a cut-and-paste
    activity. Levels 5 and 6 arrive written, so the paper task starts where the
    difficulty starts: lifting a sentence to Level 7 and then to Level 8. One
    pack per theme (fear, power, protection), two A4 sheets each, plus a single
@@ -32,7 +32,7 @@
    three theme sheets covers twenty-four students in six A4 pages, plus one
    key sheet for the desk.
 
-   There is no page furniture — no running head, no colour legend, no footer.
+   There is no page furniture: no running head, no colour legend, no footer.
    A card sheet gets cut up, so anything printed on it that is not a card is
    either thrown away or cut through. The four colours are taught on the wall
    and in the app; they do not need explaining again on a page that is about
@@ -144,12 +144,13 @@ body{background:var(--bg);color:var(--ink);
   font:600 13px/1 'Segoe UI',Tahoma,sans-serif;text-decoration:none;color:#4a5c70;
   background:rgba(255,255,255,.94);border:1px solid #cfd8e3;border-radius:999px;padding:7px 13px}
 .hublink:hover{color:#0B447C;border-color:#0B447C}
+.hublink a{color:inherit;text-decoration:none}.hublink a:hover{text-decoration:underline}
 @media (max-width:1040px){.hublink{position:static;margin:12px 0 0 12px}}
 @media print{.hublink{display:none !important}}
 </style>
 </head>
 <body>
-<a class="hublink" href="teacher/">⌂ Teacher hub</a>
+<span class="hublink"><a href="index.html">⌂ Year 7 English</a> <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span> <a href="teacher/">Teacher hub</a></span>
 <main id="out"></main>
 
 <script>
@@ -175,7 +176,7 @@ async function load(){
 
 /* ---------------------------------------------------------------------------
    THE RECIPES. Each is a list of [kind, tile text] pairs, resolved against the
-   hub's own banks — the same shape, and the same resolution, as the Level 5
+   hub's own banks: the same shape, and the same resolution, as the Level 5
    freebie the app lays on the canvas. Nothing here is a sentence typed out by
    hand: if a tile is renamed in the hub, resolve() reports it and the page
    refuses to print rather than handing out a part that no longer exists.
@@ -189,7 +190,7 @@ const CLIMB = {
         ["con","when he says"], ["q","My throat is as dry as the dirt"],
         ["con","which shows"], ["eff","that the terror is physical before it is anything else"] ],
     8:[ ["open","By writing the scene through Subhi's senses,"], ["subj","Fraillon"],
-        ["verb","exposes"], ["idea","two perspectives on fear — the rule and the body"],
+        ["verb","exposes"], ["idea","two perspectives on fear: the rule and the body"],
         ["con","in the line"], ["q","Never let anyone see your scared"], ["con",","],
         ["con","where Fraillon writes"], ["q","My throat is as dry as the dirt"],
         ["con","which makes the reader see"], ["eff","how completely fear takes over a child's body"] ] },
@@ -258,7 +259,7 @@ function resolve(B, recipe, where){
    else gets a space, so the joined sentence reads as a sentence. */
 function sentence(parts){
   return parts.map((p,i)=>{
-    const punct = /^[,.]$/.test(p.t);                 /* not a joiner to look at — just a mark */
+    const punct = /^[,.]$/.test(p.t);                 /* not a joiner to look at, just a mark */
     const sp = (i===0 || punct) ? "" : " ";
     return sp+`<span class="${punct?"":CLASSOF[p.k]}">${esc(p.t)}</span>`;
   }).join("");
@@ -283,14 +284,14 @@ function render({B,L}){
      is not a card. The teacher cuts three vertical lines and hands a column to
      each student; the student cuts their own column into cards. The level
      cards are what tell the two piles apart, which is why the parts under each
-     one are scrambled — read straight down an uncut column and you would have
+     one are scrambled: read straight down an uncut column and you would have
      the sentence. */
   const packs = Object.keys(CLIMB).map(f=>{
     const C = CLIMB[f];
     const cards = n => {
       const parts = stripParts(C["r"+n]);
       const order = SCRAMBLE[parts.length] || parts.map((_,i)=>i);
-      return `<div class="card lvcard"><b>Level ${n} — ${esc(lvl(n).focus)}</b>
+      return `<div class="card lvcard"><b>Level ${n}: ${esc(lvl(n).focus)}</b>
           <i>“${esc(lvl(n).vic)}”</i>
           <span>${esc(lvl(n).goal)}</span>
           <em>${parts.length} cards below</em></div>` +
@@ -318,7 +319,7 @@ function render({B,L}){
     </header>
     <div class="keys">${Object.keys(CLIMB).map(f=>[7,8].map(n=>`
       <div class="krow">
-        <div class="kh"><b>${esc(CLIMB[f].label)}</b><span>Level ${n} — ${esc(lvl(n).focus)}</span></div>
+        <div class="kh"><b>${esc(CLIMB[f].label)}</b><span>Level ${n}: ${esc(lvl(n).focus)}</span></div>
         <div class="kt">${sentence(CLIMB[f]["r"+n])}</div>
       </div>`).join("")).join("")}
     </div>
@@ -329,9 +330,8 @@ function render({B,L}){
 }
 
 load().then(render).catch(e=>{
-  out.innerHTML = `<div class="err"><b>Could not load the climb.</b> This page reads the sentence parts out of
-  BoneSparrowReadingHub.html, so it has to be opened from the same website (or the same folder over http),
-  not as a bare file. ${esc(e.message)}</div>`;
+  out.innerHTML = `<div class="err"><b>Could not load the climb.</b> Open this page from the class website (or the same folder over http),
+  not as a file. It reads the sentence parts from BoneSparrowReadingHub.html. ${esc(e.message)}</div>`;
 });
 </script>
 </body>

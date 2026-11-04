@@ -6,49 +6,80 @@
 <title>Sentence fluency: projector</title>
 <style>
 :root{
-  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
-  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
-  /* The grammar session decks' colours, exactly. Each also has its own
+  /* The grammar session decks' slide colours, measured from the .pptx. */
+  --maroon:#8C072D; --ink:#212121; --vote:#F7F0F1; --icon:#751400;
+  /* #888888 is the decks' grey. It is kept for the large bold item numbers;
+     smaller grey text is darkened to stay above 4.5:1 on both backgrounds. */
+  --grey:#888888; --grey-text:#6B6B6B;
+  /* The grammar session decks' part colours, exactly. Each also has its own
      weight, slant or underline and a printed label, so colour is never the
      only signal. */
   --subj:#A24800; --verb:#0F6E4D; --prep:#1F5FA8;
+  /* letterbox and control strip around the slide */
+  --frame:#1c1c1c; --frame-ink:#c8c3c3; --frame-hi:#2e2e2e;
+  --font:Aptos,'Segoe UI',Tahoma,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;overflow:hidden}
-body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
-     display:flex;flex-direction:column}
+body{background:var(--frame);font-family:var(--font);color:var(--ink);display:flex;flex-direction:column}
 
-/* ---- top bar ---- */
-#bar{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:8px 14px;flex-wrap:wrap}
-#count{font-size:15px;font-weight:700;color:var(--ink);min-width:44px}
-#phase{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+/* ---- control strip: slim and quiet so the slide dominates ---- */
+#bar{flex:0 0 auto;display:flex;align-items:center;gap:2px;padding:0 8px;min-height:40px;flex-wrap:wrap;
+     color:var(--frame-ink)}
 #bar .sp{flex:1}
-.btn{padding:9px 16px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
-     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;min-height:40px;min-width:40px}
-.btn:disabled{opacity:.4;cursor:default}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.menulink{color:var(--accent);font-weight:600;text-decoration:none;font-size:14px;padding:10px 6px;
+#count{font-size:13px;font-weight:600;min-width:48px;text-align:right;padding-right:8px;
+       font-variant-numeric:tabular-nums}
+.btn{padding:0 12px;border:1px solid transparent;border-radius:6px;font:600 13px/1 var(--font);
+     cursor:pointer;background:transparent;color:var(--frame-ink);min-height:40px;min-width:40px}
+.btn:hover:not(:disabled){background:var(--frame-hi);color:#fff}
+.btn:disabled{opacity:.35;cursor:default}
+.btn-primary{color:#fff;border-color:#4a4a4a}
+.btn[aria-pressed="true"]{background:#5a1326;border-color:#5a1326;color:#fff}
+.menulink{color:var(--frame-ink);font-weight:600;text-decoration:none;font-size:13px;padding:0 10px;
           min-height:40px;display:inline-flex;align-items:center}
-.menulink:hover{text-decoration:underline}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.menulink:hover{color:#fff;text-decoration:underline}
+:focus-visible{outline:2px solid #f3c6d1;outline-offset:2px}
 
-/* ---- the slide ---- */
-#stage{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;margin:0 14px;background:var(--paper);
-       border:1px solid var(--line);border-radius:12px}
-#wrap{margin:auto;width:100%;padding:2vh 5vw}
-.sent{font-family:Georgia,'Times New Roman',serif;line-height:1.9;margin:0;color:var(--ink)}
-.src{font-size:15px;color:var(--muted);margin:6px 0 0}
-.ans{display:flex;flex-wrap:wrap;gap:10px;margin-top:2.6vh}
-.ans span.chip{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 16px;
-               font-size:clamp(17px,1.9vw,27px);line-height:1.3}
+/* ---- the slide: a 16:9 box letterboxed in the window ----
+   --k is the slide width over 1280, set by size(). Every length on the slide
+   is written as a size on a 1280 x 720 slide times --k, so the whole slide
+   scales as one picture. */
+#frame{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+#slide{--k:1;position:relative;flex:0 0 auto;background:#fff;overflow:hidden;
+       display:grid;grid-template-rows:calc(var(--k)*140px) minmax(0,1fr) calc(var(--k)*62px);
+       padding:0 calc(var(--k)*64px) 0 calc(var(--k)*78px)}
+#slide.vote{background:var(--vote)}
+
+#hd{display:flex;align-items:flex-start;gap:calc(var(--k)*24px);min-width:0}
+#hdtext{flex:1 1 auto;min-width:0;padding-top:calc(var(--k)*26px)}
+#h{margin:0;font-size:calc(var(--k)*32px);font-weight:700;color:var(--maroon);line-height:1.2}
+#sub{margin:calc(var(--k)*12px) 0 0;font-size:calc(var(--k)*24px);font-style:italic;color:var(--grey-text);
+     line-height:1.25;min-height:1.25em}
+#icons{flex:0 0 auto;display:flex;gap:calc(var(--k)*10px);padding-top:calc(var(--k)*22px)}
+#icons svg{display:block;width:calc(var(--k)*86px);height:calc(var(--k)*86px)}
+
+#stage{min-height:0;overflow:hidden;display:flex}
+#wrap{width:100%;margin:0 0 auto}
+.is-title #wrap{margin:auto 0}
+
+#ft{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--k)*24px);
+    font-size:calc(var(--k)*18px);padding-bottom:calc(var(--k)*8px)}
+#foot{font-style:italic;color:var(--grey-text);min-width:0}
+#code{color:var(--grey-text);flex:0 0 auto}
+.legend{display:inline-flex;gap:1.1em;font-style:normal;font-size:calc(var(--k)*17px)}
+
+/* ---- sentence slides ---- */
+.sent{line-height:1.8;margin:0;color:var(--ink)}
+.src{font-size:calc(var(--k)*20px);color:var(--grey-text);margin:calc(var(--k)*4px) 0 0}
+.ans{display:grid;gap:calc(var(--k)*6px);margin-top:calc(var(--k)*20px);padding-left:calc(var(--k)*62px);
+     font-size:calc(var(--k)*28px);line-height:1.3}
+.ans .chip:first-child{font-weight:700;color:var(--maroon)}
 .ans.hide{visibility:hidden}
-.ask{font-size:clamp(18px,2vw,28px);font-weight:700;margin:2vh 0 0}
 
-/* coloured runs: in sentences (ruby, with a label under each run) and in answer chips */
-ruby{ruby-position:under;-webkit-ruby-position:after}
-rt{font:700 clamp(12px,1.15vw,17px)/1 'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;font-style:normal;
-   letter-spacing:.03em;text-decoration:none;padding-top:2px}
+/* coloured runs: in sentences (ruby, with a label under each run) and in answer lines */
+ruby{ruby-position:under;-webkit-ruby-position:after;ruby-align:center}
+rt{font:700 calc(var(--k)*15px)/1 var(--font);font-style:normal;letter-spacing:.03em;text-decoration:none;
+   padding-top:2px}
 .k-s .b{color:var(--subj);font-weight:700}
 .k-v .b{color:var(--verb);font-weight:700;font-style:italic}
 .k-p .b{color:var(--prep);font-weight:700}
@@ -58,48 +89,43 @@ rt{font:700 clamp(12px,1.15vw,17px)/1 'Segoe UI',Tahoma,Geneva,Verdana,sans-seri
 .rev .sent,.rev .ans{animation:fade .25s ease}
 @keyframes fade{from{opacity:.25}to{opacity:1}}
 
-/* title slide */
-.ttl{font-family:Georgia,'Times New Roman',serif;font-size:clamp(28px,3.4vw,48px);margin:0 0 4vh;color:var(--muted);font-weight:700}
-.rule{font-family:Georgia,'Times New Roman',serif;line-height:1.35;margin:0 0 5vh}
-.key{font-size:clamp(20px,2.4vw,34px);margin:0;line-height:1.5}
-.key b{display:inline-block;min-width:1.6em}
+/* grey bold number before a numbered item, as in the decks */
+.no{display:inline-block;color:var(--grey);font-weight:700;margin-right:.4em}
 
-/* length slide */
-.len{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:4vw;align-items:end}
-.pass{font-family:Georgia,'Times New Roman',serif;line-height:1.55;margin:0}
-.pass .s{border-radius:4px;padding:0 2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.pass sup{font-family:'Segoe UI',Tahoma,sans-serif;font-size:.5em;font-weight:800;color:var(--muted);margin-right:3px}
-.rev .pass .s.hit{background:#fff;box-shadow:inset 0 0 0 2px var(--ink);text-decoration:underline;
+/* ---- title slide ---- */
+.rule{line-height:1.3;margin:0 0 calc(var(--k)*44px)}
+.key{font-size:calc(var(--k)*34px);margin:0;line-height:1.55}
+
+/* ---- length slide ---- */
+.len{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:calc(var(--k)*56px);align-items:end}
+.pass{line-height:1.35;margin:0}
+.pass .s{display:block;margin:0 0 .55em;border-radius:4px}
+.pass .s:last-child{margin-bottom:0}
+.len + .src{margin-top:calc(var(--k)*16px)}
+.rev .pass .s.hit{outline:2px solid var(--maroon);outline-offset:.1em;text-decoration:underline;
                   text-decoration-thickness:.07em;text-underline-offset:.15em}
-.bars{display:flex;align-items:flex-end;gap:14px;height:min(40vh,330px)}
+.bars{display:flex;align-items:flex-end;gap:calc(var(--k)*18px);height:calc(var(--k)*290px)}
 .col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
-.col .num{font-size:15px;font-weight:800;color:var(--muted);margin-bottom:4px}
+.col .num{font-size:calc(var(--k)*24px);font-weight:700;color:var(--grey);margin-bottom:calc(var(--k)*4px)}
 .col .barbox{width:100%;flex:1;display:flex;align-items:flex-end}
-.col .bar{width:100%;background:var(--accent);border-radius:6px 6px 0 0;border:3px solid transparent}
-.rev .col.hit .bar{border-color:var(--ink);background:#1d4258}
-.col .wc{font-size:clamp(18px,1.9vw,26px);font-weight:700;margin-top:6px;white-space:nowrap}
-.col .wc small{font-size:.6em;font-weight:600;color:var(--muted)}
-.col .tag{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;height:18px;visibility:hidden}
+.col .bar{width:100%;background:#D8C6CB;border-radius:4px 4px 0 0}
+.rev .col.hit .bar{background:var(--maroon)}
+.col .wc{font-size:calc(var(--k)*26px);font-weight:700;margin-top:calc(var(--k)*6px);white-space:nowrap}
+.col .wc small{font-size:.65em;font-weight:600;color:var(--grey-text)}
+.col .tag{font-size:calc(var(--k)*16px);font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+          color:var(--maroon);height:1.3em;visibility:hidden}
 .rev .col.hit .tag{visibility:visible}
 
-/* ---- footer: finger key or colour legend ---- */
-#foot{flex:0 0 auto;min-height:44px;display:flex;justify-content:center;align-items:center;gap:18px;
-      padding:6px 14px;font-size:clamp(15px,1.5vw,20px);flex-wrap:wrap}
-#foot .lg{display:inline-flex;align-items:center}
-#foot .sep{color:var(--muted)}
-
 /* ---- teacher notes ---- */
-#notes{flex:0 0 auto;display:none;max-height:36vh;overflow:auto;background:#fff;border-top:1px solid var(--line);
+#notes{flex:0 0 auto;display:none;max-height:36vh;overflow:auto;background:#fff;border-top:1px solid #d4cfc2;
        padding:10px 18px 12px;font-size:15px;line-height:1.5}
 body.notes #notes{display:block}
-.nrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.nrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:4px 0;border-bottom:1px solid #e6e1d6}
 .nrow:last-child{border-bottom:0}
-.nrow b{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding-top:2px}
+.nrow b{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:#655f55;padding-top:2px}
 .broken{color:#a83232;font-size:18px;white-space:pre-wrap}
 
 @media screen and (max-width:860px){
-  .len{grid-template-columns:minmax(0,1fr)}
-  .bars{height:26vh}
   .nrow{grid-template-columns:minmax(0,1fr);gap:2px}
 }
 @media (prefers-reduced-motion:reduce){
@@ -109,17 +135,25 @@ body.notes #notes{display:block}
 </head>
 <body>
 <div id="bar">
-  <span id="count" aria-live="polite"></span>
-  <span id="phase"></span>
+  <a class="menulink" href="index.html">&#8962; Year 7 English</a>
+  <a class="menulink" href="SentenceFluency.html">Student module</a>
   <span class="sp"></span>
+  <span id="count" aria-live="polite"></span>
   <button class="btn" id="bBack" type="button">&larr; Back</button>
   <button class="btn btn-primary" id="bReveal" type="button" aria-pressed="false">Reveal</button>
   <button class="btn" id="bNext" type="button">Next &rarr;</button>
   <button class="btn" id="bNotes" type="button" aria-pressed="false" aria-controls="notes">Notes</button>
-  <a class="menulink" href="SentenceFluency.html">Student module</a>
 </div>
-<main id="stage"><div id="wrap"></div></main>
-<div id="foot"></div>
+<div id="frame">
+  <section id="slide">
+    <header id="hd">
+      <div id="hdtext"><h1 id="h"></h1><p id="sub"></p></div>
+      <div id="icons" aria-hidden="true"></div>
+    </header>
+    <main id="stage"><div id="wrap"></div></main>
+    <footer id="ft"><span id="foot"></span><span id="code"></span></footer>
+  </section>
+</div>
 <aside id="notes" aria-label="Teacher notes"></aside>
 <script>
 "use strict";
@@ -129,7 +163,7 @@ body.notes #notes{display:block}
      [p:words]  prep phrase    [c:words]  conjunction
    Anything outside brackets is plain. Take the brackets away and what is
    left must be the source, word for word.
-   "ans" holds the reveal chips and may use the same markup.
+   "ans" holds the reveal lines and may use the same markup.
    "notes" is the teacher strip (N): each row is [label, text].
    A "length" slide lists its sentences one by one; the bars and the word
    counts are worked out from the text, so they cannot drift from it.
@@ -145,15 +179,15 @@ const SLIDES = [
      ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes."] ] },
 
  { kind:"sentence",
-   src:"Day at the Beach",
-   m:"[s:Your cuff] [v:brushed] my lip [c:and] [s:I] [v:revelled] [p:at leaving my crimson mark].",
-   ans:["2 clauses","joined by [c:and]: compound","leaving: no who of its own"],
+   src:"The Courier Mail",
+   m:"[s:It] [v:took] decades, [c:but] [s:culture] finally [v:shifted].",
+   ans:["2 clauses","joined by [c:but]: compound","finally: not a verb"],
    notes:[
      ["Display","Count the clauses. Fingers up on my signal. Scan the room before you reveal."],
-     ["Answer","2. brushed: who? Your cuff. revelled: who? I. Joined by and, so it is compound."],
-     ["Ask","“What is the verb? Who’s doing that?” Then: “Who’s doing the leaving?” It has no who of its own. It sits inside the prep phrase “at leaving my crimson mark”."],
-     ["If students disagree","Three fingers usually means leaving was counted. “What would need to change to make leaving a clause?” For example: “… and I revelled as I left my crimson mark.” Now left has its own who: I."],
-     ["Teaching point","And joins two clauses of equal weight. Two clauses joined that way make a compound sentence."] ] },
+     ["Answer","2. took: who? It. shifted: who? culture. Joined by but, so it is compound."],
+     ["Ask","“What is the verb? Who’s doing that?” Then: “Can ‘It took decades’ stand on its own? Can ‘culture finally shifted’?” Both can."],
+     ["If students disagree","One finger usually means “It took decades” was read as a lead-in. Cover the second half: “It took decades.” is a full sentence. Three fingers usually means finally was counted. “Can you put ‘I’ in front of it? I finally?” It is not a verb: it tells you when."],
+     ["Teaching point","But joins two clauses of equal weight. Two clauses joined that way make a compound sentence."] ] },
 
  { kind:"sentence",
    src:"Six-word story",
@@ -167,15 +201,15 @@ const SLIDES = [
      ["Teaching point","A fragment is a choice when the form calls for it: an ad, a sign, an ingredients list. This one is written as a newspaper ad. Inside a paragraph of a review, the same thing reads as a mistake."] ] },
 
  { kind:"sentence",
-   src:"Perfect Fudgy Brownies, inspiredtaste.net",
-   m:"[v:Add] the cold eggs, one [p:at a time], stirring vigorously [p:after each egg].",
-   ans:["1 clause","[v:Add]: who? you, not written","stirring: no who of its own","one at a time, after each egg: phrases"],
+   src:"How to Do Crunches, wikiHow",
+   m:"[v:Cross] your arms [p:in front of your chest] [p:with your hands just below your shoulders].",
+   ans:["1 clause","[v:Cross]: who? you, not written","in front of…, with your hands…: phrases"],
    notes:[
      ["Display","Count the clauses."],
-     ["Answer","1. Verb: Add. Who is doing it? You, the reader. It is an instruction (imperative), so the who is not written. “stirring” has no who of its own. “one at a time” and “after each egg” are phrases: no verb."],
+     ["Answer","1. Verb: Cross. Who is doing it? You, the reader. It is an instruction (imperative), so the who is not written. “in front of your chest” and “with your hands just below your shoulders” are phrases: no verb."],
      ["Ask","“What is the verb? Who’s doing that?” For the imperative: “Who is doing this? It’s implied: you, the reader.”"],
-     ["If students disagree","Two fingers usually means stirring was counted. “Who is doing the stirring? What would need to change to make it a second clause?” For example: “Add the cold eggs, one at a time, and stir vigorously after each egg.” Now stir is a second verb, with the same unwritten you."],
-     ["Teaching point","An instruction still has a who. A recipe leaves it out because the reader is always the one doing it."] ] },
+     ["If students disagree","A fist usually means nobody was found. “Who crosses their arms?” You do. Two fingers usually means a phrase was counted. “Is there a verb in ‘with your hands just below your shoulders’?” No verb, so no clause."],
+     ["Teaching point","An instruction still has a who. A how-to text leaves it out because the reader is always the one doing it."] ] },
 
  { kind:"sentence",
    src:"Rolling Stone, review of 5 Seconds of Summer’s Everyone’s a Star!",
@@ -207,7 +241,29 @@ const SLIDES = [
      ["Choppy version","Read aloud, not on screen: “We’re trapped between two films. One is a sweet kids movie. One is a dark adult comedy. The kids movie wins.” Every sentence the same length, so none of them lands."],
      ["Teaching point","Short sentences land a verdict. Long sentences allow nuance and analysis. The contrast does the work; a run of short sentences reads as choppy."] ] }
 ];
+
+/* The words on the slide frame, in the grammar session decks' wording. */
+const FRAME = {
+  code:     "SF",
+  know:     "What you need to know",
+  count:    "Count the clauses",
+  countSub: "One finger per clause. A fist for none.",
+  reveal:   "Reveal and model",
+  vote:     "Vote with your fingers, scan the room before revealing."
+};
 /* ===================== end of content ===================== */
+
+/* Line-art icons from the grammar session decks, inlined so the file works
+   offline. f1 to f4 are the finger votes; there is no fist icon in the decks,
+   so a fist stays as words. */
+const ICONS = {
+ f1:'<svg viewBox="0 0 63.89 63.89" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.95" cy="31.95" r="30.98" stroke="#751400" stroke-width="1.94" fill="#FFFFFF"/><path d="M29.91 28.01C29.47 27.44 29.28 26.8 29.29 26.07 29.31 21.33 29.29 16.59 29.29 11.85 29.29 10.94 29.08 10.12 28.39 9.48 27.53 8.68 26.54 8.38 25.41 8.73 24.32 9.06 23.6 9.78 23.33 10.91 23.25 11.23 23.23 11.57 23.23 11.9 23.23 17.76 23.23 23.62 23.23 29.49"/><path d="M37.07 28.58C36.83 28.18 36.57 27.8 36.36 27.39 35.42 25.54 32.86 25.28 31.57 26.68 31.27 27 30.97 27.31 30.67 27.63"/><path d="M29.06 29.62C28.76 29.76 28.44 29.81 28.11 29.81 26.88 29.81 25.65 29.81 24.41 29.81 24.22 29.81 24 29.84 23.85 29.75 23.37 29.49 22.94 29.64 22.47 29.8 22 29.96 21.5 30.01 21.05 30.28 20.4 30.67 19.93 31.19 19.68 31.9 18.87 34.18 18.04 36.45 17.42 38.78 16.8 41.1 17.27 43.29 18.6 45.26 19.85 47.12 21.18 48.93 22.48 50.77 23.09 51.64 23.43 52.58 23.39 53.66 23.36 54.26 23.39 54.86 23.39 55.46"/><path d="M42.42 32.8C42.94 33.02 43.49 33 44.03 33.03 45.12 33.08 46.57 34.36 46.61 35.84 46.63 36.81 46.25 37.6 45.74 38.35 45.2 39.14 45.03 40.05 44.85 40.96 44.83 41.05 44.85 41.14 44.93 41.25 45.43 41.87 45.55 42.61 45.45 43.37 45.31 44.42 45.12 45.45 44.76 46.46 44.24 47.95 43.45 49.26 42.42 50.43 41.76 51.18 41.21 51.98 41.1 52.99 41.01 53.81 41.01 54.63 41.1 55.45"/><path d="M37.4 40.62C37.6 41.01 37.7 41.43 37.84 41.85 38.21 42.96 38.97 43.73 40.15 43.93 41.45 44.14 42.54 43.72 43.27 42.57 43.66 41.96 44.06 41.39 44.79 41.15"/><path d="M32.14 38.11C32.39 38.39 32.55 38.72 32.71 39.06 33.46 40.54 34.83 41.09 36.51 40.76 37.32 40.6 37.67 40.16 38.03 39.54 38.96 37.92 39.94 36.32 40.86 34.7 41.24 34.03 41.72 33.45 42.25 32.91 42.31 32.85 42.41 32.84 42.39 32.72 42.26 31.95 42.64 31.23 42.55 30.44 42.43 29.3 41.38 28.19 40.4 27.93 39.57 27.71 38.81 27.89 38.02 28.2 37.29 28.48 36.93 28.94 36.67 29.68 36.39 30.47 35.94 31.24 35.28 31.82"/><path d="M32.56 33.89C32.23 34 31.9 34.12 31.61 34.32 30.4 35.13 29.03 35.53 27.63 35.82 27.12 35.93 26.77 36.26 26.35 36.5"/><path d="M23.56 35.9C24.43 35.85 25.22 36.13 26.02 36.4 26.19 36.46 26.37 36.48 26.45 36.68 26.83 37.69 27.68 38.29 28.5 38.89 28.84 39.14 29.08 39.37 29.17 39.8 29.27 40.28 29.63 40.64 29.92 41.03 30.97 42.49 31.82 44.06 32.38 45.77 32.4 45.84 32.44 45.9 32.47 45.96"/><path d="M29.86 29.19C30.42 29.66 31.07 29.87 31.8 29.81 32.94 29.71 33.69 30.2 34.08 31.28 34.19 31.6 34.39 31.88 34.55 32.18"/><path d="M33.46 33.89C33.6 34.62 33.49 35.29 33.09 35.93 32.74 36.49 32.46 37.08 32.27 37.72 32.21 37.92 32.08 38.05 31.86 38.17 30.96 38.63 29.94 38.77 29.05 39.24"/></g></svg>',
+ f2:'<svg viewBox="0 0 63.98 63.98" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.99" cy="31.99" r="31.02" stroke="#751400" stroke-width="1.94" fill="#FFFFFF"/><path d="M29.1 28.85C28.55 28.38 27.55 27.22 27.35 26.49 26.17 22.11 25.16 16.12 24.19 11.48 24 10.59 23.63 9.83 22.82 9.35 21.82 8.74 20.78 8.65 19.74 9.23 18.74 9.78 18.18 10.63 18.15 11.79 18.15 12.12 18.19 12.46 18.26 12.78 19.46 18.52 20.67 24.26 21.87 29.99"/><path d="M29.1 29.36C28.8 29.5 28.48 29.55 28.15 29.55 26.92 29.55 25.69 29.55 24.45 29.55 24.26 29.55 24.04 29.58 23.89 29.49 23.41 29.23 22.98 29.38 22.51 29.54 22.04 29.7 21.54 29.75 21.09 30.02 20.44 30.41 19.97 30.93 19.72 31.64 18.82 34.19 18.01 36.47 17.46 38.52 16.84 40.84 17.31 43.03 18.64 45 19.89 46.86 21.22 48.67 22.52 50.51 23.13 51.38 23.47 52.32 23.43 53.4 23.4 54 23.43 54.6 23.43 55.2"/><path d="M42.47 32.84C42.99 33.06 43.54 33.04 44.08 33.07 45.17 33.12 46.62 34.4 46.66 35.88 46.68 36.85 46.3 37.64 45.79 38.39 45.25 39.18 45.08 40.09 44.9 41 44.88 41.09 44.9 41.18 44.98 41.29 45.48 41.91 45.6 42.65 45.5 43.41 45.36 44.46 45.17 45.49 44.81 46.5 44.29 47.99 43.5 49.3 42.47 50.47 41.81 51.22 41.26 52.02 41.15 53.03 41.06 53.85 41.06 54.67 41.15 55.49"/><path d="M37.44 40.66C37.64 41.05 37.74 41.47 37.88 41.89 38.25 43 39.01 43.77 40.19 43.97 41.49 44.18 42.58 43.76 43.31 42.61 43.7 42 44.1 41.43 44.83 41.19"/><path d="M32.18 38.15C32.43 38.43 32.59 38.76 32.75 39.1 33.5 40.58 34.87 41.13 36.55 40.8 37.36 40.64 37.71 40.2 38.07 39.58 39 37.96 39.98 36.36 40.9 34.74 41.28 34.07 41.76 33.49 42.29 32.95 42.35 32.89 42.45 32.88 42.43 32.76 42.3 31.99 42.68 31.27 42.59 30.48 42.47 29.34 41.42 28.23 40.44 27.97 39.61 27.75 38.85 27.93 38.06 28.24 37.33 28.52 36.97 28.98 36.71 29.72 36.43 30.51 35.98 31.28 35.32 31.86"/><path d="M32.61 33.63C32.28 33.74 31.95 33.86 31.66 34.06 30.45 34.87 29.08 35.27 27.68 35.56 27.17 35.67 26.82 36 26.4 36.24"/><path d="M23.6 35.64C24.47 35.59 25.26 35.87 26.06 36.14 26.23 36.2 26.41 36.22 26.49 36.42 26.87 37.43 27.72 38.03 28.54 38.63 28.88 38.88 29.12 39.11 29.21 39.54 29.31 40.02 29.67 40.38 29.96 40.77 31.01 42.23 31.86 43.8 32.42 45.51 32.44 45.58 32.48 45.64 32.51 45.7"/><path d="M36.72 28.14C36.4 27.49 36.34 26.83 36.48 26.11 37.41 21.46 38.31 16.81 39.23 12.16 39.41 11.27 39.35 10.42 38.8 9.66 38.11 8.71 37.2 8.22 36.02 8.35 34.89 8.47 34.04 9.03 33.56 10.08 33.42 10.38 33.34 10.71 33.27 11.04 32.13 16.79 31.01 22.54 29.88 28.3"/><path d="M29.91 28.93C30.47 29.4 31.12 29.61 31.85 29.55 32.99 29.45 33.74 29.94 34.13 31.02 34.24 31.34 34.44 31.62 34.6 31.92"/><path d="M33.51 33.63C33.65 34.36 33.54 35.03 33.14 35.67 32.79 36.23 32.51 36.82 32.32 37.46 32.26 37.66 32.74 37.23 31.91 37.91"/></g></svg>',
+ f3:'<svg viewBox="0 0 62.73 62.73" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.36" cy="31.36" r="30.41" stroke="#751400" stroke-width="1.9" fill="#FFFFFF"/><path d="M28.47 28.23C27.92 27.76 26.92 26.6 26.72 25.87 25.54 21.49 24.53 15.5 23.56 10.86 23.37 9.97 23 9.21 22.19 8.73 21.19 8.12 20.15 8.03 19.11 8.61 18.11 9.16 17.55 10.01 17.52 11.17 17.52 11.5 17.56 11.84 17.63 12.16 18.83 17.9 20.04 23.64 21.24 29.37"/><path d="M28.47 29.04C28.17 29.18 27.85 29.23 27.52 29.23 26.29 29.23 25.06 29.23 23.82 29.23 23.63 29.23 23.41 29.26 23.26 29.17 22.78 28.91 22.35 29.06 21.88 29.22 21.41 29.38 20.91 29.43 20.46 29.7 19.81 30.09 19.34 30.61 19.09 31.32 18.28 33.6 17.45 35.87 16.83 38.2 16.21 40.52 16.68 42.71 18.01 44.68 19.26 46.54 20.59 48.35 21.89 50.19 22.5 51.06 22.84 52 22.8 53.08 22.77 53.68 22.8 54.28 22.8 54.88"/><path d="M41.84 32.21C42.36 32.43 42.91 32.41 43.45 32.44 44.54 32.49 45.99 33.77 46.03 35.25 46.05 36.22 45.67 37.01 45.16 37.76 44.62 38.55 44.45 39.46 44.27 40.37 44.25 40.46 44.27 40.55 44.35 40.66 44.85 41.28 44.97 42.02 44.87 42.78 44.73 43.83 44.54 44.86 44.18 45.87 43.66 47.36 42.87 48.67 41.84 49.84 41.18 50.59 40.63 51.39 40.52 52.4 40.43 53.22 40.43 54.04 40.52 54.86"/><path d="M37.82 39.26C37.68 39.68 37.32 40.79 37.45 41.2 37.82 42.31 38.38 43.15 39.56 43.34 40.86 43.55 41.95 43.13 42.68 41.98 43.07 41.37 43.47 40.8 44.2 40.56"/><path d="M36.07 29.07C36.33 28.33 37.31 27.24 37.51 26.59 38.55 24.4 41.76 16.42 44.21 12.91 44.8 12.07 45.83 11.55 46.82 11.8 51.83 13.05 44.21 25.42 41.95 29.84 41.59 30.54 41.66 31.35 41.79 32.12 41.81 32.24 41.71 32.25 41.65 32.31 40.52 33.11 37.91 38.61 37.63 39.88"/><path d="M33.97 31.74C33.37 33.1 31.28 33.74 31.03 33.73 29.82 34.54 28.45 34.94 27.05 35.23 26.54 35.34 26.19 35.67 25.77 35.91"/><path d="M22.98 35.32C23.85 35.27 24.64 35.55 25.44 35.82 25.61 35.88 25.79 35.9 25.87 36.1 26.25 37.11 27.1 37.71 27.92 38.31 28.26 38.56 28.5 38.79 28.59 39.22 28.69 39.7 29.05 40.06 29.34 40.45 30.39 41.91 31.24 43.48 31.8 45.19 31.82 45.26 31.86 45.32 31.89 45.38"/><path d="M29.28 28.61C29.84 29.08 30.49 29.29 31.22 29.23 32.36 29.13 33.11 29.62 33.5 30.7 33.61 31.02 33.81 31.3 33.97 31.6"/><path d="M35.83 28C35.68 27.7 35.21 26.35 35.3 25.62 35.89 20.92 36.45 16.21 37.02 11.5 37.13 10.6 37.02 9.76 36.41 9.04 35.66 8.14 34.71 7.72 33.54 7.93 32.42 8.13 31.61 8.76 31.21 9.84 31.1 10.15 31.03 10.49 30.99 10.81 30.28 16.63 29.58 22.45 28.87 28.27"/></g></svg>',
+ f4:'<svg viewBox="0 0 63.63 63.63" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.81" cy="31.81" r="30.85" stroke="#751400" stroke-width="1.93" fill="#FFFFFF"/><path d="M25.5 28.03C25.4 27.53 25.31 26.97 25.09 26.11 24.45 23.52 22.23 14.82 21.54 12.24 21.21 11.01 20.41 10.22 19.19 9.96 17.96 9.7 16.9 10.14 16.14 11.14 15.52 11.96 15.46 12.91 15.71 13.86 16.41 16.53 17.13 19.19 17.86 21.85 18.43 23.94 19.01 26.03 19.57 28.12 19.65 28.41 19.64 28.72 19.67 29.03"/><path d="M32.02 29.51C31.45 28.89 31.29 28.17 31.29 27.31 31.32 23.87 31.96 14.44 31.98 11 31.99 9.37 30.85 7.98 29.05 7.86 27.86 7.78 26.69 8.4 26.05 9.86 25.86 10.28 25.77 10.78 25.76 11.24 25.73 14.16 25.51 23.31 25.5 26.23 25.5 26.61 25.53 27.41 25.45 27.79"/><path d="M30.55 30.32C29.91 29.39 28.98 29.3 27.96 29.36 27.27 29.4 26.56 29.46 25.9 29.14 25.84 29.11 25.73 29.11 25.67 29.14 25.2 29.41 24.69 29.38 24.18 29.38 23.08 29.38 21.98 29.38 20.88 29.38 20.77 29.38 20.64 29.42 20.55 29.38 19.95 29.09 19.38 29.26 18.77 29.36 17.43 29.58 16.46 30.25 16.02 31.49 15.24 33.67 14.53 35.88 13.86 38.09 13.14 40.45 13.54 42.69 14.87 44.73 16.16 46.7 17.56 48.61 18.93 50.53 19.55 51.4 19.82 52.36 19.83 53.4 19.83 54.2 19.8 54.99 19.79 55.79"/><path d="M37.67 55.78C37.67 54.85 37.67 53.93 37.67 53 37.67 52.04 38.08 51.23 38.68 50.52 40.64 48.17 41.93 45.51 42.6 42.53 42.89 41.24 43.03 39.93 43.07 38.61 43.1 37.65 43.12 36.69 43.18 35.74 43.2 35.48 43.34 35.22 43.46 34.98 44.63 32.7 47.72 26.51 48.89 24.23 49.28 23.47 49.68 22.72 49.98 21.93 50.47 20.63 49.67 19.16 48.65 18.54 47.52 17.85 46.19 17.83 45.28 18.91 44.87 19.09 41.12 27.2 40.66 27.85 40.41 28.2 39.2 29.91 38.94 30.26 38.52 29.5 38.9 27.83 39.11 27 39.38 25.93 40.36 21.8 40.62 20.73 41.21 18.38 42.18 14.22 42.12 13.29 42 12.24 41.84 11.55 40.91 10.97 39.19 9.9 36.87 10.7 36.33 12.75 35.52 15.82 34.12 24.88 33.34 27.96 33.26 28.28 32.28 29.32 32.12 29.62"/><path d="M20.01 35.42C20.79 35.37 21.48 35.7 22.21 35.89 22.35 35.92 22.44 36.13 22.55 36.26 22.82 36.61 23.05 37.01 23.37 37.3 25.8 39.46 27.61 42.03 28.77 45.06 28.86 45.29 28.9 45.54 28.96 45.78"/><path d="M30.63 30.45C30.63 31.05 30.59 31.9 30.01 32.38 29.35 32.92 28.72 33.51 27.99 33.95 26.74 34.71 25.36 35.17 23.89 35.38 23.39 35.45 22.93 35.77 22.45 35.98"/></g></svg>',
+ book:'<svg viewBox="0 0 63.12 63.12" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="31.56" cy="31.56" r="30.58" stroke="#751400" stroke-width="1.95" fill="#FFFFFF"/><path d="M31.21 50.29C24.37 47.5 15.26 48.71 10.14 49.45L10.14 18.23C17.17 17.43 25.37 16.59 31.28 19.11L31.28 50.24C31.28 50.24 31.24 50.31 31.2 50.29Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.38 50.83C38.89 48.33 45.7 48.27 52.07 49.58L52.07 18.56C46.45 16.03 38.02 16.33 31.28 19.65L31.28 50.76C31.28 50.76 31.33 50.84 31.37 50.82Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.36 50.03C24.89 47.09 17.37 46.56 12.19 47.65L12.19 16.43C18.95 15.63 25.75 16.33 31.43 18.85L31.43 49.98C31.43 49.98 31.39 50.05 31.35 50.03Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.52 50.02C38.75 47.1 44.65 46.19 50.13 47.64L50.13 16.43C44.73 13.9 37.91 15.52 31.43 18.85L31.43 49.96C31.43 49.96 31.48 50.04 31.52 50.02Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.36 50.03C25.86 45.89 18.57 44.88 14.07 45.97L14.02 14.79C20.1 13.99 25.75 16.34 31.44 18.86L31.44 49.99C31.44 49.99 31.4 50.06 31.36 50.04Z" stroke="#89181A" stroke-width="0.68" fill="#FFFFFF"/><path d="M31.4 50.02C37.2 45.95 44.5 44.77 48.52 45.83L48.57 13.8C44.15 12.74 37.52 15.66 31.31 18.84L31.31 49.95C31.31 49.95 31.36 50.04 31.4 50.01Z" stroke="#89181A" stroke-width="0.68" fill="#FFFFFF"/><path d="M16.65 19.27C20.1 19.14 24.33 20.82 28.71 22.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 22.27C20.1 22.14 24.33 23.82 28.71 25.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 25.27C20.1 25.14 24.33 26.82 28.71 28.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 28.26C20.1 28.13 24.33 29.81 28.71 31.79" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 31.26C20.1 31.13 24.33 32.81 28.71 34.79" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 34.25C20.1 34.12 24.33 35.8 28.71 37.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 37.25C20.1 37.12 24.33 38.8 28.71 40.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 40.25C20.1 40.12 24.33 41.8 28.71 43.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 18.89C42.38 18.76 38.06 20.67 33.61 22.65" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 21.88C42.38 21.75 38.06 23.66 33.61 25.64" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 24.88C42.38 24.75 38.06 26.66 33.61 28.64" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 27.87C42.38 27.74 38.06 29.65 33.61 31.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 30.87C42.38 30.74 38.06 32.65 33.61 34.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 33.87C42.38 33.74 38.06 35.65 33.61 37.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 36.86C42.38 36.73 38.06 38.64 33.61 40.62" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 39.86C42.38 39.73 38.06 41.64 33.61 43.62" stroke="#791214" stroke-width="0.91" fill="none"/></svg>',
+ think:'<svg viewBox="0 0 64.09 64.09" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="32.04" cy="32.04" r="31.07" stroke="#751400" stroke-width="1.95" fill="#FFFFFF"/><path d="M23.82 41.74C25.14 41.64 26.11 42.28 26.61 43.4 27.46 45.31 26.05 47.44 23.88 47.41 21.81 47.37 20.27 44.89 21.74 42.78" stroke="#751400" stroke-width="1.18" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M20.39 49.24C19.33 49.2 18.73 49.81 18.63 50.8 18.55 51.58 19.4 52.36 20.21 52.39 20.95 52.42 21.94 51.71 21.8 50.61" stroke="#751400" stroke-width="0.89" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M40.53 32.49C40.9 32.49 41.21 32.49 41.54 32.83 41.89 33.21 42.47 33.64 42.92 33.6 43.96 33.51 44.94 33.09 45.35 31.99 45.46 31.69 45.61 31.4 45.68 31.08L45.44 30.53C45.41 30.78 45.55 31 45.75 31 46.37 31 46.98 31.23 47.59 31.19 49.28 31.07 50.74 30.45 51.76 29 53.73 26.2 52.51 22.17 49.12 21.11 48.7 20.98 48.52 20.72 48.39 20.36 47.79 18.69 46.58 17.73 44.9 17.29 44.65 17.23 44.41 17.24 44.16 17.24 43.46 17.24 43.23 17.32 42.98 16.32 42.78 15.53 42.39 14.81 41.84 14.17 40.28 12.35 38.32 11.79 36.02 12.22 35.6 12.3 35.26 12.54 34.92 12.77L35.53 14.48C35.44 13.89 35.1 13.41 34.83 12.9 34.63 12.52 34.11 12.4 33.74 12.18 32.39 11.39 30.94 10.86 29.35 10.74 25.36 10.42 22.33 12.05 20.05 15.23 19.62 15.84 19.34 16.54 19.06 17.24 18.89 17.67 18.83 18.11 18.08 18.07 16.3 17.98 14.69 18.56 13.37 19.81 12.07 21.04 11.34 22.53 11.29 24.34 11.21 27.4 12.64 29.52 15.39 30.76 16.26 31.15 17.19 31.29 18.14 31.26 18.35 31.26 18.57 31.33 18.77 31.36 19.01 31.95 18.74 32.53 18.77 33.09 18.84 34.37 19.21 35.57 20.04 36.58 22.1 39.08 25.55 39.33 28.08 37.46 28.76 36.96 29.55 36.25 30.04 35.64 30.39 35.32 30.39 35.34 30.52 35.17L28.81 37.01C29.08 37.3 29.35 37.58 29.6 37.87 31.69 40.23 34.3 41.06 37.31 40.24 40.58 39.34 42.37 37.06 42.83 33.71" stroke="#751400" stroke-linecap="round" stroke-linejoin="round" fill="#FFFFFF"/><path d="M15.06 52.82C15.12 52.92 15.19 53.02 15.24 53.13 15.42 53.51 15.78 53.59 16.09 53.48 16.42 53.36 16.66 53.02 16.57 52.65 16.48 52.29 16.25 51.98 15.79 52.03 15.71 52.03 15.63 52.03 15.55 52.03" stroke="#751400" stroke-width="0.59" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+};
 
 const TAGS = {s:"subject", v:"verb", p:"prep phrase", c:"conjunction"};
 const RUN = /\[([a-z]+):([^\[\]]*)\]/g;
@@ -217,7 +273,7 @@ const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 function plain(m){ return m.replace(RUN, (x,k,t) => t); }
 
 /* The markup as HTML. ruby=true puts the part's name under each run, for the
-   sentence on a reveal; ruby=false is the flat form used in chips. */
+   sentence on a reveal; ruby=false is the flat form used in answer lines. */
 function marked(m, ruby){
   let out = "", last = 0;
   m.replace(RUN, (x,k,t,at) => {
@@ -235,7 +291,7 @@ function marked(m, ruby){
    hyphenated word or a contraction counts once and lone punctuation not at all. */
 function words(s){ return s.trim().split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w)).length; }
 
-/* Reveal chips for a length slide, built from the counts. */
+/* Reveal lines for a length slide, built from the counts. */
 function lengthAns(sl){
   const n = sl.sentences.map(words), i = sl.lands;
   const before = n.slice(Math.max(0,i-2), i);
@@ -288,58 +344,89 @@ function toggleNotes(){
 }
 
 function legend(){
-  return ["s","v","p","c"].map(k =>
+  return `<span class="legend">` + ["s","v","p","c"].map(k =>
     `<span class="lg k-${k}"><span class="b">${TAGS[k][0].toUpperCase()+TAGS[k].slice(1)}</span></span>`
-  ).join(`<span class="sep">·</span>`);
+  ).join("") + `</span>`;
+}
+
+/* Icons for the top right. A clause slide always shows 1 and 2 (every answer
+   here is 0, 1 or 2), never an icon worked out from the answer, which would
+   give it away. A length slide shows one icon per sentence number. */
+function icons(sl){
+  if(sl.kind === "title") return ["book"];
+  if(at.rev) return ["think"];
+  if(sl.kind === "sentence") return ["f1","f2"];
+  return sl.sentences.map((s,j) => "f" + (j+1)).filter(k => ICONS[k]);
 }
 
 function render(){
   const sl = SLIDES[at.i], n = SLIDES.length;
   $("count").textContent = `${at.i+1} / ${n}`;
-  $("phase").textContent = sl.kind === "title" ? "" : (at.rev ? "Reveal and model" : "Display");
   $("bBack").disabled = at.i === 0 && !at.rev;
   $("bNext").disabled = at.i === n-1;
   $("bReveal").disabled = !canReveal(at.i);
   $("bReveal").setAttribute("aria-pressed", at.rev);
-  $("stage").className = at.rev ? "rev" : "";
+  $("slide").className = `is-${sl.kind}` + (at.rev ? " rev" : "") + (canReveal(at.i) && !at.rev ? " vote" : "");
 
-  let html = "", foot = "";
+  let html = "", h = "", sub = "", foot = "";
   if(sl.kind === "title"){
-    html = `<h1 class="ttl">${esc(sl.h)}</h1>
-      <p class="rule fitme">${marked(sl.rule, false)}</p>
-      <p class="key">${sl.key.map(k => `<b>${esc(k[0])}</b>${esc(k[1])}`).join("<br>")}</p>`;
+    h = FRAME.know; sub = sl.h;
+    html = `<p class="rule fitme">${marked(sl.rule, false)}</p>
+      <p class="key">${sl.key.map(k => `<span class="no">${esc(k[0])}</span>${esc(k[1])}`).join("<br>")}</p>`;
   } else if(sl.kind === "sentence"){
+    h = at.rev ? FRAME.reveal : FRAME.count;
+    sub = at.rev ? "" : FRAME.countSub;
     html = `<p class="sent fitme"></p><p class="src">${esc(sl.src)}</p>
       <div class="ans">${sl.ans.map(a => `<span class="chip">${marked(a, false)}</span>`).join("")}</div>`;
-    foot = at.rev ? legend() : "One finger per clause · a fist for none";
+    foot = at.rev ? legend() : esc(FRAME.vote);
   } else if(sl.kind === "length"){
+    h = at.rev ? FRAME.reveal : sl.ask;
+    sub = at.rev ? sl.ask : sl.key;
     const counts = sl.sentences.map(words), max = Math.max(...counts);
     html = `<div class="len">
         <p class="pass fitme">${sl.sentences.map((s,j) =>
-          `<span class="s${j===sl.lands?" hit":""}"><sup>${j+1}</sup>${esc(s)}</span>`).join(" ")}</p>
+          `<span class="s${j===sl.lands?" hit":""}"><span class="no">${j+1}.</span>${esc(s)}</span>`).join(" ")}</p>
         <div class="bars" aria-label="Words per sentence">${counts.map((c,j) =>
           `<div class="col${j===sl.lands?" hit":""}"><span class="tag">lands</span><span class="num">${j+1}</span>
              <div class="barbox"><div class="bar" style="height:${(c/max*100).toFixed(1)}%"></div></div>
              <span class="wc">${c} <small>words</small></span></div>`).join("")}</div>
       </div>
       <p class="src">${esc(sl.src)}</p>
-      <p class="ask">${esc(sl.ask)}</p>
       <div class="ans">${lengthAns(sl).map(a => `<span class="chip">${marked(a, false)}</span>`).join("")}</div>`;
-    foot = at.rev ? "" : esc(sl.key);
+    foot = at.rev ? "" : esc(FRAME.vote);
   }
+  $("h").textContent = h;
+  $("sub").textContent = sub;
+  $("icons").innerHTML = icons(sl).map(k => ICONS[k] || "").join("");
   $("wrap").innerHTML = html;
   $("foot").innerHTML = foot;
+  $("code").textContent = FRAME.code;
   $("notes").innerHTML = sl.notes.map(r =>
     `<div class="nrow"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("");
   fit();
 }
 
+/* The slide is the largest 16:9 box that fits under the control strip (and
+   above the notes, when they are open). Returns the scale against a
+   1280 x 720 slide. */
+function size(){
+  const f = $("frame"), s = $("slide");
+  const W = f.clientWidth - 16, H = f.clientHeight - 8;
+  const w = Math.max(160, Math.floor(Math.min(W, H * 16 / 9)));
+  s.style.width = w + "px";
+  s.style.height = Math.floor(w * 9 / 16) + "px";
+  s.style.setProperty("--k", (w / 1280).toFixed(4));
+  return w / 1280;
+}
+
 /* Largest type that fits the slide in one view. A sentence slide is sized
-   with the reveal in place (bold runs, labels, chips), and the display state
-   keeps that size, so nothing jumps when the answer appears. The chips are
-   hidden, not removed, so their space is held without showing anything. */
-const SIZES = {title:[96,40], sentence:[84,40], length:[46,20]};
+   with the reveal in place (bold runs, labels, answer lines), and the display
+   state keeps that size, so nothing jumps when the answer appears. The answer
+   lines are hidden, not removed, so their space is held without showing
+   anything. Sizes are for a 1280 x 720 slide and scale with it. */
+const SIZES = {title:[60,32], sentence:[64,30], length:[40,18]};
 function fit(){
+  const k = size();
   const sl = SLIDES[at.i], el = document.querySelector(".fitme");
   if(!el) return;
   const sent = sl.kind === "sentence", ans = document.querySelector(".ans");
@@ -347,7 +434,7 @@ function fit(){
   if(ans) ans.classList.remove("hide");
   const stage = $("stage"), wrap = $("wrap");
   const fits = () => wrap.offsetHeight <= stage.clientHeight && el.scrollWidth <= el.clientWidth + 1;
-  let [s, min] = SIZES[sl.kind];
+  let [s, min] = SIZES[sl.kind].map(v => Math.round(v * k));
   el.style.fontSize = s + "px";
   while(s > min && !fits()){ s -= 2; el.style.fontSize = s + "px"; }
   if(sent && !at.rev) el.textContent = plain(sl.m);
@@ -379,6 +466,7 @@ addEventListener("resize", fit);
 (function start(){
   const bad = problems();
   if(bad.length){
+    size();
     $("wrap").innerHTML = `<p class="broken">The content block has a problem, so the deck will not run:\n${esc(bad.join("\n"))}</p>`;
     return;
   }

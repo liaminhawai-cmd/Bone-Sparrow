@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Bone Sparrow — Year 7 English</title>
+<title>The Bone Sparrow: Year 7 English</title>
 <style>
 /* Palette and type match the Grammar Hub / Vocab Hub / Reading Hub so the
    suite reads as one. This page is the front door: it collects the details
@@ -185,13 +185,13 @@ function railHtml(now){
   }).join("")+`</div>`;
 }
 
-/* ---------------- STEP 1 — who are you ---------------- */
+/* ---------------- STEP 1: who are you ---------------- */
 function renderStep1(){
   $("app").innerHTML = railHtml(1) + `
   <h1>The Bone Sparrow: Year 7 English</h1>
-  <p class="sub">Zana Fraillon · Units 5–6. Everything you do saves on this device under your name and student code, so use the same computer where you can.</p>
-  <h2>First, who are you?</h2>
-  <p class="lead">These details go on the report you hand to your teacher, so use the name and code your school knows you by.</p>
+  <p class="sub">Zana Fraillon · Units 5–6. Your work saves on this device, under your name and student code. Use the same computer where you can.</p>
+  <h2>Who are you?</h2>
+  <p class="lead">Use the name and code your school knows you by. They go on your report.</p>
   <div class="fields">
     <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(P.fname)}"><div class="err" id="ef"></div></span>
     <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(P.lname)}"><div class="err" id="el"></div></span>
@@ -203,15 +203,15 @@ function renderStep1(){
 }
 function submit1(){
   const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
-  $("ef").textContent = f ? "" : "We need your first name.";
-  $("el").textContent = l ? "" : "We need your last name.";
-  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right: check your student code and try again.";
+  $("ef").textContent = f ? "" : "Type your first name.";
+  $("el").textContent = l ? "" : "Type your last name.";
+  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "Check your student code. It is 4 to 8 characters long.";
   if(!f || !l || sid.length<4 || sid.length>8) return;
   P.fname=f; P.lname=l; P.sid=sid; writeProfile(P);
   step=2; render();
 }
 
-/* ---------------- STEP 2 — settings ---------------- */
+/* ---------------- STEP 2: settings ---------------- */
 function renderStep2(){
   const chapterOpts = Array.from({length:20},(_,i)=>i+1)
     .map(c=>`<option value="${c}" ${P.chapter===c?"selected":""}>I've read to the end of chapter ${c}</option>`).join("")
@@ -221,7 +221,7 @@ function renderStep2(){
   <p class="sub">You can change both later.</p>
 
   <div class="eyebrow">Do you use EAL support?</div>
-  <p class="lead">EAL support shows key words in your first language while you're learning them, and adds the EAL writing levels (C2, C3, C4) beside the Year 7 ones.</p>
+  <p class="lead">EAL support shows key words in your first language. It also adds the EAL writing levels (C2, C3, C4) beside the Year 7 levels.</p>
   <div class="choices">
     <button class="choice ${P.eal===true?"on":""}" id="ealYes">
       <span class="ct">Yes, turn it on</span>
@@ -239,7 +239,7 @@ function renderStep2(){
   </div>
 
   <div class="eyebrow">Where are you up to in the novel?</div>
-  <p class="lead">Tasks about chapters you haven't read stay hidden, so nothing gets spoiled. Come back and change this each week as you read on.</p>
+  <p class="lead">Tasks about chapters you haven't read stay hidden. Change this each week as you read on.</p>
   <div class="fields"><span><select id="chap"><option value="">Choose…</option>${chapterOpts}</select><div class="err" id="ec"></div></span></div>
 
   <div class="btnrow">
@@ -252,7 +252,7 @@ function renderStep2(){
   $("go2").onclick = ()=>{
     const c = $("chap").value;
     if(P.eal===null){ $("ec").textContent="Choose yes or no for EAL support first."; return; }
-    if(!c){ $("ec").textContent="Tell us where you're up to, so we don't spoil the story."; return; }
+    if(!c){ $("ec").textContent="Choose the last chapter you have read."; return; }
     $("ec").textContent="";
     P.chapter = +c;
     if(P.eal===true) P.lang = $("lang").value || "";
@@ -273,36 +273,28 @@ const DIRECTORY = [
    {u:"bonesparrowtrainer.html", t:"Pre-reading trainer", d:"the 17 unit words and sentence types, lessons 1–3"},
    {u:"GrammarHuboffline.html", t:"Grammar Hub", d:"sentence structure, when a hub sends you here"} ]},
  { g:"Chapter by chapter", items:[
-   {u:"BoneSparrowReadingHub.html#qr1", t:"Quickread 1 — the Night Sea", d:"chapter 1"},
-   {u:"BoneSparrowReadingHub.html#qr2", t:"Quickread 2 — caught by Beaver", d:"chapter 5"},
-   {u:"BoneSparrowReadingHub.html#qr3", t:"Quickread 3 — lucky", d:"chapter 6"},
-   {u:"BoneSparrowReadingHub.html#qr4", t:"Quickread 4 — what Alpha does to a person", d:"chapter 8"},
-   {u:"BoneSparrowReadingHub.html#qr5", t:"Quickread 5 — the bone sparrow", d:"chapter 10"},
-   {u:"BoneSparrowReadingHub.html#qr6", t:"Quickread 6 — a story from just Outside", d:"chapter 14"},
-   {u:"BoneSparrowReadingHub.html#qr7", t:"Quickread 7 — Aussie Boy", d:"chapter 17"},
-   {u:"BoneSparrowReadingHub.html#qr8", t:"Quickread 8 — Jimmie wants to know", d:"chapter 20"},
-   {u:"BoneSparrowReadingHub.html#qr9", t:"Quickread 9 — names and numbers", d:"chapter 2 revisited, ends in a built sentence"} ]},
+   {u:"BoneSparrowReadingHub.html#qr1", t:"Quickread 1: the Night Sea", d:"chapter 1"},
+   {u:"BoneSparrowReadingHub.html#qr2", t:"Quickread 2: caught by Beaver", d:"chapter 5"},
+   {u:"BoneSparrowReadingHub.html#qr3", t:"Quickread 3: lucky", d:"chapter 6"},
+   {u:"BoneSparrowReadingHub.html#qr4", t:"Quickread 4: what Alpha does to a person", d:"chapter 8"},
+   {u:"BoneSparrowReadingHub.html#qr5", t:"Quickread 5: the bone sparrow", d:"chapter 10"},
+   {u:"BoneSparrowReadingHub.html#qr6", t:"Quickread 6: a story from just Outside", d:"chapter 14"},
+   {u:"BoneSparrowReadingHub.html#qr7", t:"Quickread 7: Aussie Boy", d:"chapter 17"},
+   {u:"BoneSparrowReadingHub.html#qr8", t:"Quickread 8: Jimmie wants to know", d:"chapter 20"},
+   {u:"BoneSparrowReadingHub.html#qr9", t:"Quickread 9: names and numbers", d:"chapter 2 revisited, ends in a built sentence"} ]},
  { g:"How the writing works", items:[
    {u:"BoneSparrowReadingHub.html#fig", t:"Figurative → literal", d:"lesson 09"},
    {u:"BoneSparrowReadingHub.html#voice", t:"Voice fingerprint", d:"before the voice memo"} ]},
  { g:"Evidence into a sentence", items:[
    {u:"BoneSparrowReadingHub.html#ev", t:"Evidence builder", d:"find it, explain it, embed it"},
-   {u:"BoneSparrowThreeWays.html#ev", t:"Sentence from the evidence", d:"chapter 5, on rails"},
-   {u:"BoneSparrowThreeWays.html#idea", t:"Sentence from the idea", d:"chapter 5, on rails"},
-   {u:"BoneSparrowThreeWays.html#eff", t:"Sentence from the effect", d:"chapter 5, on rails"} ]},
+   {u:"BoneSparrowThreeWays.html#ev", t:"Sentence from the evidence", d:"chapter 5, step by step"},
+   {u:"BoneSparrowThreeWays.html#idea", t:"Sentence from the idea", d:"chapter 5, step by step"},
+   {u:"BoneSparrowThreeWays.html#eff", t:"Sentence from the effect", d:"chapter 5, step by step"} ]},
  { g:"Writing the analysis", items:[
-   {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]},
- { g:"Writing Folio (next unit)", items:[
-   {u:"WritingFolio.html", t:"Writing Folio", d:"its own front door: start there"},
-   {u:"ContentionClaims.html", t:"Contention and claims", d:"the deck, then your draft"},
-   {u:"PronounsModals.html", t:"Pronoun choice and modal verbs", d:"the words, then back to the draft"},
-   {u:"ConcessionSentences.html", t:"Complex sentences for concession", d:"extension: concede, then answer back"},
-   {u:"MicroFiction.html", t:"Micro-fiction", d:"lesson 08: cut and swap until it hints"},
-   {u:"SentenceFluency.html", t:"Sentence fluency", d:"find the clauses, then join and split"},
-   {u:"WritingFolioVocabHub.html", t:"Writing Folio Vocab Hub", d:"lessons 01–08, words and sentence types"} ]}
+   {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]}
 ];
 
-/* ---------------- STEP 3 — your tasks ---------------- */
+/* ---------------- STEP 3: your tasks ---------------- */
 function renderStep3(){
   const set = currentSet();
   const chapLabel = P.chapter>20 ? "the whole novel" : "chapter "+P.chapter;
@@ -313,8 +305,8 @@ function renderStep3(){
   const laterQr=[6,8,10,14,17,20].filter(c=>c<=P.chapter);
   if(laterQr.length) open.push(`${laterQr.length} more quickread${laterQr.length===1?"":"s"} (chapter${laterQr.length===1?" "+laterQr[0]:"s "+laterQr.join(", ")}) that finish by connecting evidence to ideas`);
   $("app").innerHTML = railHtml(4) + `
-  <h1>Ready, ${esc(P.fname)}.</h1>
-  <p class="sub">Zana Fraillon · Units 5–6 · reading, vocabulary, evidence and analysis.</p>
+  <h1>Your tasks</h1>
+  <p class="sub">Zana Fraillon · Units 5–6</p>
   <div class="whoami">
     <span><b>${esc(P.fname)} ${esc(P.lname)}</b> · ${esc(P.sid)}</span>
     <span class="sep">|</span><span>Read to ${esc(chapLabel)}</span>
@@ -325,18 +317,18 @@ function renderStep3(){
   <div class="eyebrow">Before you read the next chapters</div>
   <a class="card" href="BoneSparrowVocabHub.html">
     <div class="t">Vocab Hub <span class="arrow">→</span><span class="now">start here</span></div>
-    <div class="d">Your set is <b>${esc(set.title)}</b>. Do <b>Meet the words</b> and <b>Build the words</b>, then take the quick review if it offers you one.${P.eal&&langName?` Key words will show in ${esc(langName)}.`:""} The unit words we did before opening the novel are the first set in here too.</div>
+    <div class="d">Your set is <b>${esc(set.title)}</b>. Do <b>Meet the words</b>, then <b>Build the words</b>. Take the quick review if it offers you one.${P.eal&&langName?` Key words show in ${esc(langName)}.`:""} The first set is the unit words from before the novel.</div>
   </a>
 
   <div class="eyebrow">After you've read</div>
   <a class="card" href="BoneSparrowReadingHub.html">
     <div class="t">Reading &amp; Evidence Hub <span class="arrow">→</span></div>
-    <div class="d">Open at ${esc(chapLabel)}: ${open.join(", and ")}. Work top to bottom unless your teacher says otherwise, and print your report when you're asked for it.</div>
+    <div class="d">Open at ${esc(chapLabel)}: ${open.join(", and ")}. Work from top to bottom unless your teacher says otherwise. Print your report when your teacher asks for it.</div>
   </a>
 
-  <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right.</div>
+  <div class="note">Your report shows your first attempt at every question. Wrong answers come back until you get them right.</div>
 
-  <details class="dir"><summary>Every link in this suite, separately</summary>
+  <details class="dir"><summary>All the activity links</summary>
     <p class="dirnote"></p>
     ${DIRECTORY.map(g=>`<div class="dirgrp"><h4>${esc(g.g)}</h4>${g.items.map(it=>
       `<div class="dirrow"><a href="${it.u}">${esc(it.t)}</a><span>${esc(it.d)}</span></div>`).join("")}</div>`).join("")}
@@ -344,7 +336,7 @@ function renderStep3(){
   $("editMe").onclick = ()=>{ step=1; render(); };
 }
 
-/* ---------------- THE REPORT — one combined report for everything.
+/* ---------------- THE REPORT: one combined report for everything.
    Reads both hubs' own storage directly (they stay the single source of
    truth for their scoring), lays it out as one printable page with one
    verification code. Every "My report" button in the suite lands here. */
@@ -359,7 +351,7 @@ const READING_MODULES = [
   ["qr5","Quickread: the bone sparrow (ch 10)"],["qr6","Quickread: a story from just Outside (ch 14)"],
   ["qr7","Quickread: Aussie Boy (ch 17)"],["qr8","Quickread: Jimmie wants to know (ch 20)"]
 ];
-/* The CAT rubric, in the curriculum's own words — the report quotes the
+/* The CAT rubric, in the curriculum's own words. The report quotes the
    level a student actually reached rather than inventing a grade. */
 const VIC_LEVELS = {
   5:"I can identify parts of the story that relate to key ideas",
@@ -369,7 +361,7 @@ const VIC_LEVELS = {
   9:"I can analyse the way different people and perspectives are represented in the story"
 };
 const EAL_BANDS = { 5:"C2", 6:"C2/C3", 7:"C3", 8:"C4", 9:"C4+" };
-function pct(got,total){ return total? Math.round(100*got/total)+"%" : "—"; }
+function pct(got,total){ return total? Math.round(100*got/total)+"%" : "n/a"; }
 /* Score bands, the same four the reading hub uses. The colour is a second read
    of the number rather than the only one, so nothing is lost in greyscale or
    to a colour-blind reader. */
@@ -378,7 +370,7 @@ function scoreBand(got,total){
   const p=got/total;
   return p>=0.85 ? "band4" : p>=0.7 ? "band3" : p>=0.5 ? "band2" : "band1";
 }
-function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">: </span>`; }
+function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">none</span>`; }
 function vcode(str){
   let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
   return "V-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
@@ -392,7 +384,7 @@ function renderReports(){
   const first=R.first||{}; let rrows="", rGot=0, rTot=0, rAny=false;
   READING_MODULES.forEach(([id,label])=>{
     const ks=Object.keys(first).filter(k=>k.split(".")[0]===id);
-    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim">: </td><td class="dim">not started</td></tr>`; return; }
+    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim"></td><td class="dim">not started</td></tr>`; return; }
     rAny=true;
     const got=ks.filter(k=>first[k]).length;
     rGot+=got; rTot+=ks.length;
@@ -404,7 +396,7 @@ function renderReports(){
   const cnt=m=>{ const ks=Object.keys(m||{}); return {got:ks.filter(k=>m[k]).length, tot:ks.length}; };
   VOCAB_SETS.forEach(st=>{
     const L=lessons[st.id];
-    if(!L){ vrows+=`<tr><td>${esc(st.title)}</td><td class="dim">—</td><td class="dim">—</td><td class="dim">not started</td></tr>`; return; }
+    if(!L){ vrows+=`<tr><td>${esc(st.title)}</td><td class="dim"></td><td class="dim"></td><td class="dim">not started</td></tr>`; return; }
     vAny=true;
     const b=cnt(L.buildFirst), a=cnt(L.applyFirst);
     vGot+=b.got+a.got; vTot+=b.tot+a.tot;
@@ -430,7 +422,7 @@ function renderReports(){
       ? `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
           <div class="catlv">Level ${climbed}${P.eal&&EAL_BANDS[climbed]?` <span class="dim">· EAL ${EAL_BANDS[climbed]}</span>`:""}</div>
           <div class="catvic">“${esc(VIC_LEVELS[climbed])}”</div>
-          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:"."}</div></div>`
+          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt.${climbed<9?` Level ${climbed+1} is the next rung.`:""}</div></div>`
       : `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
           <div class="catlv dim">Not yet reached</div>
           <div class="catvic">Working towards “${esc(VIC_LEVELS[5])}”</div></div>`;
@@ -444,19 +436,19 @@ function renderReports(){
     <button class="btn btn-primary" onclick="window.print()">Print / save as PDF</button>
   </div>
   <h1 style="margin-bottom:2px">The Bone Sparrow, my report</h1>
-  <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
-  <p class="sub">One report for everything. Every score is a <b>first attempt</b>.</p>
+  <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"?")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
+  <p class="sub">Every score is a <b>first attempt</b>.</p>
 
-  <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt (${pct(rGot,rTot)})`:""}</h2>
+  <h2 class="rpth">Reading &amp; Evidence Hub${rTot?`: <b>${rGot}/${rTot}</b> first attempt (${pct(rGot,rTot)})`:""}</h2>
   <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rrows}</table>
-  ${rAny?"":`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowReadingHub.html">go do an activity</a>.</p>`}
+  ${rAny?"":`<p class="sub dim">Nothing recorded yet on this device. <a href="BoneSparrowReadingHub.html">Open the Reading &amp; Evidence Hub</a>.</p>`}
   ${climbBlock}
 
-  <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items (${pct(vGot,vTot)})`:""}</h2>
+  <h2 class="rpth">Vocab Hub${vTot?`: <b>${vGot}/${vTot}</b> first attempt on lesson items (${pct(vGot,vTot)})`:""}</h2>
   <table class="rpt"><tr><th>Chapter set</th><th>Build (1st try)</th><th>Use (1st try)</th><th>Status</th></tr>${vrows}</table>
   ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them (${pct(revFirst,revAtt)}).`:"none yet."}</p>
   <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered (${pct(mastered.length,wk.length)})</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
-  :`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowVocabHub.html">go meet some words</a>.</p>`}
+  :`<p class="sub dim">Nothing recorded yet on this device. <a href="BoneSparrowVocabHub.html">Open the Vocab Hub</a>.</p>`}
 
   <p class="sub">Verification code: <b class="vc">${code}</b></p>`;
   $("backRep").onclick=()=>{ document.querySelector(".container").classList.remove("report"); step=3; render(); };

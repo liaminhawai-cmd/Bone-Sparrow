@@ -69,7 +69,17 @@ input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8p
 /* One view on a school laptop: each column scrolls inside itself rather than
    pushing the page past the bottom of the screen. */
 .cols>.cardbox{max-height:calc(100vh - 128px);overflow:auto}
-.prompt{font-size:15px;font-weight:700;margin:0 0 2px;line-height:1.5}
+.prompt{font-size:18px;font-weight:700;margin:0 0 4px;line-height:1.45;border-left:4px solid var(--accent);padding:1px 0 1px 10px}
+.stepno{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin:0 0 4px}
+ol.how{margin:0 0 10px;padding-left:22px;font-size:14px;color:var(--ink);line-height:1.55}
+.gap{font:inherit;font-weight:700;color:var(--accent);background:#fff;border:2px dashed var(--accent);border-radius:6px;
+     padding:2px 9px;min-height:40px;min-width:44px;cursor:pointer;margin:0 2px}
+.gap.filled{border-style:solid}
+.gap.sel{box-shadow:0 0 0 3px rgba(44,95,124,.25)}
+.gap sup{font-family:'Segoe UI',Tahoma,sans-serif;font-size:10px;color:var(--muted);margin-left:3px}
+.jopt{display:flex;flex-direction:column;align-items:flex-start;min-width:92px}
+.jopt b{font-size:16px}
+.jopt .job{font-size:12px;color:var(--muted);font-weight:600}
 .hint{font-size:13px;color:var(--muted);margin:0 0 10px}
 .lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:12px 0 4px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -186,10 +196,10 @@ const CARDS = [
    t:"(Before social media|p), {happiness|s1} [was|s1|was mixtapes, bike rides and blanket forts] mixtapes, bike rides, <and|j> blanket forts.",
    type:"simple",
    why:"“Before social media” has no verb. It is a phrase that tells you when, so “social media” is not the subject." },
- { id:"pier", short:"On the pier…", src:"Day at the Beach",
-   t:"(On the pier|p), {you|s1} [slung|s1|slung an arm] your arm (over my shoulder|p) <and|c> {I|s2} [fell|s2|fell into step] (into step|p) (with you|p), [training|-|“training” has no subject of its own. It starts a phrase that tells you how.] my body [to match|-|“to match” has no subject of its own. A “to” verb never does.] your low, slow rhythm.",
+ { id:"decades", short:"It took decades…", src:"The Courier Mail",
+   t:"{It|s1} [took|s1|took decades] decades, <but|c> {culture|s2} finally [shifted|s2|shifted].",
    type:"compound",
-   why:"“training” and “to match” have no subject, so they add no clause. “and” joins “you slung” and “I fell” as equals." },
+   why:"“but” joins “It took decades” and “culture finally shifted” as equals. “finally” is not a verb: it tells you when." },
  { id:"easy", short:"They are super easy…", src:"Perfect Fudgy Brownies (recipe)",
    t:"{They|s1} [are|s1|is super easy to make] super easy [to make|-|“to make” has no subject of its own. It belongs to “easy”: easy to make.], [taste|s1|tastes like rich dark chocolate] (like rich dark chocolate|p), [have|s1|has the fudgiest middles] the fudgiest middles, <and|j> [have|s1|has crinkly, shiny tops] crinkly, shiny tops.",
    type:"simple",
@@ -202,11 +212,38 @@ const CARDS = [
    t:"{Everyone|s1} always [has|s1|has the same set of ants] the same set (of workers, big-headed warriors, <and|j> “gunner” ants|p) (as their primary units|p), <and|c> {they all|s2} [counter|s2|counters each other] each other (in a straightforward rock-paper-scissors balance|p).",
    type:"compound",
    why:"The first “and” joins three kinds of ant, not two clauses. Only the second “and” joins one subject and verb to another." },
- { id:"firm", short:"The brownies continue…", src:"Perfect Fudgy Brownies (recipe)",
-   t:"{The brownies|s1} [continue|s1|continues to firm up] [to firm up|-|“to firm up” has no subject of its own. A “to” verb never does.] <as|s> {they|s2} [cool|s2|cools], <so|c> <even though|s> {they|s3} [may look|s3|may look underdone] underdone, {they|s4} [will be|s4|will be perfect] perfect <when|j> [cooled|-|“cooled” has no subject of its own. Nothing in “when cooled” is doing the cooling.] (to room temperature|p).",
+ { id:"resilience", short:"We talk about resilience…", src:"The Courier Mail",
+   t:"{We|s1} [talk|s1|talks about resilience] (about resilience|p), <but|c> {we|s2} [forget|s2|forgets how fragile identity is] <how|s> fragile {identity|s3} [is|s3|is fragile at that age] (at that age|p).",
    type:"compound-complex",
-   why:"“so” joins two main clauses as equals. “as” and “even though” each start a clause that cannot stand alone. “to firm up” and “when cooled” have no subject, so they add no clause." }
+   why:"“but” joins “We talk about resilience” and “we forget…” as equals. “how” starts a clause that cannot stand alone: “identity is fragile at that age”." },
+
+ /* Revisit cards. "twinOf" names the card above whose box they share. A due
+    card comes back as one of its twins on odd boxes and as itself on even
+    ones, so a revisit is not always the sentence the student has seen.
+    No card here has an -ing or -ed clause: those are not taught yet. */
+ { id:"around98", twinOf:"social", short:"Around 98%…", src:"Crikey",
+   t:"{Around 98%|s1} (of Australian 15-year-olds|p) [use|s1|uses social media] social media.",
+   type:"simple",
+   why:"“of Australian 15-year-olds” is a phrase with no verb. The subject is “Around 98%”: they are the ones who use social media." },
+ { id:"butter", twinOf:"easy", short:"So, I melt my butter…", src:"Perfect Fudgy Brownies (recipe)",
+   t:"So, {I|s1} [melt|s1|melts my butter in a saucepan] my butter (in a saucepan|p) <and|j> then immediately [stir in|s1|stirs in sugar, cocoa powder, vanilla extract and salt] sugar, cocoa powder, vanilla extract, <and|j> salt.",
+   type:"simple",
+   why:"One subject, “I”, does both things, so it is one clause. Neither “and” joins two clauses. “So” links back to the sentence before this one." },
+ { id:"automated", twinOf:"ants", short:"Automated processes…", src:"Crikey",
+   t:"{Automated processes|s1} [have|s1|has their place] their place, <but|c> {many recommendations|s2} (in our review|p) [emphasised|s2|emphasises the importance of human moderators] the importance (of human moderators|p) [to keep up|-|“to keep up” has no subject of its own. A “to” verb never does.].",
+   type:"compound",
+   why:"“but” joins “Automated processes have their place” and “many recommendations emphasised…” as equals. “to keep up” has no subject, so it adds no clause." },
+ { id:"platforms", twinOf:"batter", short:"Platforms such as TikTok…", src:"Crikey",
+   t:"{Platforms|s1} such as TikTok, Snapchat <and|j> Instagram [are|s1|is where young people connect] <where|s> {young people|s2} [connect|s2|connects with friends and online communities] (with friends <and|j> online communities|p), [explore|s2|explores their identities] <and|j> [express|s2|expresses their identities] their identities, [seek|s2|seeks information] information, <and|j> [find|s2|finds support for mental health struggles] support (for mental health struggles|p).",
+   type:"complex",
+   why:"“where” starts a clause that cannot stand alone: “young people connect…”. One subject, “young people”, does all five things in it. Every “and” joins words or phrases, not clauses." },
+ { id:"reviewed", twinOf:"batter", short:"We reviewed 70 reports…", src:"Crikey",
+   t:"{We|s1} [reviewed|s1|reviewed 70 reports] 70 reports (from experts in Australia, the United Kingdom, the United States <and|j> Canada|p) [to understand|-|“to understand” has no subject of its own. A “to” verb never does.] <what|s> {they|s2} [recommend|s2|recommends] – <and|j> [found|s1|found broad agreement] broad agreement <that|s> {a ban|s3} [may not address|s3|may not address the real problems] the real problems.",
+   type:"complex",
+   why:"“what” and “that” each start a clause that cannot stand alone. One subject, “We”, does both “reviewed” and “found”: this “and” joins two verbs, not two clauses." }
 ];
+const CORE = CARDS.filter(c=>!c.twinOf);
+function twinsOf(id){ return CARDS.map((c,i)=>c.twinOf===id?i:-1).filter(i=>i>=0); }
 
 const JOIN = {
   src:"Dear Santa review (The Guardian)",
@@ -304,7 +341,7 @@ function writeProfile(){
    and makes it due today. Days are local calendar days. */
 const GAPS={1:1,2:3,3:7,4:21};
 function dayNo(){ const d=new Date(); return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000); }
-function unitList(){ return CARDS.map(c=>"cl."+c.id).concat(["join","split"]); }
+function unitList(){ return CORE.map(c=>"cl."+c.id).concat(["join","split"]); }
 function boxOf(u){ const b=S.box&&S.box[u]; return b?b.n:0; }
 function isDue(u){ const b=S.box&&S.box[u]; return !!b && b.n>0 && b.n<5 && b.due<=dayNo(); }
 function dueUnits(){ return unitList().filter(isDue); }
@@ -328,7 +365,7 @@ function wordsIn(t){ return String(t).split(/\s+/).filter(w=>/[A-Za-z0-9]/.test(
 function words(t){ return String(t).replace(/[.!?]$/,"").split(/\s+/).filter(Boolean); }
 function head(t,n){ const w=words(t); return w.slice(0,n).join(" ")+(w.length>n?"…":""); }
 function tail(t,n){ const w=words(t); return (w.length>n?"…":"")+w.slice(-n).join(" "); }
-function clean(w){ return String(w).replace(/^[^A-Za-z0-9]+/,"").replace(/[^A-Za-z0-9]+$/,""); }
+function clean(w){ const c=String(w).replace(/^[^A-Za-z0-9]+/,"").replace(/[^A-Za-z0-9]+$/,""); return c||String(w); }
 
 /* ====================== STEP 1 MARKUP ====================================
    Characters are read one at a time. Brackets may nest (a conjunction inside
@@ -389,6 +426,7 @@ function model(c){ return MODELS[c.id]||(MODELS[c.id]=parseCard(c)); }
 function contentErrors(){
   const out=[];
   CARDS.forEach(c=>model(c).errors.forEach(e=>out.push("Card “"+c.short+"”: "+e)));
+  CARDS.forEach(c=>{ if(c.twinOf && !CORE.some(k=>k.id===c.twinOf)) out.push("Card “"+c.short+"”: twinOf "+c.twinOf+" is not a card"); });
   if(JOIN.links.length!==JOIN.sents.length-1) out.push("Join: "+JOIN.sents.length+" sentences need "+(JOIN.sents.length-1)+" links");
   JOIN.links.forEach((L,i)=>{ if(["contrast","reason","result","addition","apart","verdict"].indexOf(L.k)<0) out.push("Join link "+(i+1)+": unknown kind "+L.k);
     if(L.k==="contrast" && L.weight!=="first" && L.weight!=="second") out.push("Join link "+(i+1)+": contrast needs weight first or second"); });
@@ -464,12 +502,11 @@ function go(screen){
   else if(screen==="report") renderReport();
 }
 function links(){
-  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a>
-    <a class="menulink" href="WritingFolio.html">Folio menu</a>
+  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>
     <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`;
 }
 function topbar(deck){
-  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><a class="menulink" href="WritingFolio.html">Folio menu</a>`}</span></div>`;
+  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`}</span></div>`;
 }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 
@@ -495,9 +532,9 @@ function idSubmit(){
   go("home");
 }
 function renderHome(){
-  const n=CARDS.filter(c=>S.done["cl."+c.id]).length;
+  const n=CORE.filter(c=>S.done["cl."+c.id]).length;
   const steps=[
-    { t:"Find the clauses", d:"Verbs, subjects, then the kind of sentence.", tag:n?`${n} of ${CARDS.length} done`:"", done:n===CARDS.length, fn:"go('clauses')" },
+    { t:"Find the clauses", d:"Verbs, subjects, then the kind of sentence.", tag:n?`${n} of ${CORE.length} done`:"", done:n===CORE.length, fn:"go('clauses')" },
     { t:"Join", d:"A film review cut into short sentences.", tag:isDue("join")?"due":(S.done.join?"done":""), done:!!S.done.join, fn:isDue("join")?"revisitTask('join')":"go('join')" },
     { t:"Split", d:"A brownie method written as one sentence.", tag:isDue("split")?"due":(S.done.split?"done":""), done:!!S.done.split, fn:isDue("split")?"revisitTask('split')":"go('split')" }
   ];
@@ -523,32 +560,37 @@ function renderHome(){
    first go comes back once, two cards later. */
 let CV=null;
 let Q={ again:[], served:0 };
-function freshCard(at, again, rv){
+function freshCard(at, again, rv, unit){
   const id="cl."+CARDS[at].id;
-  return { at, again:!!again, rv:!!rv, firstRun:S.first[id+".C"]===undefined, phase:"A", sel:[], aDone:false,
+  return { at, again:!!again, rv:!!rv, unit:unit||id, firstRun:S.first[id+".C"]===undefined, phase:"A", sel:[], aDone:false,
            b:0, bWait:false, bWrong:null, bMiss:[], bRes:[], shown:{}, cPick:null, fb:null };
 }
 /* Queue entries: {at, due, rv, second}. "second" marks a card coming back
    after a miss; "rv" marks a revisit of a task that was due. */
 function nextClause(){
   const due=Q.again.find(e=>e.due<=Q.served);
-  if(due){ Q.again.splice(Q.again.indexOf(due),1); return {at:due.at, again:!!due.second, rv:due.rv}; }
-  const i=CARDS.findIndex(c=>!S.done["cl."+c.id]);
+  if(due){ Q.again.splice(Q.again.indexOf(due),1); return {at:due.at, again:!!due.second, rv:due.rv, unit:due.unit}; }
+  const i=CARDS.findIndex(c=>!c.twinOf && !S.done["cl."+c.id]);
   if(i>=0) return {at:i};
-  if(Q.again.length){ const e=Q.again.shift(); return {at:e.at, again:!!e.second, rv:e.rv}; }
+  if(Q.again.length){ const e=Q.again.shift(); return {at:e.at, again:!!e.second, rv:e.rv, unit:e.unit}; }
   return null;
 }
 function startClauses(at){
   if(at!==undefined){ CV=freshCard(at); renderCard(); return; }
   const n=nextClause();
   if(!n){ renderClauseSummary(); return; }
-  CV=freshCard(n.at, n.again, n.rv); renderCard();
+  CV=freshCard(n.at, n.again, n.rv, n.unit); renderCard();
 }
 /* Revisit: the due cards first, then Join and Split if they are due. */
 function startRevisit(){
-  const at=dueUnits().filter(u=>u.indexOf("cl.")===0).map(u=>CARDS.findIndex(c=>"cl."+c.id===u));
-  Q={ again:at.map(i=>({at:i, due:0, rv:true})), served:0, revisit:true };
-  if(at.length) startClauses(); else nextDueTask();
+  const due=dueUnits().filter(u=>u.indexOf("cl.")===0);
+  Q={ again:due.map(u=>({at:revisitCard(u), due:0, rv:true, unit:u})), served:0, revisit:true };
+  if(due.length) startClauses(); else nextDueTask();
+}
+/* Odd boxes come back as a twin, even boxes as the card itself. */
+function revisitCard(u){
+  const core=CARDS.findIndex(c=>"cl."+c.id===u), tw=twinsOf(CARDS[core].id), n=boxOf(u);
+  return (tw.length && n%2===1) ? tw[Math.floor(n/2)%tw.length] : core;
 }
 function nextDueTask(){
   if(isDue("join")) revisitTask("join");
@@ -556,7 +598,7 @@ function nextDueTask(){
   else go("home");
 }
 function revisitTask(u){
-  if(u==="join"){ bump(s=>{ s.join=[]; }); JV={ sel:[], fb:null, run:true, failed:false }; go("join"); }
+  if(u==="join"){ bump(s=>{ s.join=[]; }); JV={ sel:null, fb:null, run:true, failed:false }; go("join"); }
   else { bump(s=>{ s.split={}; }); PV={ fb:null, run:true, failed:false }; go("split"); }
 }
 function cardFirst(c){
@@ -565,7 +607,7 @@ function cardFirst(c){
   return a.ok && b.ok && cc.ok;
 }
 function pipsHtml(){
-  return `<span class="pips">${CARDS.map((c,i)=>{ const r=cardFirst(c);
+  return `<span class="pips">${CORE.map((c,i)=>{ const r=cardFirst(c);
     return `<button class="pip ${CV&&i===CV.at?"on":""} ${r===null?"":(r?"okf":"nof")}" onclick="startClauses(${i})"
       aria-label="Card ${i+1}${r===null?"":(r?", right first go":", missed first go")}">${i+1}${r===null?"":(r?" ✓":" ✗")}</button>`; }).join("")}</span>`;
 }
@@ -612,6 +654,7 @@ function renderCard(){
   const colours = CV.aDone || CV.phase!=="A";
   $("body").innerHTML=bar("Find the clauses", pipsHtml()+(CV.again?`<span>Second go</span>`:(CV.rv?`<span>Revisit</span>`:"")))+
     `<div class="cols"><div class="cardbox">
+      <p class="stepno">Step ${({A:1,B:2,C:3})[CV.phase]} of 3 · ${({A:"Verbs",B:"Subjects",C:"Sentence type"})[CV.phase]}</p>
       <p class="prompt">${prompt}</p><p class="hint">${hint}</p>
       <div class="sent">${sent}</div>
       <p class="dim src">${esc(c.src)}</p>
@@ -657,14 +700,14 @@ function pickB(pick){
   if(!v || CV.bWait) return;
   const r=judgeB(m, v, pick);
   CV.shown[v.subj]=true;
+  const last=CV.b+1>=m.verbs.length;
   if(r.ok){
-    CV.bRes[CV.b]=true;
-    CV.fb={cls:"ok", html:`<span class="rule">Right.</span>${isYou(v.subj)?"The unwritten you":"“"+esc(subjOf(m,v))+"”"} goes with “${esc(v.text)}”.`};
-    advanceB(); return;
+    CV.bRes[CV.b]=true; CV.bWait=true; CV.bWrong=null;
+    CV.fb={cls:"ok", html:`<span class="rule">Right.</span>${isYou(v.subj)?"The unwritten you":"“"+esc(subjOf(m,v))+"”"} goes with “${esc(v.text)}”.${nextBtn("CV.bWait=false;CV.fb=null;advanceB()", last?"Sentence type →":"Next verb →")}`};
+    renderCard(); return;
   }
   CV.bRes[CV.b]=false; CV.bMiss.push({k:r.k, w:r.w, v:v.text});
   CV.bWait=true; CV.bWrong=(pick==="you")?null:pick;
-  const last=CV.b+1>=m.verbs.length;
   CV.fb={cls:"bad", html:`<span class="rule">Not that.</span>${esc(r.msg)}${nextBtn("CV.bWait=false;CV.bWrong=null;CV.fb=null;advanceB()", last?"Sentence type →":"Next verb →")}`};
   renderCard();
 }
@@ -685,24 +728,24 @@ function pickC(t){
   Q.served++;
   bump(s=>{ s.done["cl."+c.id]=true; });
   const runOk=!!(CV.resA && CV.resB && CV.resC);
-  boxRun("cl."+c.id, runOk);
-  if(!runOk && !CV.again && !Q.again.some(e=>e.at===CV.at)) Q.again.push({at:CV.at, due:Q.served+2, rv:CV.rv, second:true});
+  boxRun(CV.unit, runOk);
+  if(!runOk && !CV.again && !Q.again.some(e=>e.at===CV.at)) Q.again.push({at:CV.at, due:Q.served+2, rv:CV.rv, unit:CV.unit, second:true});
   CV.fb={cls:ok?"ok":"bad", html:`<span class="rule">${ok?esc(TYPE_RULE[m.type]):"It is "+esc(typeName(m.type).toLowerCase())+", not "+esc(typeName(t).toLowerCase())+"."}</span>
     ${clauseLine(m)}<div style="margin-top:6px">${esc(c.why)}</div>${nextBtn("startClauses()","Next card →")}`};
   renderCard();
 }
 function renderClauseSummary(){
   CV=null;
-  const got=CARDS.filter(c=>cardFirst(c)===true).length;
+  const got=CORE.filter(c=>cardFirst(c)===true).length;
   $("body").innerHTML=bar("Find the clauses", pipsHtml())+`<div class="cardbox">
-    <p class="prompt">First go: ${got} of ${CARDS.length}</p>
-    <ul class="qlist" style="margin-top:8px">${CARDS.map(c=>{ const r=cardFirst(c);
+    <p class="prompt">First go: ${got} of ${CORE.length}</p>
+    <ul class="qlist" style="margin-top:8px">${CORE.map(c=>{ const r=cardFirst(c);
       const bx=boxOf("cl."+c.id);
       return `<li class="${r===null?"":(r?"ok":"no")}"><span class="mk">${r===null?"":(r?"✓":"✗")}</span>${esc(model(c).plain)}${bx?` <span class="dim">box ${bx} of 5</span>`:""}</li>`; }).join("")}</ul>
     <div class="btnrow">${Q.revisit
         ? `<button class="btn btn-primary" id="nextBtn" onclick="nextDueTask()">Next →</button>`
         : `<button class="btn btn-primary" id="nextBtn" onclick="go('join')">Join →</button>`}
-      <button class="btn btn-ghost" onclick="Q={again:CARDS.map((c,i)=>({at:i,due:0})),served:0};startClauses()">Again</button></div></div>`;
+      <button class="btn btn-ghost" onclick="Q={again:CORE.map((c,i)=>({at:i,due:0})),served:0};startClauses()">Again</button></div></div>`;
   $("nextBtn").focus();
 }
 
@@ -716,10 +759,14 @@ function barsHtml(before, now){
 }
 
 /* ====================== STEP 2 · JOIN ====================================
-   A join is null (two sentences) or one of the words in the box. Joins save
-   as they are made, and a failed check never undoes them. */
-const JOINWORDS=["and","but","yet","so","or","because","although",","];
-function joinState(raw){ const a=[]; for(let i=0;i<JOIN.sents.length-1;i++) a.push(raw && raw[i] ? raw[i] : null); return a; }
+   Only the gaps that should be joined get a ? button; the others stay full
+   stops. Every word in the box carries its job, so the choice is about
+   meaning, not guessing which gaps count. Joins save as they are made, and a
+   failed check never undoes them. */
+const JOINWORDS=[["and","adds"],["but","contrast"],["so","result"],["because","reason"],[",","comma only"]];
+function isPair(L){ return L.k!=="apart" && L.k!=="verdict"; }
+function joinState(raw){ const a=[]; for(let i=0;i<JOIN.sents.length-1;i++) a.push(raw && raw[i] && isPair(JOIN.links[i]) ? raw[i] : null); return a; }
+function gapNo(i){ return JOIN.links.slice(0,i+1).filter(isPair).length; }
 function glue(w){ return w==="," ? ", " : (w==="because" ? " because " : ", "+w+" "); }
 function lowerFirst(s){ return s.cap ? s.t : s.t.charAt(0).toLowerCase()+s.t.slice(1); }
 function joinSentences(js){
@@ -737,48 +784,23 @@ function joinAt(i, w){
 function bare(s){ return lowerFirst(s).replace(/[.!?]$/,""); }
 function judgeJoin(js){
   const issues=[];
+  const what={contrast:"pulls against the first", reason:"gives the reason for the first", result:"is what follows from the first", addition:"adds to the first"};
+  const right={contrast:["but","yet","although"], reason:["because"], result:["so"], addition:["and"]};
   JOIN.links.forEach((L,i)=>{
-    const w=js[i], A=JOIN.sents[i], B=JOIN.sents[i+1], at=joinAt(i,w);
+    if(!isPair(L)) return;
+    const w=js[i], B=JOIN.sents[i+1], at=joinAt(i,w);
     const add=(k,msg)=>{ issues.push({i,k,w:w||"",at,msg}); };
-    const pair = L.k!=="apart" && L.k!=="verdict";
-    if(w===","){ add("splice","A comma on its own cannot join two sentences. That is a comma splice."+(pair?"":" These two stay apart.")); return; }
-    if(!pair){
-      if(w) add(L.k, L.k==="verdict" ? "Joined on, the verdict becomes one more detail. Leave it on its own."
-                                     : "These are two different points. Joined, one sentence carries two topics. Keep them apart.");
-      return;
-    }
-    if(!w){ add("left","These two are about the same thing. Join them."); return; }
-    if(w==="or"){ add("word","“or” offers a choice. The reviewer is not offering one."); return; }
-    const contrastW=["but","yet","although"];
-    if(L.k==="contrast"){
-      const right = L.weight==="first" ? ["although"] : ["but","yet"];
-      if(right.indexOf(w)>=0) return;
-      if(w==="and") return add("adds","“and” only adds. The second sentence pulls against the first.");
-      if(w==="although") return add("weight","“although” ranks the second clause underneath, so the weight falls on “"+bare(A).replace(/^./,ch=>ch.toUpperCase())+"”. The reviewer’s point is the second clause.");
-      if(w==="but"||w==="yet") return add("weight","“"+w+"” puts the weight on the second clause, so the sentence lands on “"+bare(B)+"”. The reviewer’s point is the first clause.");
-      return add("word","“"+w+"” makes one clause the "+(w==="because"?"reason for":"result of")+" the other. These two pull against each other.");
-    }
-    if(L.k==="reason"){
-      if(w==="because") return;
-      if(w==="so") return add("backwards","“so” runs it backwards: it makes “"+bare(B)+"” the result. It is the reason.");
-      if(w==="and") return add("adds","“and” only adds. The second sentence gives the reason for the first.");
-      return add("word","“"+w+"” sets up a contrast. The second sentence does not pull against the first: it explains it.");
-    }
-    if(L.k==="result"){
-      if(w==="so") return;
-      if(w==="because") return add("backwards","“because” runs it backwards: it makes “"+bare(B)+"” the reason. It is the result.");
-      if(w==="and") return add("adds","“and” only adds. The second sentence is what follows from the first.");
-      return add("word","“"+w+"” sets up a contrast. The second sentence follows from the first.");
-    }
-    if(L.k==="addition"){
-      if(w==="and") return;
-      if(contrastW.indexOf(w)>=0) return add("word","“"+w+"” sets up a contrast. Nothing in the second sentence pulls against the first.");
-      return add("word","“"+w+"” makes one clause the "+(w==="because"?"reason for":"result of")+" the other. The second sentence only adds.");
-    }
+    if(!w) return add("left","Gap "+gapNo(i)+" is empty. Pick a word for it.");
+    if(w===",") return add("splice","A comma on its own cannot join two sentences. That is a comma splice.");
+    if(right[L.k].indexOf(w)>=0) return;
+    if(w==="and") return add("adds","The grammar is fine, but “and” only adds. The second sentence "+what[L.k]+". Pick the word that says that.");
+    if(L.k==="reason" && w==="so") return add("backwards","“so” runs it backwards: it makes “"+bare(B)+"” the result. It is the reason.");
+    if(L.k==="result" && w==="because") return add("backwards","“because” runs it backwards: it makes “"+bare(B)+"” the reason. It is the result.");
+    return add("word","“"+w+"” shows "+(w==="but"?"a contrast":(w==="so"?"a result":"a reason"))+". The second sentence "+what[L.k]+".");
   });
   return issues;
 }
-let JV={ sel:[], fb:null, run:!S.done.join, failed:false };
+let JV={ sel:null, fb:null, run:!S.done.join, failed:false };
 function renderJoin(){
   const js=joinState(S.join), n=JOIN.sents.length;
   let p="";
@@ -786,22 +808,25 @@ function renderJoin(){
     const prev=i>0 && js[i-1], next=i<n-1 && js[i];
     let t = prev ? lowerFirst(s) : s.t;
     if(next) t=t.replace(/[.!?]$/,"");
-    if(prev) p+=`<span class="jw">${esc(glue(js[i-1]).replace(/\s+$/,""))}</span> `;
-    else if(i>0) p+=" ";
-    p+=`<span class="ck ${JV.sel.indexOf(i)>=0?"sel":""}" role="button" tabindex="0" onclick="joinClick(${i})"
-      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();joinClick(${i});}">${esc(t)}</span>`;
+    p+=esc(t);
+    if(i<n-1){
+      if(isPair(JOIN.links[i])){
+        const w=js[i], g=gapNo(i);
+        p+=`<button class="gap ${JV.sel===i?"sel":""} ${w?"filled":""}" onclick="joinGap(${i})" aria-label="Gap ${g}: ${w?esc(w):"empty"}">${w?esc(w===","?",":glue(w).trim()):"?"}<sup>${g}</sup></button> `;
+      } else p+=" ";
+    }
   });
   let box="";
-  if(JV.sel.length===2){
-    const k=JV.sel[0], cur=js[k];
-    box=`<p class="lab">Join with</p><div class="chips">${JOINWORDS.map(w=>
-      `<button class="opt ${cur===w?"on":""}" onclick="pickJoin('${w}')">${w===","?", (comma only)":w}</button>`).join("")}
-      <button class="opt ${cur?"":"on"}" onclick="pickJoin(null)">Keep apart</button></div>`;
+  if(JV.sel!==null){
+    const cur=js[JV.sel];
+    box=`<p class="lab">Gap ${gapNo(JV.sel)}</p><div class="chips">${JOINWORDS.map(([w,job])=>
+      `<button class="opt jopt ${cur===w?"on":""}" onclick="pickJoin('${w}')"><b>${w}</b><span class="job">${job}</span></button>`).join("")}
+      ${cur?`<button class="opt" onclick="pickJoin(null)">Clear</button>`:""}</div>`;
   }
   const before=JOIN.sents.map(s=>wordsIn(s.t)), now=joinSentences(js).map(wordsIn);
   $("body").innerHTML=bar("Join")+`<div class="cols"><div class="cardbox">
-      <p class="prompt">Click two sentences next to each other.</p>
-      <p class="hint">Then pick a joining word.</p>
+      <p class="prompt">Fill each ? gap with a joining word.</p>
+      <ol class="how"><li>Click a ? gap.</li><li>Pick the word that shows how the two sentences connect.</li><li>Press Check when every gap is filled.</li></ol>
       <div class="jp">${p}</div>
       <p class="dim src">${esc(JOIN.src)}</p>
       ${box}
@@ -814,18 +839,13 @@ function renderJoin(){
     </div></div>`;
   const nb=$("nextBtn"); if(nb) nb.focus();
 }
-function joinClick(i){
-  if(JV.sel.length===1 && JV.sel[0]===i) JV.sel=[];
-  else if(JV.sel.length===1 && Math.abs(JV.sel[0]-i)===1) JV.sel=[Math.min(i,JV.sel[0]), Math.max(i,JV.sel[0])];
-  else JV.sel=[i];
-  renderJoin();
-}
+function joinGap(i){ JV.sel = JV.sel===i ? null : i; renderJoin(); }
 function pickJoin(w){
-  const k=JV.sel[0];
+  const k=JV.sel; if(k===null) return;
   bump(s=>{ const a=joinState(s.join); a[k]=w; s.join=a; });
-  JV.sel=[]; JV.fb=null; renderJoin();
+  JV.sel=null; JV.fb=null; renderJoin();
 }
-function resetJoin(){ bump(s=>{ s.join=[]; }); JV={sel:[], fb:null, run:true, failed:false}; renderJoin(); }
+function resetJoin(){ bump(s=>{ s.join=[]; }); JV={sel:null, fb:null, run:true, failed:false}; renderJoin(); }
 function checkJoin(){
   const js=joinState(S.join), issues=judgeJoin(js), ok=!issues.length;
   if(S.first.join===undefined) bump(s=>{ s.first.join={ ok, issues:issues.map(x=>({k:x.k, w:x.w, at:x.at})) }; });
@@ -836,7 +856,7 @@ function checkJoin(){
     if(!ok && !JV.failed){ JV.failed=true; boxRun("join", false); }
     if(ok){ boxRun("join", true); JV.run=false; JV.failed=false; }
   }
-  JV.sel=[];
+  JV.sel=null;
   if(ok){
     const origs=JOIN.links.filter(L=>L.orig).map(L=>`<p class="yours">${esc(L.orig)}</p>`).join("");
     JV.fb={cls:"ok", html:`<span class="rule">Every gap is right.</span><p class="lab" style="margin-top:6px">The reviewer wrote</p>${origs}${Q.revisit?nextBtn("nextDueTask()","Next →"):nextBtn("go('split')","Split →")}`};
@@ -912,9 +932,8 @@ function renderSplit(){
   const now=splitSentences(st);
   const before=splitSentences({}).map(wordsIn);
   $("body").innerHTML=bar("Split")+`<div class="cols"><div class="cardbox">
-      <p class="prompt">Click a dotted joining word to split the sentence there.</p>
-      <p class="hint" style="margin:0">Click a dotted “you” to cut it.</p>
-      <p class="hint">Click again to undo.</p>
+      <p class="prompt">Split the run-on into one step per sentence.</p>
+      <ol class="how"><li>Click a dotted joining word to split there.</li><li>Click a dotted “you” to cut it.</li><li>Click again to undo. Press Check when you are done.</li></ol>
       <div class="jp">${h}</div>
       <p class="dim src">${esc(SPLIT.src)}</p>
       <p class="lab">Your steps</p>
@@ -960,7 +979,7 @@ const MISS = {
 function reportData(){
   const miss={}, note=(k,item)=>{ (miss[k]=miss[k]||[]).push(item); };
   let tried=0, ok=0;
-  CARDS.forEach(c=>{
+  CORE.forEach(c=>{
     const k="cl."+c.id, a=S.first[k+".A"], b=S.first[k+".B"], cc=S.first[k+".C"], tag=" ("+c.short+")";
     if(a){ (a.nf||[]).forEach(w=>note("nf","“"+w+"”"+tag)); (a.missv||[]).forEach(w=>note("missv","“"+w+"”"+tag)); (a.notverb||[]).forEach(w=>note("notverb","“"+w+"”"+tag)); }
     if(b) (b.miss||[]).forEach(x=>note(x.k,"“"+x.w+"” for “"+x.v+"”"+tag));
@@ -973,11 +992,11 @@ function reportData(){
   const mins = (S.startedAt&&S.lastAt) ? Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)) : "";
   const misses = Object.keys(MISS).filter(k=>miss[k]).map(k=>`${MISS[k]}: ${miss[k].join("; ")}`).join(" | ");
   const d=new Date();
-  const boxes=CARDS.map(c=>boxOf("cl."+c.id)).join(",")+" | join "+boxOf("join")+" | split "+boxOf("split");
+  const boxes=CORE.map(c=>boxOf("cl."+c.id)).join(",")+" | join "+boxOf("join")+" | split "+boxOf("split");
   return { cols:["Date","First name","Last name","Code","Minutes","Clauses, first go","Join, first go","Split, first go","Boxes (cards | join | split)","Due now","Misses"],
            row:[ d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
                  S.fname, S.lname, S.sid, String(mins),
-                 `${ok}/${CARDS.length}`+(tried<CARDS.length?` (${tried} tried)`:""),
+                 `${ok}/${CORE.length}`+(tried<CORE.length?` (${tried} tried)`:""),
                  J?(J.ok?"yes":"no"):"not tried", P?(P.ok?"yes":"no"):"not tried", boxes, String(dueUnits().length), misses||"none" ] };
 }
 function renderReport(){

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Writing Folio — Year 7 English</title>
+<title>Writing Folio: Year 7 English</title>
 <style>
 /* Same paper palette as the rest of the suite, with its own accent so the two
    strands are tellable apart at a glance. This page is the folio's front
@@ -87,10 +87,9 @@ function $(id){ return document.getElementById(id); }
 
 function renderStep1(){
   $("app").innerHTML = `
-  <h1>Writing Folio — Year 7 English</h1>
-  <p class="sub">Your work saves on this device under your name and student code, so use the same computer where you can.</p>
-  <h2>First, who are you?</h2>
-  <p class="lead">Use the name and code your school knows you by — they go on the report you send your teacher.</p>
+  <h1>Writing Folio</h1>
+  <p class="sub">Your work saves on this device under your name and student code. Use the same computer where you can.</p>
+  <p class="lead">Use the name and code your school knows you by. They go on the report you send your teacher.</p>
   <div class="fields">
     <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(P.fname)}"><div class="err" id="ef"></div></span>
     <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(P.lname)}"><div class="err" id="el"></div></span>
@@ -150,7 +149,7 @@ function vocabStatus(){
 function renderStep2(){
   const cc = ccStatus(), vs = vocabStatus(), pm = pmStatus(), cs = csStatus(), mf = mfStatus();
   $("app").innerHTML = `
-  <h1>Hi, ${esc(P.fname)}.</h1>
+  <h1>Writing Folio</h1>
   <div class="whoami">
     <span><b>${esc(P.fname)} ${esc(P.lname)}</b> · ${esc(P.sid)}</span>
     <span style="margin-left:auto"><button class="linkbtn" id="editMe">Not you?</button></span>
@@ -192,8 +191,7 @@ function renderStep2(){
 
 function renderTopMini(){
   const bar=$("topMini"); if(!bar) return;
-  bar.innerHTML = `<a class="linkbtn2" href="index.html">⌂ Year 7 English</a>`
-    + (P.sid ? ` <a class="linkbtn2" href="BoneSparrow.html">The Bone Sparrow →</a>` : "");
+  bar.innerHTML = `<a class="linkbtn2" href="index.html">⌂ Year 7 English</a>`;
 }
 function render(){
   if(step===1) renderStep1(); else renderStep2();
