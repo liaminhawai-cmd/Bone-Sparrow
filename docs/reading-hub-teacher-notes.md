@@ -10,7 +10,7 @@ Every hub screen carries a **⌂ Main menu** link, so nothing traps a student mi
 
 | File | Live page | What it is |
 |---|---|---|
-| `index.html` | (the address above) | Sign-in, settings, and today's tasks |
+| `BoneSparrow.html` | the address above, ending in `BoneSparrow.html` | Sign-in, settings, and today's tasks |
 | `BoneSparrowReadingHub.html` | …/BoneSparrowReadingHub.html | Reading, inference, voice & evidence skills |
 | `BoneSparrowVocabHub.html` | …/BoneSparrowVocabHub.html | Vocabulary: "before you read" set + chapter by chapter |
 | `GrammarHuboffline.html` | …/GrammarHuboffline.html | Grammar Hub — reached only from a hub's coded feedback |

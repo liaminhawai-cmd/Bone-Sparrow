@@ -54,7 +54,7 @@ a.card .st{display:inline-block;font-size:10.5px;font-weight:800;text-transform:
 .secondary{margin-top:22px}
 .whoami{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--line);
         border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:13px}
-.topmini{display:flex;justify-content:flex-end;margin:0 0 14px;min-height:20px}
+.topmini{display:flex;justify-content:flex-end;gap:8px;margin:0 0 14px;min-height:20px}
 .topmini .linkbtn2{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 13px;
     font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit;text-decoration:none}
 .topmini .linkbtn2:hover{border-color:var(--accent)}
@@ -192,9 +192,8 @@ function renderStep2(){
 
 function renderTopMini(){
   const bar=$("topMini"); if(!bar) return;
-  bar.innerHTML = P.sid
-    ? `<a class="linkbtn2" href="index.html">The Bone Sparrow →</a>`
-    : "";
+  bar.innerHTML = `<a class="linkbtn2" href="index.html">⌂ Year 7 English</a>`
+    + (P.sid ? ` <a class="linkbtn2" href="BoneSparrow.html">The Bone Sparrow →</a>` : "");
 }
 function render(){
   if(step===1) renderStep1(); else renderStep2();

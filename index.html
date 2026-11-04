@@ -3,480 +3,86 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Bone Sparrow — Year 7 English</title>
+<title>Year 7 English</title>
 <style>
-/* Palette and type match the Grammar Hub / Vocab Hub / Reading Hub so the
-   suite reads as one. This page is the front door: it collects the details
-   every hub needs ONCE and hands them on through a shared profile. */
+/* The landing page for the whole Year 7 English site. Every strand has its
+   own front door, and every front door links back here. To add a module, add
+   one line to the right list in STRANDS below. */
 :root{
-  --bg:#f4efe6; --paper:#fbf7ee; --ink:#1f1f1f; --muted:#6b6256;
-  --line:#d8cfbb; --line-soft:#e8e0cd; --accent:#a83232;
-  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232;
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --edward:#5b3f78; --bone:#a83232; --folio:#2c5f7c;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
-     display:flex;justify-content:center;padding:22px 12px 48px}
-.container{width:100%;max-width:720px;background:var(--paper);border:1px solid var(--line);
-           border-radius:12px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-h1{font-family:Georgia,'Times New Roman',serif;font-size:25px;margin:0 0 4px}
-h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 6px}
-.sub{color:var(--muted);font-size:13px;margin:0 0 18px;line-height:1.55}
-.eyebrow{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin:0 0 6px}
-p.lead{color:var(--muted);font-size:13.5px;line-height:1.6;margin:0 0 14px}
-
-/* ---- step rail ---- */
-.rail{display:flex;align-items:center;margin:0 0 20px}
-.rail .s{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;
-         text-transform:uppercase;letter-spacing:.4px;color:var(--muted);white-space:nowrap}
-.rail .dot{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;
-           display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 26px}
-.rail .s.now{color:var(--ink)}
-.rail .s.now .dot{border:2px solid var(--ink)}
-.rail .s.done .dot{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
-.rail .bar{flex:1;height:1px;background:var(--line);margin:0 10px;min-width:12px}
-@media (max-width:520px){.rail .s span:not(.dot){display:none}}
-
-/* ---- forms ---- */
-.fields{display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 0 6px}
-label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
-input,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
-             font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
-select{background:var(--paper)}
-.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
-.btn{padding:11px 18px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
-     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-primary:hover{background:#8c2828}
-.btn-ghost{background:var(--bg);color:var(--muted)}
-.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.linkbtn{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:0;font-family:inherit}
-.linkbtn:hover{text-decoration:underline}
-
-/* ---- choice cards (EAL) ---- */
-.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 16px}
-@media (max-width:560px){.choices{grid-template-columns:1fr}}
-.choice{text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;
-        cursor:pointer;font-family:inherit;transition:border-color .12s}
-.choice:hover{border-color:var(--ink)}
-.choice.on{border:2px solid var(--ink);background:var(--bg)}
-.choice .ct{display:block;font-weight:700;font-size:15px}
-.choice .cd{display:block;color:var(--muted);font-size:12.5px;margin-top:3px;line-height:1.45}
-
-/* ---- task cards ---- */
-a.card{display:block;width:100%;text-align:left;text-decoration:none;color:inherit;background:#fff;
-       border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 10px;
-       transition:border-color .15s}
-a.card:hover{border-color:var(--accent)}
-a.card .t{font-weight:700;font-size:16px}
-a.card .t .arrow{color:var(--accent)}
-a.card .d{color:var(--muted);font-size:13px;margin-top:4px;line-height:1.55}
-a.card .now{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
-            color:var(--correct);background:var(--okbg);border:1px solid var(--correct);border-radius:99px;
-            padding:2px 9px;margin-left:8px;vertical-align:2px}
-.secondary a.card{background:var(--bg)}
-.whoami{display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--line);
-        border-radius:10px;padding:10px 14px;margin:0 0 18px;font-size:13px}
-.whoami .sep{color:var(--line)}
-.note{background:var(--okbg);border:1px solid var(--correct);border-radius:8px;padding:10px 13px;
-      font-size:13px;color:var(--correct);margin:18px 0 0;line-height:1.55}
-.dir{margin:14px 0 0;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 14px}
-.dir summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--ink)}
-.dirnote{font-size:12.5px;color:var(--muted);margin:8px 0 12px;line-height:1.5}
-.dirgrp{margin-bottom:12px}
-.dirgrp h4{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 5px}
-.dirrow{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:3px 0;
-  border-bottom:1px dotted var(--line-soft,#e8e0cd)}
-.dirrow a{font-size:13.5px;font-weight:600}
-.dirrow span{font-size:12px;color:var(--muted)}
-
-/* ---- persistent top-right link, present on every step ---- */
-.topmini{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:0 0 14px;min-height:20px}
-.topmini .teachmini{font-size:12px;font-weight:600;color:var(--muted);text-decoration:none}
-.topmini .teachmini:hover{color:var(--accent);text-decoration:underline}
-.topmini .linkbtn2{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 13px;
-    font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;font-family:inherit}
-.topmini .linkbtn2:hover{border-color:var(--accent)}
-
-/* ---- reports summary ---- */
-.repgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 4px}
-@media (max-width:560px){.repgrid{grid-template-columns:1fr}}
-.repcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
-.repcard.empty{background:var(--bg)}
-.repcard .rt{font-family:Georgia,serif;font-weight:700;font-size:16px;margin:0 0 8px}
-.repcard .rscore{font-size:22px;font-weight:800;margin:0 0 4px}
-.repcard .rscore span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-left:4px}
-.repcard .rd{color:var(--muted);font-size:12.5px;line-height:1.55;margin:0 0 12px}
-.repcard a.btn{display:inline-block;text-decoration:none;text-align:center}
-:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+     display:flex;justify-content:center;padding:8px 12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:14px 24px 8px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:26px;margin:0 0 10px}
+.strands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}
+.strand h2{font-family:Georgia,'Times New Roman',serif;font-size:19px;margin:0 0 9px;padding:0 0 7px;
+           border-bottom:3px solid var(--c)}
+.strand h2 a{color:var(--c);text-decoration:none}
+.strand h2 a:hover{text-decoration:underline}
+a.card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);
+       border-left:4px solid var(--c);border-radius:9px;padding:9px 12px;margin:0 0 7px;transition:border-color .15s}
+a.card:hover{border-color:var(--c)}
+a.card .t{font-weight:700;font-size:15px;line-height:1.35}
+a.card .t .arrow{color:var(--c)}
+a.card .d{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.45}
+a.card.ext{background:var(--bg)}
+.teacher{margin:6px 0 0;padding:4px 0 0;border-top:1px solid var(--line);font-size:13px;display:flex;gap:18px;flex-wrap:wrap}
+.teacher a{color:var(--muted);font-weight:600;text-decoration:none;padding:8px 0}
+.teacher a:hover{text-decoration:underline;color:var(--ink)}
+:focus-visible{outline:3px solid var(--ink);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
-.container.report{max-width:min(1080px,96vw)}
-.rpth{margin:22px 0 8px;font-size:1.05rem}
-.cattest{border:1px solid var(--line);border-left:4px solid var(--accent,#a03d29);border-radius:8px;
-  padding:10px 14px;margin:10px 0 4px;background:#fff}
-.catlab{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#8a7c56}
-.catlv{font-size:1.15rem;font-weight:800;margin:2px 0 2px}
-.catvic{font-family:Georgia,serif;font-style:italic;margin-bottom:4px}
-table.rpt{width:100%;border-collapse:collapse;font-size:14px;margin:0 0 8px;background:#fff}
-table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 10px;text-align:left}
-table.rpt th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
-table.rpt td.dim,.dim{color:#98917f}
-.vc{letter-spacing:1px}
-@media print{
-  .noprint,#topMini{display:none !important}
-  body{background:#fff}
-  .wrap,.card{box-shadow:none;border:0;max-width:none;padding:0}
-}
-
-/* first-attempt score bands, matching the reading hub */
-.band4{color:#1e6b3a} .band3{color:#7a6410} .band2{color:#a8541b} .band1{color:#9a3324}
+@media screen and (max-width:860px){ .strands{grid-template-columns:1fr} .container{padding:16px} }
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="topmini noprint" id="topMini"></div>
-  <div id="app"></div>
+  <h1>Year 7 English</h1>
+  <div class="strands" id="strands"></div>
+  <div class="teacher">
+    <a href="teacher/">Teacher hub</a>
+    <a href="SentenceFluencyDeck.html">Sentence fluency deck</a>
+  </div>
 </div>
 
 <script>
 /* ============================================================================
-   SHARED PROFILE
-   Each hub keeps its own scores, but they all read this one profile, so a
-   student signs in once for the whole suite. Written here; the hubs write
-   back when a student changes their chapter or EAL setting inside a hub.
+   STRANDS. "door" is the strand's own front door (sign-in, tasks, report).
+   Each item is [file, title, one line, "ext" for an extension].
    ========================================================================== */
-const PKEY = "bonesparrow.profile.v1";
-function readProfile(){ try{ const p=JSON.parse(localStorage.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
-function writeProfile(p){ try{ localStorage.setItem(PKEY, JSON.stringify(Object.assign({v:1},p))); }catch(e){} }
-
-let P = readProfile() || { fname:"", lname:"", sid:"", eal:null, lang:"", chapter:null };
-let step = (P.sid && P.eal!==null && P.chapter) ? 3 : 1;
-if(location.hash==="#report" && P.sid) step="reports";
-
-/* Vocab Hub sets. "Before you read" is always open; each chapter set opens
-   once you've read to (pre - 1), so the words come just before the chapters. */
-const VOCAB_SETS = [
-  { id:"0",      pre:1,  title:"Before you read · the words of the unit" },
-  { id:"1-2",    pre:1,  title:"Chapters 1–2 · The Night Sea" },
-  { id:"3-4",    pre:3,  title:"Chapters 3–4 · Jimmie and the fences" },
-  { id:"5",      pre:5,  title:"Chapter 5 · Caught by Beaver" },
-  { id:"6-7",    pre:6,  title:"Chapters 6–7 · Outside looking in" },
-  { id:"8-10",   pre:8,  title:"Chapters 8–10 · Rats and promises" },
-  { id:"11-14",  pre:11, title:"Chapters 11–14 · Anka's story" },
-  { id:"15-17",  pre:15, title:"Chapters 15–17 · Aussie boy" },
-  { id:"18-20",  pre:18, title:"Chapters 18–20 · Lips sewn shut" },
-  { id:"21-end", pre:21, title:"Chapters 21–end · The whole sky" }
+const STRANDS = [
+  { name:"Edward Scissorhands", c:"--edward", door:null, items:[
+    ["EdwardParagraphs.html","Analysing paragraphs",""],
+    ["EdwardSoundLighting.html","Sound and lighting","Name the shot, then fix the mistakes in three scenes."],
+    ["EdwardSentenceBuilder.html","Sentence builder","Edward arrives at Peg’s house."] ]},
+  { name:"The Bone Sparrow", c:"--bone", door:"BoneSparrow.html", items:[
+    ["BoneSparrow.html","Sign in and my tasks","Chapter, EAL settings and the report."],
+    ["BoneSparrowVocabHub.html","Vocab Hub","Words, chapter by chapter."],
+    ["BoneSparrowReadingHub.html","Reading and Evidence Hub","Quickreads, evidence, the analysis workshop."],
+    ["bonesparrowtrainer.html","Pre-reading trainer","The 17 unit words and sentence types."],
+    ["BoneSparrowThreeWays.html","Three ways into a sentence","From the evidence, the idea or the effect."],
+    ["BoneSparrowTeel.html","A TEEL paragraph",""],
+    ["GrammarHuboffline.html","Grammar Hub","Sentence structure."] ]},
+  { name:"Writing Folio", c:"--folio", door:"WritingFolio.html", items:[
+    ["PronounsModals.html","Pronoun choice and modal verbs","Three words, then back to your draft."],
+    ["ContentionClaims.html","Contention and claims","The deck, then your draft, then the PDF."],
+    ["WritingFolioVocabHub.html#set-04","Persuasive writing words","Build each word from its parts, then use it."],
+    ["SentenceFluency.html","Sentence fluency","Find the clauses, then join and split."],
+    ["MicroFiction.html","Micro-fiction","Cut and swap a story until it hints."],
+    ["ConcessionSentences.html","Complex sentences for concession","Extension.","ext"],
+    ["WritingFolioVocabHub.html","Writing Folio vocab, all sets","","ext"] ]}
 ];
-const LANGS = [["zh","中文（简体）· Mandarin"],["yue","中文（繁體）· Cantonese"],
-               ["vi","Tiếng Việt · Vietnamese"],["ar","العربية · Arabic"],["fa","فارسی · Farsi"]];
-
 function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
-function $(id){ return document.getElementById(id); }
-function currentSet(){
-  const open = VOCAB_SETS.filter(s => (s.pre-1) <= P.chapter);
-  return open.length ? open[open.length-1] : VOCAB_SETS[0];
-}
-function railHtml(now){
-  const steps=[["1","You"],["2","Your settings"],["3","Your tasks"]];
-  return `<div class="rail">`+steps.map(([n,label],i)=>{
-    const k=i+1, cls = k<now?"done":(k===now?"now":"");
-    return `<span class="s ${cls}"><span class="dot">${k<now?"✓":n}</span><span>${label}</span></span>`+
-           (i<2?`<span class="bar"></span>`:"");
-  }).join("")+`</div>`;
-}
-
-/* ---------------- STEP 1 — who are you ---------------- */
-function renderStep1(){
-  $("app").innerHTML = railHtml(1) + `
-  <h1>The Bone Sparrow: Year 7 English</h1>
-  <p class="sub">Zana Fraillon · Units 5–6. Everything you do saves on this device under your name and student code, so use the same computer where you can.</p>
-  <h2>First, who are you?</h2>
-  <p class="lead">These details go on the report you hand to your teacher, so use the name and code your school knows you by.</p>
-  <div class="fields">
-    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(P.fname)}"><div class="err" id="ef"></div></span>
-    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(P.lname)}"><div class="err" id="el"></div></span>
-    <span><label for="ids">Student code</label><input id="ids" autocomplete="off" maxlength="8" value="${esc(P.sid)}"><div class="err" id="es"></div></span>
-  </div>
-  <div class="btnrow"><button class="btn btn-primary" id="go1">Continue →</button></div>`;
-  $("go1").onclick = submit1;
-  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") submit1(); });
-}
-function submit1(){
-  const f=$("idf").value.trim(), l=$("idl").value.trim(), sid=$("ids").value.trim();
-  $("ef").textContent = f ? "" : "We need your first name.";
-  $("el").textContent = l ? "" : "We need your last name.";
-  $("es").textContent = (sid.length>=4 && sid.length<=8) ? "" : "That doesn't look right: check your student code and try again.";
-  if(!f || !l || sid.length<4 || sid.length>8) return;
-  P.fname=f; P.lname=l; P.sid=sid; writeProfile(P);
-  step=2; render();
-}
-
-/* ---------------- STEP 2 — settings ---------------- */
-function renderStep2(){
-  const chapterOpts = Array.from({length:20},(_,i)=>i+1)
-    .map(c=>`<option value="${c}" ${P.chapter===c?"selected":""}>I've read to the end of chapter ${c}</option>`).join("")
-    + `<option value="99" ${P.chapter>20?"selected":""}>I've finished the novel</option>`;
-  $("app").innerHTML = railHtml(2) + `
-  <h1>Hi, ${esc(P.fname)}.</h1>
-  <p class="sub">You can change both later.</p>
-
-  <div class="eyebrow">Do you use EAL support?</div>
-  <p class="lead">EAL support shows key words in your first language while you're learning them, and adds the EAL writing levels (C2, C3, C4) beside the Year 7 ones.</p>
-  <div class="choices">
-    <button class="choice ${P.eal===true?"on":""}" id="ealYes">
-      <span class="ct">Yes, turn it on</span>
-      <span class="cd">Pick your language below.</span></button>
-    <button class="choice ${P.eal===false?"on":""}" id="ealNo">
-      <span class="ct">No thanks</span>
-      <span class="cd">Everything in English, Year 7 rubric only.</span></button>
-  </div>
-  <div id="langWrap" style="${P.eal===true?"":"display:none"};max-width:420px;margin:0 0 18px">
-    <label for="lang">Key words in my language</label>
-    <select id="lang">
-      <option value="">Choose a language…</option>
-      ${LANGS.map(([c,n])=>`<option value="${c}" ${P.lang===c?"selected":""}>${esc(n)}</option>`).join("")}
-    </select>
-  </div>
-
-  <div class="eyebrow">Where are you up to in the novel?</div>
-  <p class="lead">Tasks about chapters you haven't read stay hidden, so nothing gets spoiled. Come back and change this each week as you read on.</p>
-  <div class="fields"><span><select id="chap"><option value="">Choose…</option>${chapterOpts}</select><div class="err" id="ec"></div></span></div>
-
-  <div class="btnrow">
-    <button class="btn btn-primary" id="go2">Continue →</button>
-    <button class="btn btn-ghost" id="back2">← back</button>
-  </div>`;
-  $("ealYes").onclick = ()=>{ P.eal=true; renderStep2(); };
-  $("ealNo").onclick  = ()=>{ P.eal=false; P.lang=""; renderStep2(); };
-  $("back2").onclick  = ()=>{ step=1; render(); };
-  $("go2").onclick = ()=>{
-    const c = $("chap").value;
-    if(P.eal===null){ $("ec").textContent="Choose yes or no for EAL support first."; return; }
-    if(!c){ $("ec").textContent="Tell us where you're up to, so we don't spoil the story."; return; }
-    $("ec").textContent="";
-    P.chapter = +c;
-    if(P.eal===true) P.lang = $("lang").value || "";
-    writeProfile(P);
-    step=3; render();
-  };
-}
-
-/* Every student address in the suite, grouped by what it sits beside in the
-   unit. Students only ever need the two hubs; the rest is here so one
-   activity can be linked on its own. The hub screens are hash routes it
-   understands. Anything for the teacher lives behind the teacher hub. */
-const DIRECTORY = [
- { g:"The hubs", items:[
-   {u:"BoneSparrowVocabHub.html", t:"Vocab Hub", d:"words, chapter by chapter"},
-   {u:"BoneSparrowReadingHub.html", t:"Reading & Evidence Hub", d:""} ]},
- { g:"Words and sentences", items:[
-   {u:"bonesparrowtrainer.html", t:"Pre-reading trainer", d:"the 17 unit words and sentence types, lessons 1–3"},
-   {u:"GrammarHuboffline.html", t:"Grammar Hub", d:"sentence structure, when a hub sends you here"} ]},
- { g:"Chapter by chapter", items:[
-   {u:"BoneSparrowReadingHub.html#qr1", t:"Quickread 1 — the Night Sea", d:"chapter 1"},
-   {u:"BoneSparrowReadingHub.html#qr2", t:"Quickread 2 — caught by Beaver", d:"chapter 5"},
-   {u:"BoneSparrowReadingHub.html#qr3", t:"Quickread 3 — lucky", d:"chapter 6"},
-   {u:"BoneSparrowReadingHub.html#qr4", t:"Quickread 4 — what Alpha does to a person", d:"chapter 8"},
-   {u:"BoneSparrowReadingHub.html#qr5", t:"Quickread 5 — the bone sparrow", d:"chapter 10"},
-   {u:"BoneSparrowReadingHub.html#qr6", t:"Quickread 6 — a story from just Outside", d:"chapter 14"},
-   {u:"BoneSparrowReadingHub.html#qr7", t:"Quickread 7 — Aussie Boy", d:"chapter 17"},
-   {u:"BoneSparrowReadingHub.html#qr8", t:"Quickread 8 — Jimmie wants to know", d:"chapter 20"},
-   {u:"BoneSparrowReadingHub.html#qr9", t:"Quickread 9 — names and numbers", d:"chapter 2 revisited, ends in a built sentence"} ]},
- { g:"How the writing works", items:[
-   {u:"BoneSparrowReadingHub.html#fig", t:"Figurative → literal", d:"lesson 09"},
-   {u:"BoneSparrowReadingHub.html#voice", t:"Voice fingerprint", d:"before the voice memo"} ]},
- { g:"Evidence into a sentence", items:[
-   {u:"BoneSparrowReadingHub.html#ev", t:"Evidence builder", d:"find it, explain it, embed it"},
-   {u:"BoneSparrowThreeWays.html#ev", t:"Sentence from the evidence", d:"chapter 5, on rails"},
-   {u:"BoneSparrowThreeWays.html#idea", t:"Sentence from the idea", d:"chapter 5, on rails"},
-   {u:"BoneSparrowThreeWays.html#eff", t:"Sentence from the effect", d:"chapter 5, on rails"} ]},
- { g:"Writing the analysis", items:[
-   {u:"BoneSparrowReadingHub.html#wk", t:"Analysis workshop", d:"the WAGOLL wall, then the climb"} ]},
- { g:"Writing Folio (next unit)", items:[
-   {u:"WritingFolio.html", t:"Writing Folio", d:"its own front door: start there"},
-   {u:"ContentionClaims.html", t:"Contention and claims", d:"the deck, then your draft"},
-   {u:"PronounsModals.html", t:"Pronoun choice and modal verbs", d:"the words, then back to the draft"},
-   {u:"ConcessionSentences.html", t:"Complex sentences for concession", d:"extension: concede, then answer back"},
-   {u:"MicroFiction.html", t:"Micro-fiction", d:"lesson 08: cut and swap until it hints"},
-   {u:"SentenceFluency.html", t:"Sentence fluency", d:"find the clauses, then join and split"},
-   {u:"WritingFolioVocabHub.html", t:"Writing Folio Vocab Hub", d:"lessons 01–08, words and sentence types"} ]}
-];
-
-/* ---------------- STEP 3 — your tasks ---------------- */
-function renderStep3(){
-  const set = currentSet();
-  const chapLabel = P.chapter>20 ? "the whole novel" : "chapter "+P.chapter;
-  const langName = (LANGS.find(l=>l[0]===P.lang)||[])[1];
-  const open = ["the Chapter 1 quickread, figurative language, voice fingerprints and the evidence builder"];
-  if(P.chapter>=5) open.push("the Chapter 5 quickread and the analysis workshop");
-  /* The later quickreads open on reading position alone. */
-  const laterQr=[6,8,10,14,17,20].filter(c=>c<=P.chapter);
-  if(laterQr.length) open.push(`${laterQr.length} more quickread${laterQr.length===1?"":"s"} (chapter${laterQr.length===1?" "+laterQr[0]:"s "+laterQr.join(", ")}) that finish by connecting evidence to ideas`);
-  $("app").innerHTML = railHtml(4) + `
-  <h1>Ready, ${esc(P.fname)}.</h1>
-  <p class="sub">Zana Fraillon · Units 5–6 · reading, vocabulary, evidence and analysis.</p>
-  <div class="whoami">
-    <span><b>${esc(P.fname)} ${esc(P.lname)}</b> · ${esc(P.sid)}</span>
-    <span class="sep">|</span><span>Read to ${esc(chapLabel)}</span>
-    <span class="sep">|</span><span>EAL support ${P.eal? "on"+(langName?" · "+esc(langName):"") : "off"}</span>
-    <button class="linkbtn" id="editMe" style="margin-left:auto">change these</button>
-  </div>
-
-  <div class="eyebrow">Before you read the next chapters</div>
-  <a class="card" href="BoneSparrowVocabHub.html">
-    <div class="t">Vocab Hub <span class="arrow">→</span><span class="now">start here</span></div>
-    <div class="d">Your set is <b>${esc(set.title)}</b>. Do <b>Meet the words</b> and <b>Build the words</b>, then take the quick review if it offers you one.${P.eal&&langName?` Key words will show in ${esc(langName)}.`:""} The unit words we did before opening the novel are the first set in here too.</div>
-  </a>
-
-  <div class="eyebrow">After you've read</div>
-  <a class="card" href="BoneSparrowReadingHub.html">
-    <div class="t">Reading &amp; Evidence Hub <span class="arrow">→</span></div>
-    <div class="d">Open at ${esc(chapLabel)}: ${open.join(", and ")}. Work top to bottom unless your teacher says otherwise, and print your report when you're asked for it.</div>
-  </a>
-
-  <div class="note">Your first attempt at every question is what goes on your report. Wrong answers come back until you get them right.</div>
-
-  <details class="dir"><summary>Every link in this suite, separately</summary>
-    <p class="dirnote"></p>
-    ${DIRECTORY.map(g=>`<div class="dirgrp"><h4>${esc(g.g)}</h4>${g.items.map(it=>
-      `<div class="dirrow"><a href="${it.u}">${esc(it.t)}</a><span>${esc(it.d)}</span></div>`).join("")}</div>`).join("")}
-  </details>`;
-  $("editMe").onclick = ()=>{ step=1; render(); };
-}
-
-/* ---------------- THE REPORT — one combined report for everything.
-   Reads both hubs' own storage directly (they stay the single source of
-   truth for their scoring), lays it out as one printable page with one
-   verification code. Every "My report" button in the suite lands here. */
-function readJSON(key){ try{ return JSON.parse(localStorage.getItem(key)); }catch(e){ return null; } }
-const READING_MODULES = [
-  ["qr1","Quickread: the Night Sea"],["qr2","Quickread: caught by Beaver"],
-  ["fig","Figurative → literal"],["voice","Voice fingerprint"],
-  ["ev","Evidence builder"],["wk","Analysis workshop"],
-  /* Quickreads 3-8, each ending on evidence-to-idea questions. Same order as
-     the hub's own module list. */
-  ["qr3","Quickread: lucky (ch 6)"],["qr4","Quickread: what Alpha does to a person (ch 8)"],
-  ["qr5","Quickread: the bone sparrow (ch 10)"],["qr6","Quickread: a story from just Outside (ch 14)"],
-  ["qr7","Quickread: Aussie Boy (ch 17)"],["qr8","Quickread: Jimmie wants to know (ch 20)"]
-];
-/* The CAT rubric, in the curriculum's own words — the report quotes the
-   level a student actually reached rather than inventing a grade. */
-const VIC_LEVELS = {
-  5:"I can identify parts of the story that relate to key ideas",
-  6:"I can describe characters and events that relate to key ideas",
-  7:"I can describe the ideas and issues that are illustrated through characters and events",
-  8:"I can explain the way different perspectives on ideas are represented through characters and events",
-  9:"I can analyse the way different people and perspectives are represented in the story"
-};
-const EAL_BANDS = { 5:"C2", 6:"C2/C3", 7:"C3", 8:"C4", 9:"C4+" };
-function pct(got,total){ return total? Math.round(100*got/total)+"%" : "—"; }
-/* Score bands, the same four the reading hub uses. The colour is a second read
-   of the number rather than the only one, so nothing is lost in greyscale or
-   to a colour-blind reader. */
-function scoreBand(got,total){
-  if(!total) return "";
-  const p=got/total;
-  return p>=0.85 ? "band4" : p>=0.7 ? "band3" : p>=0.5 ? "band2" : "band1";
-}
-function scoreCell(got,total){ return total? `<b class="${scoreBand(got,total)}">${got} / ${total}</b> <span class="dim">(${pct(got,total)})</span>` : `<span class="dim">: </span>`; }
-function vcode(str){
-  let h=5381; for(let i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))>>>0; }
-  return "V-"+h.toString(36).toUpperCase().padStart(7,"0").slice(0,7);
-}
-function renderReports(){
-  const R = readJSON("bonesparrow.readinghub.v2")||{};
-  const V = readJSON("bonesparrow.vocabhub.v1")||{};
-  const dt = new Date().toLocaleString("en-AU",{dateStyle:"full",timeStyle:"short"});
-
-  /* ---- reading hub: first-attempt per activity ---- */
-  const first=R.first||{}; let rrows="", rGot=0, rTot=0, rAny=false;
-  READING_MODULES.forEach(([id,label])=>{
-    const ks=Object.keys(first).filter(k=>k.split(".")[0]===id);
-    if(!ks.length){ rrows+=`<tr><td>${esc(label)}</td><td class="dim">: </td><td class="dim">not started</td></tr>`; return; }
-    rAny=true;
-    const got=ks.filter(k=>first[k]).length;
-    rGot+=got; rTot+=ks.length;
-    rrows+=`<tr><td>${esc(label)}</td><td>${scoreCell(got,ks.length)}</td><td>${R.done&&R.done[id]?"finished":"in progress"}</td></tr>`;
-  });
-
-  /* ---- vocab hub: first-attempt per chapter set ---- */
-  const lessons=V.lessons||{}; let vrows="", vGot=0, vTot=0, vAny=false;
-  const cnt=m=>{ const ks=Object.keys(m||{}); return {got:ks.filter(k=>m[k]).length, tot:ks.length}; };
-  VOCAB_SETS.forEach(st=>{
-    const L=lessons[st.id];
-    if(!L){ vrows+=`<tr><td>${esc(st.title)}</td><td class="dim">—</td><td class="dim">—</td><td class="dim">not started</td></tr>`; return; }
-    vAny=true;
-    const b=cnt(L.buildFirst), a=cnt(L.applyFirst);
-    vGot+=b.got+a.got; vTot+=b.tot+a.tot;
-    vrows+=`<tr><td>${esc(st.title)}</td><td>${scoreCell(b.got,b.tot)}</td><td>${scoreCell(a.got,a.tot)}</td>
-      <td>${L.applyDone?"finished":(L.studied?"in progress":"met the words")}</td></tr>`;
-  });
-
-  /* ---- word list + reviews ---- */
-  const wstat=V.wstat||{}; const wk=Object.keys(wstat);
-  const mastered=wk.filter(w=>wstat[w].mastered);
-  const working=wk.filter(w=>wstat[w].seen&&!wstat[w].mastered);
-  const revs=V.reviews||[];
-  const revFirst=revs.reduce((s,r)=>s+(r.got||0),0), revAtt=revs.reduce((s,r)=>s+(r.total||0),0);
-
-  /* Against the rubric: the highest level of the analysis climb the student
-     actually wrote at. This is the one number a CAT marker cares about, so
-     it gets said in the curriculum's words rather than as a score. */
-  let climbBlock="";
-  const climbed = R.wkLevel || [9,8,7,6,5].find(n=>first["wk.build.L"+n]===true) || 0;
-  const attempted=[5,6,7,8,9].filter(n=>first["wk.build.L"+n]!==undefined);
-  if(attempted.length){
-    climbBlock = climbed
-      ? `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
-          <div class="catlv">Level ${climbed}${P.eal&&EAL_BANDS[climbed]?` <span class="dim">· EAL ${EAL_BANDS[climbed]}</span>`:""}</div>
-          <div class="catvic">“${esc(VIC_LEVELS[climbed])}”</div>
-          <div class="dim">Reached by writing at that level in the analysis workshop, first attempt${climbed<9?` — Level ${climbed+1} is the next rung.`:"."}</div></div>`
-      : `<div class="cattest"><div class="catlab">Against the CAT rubric: analysis writing</div>
-          <div class="catlv dim">Not yet reached</div>
-          <div class="catvic">Working towards “${esc(VIC_LEVELS[5])}”</div></div>`;
-  }
-  const code=vcode(JSON.stringify(first)+"|"+rGot+"/"+rTot+"|"+vGot+"/"+vTot+"|"+revFirst+"/"+revAtt+"|"+mastered.length+"|"+(P.fname||"")+(P.lname||"")+(P.sid||""));
-
-  document.querySelector(".container").classList.add("report");
-  $("app").innerHTML=`
-  <div class="noprint btnrow" style="justify-content:space-between;margin:0 0 10px">
-    <button class="btn btn-ghost" id="backRep">← back to my tasks</button>
-    <button class="btn btn-primary" onclick="window.print()">Print / save as PDF</button>
-  </div>
-  <h1 style="margin-bottom:2px">The Bone Sparrow, my report</h1>
-  <p class="sub" style="margin-top:4px"><b>${esc(P.fname||"")} ${esc(P.lname||"")}</b> · ID ${esc(P.sid||"—")} · reading up to ${P.chapter>20?"the end":"chapter "+esc(String(P.chapter||"?"))}${P.eal?" · EAL support on":""} · ${esc(dt)}</p>
-  <p class="sub">One report for everything. Every score is a <b>first attempt</b>.</p>
-
-  <h2 class="rpth">Reading &amp; Evidence Hub ${rTot?`— <b>${rGot}/${rTot}</b> first attempt (${pct(rGot,rTot)})`:""}</h2>
-  <table class="rpt"><tr><th>Activity</th><th>First attempt</th><th>Status</th></tr>${rrows}</table>
-  ${rAny?"":`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowReadingHub.html">go do an activity</a>.</p>`}
-  ${climbBlock}
-
-  <h2 class="rpth">Vocab Hub ${vTot?`— <b>${vGot}/${vTot}</b> first attempt on lesson items (${pct(vGot,vTot)})`:""}</h2>
-  <table class="rpt"><tr><th>Chapter set</th><th>Build (1st try)</th><th>Use (1st try)</th><th>Status</th></tr>${vrows}</table>
-  ${vAny?`<p class="sub"><b>Reviews:</b> ${revs.length?`${revs.length} session${revs.length===1?"":"s"}, ${revFirst}/${revAtt} first attempt across them (${pct(revFirst,revAtt)}).`:"none yet."}</p>
-  <p class="sub"><b>Word list:</b> ${wk.length?`${wk.length} word${wk.length===1?"":"s"} drilled · <b>${mastered.length} mastered (${pct(mastered.length,wk.length)})</b>${working.length?` · still coming back in drills: ${working.map(esc).join(", ")}`:""}.`:"no words drilled yet."}</p>`
-  :`<p class="sub dim">Nothing recorded yet on this device — <a href="BoneSparrowVocabHub.html">go meet some words</a>.</p>`}
-
-  <p class="sub">Verification code: <b class="vc">${code}</b></p>`;
-  $("backRep").onclick=()=>{ document.querySelector(".container").classList.remove("report"); step=3; render(); };
-}
-function renderTopMini(){
-  const bar=$("topMini"); if(!bar) return;
-  bar.innerHTML = `<a class="teachmini" href="teacher/">Teacher hub →</a>`
-    + (P.sid ? `<button class="linkbtn2" id="reportsLink">📊 My report</button>` : "");
-  if(P.sid) $("reportsLink").onclick=()=>{ step="reports"; render(); };
-}
-
-function render(){
-  if(step===1) renderStep1();
-  else if(step===2) renderStep2();
-  else if(step==="reports") renderReports();
-  else renderStep3();
-  renderTopMini();
-  window.scrollTo(0,0);
-}
-render();
+document.getElementById("strands").innerHTML = STRANDS.map(s=>{
+  const head = s.door ? `<a href="${s.door}">${esc(s.name)}</a>` : esc(s.name);
+  return `<section class="strand" style="--c:var(${s.c})"><h2>${head}</h2>`+
+    s.items.map(it=>`<a class="card ${it[3]||""}" href="${it[0]}"><div class="t">${esc(it[1])}<span class="arrow"> →</span></div>${it[2]?`<div class="d">${esc(it[2])}</div>`:""}</a>`).join("")+
+    `</section>`;
+}).join("");
 </script>
 </body>
 </html>

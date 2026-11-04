@@ -1517,7 +1517,7 @@ const store = (function(){
   catch(e){ const m={}; return { getItem:k=>(k in m?m[k]:null), setItem:(k,v)=>{m[k]=String(v);}, removeItem:k=>{delete m[k];} }; }
 })();
 const KEY = "writingfolio.vocabhub.v1";
-/* Shared profile written by the front door (index.html) so a student signs in
+/* Shared profile written by the front door (BoneSparrow.html) so a student signs in
    once for the whole suite. Identity, chapter and language live there; scores
    stay in this hub's own key. We adopt it on boot and write back on change. */
 const PKEY = "bonesparrow.profile.v1";

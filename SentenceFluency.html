@@ -277,7 +277,7 @@ const KEY = "writingfolio.fluency.v1";
 const PKEY = "bonesparrow.profile.v1";
 let store;
 try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
-function blank(){ return { fname:"", lname:"", sid:"", first:{}, done:{}, join:[], split:{}, startedAt:null, lastAt:null }; }
+function blank(){ return { fname:"", lname:"", sid:"", first:{}, done:{}, join:[], split:{}, box:{}, startedAt:null, lastAt:null }; }
 function load(){ try{ const s=JSON.parse(store.getItem(KEY)); return (s&&typeof s==="object")?Object.assign(blank(),s):blank(); }catch(e){ return blank(); } }
 let S = load();
 /* Read, change, write: another folio page may be open in a second tab. */
@@ -294,6 +294,31 @@ function writeProfile(){
 (function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
   bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
 })();
+
+/* ====================== MASTERY BOXES ====================================
+   Every task (the six cards, Join and Split) sits in a box from 0 to 5.
+   Done right in a run: box 1, due in 1 day. Done right again on or after
+   its due day: up one box, next due in 3, then 7, then 21 days. Box 5 is
+   "recalled after three weeks". Doing a task early is always allowed and
+   changes nothing when it is right. A miss on a due task drops it one box
+   and makes it due today. Days are local calendar days. */
+const GAPS={1:1,2:3,3:7,4:21};
+function dayNo(){ const d=new Date(); return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000); }
+function unitList(){ return CARDS.map(c=>"cl."+c.id).concat(["join","split"]); }
+function boxOf(u){ const b=S.box&&S.box[u]; return b?b.n:0; }
+function isDue(u){ const b=S.box&&S.box[u]; return !!b && b.n>0 && b.n<5 && b.due<=dayNo(); }
+function dueUnits(){ return unitList().filter(isDue); }
+function unitName(u){ if(u==="join") return "Join"; if(u==="split") return "Split"; const c=CARDS.find(x=>"cl."+x.id===u); return c?c.short:u; }
+function boxRun(u, ok){
+  bump(s=>{ s.box=s.box||{};
+    const t=dayNo(), b=s.box[u]||{n:0,due:t};
+    if(ok){
+      if(b.n===0){ b.n=1; b.due=t+GAPS[1]; }
+      else if(b.n<5 && t>=b.due){ b.n++; b.due=b.n<5 ? t+GAPS[b.n] : 0; }
+    } else if(b.n>0 && t>=b.due){ b.n=Math.max(1,b.n-1); b.due=t; }
+    else if(b.n===0){ b.due=t; }
+    s.box[u]=b; });
+}
 
 function esc(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function $(id){ return document.getElementById(id); }
@@ -429,6 +454,7 @@ let view = { screen:"home" };
 function go(screen){
   if(!idOk() && screen!=="id") screen="id";
   view = { screen };
+  if(screen==="home") Q={ again:[], served:0 };
   window.scrollTo(0,0);
   if(screen==="id") renderId();
   else if(screen==="home") renderHome();
@@ -438,11 +464,12 @@ function go(screen){
   else if(screen==="report") renderReport();
 }
 function links(){
-  return `<a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>
+  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a>
+    <a class="menulink" href="WritingFolio.html">Folio menu</a>
     <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`;
 }
 function topbar(deck){
-  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="WritingFolio.html">&#8962; Folio menu</a>`}</span></div>`;
+  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><a class="menulink" href="WritingFolio.html">Folio menu</a>`}</span></div>`;
 }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 
@@ -470,19 +497,24 @@ function idSubmit(){
 function renderHome(){
   const n=CARDS.filter(c=>S.done["cl."+c.id]).length;
   const steps=[
-    { t:"Find the clauses", d:"Verbs, subjects, then the kind of sentence.", tag:n?`${n} of ${CARDS.length} done`:"", done:n===CARDS.length, go:"clauses" },
-    { t:"Join", d:"A film review cut into short sentences.", tag:S.done.join?"done":"", done:!!S.done.join, go:"join" },
-    { t:"Split", d:"A brownie method written as one sentence.", tag:S.done.split?"done":"", done:!!S.done.split, go:"split" }
+    { t:"Find the clauses", d:"Verbs, subjects, then the kind of sentence.", tag:n?`${n} of ${CARDS.length} done`:"", done:n===CARDS.length, fn:"go('clauses')" },
+    { t:"Join", d:"A film review cut into short sentences.", tag:isDue("join")?"due":(S.done.join?"done":""), done:!!S.done.join, fn:isDue("join")?"revisitTask('join')":"go('join')" },
+    { t:"Split", d:"A brownie method written as one sentence.", tag:isDue("split")?"due":(S.done.split?"done":""), done:!!S.done.split, fn:isDue("split")?"revisitTask('split')":"go('split')" }
   ];
+  const due=dueUnits(), later=unitList().filter(u=>boxOf(u)>=2).length, weeks=unitList().filter(u=>boxOf(u)===5).length;
   let h=topbar(true)+`<h1>Sentence fluency</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>`;
+  if(due.length) h+=`<button class="step" onclick="startRevisit()"><span class="num">&#8635;</span>
+      <span><span class="t">Revisit</span><br><span class="d">${esc(due.map(unitName).join(" · "))}</span></span>
+      <span class="tag">${due.length} due</span></button>`;
   steps.forEach((st,i)=>{
-    h+=`<button class="step ${st.done?"done":""}" onclick="go('${st.go}')">
+    h+=`<button class="step ${st.done?"done":""}" onclick="${st.fn}">
       <span class="num">${st.done?"✓":i+1}</span>
       <span><span class="t">${esc(st.t)}</span><br><span class="d">${esc(st.d)}</span></span>
       <span class="tag">${esc(st.tag)}</span></button>`;
   });
   h+=`<button class="step" onclick="go('report')"><span class="num">${steps.length+1}</span>
       <span><span class="t">Report for your teacher</span><br><span class="d">One row to copy and send.</span></span></button>`;
+  if(later) h+=`<p class="dim">Right again on a later day: ${later} of ${unitList().length}.${weeks?` Right after three weeks: ${weeks}.`:""}</p>`;
   $("body").innerHTML=h;
 }
 
@@ -491,24 +523,41 @@ function renderHome(){
    first go comes back once, two cards later. */
 let CV=null;
 let Q={ again:[], served:0 };
-function freshCard(at, again){
+function freshCard(at, again, rv){
   const id="cl."+CARDS[at].id;
-  return { at, again:!!again, firstRun:S.first[id+".C"]===undefined, phase:"A", sel:[], aDone:false,
+  return { at, again:!!again, rv:!!rv, firstRun:S.first[id+".C"]===undefined, phase:"A", sel:[], aDone:false,
            b:0, bWait:false, bWrong:null, bMiss:[], bRes:[], shown:{}, cPick:null, fb:null };
 }
+/* Queue entries: {at, due, rv, second}. "second" marks a card coming back
+   after a miss; "rv" marks a revisit of a task that was due. */
 function nextClause(){
   const due=Q.again.find(e=>e.due<=Q.served);
-  if(due){ Q.again.splice(Q.again.indexOf(due),1); return {at:due.at, again:true}; }
+  if(due){ Q.again.splice(Q.again.indexOf(due),1); return {at:due.at, again:!!due.second, rv:due.rv}; }
   const i=CARDS.findIndex(c=>!S.done["cl."+c.id]);
   if(i>=0) return {at:i};
-  if(Q.again.length){ const e=Q.again.shift(); return {at:e.at, again:true}; }
+  if(Q.again.length){ const e=Q.again.shift(); return {at:e.at, again:!!e.second, rv:e.rv}; }
   return null;
 }
 function startClauses(at){
   if(at!==undefined){ CV=freshCard(at); renderCard(); return; }
   const n=nextClause();
   if(!n){ renderClauseSummary(); return; }
-  CV=freshCard(n.at, n.again); renderCard();
+  CV=freshCard(n.at, n.again, n.rv); renderCard();
+}
+/* Revisit: the due cards first, then Join and Split if they are due. */
+function startRevisit(){
+  const at=dueUnits().filter(u=>u.indexOf("cl.")===0).map(u=>CARDS.findIndex(c=>"cl."+c.id===u));
+  Q={ again:at.map(i=>({at:i, due:0, rv:true})), served:0, revisit:true };
+  if(at.length) startClauses(); else nextDueTask();
+}
+function nextDueTask(){
+  if(isDue("join")) revisitTask("join");
+  else if(isDue("split")) revisitTask("split");
+  else go("home");
+}
+function revisitTask(u){
+  if(u==="join"){ bump(s=>{ s.join=[]; }); JV={ sel:[], fb:null, run:true, failed:false }; go("join"); }
+  else { bump(s=>{ s.split={}; }); PV={ fb:null, run:true, failed:false }; go("split"); }
 }
 function cardFirst(c){
   const k="cl."+c.id, a=S.first[k+".A"], b=S.first[k+".B"], cc=S.first[k+".C"];
@@ -549,8 +598,8 @@ function renderCard(){
       <button class="btn btn-ghost" onclick="CV.sel=[];renderCard()">Clear</button>`;
   } else if(CV.phase==="B"){
     const v=m.verbs[Math.min(CV.b, m.verbs.length-1)];
-    prompt="Who or what "+esc(v.ask)+"?"; hint="Click the main word of the subject.";
-    controls=`<button class="btn" ${CV.bWait?"disabled":""} onclick="pickB('you')">Not written: you</button>`;
+    prompt="Who or what "+esc(v.ask)+"?"; hint="Click the main word of the subject. If none is written, use the button.";
+    controls=`<button class="btn" ${CV.bWait?"disabled":""} onclick="pickB('you')">No subject written: it is you</button>`;
   } else {
     prompt="What kind of sentence is it?"; hint="Pick one.";
     controls=`<div class="chips">${TYPES.map(t=>{
@@ -561,7 +610,7 @@ function renderCard(){
     const r=CV["res"+p[0]];
     return `<li class="${CV.phase===p[0]?"now":""} ${r===undefined?"":(r?"ok":"no")}"><span class="mk">${r===undefined?"":(r?"✓":"✗")}</span>${p[1]}</li>`; }).join("");
   const colours = CV.aDone || CV.phase!=="A";
-  $("body").innerHTML=bar("Find the clauses", pipsHtml()+(CV.again?`<span>Second go</span>`:""))+
+  $("body").innerHTML=bar("Find the clauses", pipsHtml()+(CV.again?`<span>Second go</span>`:(CV.rv?`<span>Revisit</span>`:"")))+
     `<div class="cols"><div class="cardbox">
       <p class="prompt">${prompt}</p><p class="hint">${hint}</p>
       <div class="sent">${sent}</div>
@@ -635,7 +684,9 @@ function pickC(t){
   CV.cPick=t; CV.resC=ok;
   Q.served++;
   bump(s=>{ s.done["cl."+c.id]=true; });
-  if(CV.firstRun && !CV.again && cardFirst(c)===false && !Q.again.some(e=>e.at===CV.at)) Q.again.push({at:CV.at, due:Q.served+2});
+  const runOk=!!(CV.resA && CV.resB && CV.resC);
+  boxRun("cl."+c.id, runOk);
+  if(!runOk && !CV.again && !Q.again.some(e=>e.at===CV.at)) Q.again.push({at:CV.at, due:Q.served+2, rv:CV.rv, second:true});
   CV.fb={cls:ok?"ok":"bad", html:`<span class="rule">${ok?esc(TYPE_RULE[m.type]):"It is "+esc(typeName(m.type).toLowerCase())+", not "+esc(typeName(t).toLowerCase())+"."}</span>
     ${clauseLine(m)}<div style="margin-top:6px">${esc(c.why)}</div>${nextBtn("startClauses()","Next card →")}`};
   renderCard();
@@ -646,8 +697,11 @@ function renderClauseSummary(){
   $("body").innerHTML=bar("Find the clauses", pipsHtml())+`<div class="cardbox">
     <p class="prompt">First go: ${got} of ${CARDS.length}</p>
     <ul class="qlist" style="margin-top:8px">${CARDS.map(c=>{ const r=cardFirst(c);
-      return `<li class="${r===null?"":(r?"ok":"no")}"><span class="mk">${r===null?"":(r?"✓":"✗")}</span>${esc(model(c).plain)}</li>`; }).join("")}</ul>
-    <div class="btnrow"><button class="btn btn-primary" id="nextBtn" onclick="go('join')">Join →</button>
+      const bx=boxOf("cl."+c.id);
+      return `<li class="${r===null?"":(r?"ok":"no")}"><span class="mk">${r===null?"":(r?"✓":"✗")}</span>${esc(model(c).plain)}${bx?` <span class="dim">box ${bx} of 5</span>`:""}</li>`; }).join("")}</ul>
+    <div class="btnrow">${Q.revisit
+        ? `<button class="btn btn-primary" id="nextBtn" onclick="nextDueTask()">Next →</button>`
+        : `<button class="btn btn-primary" id="nextBtn" onclick="go('join')">Join →</button>`}
       <button class="btn btn-ghost" onclick="Q={again:CARDS.map((c,i)=>({at:i,due:0})),served:0};startClauses()">Again</button></div></div>`;
   $("nextBtn").focus();
 }
@@ -724,7 +778,7 @@ function judgeJoin(js){
   });
   return issues;
 }
-let JV={ sel:[], fb:null };
+let JV={ sel:[], fb:null, run:!S.done.join, failed:false };
 function renderJoin(){
   const js=joinState(S.join), n=JOIN.sents.length;
   let p="";
@@ -771,15 +825,21 @@ function pickJoin(w){
   bump(s=>{ const a=joinState(s.join); a[k]=w; s.join=a; });
   JV.sel=[]; JV.fb=null; renderJoin();
 }
-function resetJoin(){ bump(s=>{ s.join=[]; }); JV={sel:[], fb:null}; renderJoin(); }
+function resetJoin(){ bump(s=>{ s.join=[]; }); JV={sel:[], fb:null, run:true, failed:false}; renderJoin(); }
 function checkJoin(){
   const js=joinState(S.join), issues=judgeJoin(js), ok=!issues.length;
   if(S.first.join===undefined) bump(s=>{ s.first.join={ ok, issues:issues.map(x=>({k:x.k, w:x.w, at:x.at})) }; });
   if(ok) bump(s=>{ s.done.join=true; });
+  /* A run starts from a clean sheet. Its first miss counts once; the right
+     answer then counts once. Checking a saved answer counts for nothing. */
+  if(JV.run){
+    if(!ok && !JV.failed){ JV.failed=true; boxRun("join", false); }
+    if(ok){ boxRun("join", true); JV.run=false; JV.failed=false; }
+  }
   JV.sel=[];
   if(ok){
     const origs=JOIN.links.filter(L=>L.orig).map(L=>`<p class="yours">${esc(L.orig)}</p>`).join("");
-    JV.fb={cls:"ok", html:`<span class="rule">Every gap is right.</span><p class="lab" style="margin-top:6px">The reviewer wrote</p>${origs}${nextBtn("go('split')","Split →")}`};
+    JV.fb={cls:"ok", html:`<span class="rule">Every gap is right.</span><p class="lab" style="margin-top:6px">The reviewer wrote</p>${origs}${Q.revisit?nextBtn("nextDueTask()","Next →"):nextBtn("go('split')","Split →")}`};
   } else {
     JV.fb={cls:"bad", html:`<span class="rule">Not yet.</span><ul>${issues.map(x=>`<li><i>“${esc(x.at)}”</i>: ${esc(x.msg)}</li>`).join("")}</ul>`};
   }
@@ -833,7 +893,7 @@ function judgeSplit(st){
   });
   return issues;
 }
-let PV={ fb:null };
+let PV={ fb:null, run:!S.done.split, failed:false };
 function renderSplit(){
   const st=S.split||{};
   let h="", start=true;
@@ -869,14 +929,18 @@ function renderSplit(){
   const nb=$("nextBtn"); if(nb) nb.focus();
 }
 function splitClick(i){ bump(s=>{ const o=Object.assign({}, s.split||{}); if(o[i]) delete o[i]; else o[i]=true; s.split=o; }); PV.fb=null; renderSplit(); }
-function resetSplit(){ bump(s=>{ s.split={}; }); PV.fb=null; renderSplit(); }
+function resetSplit(){ bump(s=>{ s.split={}; }); PV={fb:null, run:true, failed:false}; renderSplit(); }
 function checkSplit(){
   const issues=judgeSplit(S.split||{}), ok=!issues.length;
   if(S.first.split===undefined) bump(s=>{ s.first.split={ ok, issues:issues.map(x=>({k:x.k, w:x.w, at:x.at})) }; });
   if(ok) bump(s=>{ s.done.split=true; });
+  if(PV.run){
+    if(!ok && !PV.failed){ PV.failed=true; boxRun("split", false); }
+    if(ok){ boxRun("split", true); PV.run=false; PV.failed=false; }
+  }
   PV.fb = ok
     ? {cls:"ok", html:`<span class="rule">Every step is a sentence, and every instruction starts with its verb.</span>
-        <p class="lab" style="margin-top:6px">The recipe says</p>${SPLIT.recipe.map(r=>`<p class="yours">${esc(r)}</p>`).join("")}${nextBtn("go('report')","Report →")}`}
+        <p class="lab" style="margin-top:6px">The recipe says</p>${SPLIT.recipe.map(r=>`<p class="yours">${esc(r)}</p>`).join("")}${Q.revisit?nextBtn("nextDueTask()","All steps →"):nextBtn("go('report')","Report →")}`}
     : {cls:"bad", html:`<span class="rule">Not yet.</span><ul>${issues.map(x=>`<li><i>“${esc(x.at)}”</i>: ${esc(x.msg)}</li>`).join("")}</ul>`};
   renderSplit();
 }
@@ -909,18 +973,19 @@ function reportData(){
   const mins = (S.startedAt&&S.lastAt) ? Math.max(1,Math.round((S.lastAt-S.startedAt)/60000)) : "";
   const misses = Object.keys(MISS).filter(k=>miss[k]).map(k=>`${MISS[k]}: ${miss[k].join("; ")}`).join(" | ");
   const d=new Date();
-  return { cols:["Date","First name","Last name","Code","Minutes","Clauses, first go","Join, first go","Split, first go","Misses"],
+  const boxes=CARDS.map(c=>boxOf("cl."+c.id)).join(",")+" | join "+boxOf("join")+" | split "+boxOf("split");
+  return { cols:["Date","First name","Last name","Code","Minutes","Clauses, first go","Join, first go","Split, first go","Boxes (cards | join | split)","Due now","Misses"],
            row:[ d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),
                  S.fname, S.lname, S.sid, String(mins),
                  `${ok}/${CARDS.length}`+(tried<CARDS.length?` (${tried} tried)`:""),
-                 J?(J.ok?"yes":"no"):"not tried", P?(P.ok?"yes":"no"):"not tried", misses||"none" ] };
+                 J?(J.ok?"yes":"no"):"not tried", P?(P.ok?"yes":"no"):"not tried", boxes, String(dueUnits().length), misses||"none" ] };
 }
 function renderReport(){
   const r=reportData();
   $("body").innerHTML=topbar(false)+`<h2>Report for your teacher</h2>
     <table class="rpt"><tr>${r.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr>
       <tr>${r.row.map(v=>`<td>${esc(v)}</td>`).join("")}</tr></table>
-    <p class="dim">First tries only. It cannot tell whether you can do this in your own folio piece.</p>
+    <p class="dim">First tries only. Boxes run 0 to 5: a task goes up a box when it is right again on a later day, after 1, 3, 7 and 21 days. Box 5 is recalled after three weeks. It cannot tell whether you can do this in your own folio piece.</p>
     <div class="btnrow"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
       <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
     <div class="fb" id="fb"></div>`;

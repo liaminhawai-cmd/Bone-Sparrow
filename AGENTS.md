@@ -87,9 +87,15 @@ publication.
 
 ### 2. Every front-door link must have a file and a workflow line.
 
-`index.html` lists the activities. Deleting or renaming a page without fixing
-that list leaves a dead link on the live site, which is exactly how a page
-disappears quietly. Check both after any rename or removal.
+`index.html` is the Year 7 English landing page: three strands (Edward
+Scissorhands, The Bone Sparrow, Writing Folio), one menu option per module,
+from its `STRANDS` list. `BoneSparrow.html` is the Bone Sparrow front door and
+`WritingFolio.html` is the folio's; both link back to `index.html`. A new module
+gets a line in `STRANDS` and a line in the workflow.
+
+Deleting or renaming a page without fixing those lists leaves a dead link on
+the live site, which is exactly how a page disappears quietly. Check both after
+any rename or removal.
 
 ### 3. A page that reads from the hub must fail loudly.
 

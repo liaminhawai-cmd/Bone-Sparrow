@@ -601,7 +601,7 @@ body.dragging .tile,body.dragging .ctile{cursor:grabbing}
       <button class="linkbtn" id="homeBtn" onclick="go('home')" style="display:none">← all activities</button>
       <a class="teachbtn" id="teachBtn" href="teacher/" title="Printables, slides and the front-of-the-room tools">▶ Teacher mode</a>
       <button class="linkbtn menulink" onclick="go('rpt')">My report</button>
-      <a class="linkbtn menulink" href="index.html">⌂ Main menu</a>
+      <a class="linkbtn menulink" href="BoneSparrow.html">⌂ Main menu</a>
     </span>
   </div>
   <div id="body"></div>
@@ -2223,7 +2223,7 @@ const MODULES = [
    ENGINE — knows nothing about the novel. State, router, runners, report.
    ============================================================================ */
 const KEY="bonesparrow.readinghub.v2";
-/* Shared profile written by the front door (index.html) so a student signs in
+/* Shared profile written by the front door (BoneSparrow.html) so a student signs in
    once for the whole suite. Identity, chapter and EAL live there; the scores
    stay in this hub's own key. Adopted on boot, written back on change. */
 const PKEY="bonesparrow.profile.v1";
@@ -2271,7 +2271,7 @@ function go(s, arg){
   else if(s==="ev") renderEv(0);
   else if(s==="wk") runWk();
   else if(s==="teach") runTeach();
-  else if(s==="rpt"){ location.href="index.html#report"; return; }
+  else if(s==="rpt"){ location.href="BoneSparrow.html#report"; return; }
   else if(s==="wagoll"){ location.href="BoneSparrowWagollWall.html"; return; }
   document.body.classList.toggle("wide", s==="wk");
   lastArg=arg;
@@ -4212,7 +4212,7 @@ function hashTarget(){
   return null;
 }
 (function boot(){
-  if(location.hash==="#report"){ location.replace("index.html#report"); return; }
+  if(location.hash==="#report"){ location.replace("BoneSparrow.html#report"); return; }
   if(location.hash==="#resume"){
     /* back from the vocab hub — pick up exactly where the student left off */
     try{

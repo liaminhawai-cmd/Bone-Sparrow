@@ -297,7 +297,7 @@
 <div class="container">
 
 <div class="topnav noprint">
-  <a class="menulink" href="index.html">&#8962; Main menu</a>
+  <a class="menulink" href="BoneSparrow.html">&#8962; Main menu</a>
   <button data-scr="home" onclick="go('home')">&#9776; Chapters</button>
   <button data-scr="morphtable" onclick="go('morphtable')">Morpheme table</button>
   <button data-scr="glossary" onclick="go('glossary')">Word list</button>
@@ -1839,7 +1839,7 @@ const store = (function(){
   catch(e){ const m={}; return { getItem:k=>(k in m?m[k]:null), setItem:(k,v)=>{m[k]=String(v);}, removeItem:k=>{delete m[k];} }; }
 })();
 const KEY = "bonesparrow.vocabhub.v1";
-/* Shared profile written by the front door (index.html) so a student signs in
+/* Shared profile written by the front door (BoneSparrow.html) so a student signs in
    once for the whole suite. Identity, chapter and language live there; scores
    stay in this hub's own key. We adopt it on boot and write back on change. */
 const PKEY = "bonesparrow.profile.v1";
@@ -1916,7 +1916,7 @@ function go(id){
   updateNav(id);
   if(id==="id") renderIdentity();
   if(id==="home") renderHome();
-  if(id==="report"){ location.href="index.html#report"; return; }
+  if(id==="report"){ location.href="BoneSparrow.html#report"; return; }
   if(id==="morphtable") renderMorphTable();
   if(id==="glossary") renderGlossary();
 }
@@ -3015,7 +3015,7 @@ function idSubmit(){
 
 /* ---- boot ---- */
 (function boot(){
-  if(location.hash==="#report"){ location.replace("index.html#report"); return; }
+  if(location.hash==="#report"){ location.replace("BoneSparrow.html#report"); return; }
   const m=location.hash.match(/^#set-(.+)$/);
   go("home");
   if(m && idOk()){
