@@ -1,0 +1,12 @@
+# Classroom copies, mentor texts, CATs, rubrics, lesson plans and the
+# department's unit folders live in the private Year-7-English repo. This
+# repo is public, so they never come back here.
+6. Writing Folio/
+Grammar resources/
+Lesson Resources/
+OneDrive_*.zip
+*.zip
+~$*
+desktop.ini
+Thumbs.db
+.claude/

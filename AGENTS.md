@@ -16,10 +16,16 @@ ever reaches a student, and nothing warns you: the push succeeds, no workflow
 runs, and the site silently stays as it was. That has already cost one round of
 work.
 
-Two files exist only on `main` and are therefore not published:
-`wordbuilderoffline.html` and
-`Lesson Resources/Oral formative assessment - Five conversations.docx`. If either
-is wanted on the live site, copy it onto the live branch deliberately.
+One file exists only on `main` and is therefore not published:
+`wordbuilderoffline.html`. If it is wanted on the live site, copy it onto the
+live branch deliberately.
+
+This repository is public, and so is every branch in it. Classroom copies,
+mentor texts, CATs, rubrics, lesson plans, the grammar session decks and the
+department's unit folders (`Lesson Resources/`, `6. Writing Folio/`) live in
+the private repo `liaminhawai-cmd/Year-7-English`, never here. `.gitignore`
+blocks the usual folder names. A page here may quote a single sentence from
+a mentor text inside original work, and names where it came from.
 
 Read `STYLE_GUIDE.md` first — the portable build principles behind everything
 below. Rule 0 here is that guide's minimalism principle, made specific to this

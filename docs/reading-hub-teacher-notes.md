@@ -63,7 +63,7 @@ miss, so a wrong answer hands back a different idea to prove rather than the
 same one with the options shuffled.
 
 **The passages are shorter than the first two on purpose.** Chapters 1 and 5 are
-reproduced at length in `Lesson Resources/Bone Sparrow extracts for grammar.docx`;
+reproduced at length in `Year-7-English: The Bone Sparrow/Lesson Resources/Bone Sparrow extracts for grammar.docx`;
 the later chapters are not, so these six quote the short page-referenced
 extracts that appear in the unit's own resources and in the publisher packs
 (chapter 6 at p 43, chapter 14 at p 96, chapter 17 at p 113, and so on). A

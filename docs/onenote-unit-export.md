@@ -346,7 +346,7 @@ Model ladder (passive voice, Belonging/Exclusion):
 
 ## Rubrics and other pages
 
-- **2025 Text Essay Rubric** — page exists (content in `Lesson Resources/CAT 2 Bone Sparrow Text Essay Rubric 2019.docx` as prior version).
+- **2025 Text Essay Rubric** — page exists (content in `Year-7-English: The Bone Sparrow/Lesson Resources/CAT 2 Bone Sparrow Text Essay Rubric 2019.docx` as prior version).
 - **Malala — Speech to the UN** — stimulus page.
 - **Info Bank for Body Part** — image bank page.
 - **CAT 1 — Modified Speaking and Listening** — for low literacy and EAL students.
