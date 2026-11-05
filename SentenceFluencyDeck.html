@@ -228,22 +228,23 @@ const SLIDES = [
      ["Teaching point","Put the judgement you want remembered last: after but, or in the main clause after an although clause."] ] },
 
  { kind:"length",
-   src:"The Guardian, review of Dear Santa",
-   ask:"Which sentence lands hardest? Why?",
-   key:"Fingers: the number of the sentence.",
+   src:"The Guardian, review of Dear Santa · “the former”: the first film named, the kids movie",
+   context:"From a review of Dear Santa, a Christmas comedy.",
+   ask:"Which sentence is the reviewer’s verdict?",
+   key:"Fingers: 1 or 2.",
    sentences:[
      "We’re trapped between a sweet-natured kids movie full of life lessons about family and acceptance and a black-hearted adult comedy about a devil trying to steal the soul of a pre-teen.",
      "Unsurprisingly, and less interestingly, the former wins out." ],
    lands:1,
-   after:"the short one lands because of the long one before it",
+   after:"the long sentence sets out the two films; the short one judges them",
    notes:[
-     ["Display","“Which sentence lands hardest? Why?” Fingers up: the number of the sentence."],
-     ["Answer","Sentence 2. It lands because of the long sentence before it: the reader is carried through a long, crowded comparison, then the verdict arrives in a handful of words."],
+     ["Display","“This is from a review of Dear Santa, a Christmas comedy. Which sentence is the reviewer’s verdict?” Fingers: 1 or 2."],
+     ["Answer","Sentence 2. Sentence 1 sets out the two films the reviewer is stuck between, in 31 words. Sentence 2 judges them in 8. The verdict hits hard because the long sentence comes first."],
      ["Gloss","“the former” means the first of the two things just named: the sweet-natured kids movie."],
      ["Ask","Read both sentences aloud. “What does the long one let the reviewer do? What does the short one do?”"],
-     ["If students disagree","“What would need to change to make sentence 2 land less?” Put it first, or stretch it with a reason."],
-     ["Choppy version","Read aloud, not on screen: “We’re trapped between two films. One is a sweet kids movie. One is a dark adult comedy. The kids movie wins.” Every sentence the same length, so none of them lands."],
-     ["Teaching point","Short sentences land a verdict. Long sentences allow nuance and analysis. The contrast does the work; a run of short sentences reads as choppy."] ] }
+     ["If students disagree","One finger usually means the long sentence was read as the judgement because it has the strong words (sweet-natured, black-hearted). Ask: “Does it say which film is better?” It only describes them. Then: “What would weaken sentence 2?” Put it first, or stretch it with a reason."],
+     ["Choppy version","Read aloud, not on screen: “We’re trapped between two films. One is a sweet kids movie. One is a dark adult comedy. The kids movie wins.” Every sentence the same length, so the verdict does not stand out."],
+     ["Teaching point","A short sentence after a long one makes a verdict stand out. Long sentences allow nuance and analysis. The contrast does the work; a run of short sentences reads as choppy."] ] }
 ];
 
 /* The words on the slide frame, in the grammar session decks' wording. */
@@ -299,7 +300,7 @@ function words(s){ return s.trim().split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w
 function lengthAns(sl){
   const n = sl.sentences.map(words), i = sl.lands;
   const before = n.slice(Math.max(0,i-2), i);
-  return [`Sentence ${i+1} lands: ${n[i]} words, after ${before.join(" and ")}`, sl.after];
+  return [`Sentence ${i+1} is the verdict: ${n[i]} words, after ${before.join(" and ")}`, sl.after];
 }
 
 /* Every problem a hand edit to the content block could cause. If there are
@@ -385,13 +386,13 @@ function render(){
     foot = at.rev ? legend() : esc(FRAME.vote);
   } else if(sl.kind === "length"){
     h = at.rev ? FRAME.reveal : sl.ask;
-    sub = at.rev ? sl.ask : sl.key;
+    sub = at.rev ? sl.ask : [sl.context, sl.key].filter(Boolean).join(" ");
     const counts = sl.sentences.map(words), max = Math.max(...counts);
     html = `<div class="len">
         <p class="pass fitme">${sl.sentences.map((s,j) =>
           `<span class="s${j===sl.lands?" hit":""}"><span class="no">${j+1}.</span>${esc(s)}</span>`).join(" ")}</p>
         <div class="bars" aria-label="Words per sentence">${counts.map((c,j) =>
-          `<div class="col${j===sl.lands?" hit":""}"><span class="tag">lands</span><span class="num">${j+1}</span>
+          `<div class="col${j===sl.lands?" hit":""}"><span class="tag">verdict</span><span class="num">${j+1}</span>
              <div class="barbox"><div class="bar" style="height:${(c/max*100).toFixed(1)}%"></div></div>
              <span class="wc">${c} <small>words</small></span></div>`).join("")}</div>
       </div>

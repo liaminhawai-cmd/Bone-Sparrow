@@ -205,7 +205,7 @@ foreach($st in $spec.states){
       $bar = $s.Shapes.AddShape(1, $x, $bottom - $hgt, $bw, $hgt)
       $bar.Line.Visible = 0
       $bar.Fill.ForeColor.RGB = $(if($hit){ $C.head } else { $C.bar })
-      [void](TextBox $s $x ($bottom - $hgt - 24) $bw 20 @( (Para @(@{ t=$(if($hit){"LANDS  " + ($j+1)} else {"" + ($j+1)}); bold=$true; color=$(if($hit){$C.head}else{$C.grey}) }) 13 @{ align=2 }) ) $false)
+      [void](TextBox $s $x ($bottom - $hgt - 24) $bw 20 @( (Para @(@{ t=$(if($hit){"VERDICT  " + ($j+1)} else {"" + ($j+1)}); bold=$true; color=$(if($hit){$C.head}else{$C.grey}) }) 13 @{ align=2 }) ) $false)
       [void](TextBox $s ($x - 10) ($bottom + 4) ($bw + 20) 22 @( (Para @(@{ t=("" + $st.counts[$j] + " words"); bold=$true }) 16 @{ align=2 }) ) $false)
     }
     [void](TextBox $s $L 392 540 20 @( (Para @(@{ t=$st.src; color=$C.grey }) 13) ) $false)
