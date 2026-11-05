@@ -230,30 +230,49 @@ const SLIDES = [
      ["If students disagree","“What would need to change to make it complex?” For example: “Although they may not be reinventing the wheel on Everyone’s a Star!, their humour and musical restlessness make it a breezy listen.” Although is subordinating; the reader is still left with the breezy listen. Then swap the two clauses around but: which judgement wins now?"],
      ["Teaching point","Put the judgement you want remembered last: after but, or in the main clause after an although clause."] ] },
 
- { kind:"length",
+ { kind:"length", vote:false,
    src:"The Courier Mail",
-   context:"A persuasive article. The writer has just described the problem. Now they want the reader to feel it must stop.",
-   ask:"Which sentence fits here?",
-   key:"Fingers: 1 or 2.",
+   ask:"A time and a place",
+   key:"Persuasive article",
+   context:"The writer has just described the problem. Now they want the reader to feel it must stop.",
    sentences:[
      "That is why I think that, as parents, teachers and young people, we should all start to think seriously about whether this is something we want to keep on accepting.",
      "This has to change." ],
    lands:1,
    tag:"fits",
    answer:"Sentence 2 fits: 4 words, straight after the problem",
-   after:"Sentence 2 is the writer’s. Sentence 1 is a rewrite: it says the same thing slowly, so the push is lost.",
+   after:"Sentence 2 is the writer’s. Sentence 1 is a rewrite: the same idea said slowly, so the push is lost.",
    notes:[
-     ["Display","Read the context aloud. “Which sentence fits here?” Fingers: 1 or 2."],
+     ["Display","Read the context, then both sentences aloud. “Which one fits here? Why?” Take a few answers before you reveal."],
      ["Answer","Sentence 2, “This has to change.” The writer has spent a paragraph on the problem. Four words after that hit hard."],
      ["Ask","“Both sentences say the same thing. What does the long one do to the push?”"],
-     ["If students disagree","One finger usually means the long one sounded more grown-up. Read sentence 1 aloud, then sentence 2. “Which one would make you stop and think?”"],
+     ["If students disagree","Students who pick sentence 1 often say it sounds more grown-up. Read sentence 1 aloud, then sentence 2. “Which one would make you stop and think?”"],
      ["Teaching point","A short sentence after a long build-up makes the point stand out. Use it for the line you want remembered."] ] },
 
- { kind:"length",
+ { kind:"length", vote:false,
    src:"Perfect Fudgy Brownies, inspiredtaste.net",
-   context:"A recipe. The reader is deciding whether to bake these brownies.",
-   ask:"Which sentence fits here?",
-   key:"Fingers: 1 or 2.",
+   ask:"A time and a place",
+   key:"Recipe step",
+   context:"The reader has the butter in one hand and is reading the next step.",
+   sentences:[
+     "The first thing you are going to want to do, once you have got everything ready on the bench, is take your butter and put it into a saucepan, ideally a medium one.",
+     "Add the butter to a medium saucepan." ],
+   lands:1,
+   tag:"fits",
+   answer:"Sentence 2 fits: one action, the verb first",
+   after:"Sentence 2 is the recipe’s. Sentence 1 is a rewrite: longer, but the reader has to dig the action out of it. Longer is not better here.",
+   notes:[
+     ["Display","Read the context, then both sentences aloud. “Which one fits here? Why?”"],
+     ["Answer","Sentence 2. A step is one thing to do. The reader is cooking, not reading for pleasure, so the verb comes first and nothing gets in the way."],
+     ["Ask","“Where is the verb in sentence 1? How many words do you read before you find out what to do?”"],
+     ["If students disagree","Students who pick sentence 1 often think more words means better writing. That is the idea this slide is here to break: “Is it better for someone with butter in their hand?”"],
+     ["Teaching point","Longer is not better. Every word has to earn its place for this reader at this moment."] ] },
+
+ { kind:"length", vote:false,
+   src:"Perfect Fudgy Brownies, inspiredtaste.net",
+   ask:"A time and a place",
+   key:"Recipe introduction",
+   context:"The reader is deciding whether to bake these brownies at all.",
    sentences:[
      "They are super easy to make, taste like rich dark chocolate, have the fudgiest middles, and have crinkly, shiny tops.",
      "They are easy and fudgy." ],
@@ -262,11 +281,11 @@ const SLIDES = [
    answer:"Sentence 1 fits: every detail the reader needs to decide",
    after:"Sentence 1 is the recipe writer’s. Sentence 2 is a rewrite: short, but it drops the details that sell the brownies.",
    notes:[
-     ["Display","Read the context aloud. “Which sentence fits here?” Fingers: 1 or 2."],
+     ["Display","Read the context, then both sentences aloud. “Which one fits here? Why?”"],
      ["Answer","Sentence 1. The reader is deciding whether to bake, so they need the details: easy, rich, fudgy, crinkly. One long sentence lists them all."],
-     ["Ask","“What does sentence 2 leave out? Would it make you bake them?”"],
-     ["If students disagree","Two fingers usually means short was taken as always better after the last slide. “Short worked for a push. What job does this sentence have?” It sells, so it needs the details."],
-     ["Teaching point","Length follows the job. Short for a verdict or a push. Long when the reader needs the detail."] ] }
+     ["Ask","“Same recipe as the last slide. Why does long work here and not there?” The sentence has a different job."],
+     ["If students disagree","Students who pick sentence 2 are often carrying over “short is better” from the last two slides. Ask what job this sentence has: it sells, so it needs the details."],
+     ["Teaching point","Length follows the job. Short for a step or a push. Long when the reader needs the detail to decide."] ] }
 ];
 
 /* The words on the slide frame, in the grammar session decks' wording. */
@@ -383,6 +402,7 @@ function legend(){
 function icons(sl){
   if(sl.kind === "title") return ["book"];
   if(at.rev) return ["think"];
+  if(sl.vote === false) return [];
   if(sl.kind === "sentence") return ["f1","f2"];
   return sl.sentences.map((s,j) => "f" + (j+1)).filter(k => ICONS[k]);
 }
@@ -394,7 +414,7 @@ function render(){
   $("bNext").disabled = at.i === n-1;
   $("bReveal").disabled = !canReveal(at.i);
   $("bReveal").setAttribute("aria-pressed", at.rev);
-  $("slide").className = `is-${sl.kind}` + (at.rev ? " rev" : "") + (canReveal(at.i) && !at.rev ? " vote" : "");
+  $("slide").className = `is-${sl.kind}` + (at.rev ? " rev" : "") + (canReveal(at.i) && !at.rev && sl.vote !== false ? " vote" : "");
 
   let html = "", h = "", sub = "", foot = "";
   if(sl.kind === "title"){
@@ -409,7 +429,7 @@ function render(){
     foot = at.rev ? legend() : esc(FRAME.vote);
   } else if(sl.kind === "length"){
     h = at.rev ? FRAME.reveal : sl.ask;
-    sub = at.rev ? sl.ask : sl.key;
+    sub = at.rev ? (sl.vote === false ? sl.key : sl.ask) : sl.key;
     const counts = sl.sentences.map(words), max = Math.max(...counts);
     html = `${sl.context ? `<p class="ctx">${esc(sl.context)}</p>` : ""}<div class="len">
         <p class="pass fitme">${sl.sentences.map((s,j) =>
@@ -421,7 +441,7 @@ function render(){
       </div>
       <p class="src">${esc(sl.src)}</p>
       <div class="ans">${lengthAns(sl).map(a => `<span class="chip">${marked(a, false)}</span>`).join("")}</div>`;
-    foot = at.rev ? "" : esc(FRAME.vote);
+    foot = (at.rev || sl.vote === false) ? "" : esc(FRAME.vote);
   }
   $("h").textContent = h;
   $("sub").textContent = sub;
