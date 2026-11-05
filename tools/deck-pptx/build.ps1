@@ -30,6 +30,7 @@ function KindRun($r){
     "v" { $o.color=$C.v; $o.bold=$true; $o.italic=$true }
     "p" { $o.color=$C.p; $o.bold=$true }
     "c" { $o.color=$C.c; $o.bold=$true; $o.underline=$true }
+    "e" { $o.underline=$true }   # a marked rhyme word on a poem reveal
   }
   return $o
 }
@@ -96,6 +97,9 @@ foreach($st in $spec.states){
   if($st.foot -eq "legend"){
     $runs = @(); foreach($k in @("s","v","p","c")){ $r = KindRun @{ t=($spec.tags.$k.Substring(0,1).ToUpper() + $spec.tags.$k.Substring(1)); k=$k }; $runs += $r; $runs += @{ t="     " } }
     [void](TextBox $s $L 500 600 20 @( (Para $runs 12) ) $false)
+  } elseif($st.footRuns){
+    $runs = @(); foreach($r in $st.footRuns){ $runs += (KindRun @{ t=$r.t; k=$r.k }); $runs += @{ t="     " } }
+    [void](TextBox $s $L 500 600 20 @( (Para $runs 12) ) $false)
   } elseif($st.foot){
     [void](TextBox $s $L 500 600 20 @( (Para @(@{ t=$st.foot; italic=$true; color=$C.grey }) 12) ) $false)
   }
@@ -118,6 +122,69 @@ foreach($st in $spec.states){
       $first = $false
     }
     [void](TextBox $s $L 118 $BODYW 370 $paras $true)
+  }
+  elseif($st.kind -eq "go"){
+    [void](TextBox $s $L 170 $BODYW 200 @( (Para @(@{ t=$st.line }) 36) ) $true)
+  }
+  elseif($st.kind -eq "rows"){
+    # Poem, vote and move slides: number, line, then the tag shown on the reveal.
+    # Sizes are worked out from the longest line so no line wraps.
+    $maxLen = 0; $hasTag = $false
+    foreach($r in $st.rows){
+      if($r.type -eq "line"){
+        $len = (($r.runs | ForEach-Object { $_.t }) -join "").Length
+        if($len -gt $maxLen){ $maxLen = $len }
+        if(@($r.tagSpace).Count){ $hasTag = $true }
+      }
+    }
+    $numW = 34; $tagW = $(if($hasTag){ 190 } else { 0 })
+    $textW = $BODYW - $numW - $tagW
+    $size = [Math]::Max(16, [Math]::Min(28, [Math]::Floor($textW / ($maxLen * 0.52))))
+    $step = [Math]::Round($size * 1.7)
+    $tagX = [Math]::Min(($L + $numW + $textW + 10), ($L + $numW + 10 + $maxLen * $size * 0.47 + 24))
+    $y = 118
+    foreach($r in $st.rows){
+      if($r.type -eq "label"){
+        if(-not $r.hidden){ [void](TextBox $s $L $y 400 18 @( (Para @(@{ t=$r.text; bold=$true; color=$C.head }) 13) ) $false) }
+        $y += 24
+      }
+      elseif($r.type -eq "gap"){ $y += 14 }
+      else {
+        if(-not $r.hidden){
+          if($r.hit){
+            $hb = $s.Shapes.AddShape(1, ($L - 6), ($y - 2), ($BODYW + 12), ($step - 2))
+            $hb.Line.Visible = 0
+            $hb.Fill.ForeColor.RGB = (RGB "F0DDE2")
+          }
+          [void](TextBox $s $L $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false)
+          $runs = @($r.runs | ForEach-Object { KindRun $_ })
+          if($r.hit){ $runs = @($runs | ForEach-Object { $_.bold=$true; $_ }) }
+          $tb = TextBox $s ($L + $numW + 10) $y ($textW - 10 + $tagW) 24 @( (Para $runs $size) ) $false
+          $tb.TextFrame.WordWrap = 0
+          $tagRuns = @()
+          foreach($t in @($r.tag)){
+            if($t.k -eq "r"){ $tagRuns += @{ t=$t.t; bold=$true; color=$C.head } } else { $tagRuns += @{ t=$t.t; color=$C.grey } }
+            $tagRuns += @{ t="   " }
+          }
+          if($tagRuns.Count){
+            $tb2 = TextBox $s $tagX ($y + ($size - 14) * 0.75) ($tagW - 10) 20 @( (Para $tagRuns 14) ) $false
+            $tb2.TextFrame.WordWrap = 0
+          }
+        }
+        $y += $step
+      }
+    }
+    [void](TextBox $s $L ($y + 4) 700 20 @( (Para @(@{ t=$st.src; color=$C.grey }) 13) ) $false)
+    if($st.ans.Count){
+      $paras = @(); $first = $true
+      foreach($a in $st.ans){
+        $runs = @($a | ForEach-Object { KindRun $_ })
+        if($first){ $runs = @($runs | ForEach-Object { $_.bold=$true; if(-not $_.k){ $_.color=$C.head }; $_ }) }
+        $paras += (Para $runs 20 @{ before=($(if($first){0}else{2})); indent=40 })
+        $first = $false
+      }
+      [void](TextBox $s $L ($y + 30) $BODYW 90 $paras $true)
+    }
   }
   elseif($st.kind -eq "length"){
     $paras = @()

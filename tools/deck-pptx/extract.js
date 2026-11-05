@@ -21,7 +21,10 @@ const name = path.basename(src, ".html");
 const from = html.indexOf("const SLIDES = [");
 const to = html.indexOf("function problems(");
 if(from < 0 || to < 0) throw new Error("Could not find the content block in " + src);
-const code = html.slice(from, to) + "\n;({SLIDES, FRAME, ICONS, TAGS, RUN, words, lengthAns});";
+/* A deck without length slides has no words() or lengthAns(); a deck without
+   poem slides has no rowsOf(). Each is optional. */
+const opt = n => `typeof ${n} === "undefined" ? null : ${n}`;
+const code = html.slice(from, to) + `\n;({SLIDES, FRAME, ICONS, TAGS, RUN, words: ${opt("words")}, lengthAns: ${opt("lengthAns")}, rowsOf: ${opt("rowsOf")}});`;
 const D = vm.runInNewContext(code, {});
 
 /* Markup into runs: [{t:"Your cuff", k:"s"}, {t:" brushed ", k:""}, ...] */
@@ -52,6 +55,28 @@ D.SLIDES.forEach((sl, i) => {
       icons: ["f1","f2"], sent: plainRuns(sl.m), src: sl.src, ans: [], foot: D.FRAME.vote, notes: notes(sl) });
     states.push({ n, kind: "sentence", rev: true, bg: "FFFFFF", h: D.FRAME.reveal, sub: "",
       icons: ["think"], sent: runs(sl.m), src: sl.src, ans: sl.ans.map(runs), foot: "legend", notes: notes(sl) });
+    return;
+  }
+  if(sl.kind === "go"){
+    states.push({ n, kind: "go", bg: "FFFFFF", h: sl.h, sub: sl.mod, icons: ["book"], line: sl.line,
+      foot: "", notes: notes(sl) });
+    return;
+  }
+  if(/^(poem|vote|move)$/.test(sl.kind)){
+    /* Rows come from the deck's own rowsOf(), so the PowerPoint shows what the page shows. */
+    const rowState = rev => D.rowsOf(sl, rev).map(r => r.type === "line"
+      ? { type: "line", no: r.no, runs: r.runs, tag: r.tagOn ? r.tag : [], tagSpace: r.tag, hit: r.hit, hidden: r.hidden }
+      : r);
+    const base = { n, kind: "rows", src: sl.src, notes: notes(sl) };
+    const isVote = sl.kind === "vote";
+    states.push(Object.assign({}, base, { rev: false, bg: isVote ? "F7F0F1" : "FFFFFF",
+      h: isVote ? sl.ask : sl.h, sub: isVote ? sl.key : (sl.sub || ""),
+      icons: isVote ? [1, 2, 3, 4].slice(0, sl.fingers).map(j => "f" + j) : ["book"],
+      rows: rowState(false), ans: [], foot: isVote ? D.FRAME.vote : "" }));
+    const rv = Object.assign({}, base, { rev: true, bg: "FFFFFF", h: D.FRAME.reveal, sub: isVote ? sl.ask : sl.h,
+      icons: ["think"], rows: rowState(true), ans: sl.ans.map(a => [{ t: a, k: "" }]), foot: "" });
+    if(sl.kind === "move") rv.footRuns = D.FRAME.legend.map(l => ({ t: l[1], k: l[0] }));
+    states.push(rv);
     return;
   }
   if(sl.kind === "length"){

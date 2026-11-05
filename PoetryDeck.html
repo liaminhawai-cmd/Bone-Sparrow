@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poetry: projector</title>
+<style>
+:root{
+  /* The grammar session decks' slide colours, measured from the .pptx. */
+  --maroon:#8C072D; --ink:#212121; --vote:#F7F0F1; --icon:#751400;
+  --grey:#888888; --grey-text:#6B6B6B;
+  /* Changed word and rhyme-to-fix colours. Each also has its own weight or
+     underline, so colour is never the only signal. */
+  --subj:#A24800; --verb:#0F6E4D; --prep:#1F5FA8;
+  --frame:#1c1c1c; --frame-ink:#c8c3c3; --frame-hi:#2e2e2e;
+  --font:Aptos,'Segoe UI',Tahoma,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{background:var(--frame);font-family:var(--font);color:var(--ink);display:flex;flex-direction:column}
+
+/* ---- control strip ---- */
+#bar{flex:0 0 auto;display:flex;align-items:center;gap:2px;padding:0 8px;min-height:40px;flex-wrap:wrap;
+     color:var(--frame-ink)}
+#bar .sp{flex:1}
+#count{font-size:13px;font-weight:600;min-width:48px;text-align:right;padding-right:8px;
+       font-variant-numeric:tabular-nums}
+.btn{padding:0 12px;border:1px solid transparent;border-radius:6px;font:600 13px/1 var(--font);
+     cursor:pointer;background:transparent;color:var(--frame-ink);min-height:40px;min-width:40px}
+.btn:hover:not(:disabled){background:var(--frame-hi);color:#fff}
+.btn:disabled{opacity:.35;cursor:default}
+.btn-primary{color:#fff;border-color:#4a4a4a}
+.btn[aria-pressed="true"]{background:#5a1326;border-color:#5a1326;color:#fff}
+.menulink{color:var(--frame-ink);font-weight:600;text-decoration:none;font-size:13px;padding:0 10px;
+          min-height:40px;display:inline-flex;align-items:center}
+.menulink:hover{color:#fff;text-decoration:underline}
+:focus-visible{outline:2px solid #f3c6d1;outline-offset:2px}
+
+/* ---- the slide: a 16:9 box letterboxed in the window.
+   --k is the slide width over 1280, set by size(). ---- */
+#frame{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+#slide{--k:1;position:relative;flex:0 0 auto;background:#fff;overflow:hidden;
+       display:grid;grid-template-rows:calc(var(--k)*140px) minmax(0,1fr) calc(var(--k)*62px);
+       padding:0 calc(var(--k)*64px) 0 calc(var(--k)*78px)}
+#slide.vote{background:var(--vote)}
+
+#hd{display:flex;align-items:flex-start;gap:calc(var(--k)*24px);min-width:0}
+#hdtext{flex:1 1 auto;min-width:0;padding-top:calc(var(--k)*26px)}
+#h{margin:0;font-size:calc(var(--k)*32px);font-weight:700;color:var(--maroon);line-height:1.2}
+#sub{margin:calc(var(--k)*12px) 0 0;font-size:calc(var(--k)*24px);font-style:italic;color:var(--grey-text);
+     line-height:1.25;min-height:1.25em}
+#icons{flex:0 0 auto;display:flex;gap:calc(var(--k)*10px);padding-top:calc(var(--k)*22px)}
+#icons svg{display:block;width:calc(var(--k)*86px);height:calc(var(--k)*86px)}
+
+#stage{min-height:0;overflow:hidden;display:flex}
+#wrap{width:100%;margin:0 0 auto}
+.is-title #wrap,.is-go #wrap{margin:auto 0}
+
+#ft{display:flex;align-items:center;justify-content:space-between;gap:calc(var(--k)*24px);
+    font-size:calc(var(--k)*18px);padding-bottom:calc(var(--k)*8px)}
+#foot{font-style:italic;color:var(--grey-text);min-width:0}
+#code{color:var(--grey-text);flex:0 0 auto}
+.legend{display:inline-flex;gap:1.6em;font-style:normal;font-size:calc(var(--k)*17px)}
+
+/* ---- title and pointer slides ---- */
+.rule{line-height:1.3;margin:0 0 calc(var(--k)*44px)}
+.key{font-size:calc(var(--k)*34px);margin:0;line-height:1.55}
+.go{line-height:1.35;margin:0}
+.no{display:inline-block;color:var(--grey);font-weight:700;margin-right:.4em}
+
+/* ---- poem rows: number, line, then the reveal tags ---- */
+.rows{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:.55em;align-items:baseline;
+      line-height:1.5}
+.rows .no{margin:0;text-align:right}
+.rows .tx{white-space:nowrap}
+.rows .row{display:contents}
+.rows .tag{font-size:.62em;color:var(--grey-text);white-space:nowrap;padding-left:1em;visibility:hidden;
+           display:inline-flex;gap:.8em;align-items:baseline}
+.rows .tag .r{font-weight:700;color:var(--maroon);font-size:1.45em}
+.rows .tag .n,.rows .tag .m{font-weight:600}
+.rev .rows .tag{visibility:visible}
+.rows .lab{grid-column:1 / -1;font-size:.55em;font-weight:700;color:var(--maroon);margin-top:.5em;
+           line-height:1.4}
+.rows .lab:first-child{margin-top:0}
+.rows .gap{grid-column:1 / -1;height:.45em}
+.rows .hidden{visibility:hidden}
+.rev .rows .row.hit > *{background:#F0DDE2}
+.rev .rows .row.hit .tx{font-weight:700}
+.rev .rows .row.hit .tag .m{color:var(--maroon)}
+.rev .rows .e{text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.14em}
+.k-s .b{color:var(--subj);font-weight:700}
+.k-c .b{color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-thickness:.08em;
+        text-underline-offset:.14em}
+.src{font-size:calc(var(--k)*20px);color:var(--grey-text);margin:calc(var(--k)*8px) 0 0}
+.ans{display:grid;gap:calc(var(--k)*6px);margin-top:calc(var(--k)*14px);padding-left:calc(var(--k)*62px);
+     font-size:calc(var(--k)*28px);line-height:1.3}
+.ans .chip:first-child{font-weight:700;color:var(--maroon)}
+.ans.hide{visibility:hidden}
+.rev .rows,.rev .ans{animation:fade .25s ease}
+@keyframes fade{from{opacity:.25}to{opacity:1}}
+
+/* ---- teacher notes ---- */
+#notes{flex:0 0 auto;display:none;max-height:36vh;overflow:auto;background:#fff;border-top:1px solid #d4cfc2;
+       padding:10px 18px 12px;font-size:15px;line-height:1.5}
+body.notes #notes{display:block}
+.nrow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:4px 0;border-bottom:1px solid #e6e1d6}
+.nrow:last-child{border-bottom:0}
+.nrow b{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:#655f55;padding-top:2px}
+.broken{color:#a83232;font-size:18px;white-space:pre-wrap}
+
+@media screen and (max-width:860px){
+  .nrow{grid-template-columns:minmax(0,1fr);gap:2px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rev .rows,.rev .ans{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="bar">
+  <a class="menulink" href="index.html">&#8962; Year 7 English</a>
+  <a class="menulink" href="Limericks.html">Limericks</a>
+  <a class="menulink" href="Ballads.html">Ballads</a>
+  <a class="menulink" href="PoetryDeck.pptx" download>Download PowerPoint</a>
+  <span class="sp"></span>
+  <span id="count" aria-live="polite"></span>
+  <button class="btn" id="bBack" type="button">&larr; Back</button>
+  <button class="btn btn-primary" id="bReveal" type="button" aria-pressed="false">Reveal</button>
+  <button class="btn" id="bNext" type="button">Next &rarr;</button>
+  <button class="btn" id="bNotes" type="button" aria-pressed="false" aria-controls="notes">Notes</button>
+</div>
+<div id="frame">
+  <section id="slide">
+    <header id="hd">
+      <div id="hdtext"><h1 id="h"></h1><p id="sub"></p></div>
+      <div id="icons" aria-hidden="true"></div>
+    </header>
+    <main id="stage"><div id="wrap"></div></main>
+    <footer id="ft"><span id="foot"></span><span id="code"></span></footer>
+  </section>
+</div>
+<aside id="notes" aria-label="Teacher notes"></aside>
+<script>
+"use strict";
+/* ======================= CONTENT: edit here =======================
+   Slide kinds:
+     title  h, rule, key, notes. The rule uses [s:words] and [v:words] for the
+            two labelled parts; take the brackets away and the plain words
+            are what the slide says.
+     poem   h, src, lines, ends, tags, ans, notes. "ends" is the last word of
+            each line. "tags" is shown on the reveal, one per line:
+            {r: rhyme letter, n: syllables, m: a few words}. Optional "sub",
+            "first" (number of the first line, when a stanza is cut short).
+     vote   ask, key, src, lines, ends, tags, hit, opts, hitOpt, ans, notes.
+            "hit" lists the lines (from 0) the reveal marks; "hitOpt" is the
+            option (from 0) that is the answer. Fingers show 1 to 4.
+     move   h, sub, first, from, to, src, ans, notes. "from" and "to" are
+            {label, lines}; lines use [s:word] for a changed word and
+            [c:word] for a rhyme word that has to change.
+     go     h, mod, line, notes.
+   Every poem line is word for word from the module it comes from:
+   the Ealing limerick and the two near misses from Limericks.html (MODEL,
+   NEARMISS); Paterson's stanza 1 from Ballads.html (BALLAD), which was
+   checked against Project Gutenberg. Do not change a word of a poem.
+   "notes" is the teacher strip (N): each row is [label, text].
+   The PowerPoint copy, PoetryDeck.pptx, is built from this block by
+   tools/deck-pptx (extract.js, then build.ps1). After an edit here,
+   rebuild it so the two stay the same.
+   ================================================================== */
+const SLIDES = [
+ /* ---------------- Limericks ---------------- */
+ { kind:"title",
+   h:"Limericks",
+   rule:"A limerick is five lines. [s:A A B B A] rhyme. [v:Long long short short long.]",
+   key:[["1 to 5","Fingers up: the number of the line."]],
+   notes:[
+     ["Say","A limerick has five lines. Lines 1, 2 and 5 rhyme and they are the long lines. Lines 3 and 4 rhyme with each other and they are the short lines. One limerick first, then two votes with your fingers. Five fingers is line 5."],
+     ["Timing","About 5 minutes for the limerick slides. Under a minute a slide: display, read aloud, fingers up, scan the room, reveal."],
+     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes."] ] },
+
+ { kind:"poem",
+   h:"The Ealing limerick",
+   src:"Traditional",
+   lines:["There once was a young man from Ealing,",
+          "Who would always hang from the ceiling.",
+          "He couldn’t wear a hat,",
+          "But could hang like a bat,",
+          "And said, “What a wonderful feeling!”"],
+   ends:["Ealing","ceiling","hat","bat","feeling"],
+   tags:[{r:"A",n:9},{r:"A",n:9},{r:"B",n:6},{r:"B",n:6},{r:"A",n:9}],
+   scheme:"AABBA",
+   ans:["A A B B A","9 9 6 6 9 syllables","long, long, short, short, long"],
+   notes:[
+     ["Display","Read it aloud once, with the beat. Ask which lines sound the same at the end."],
+     ["Answer","A A B B A. Ealing, ceiling and feeling rhyme. Hat and bat rhyme. Syllables per line: 9, 9, 6, 6, 9."],
+     ["Ask","“Which lines are the long ones? How do you know?” Clap each line with the class before you reveal the counts."],
+     ["If students disagree","A count of 8 for line 2 usually means always was counted as one syllable. Clap it: Who would al-ways hang from the ceil-ing. Ealing and ceiling are two syllables each: Ea-ling, ceil-ing."],
+     ["Teaching point","The shape of a limerick is something you can hear. Rhyme marks which lines belong together, and length marks which are long and which are short."] ] },
+
+ { kind:"vote",
+   ask:"Which line breaks the pattern?",
+   key:"Fingers: the number of the line.",
+   src:"Traditional, with one line changed",
+   lines:["There once was a young man from Ealing,",
+          "Who would always hang from the ceiling.",
+          "He could never find room for a hat,",
+          "But could hang like a bat,",
+          "And said, “What a wonderful feeling!”"],
+   ends:["Ealing","ceiling","hat","bat","feeling"],
+   tags:[{n:9},{n:9},{n:9,m:"too long"},{n:6},{n:9}],
+   hit:[2], fingers:4,
+   ans:["Line 3","9 syllables: as long as the long lines","lines 3 and 4 are the short pair"],
+   notes:[
+     ["Display","Which line breaks the pattern? Fingers up: the number of the line. Five fingers is line 5. Scan the room before you reveal."],
+     ["Answer","Line 3. It has 9 syllables. In the Ealing limerick, lines 3 and 4 are the short pair with 6 each. The rhyme is still right (hat, bat), so the fault is the length."],
+     ["Ask","“Count the syllables in line 3 with me. Which other lines have that many?” Lines 1, 2 and 5, the long lines."],
+     ["If students disagree","A vote for line 4 is usually because it looks short next to the long line above it. It is correct: 6 syllables, as in the Ealing limerick. Clap line 3 then line 4 and ask which one has room to spare."],
+     ["Teaching point","A line can end on the right rhyme and still be the wrong length. Check the end word and the count."] ] },
+
+ { kind:"vote",
+   ask:"How many other lines rhyme with line 1?",
+   key:"Fingers: how many.",
+   src:"Traditional, with one line changed",
+   lines:["There once was a young man from Ealing,",
+          "Who would always hang from the ceiling.",
+          "He couldn’t wear a hat,",
+          "But could hang like a bat,",
+          "And said, “What a wonderful time!”"],
+   ends:["Ealing","ceiling","hat","bat","time"],
+   tags:[{r:"A"},{r:"A"},{r:"B"},{r:"B"},{m:"no rhyme"}],
+   hit:[1], fingers:4,
+   ans:["1 line: line 2","ceiling rhymes with Ealing","time does not"],
+   notes:[
+     ["Display","How many other lines rhyme with line 1? Read the end words aloud: Ealing, ceiling, hat, bat, time. Fingers up on my signal."],
+     ["Answer","1. Line 2: ceiling rhymes with Ealing. Line 5 ends in time, which does not rhyme with them, so the A pattern has one rhyme missing."],
+     ["Ask","“Say the end words. Which ones sound the same?” Ask for the ending sound: -eeling, -eeling, -ime."],
+     ["If students disagree","Two fingers usually means line 5 was counted because it sits in the last A spot. The place in the pattern does not make the rhyme. The sound does. Say Ealing and time side by side."],
+     ["Teaching point","A rhyme letter is a promise that the end sounds match. Check it by ear, not by where the line sits."] ] },
+
+ { kind:"go",
+   h:"Build",
+   mod:"Limericks",
+   line:"Open Limericks. Do Build: put the lines in order, then fill in the end words.",
+   notes:[
+     ["Say","Open Limericks and go to Build. Put the lines in order, then fill in the end words."],
+     ["Keys","Left: back to the votes. Right arrow: on to the Ballads slides."] ] },
+
+ /* ---------------- Ballads ---------------- */
+ { kind:"title",
+   h:"Ballads",
+   rule:"A ballad tells a [v:story] in verse. [s:Rhymed pairs] and a regular beat.",
+   key:[["A A B B C C","Six lines, three rhymed pairs."],["About 7","Beats in a line."]],
+   notes:[
+     ["Say","A ballad tells a story in verse. The lines rhyme in pairs and the beat stays the same from line to line. We are going to look at one stanza by Banjo Paterson, then see what happens to the rhymes when we change one word."],
+     ["Timing","About 5 minutes for the ballad slides. Display, read aloud, reveal, one vote, then the move to Kew."],
+     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes."] ] },
+
+ { kind:"poem",
+   h:"The Man from Ironbark, stanza 1",
+   src:"A. B. Paterson, The Bulletin, 1892",
+   lines:["It was the man from Ironbark who struck the Sydney town,",
+          "He wandered over street and park, he wandered up and down.",
+          "He loitered here, he loitered there, till he was like to drop,",
+          "Until at last in sheer despair he sought a barber’s shop.",
+          "‘’Ere! shave my beard and whiskers off, I’ll be a man of mark,",
+          "I’ll go and do the Sydney toff up home in Ironbark.’"],
+   ends:["town","down","drop","shop","mark","Ironbark"],
+   tags:[{r:"A",m:"visitor + place"},{r:"A",m:"movement"},{r:"B",m:"problem"},
+         {r:"B",m:"decision"},{r:"C",m:"goal"},{r:"C",m:"plan"}],
+   scheme:"AABBCC",
+   ans:["A A B B C C","a step of the story in each line"],
+   notes:[
+     ["Display","Read stanza 1 aloud. Ask who is in it, where he is, and what he wants by the last line."],
+     ["Answer","Rhyme: town and down (A), drop and shop (B), mark and Ironbark (C). Story, line by line: the visitor and the place, he moves around, he has a problem, he makes a decision, he has a goal, he has a plan."],
+     ["Watch for","Ironbark is both a kind of tree and the name of the man’s home town. Line 2 has park in the middle, but the rhyme sits on the last word of the line."],
+     ["Ask","“Who is in the stanza? Where is he? What does he want to do by line 6?”"],
+     ["If students disagree","A vote that line 1 rhymes with line 2 on Ironbark and park is common. Park is inside line 2. Read the last word of each line: town, down."],
+     ["Teaching point","A ballad tells its story in order, a step to a line. The rhymed pairs keep the pace."] ] },
+
+ { kind:"poem",
+   h:"Rhythm",
+   sub:"Say it aloud. Tap the beat.",
+   src:"A. B. Paterson, The Bulletin, 1892",
+   lines:["It was the man from Ironbark who struck the Sydney town,",
+          "He wandered over street and park, he wandered up and down.",
+          "He loitered here, he loitered there, till he was like to drop,",
+          "Until at last in sheer despair he sought a barber’s shop.",
+          "‘’Ere! shave my beard and whiskers off, I’ll be a man of mark,",
+          "I’ll go and do the Sydney toff up home in Ironbark.’"],
+   ends:["town","down","drop","shop","mark","Ironbark"],
+   tags:[{m:"about 7 beats"},{m:"about 7 beats"},{m:"about 7 beats"},
+         {m:"about 7 beats"},{m:"about 7 beats"},{m:"about 7 beats"}],
+   ans:["About 7 beats in every line","the rhyme word lands on the last beat"],
+   notes:[
+     ["Display","Say it aloud together and tap the beat on the desk. Tap on the strong syllables, not on every word."],
+     ["Answer","About 7 beats in each line. The last tap lands on the rhyme word: town, down, drop, shop, mark, Ironbark."],
+     ["Ask","“Where does your last tap land in line 1? In line 2?”"],
+     ["If students disagree","A count near 14 is the syllables. Beats are the bigger taps. Line 1 has about 14 syllables and about 7 beats, so a beat falls on about every second syllable."],
+     ["Teaching point","A ballad keeps the same beat from line to line. That is why it can be read aloud or sung, and why a rewrite has to keep the beat as well as the rhyme."] ] },
+
+ { kind:"vote",
+   ask:"Who says lines 5 and 6?",
+   key:"Fingers: the number of your choice.",
+   src:"A. B. Paterson, The Bulletin, 1892",
+   first:5,
+   lines:["‘’Ere! shave my beard and whiskers off, I’ll be a man of mark,",
+          "I’ll go and do the Sydney toff up home in Ironbark.’"],
+   ends:["mark","Ironbark"],
+   opts:["The narrator","The barber","The man from Ironbark","The poet, Paterson"],
+   hitOpt:2, fingers:4,
+   ans:["3. The man from Ironbark","the quotation marks show direct speech","I’ll and I’ll: he is speaking about himself"],
+   notes:[
+     ["Display","Who says lines 5 and 6? Find the quotation marks first. Fingers up on my signal."],
+     ["Answer","3. The man from Ironbark. The quotation marks show he is speaking, and I’ll be and I’ll go are him talking about himself. Lines 1 to 4 are the narrator, who says he."],
+     ["Ask","“Find the quotation marks. Who is the I in these lines?”"],
+     ["If students disagree","One finger usually means the narrator was chosen because the stanza starts with the narrator. The narrator says he. These lines say I. Two fingers: the barber has not appeared yet. He is in stanza 2."],
+     ["Teaching point","Direct speech changes the voice. He is the narrator, I is the character speaking. The pronoun and the quotation marks tell you who is talking."] ] },
+
+ { kind:"move",
+   h:"Ironbark to Kew",
+   sub:"Ironbark becomes Kew.",
+   src:"A. B. Paterson, The Bulletin, 1892",
+   first:5,
+   from:{ label:"Paterson",
+          lines:["‘’Ere! shave my beard and whiskers off, I’ll be a man of [c:mark],",
+                 "I’ll go and do the Sydney toff up home in [s:Ironbark].’"] },
+   to:{ label:"Kew",
+        lines:["‘’Ere! shave my beard and whiskers off, I’ll be a man of [c:mark],",
+               "I’ll go and do the Sydney toff up home in [s:Kew].’"] },
+   ans:["Ironbark becomes Kew","mark no longer rhymes with it","mark has to become a word like you, new or through"],
+   notes:[
+     ["Display","Paterson’s lines 5 and 6. Say them aloud. Then: Ironbark becomes Kew. Say line 6 with Kew in it. Does it still rhyme with line 5?"],
+     ["Answer","Line 6 now ends in Kew, which does not rhyme with mark. Line 5 has to change as well: mark becomes a word that rhymes with Kew, such as you, new or through. The rewrite starts with only Ironbark swapped for Kew."],
+     ["Ask","“What is the rhyme pair? Which word did we change? Which word has to change to match it?”"],
+     ["If students disagree","If someone says Kew and mark still rhyme, have them say both and listen to the vowel. Mark has the sound in car. Kew has the sound in you."],
+     ["Teaching point","Changing one word can break a rhyme pair. To keep A A, B B, C C, change the partner word or reshape the line."] ] },
+
+ { kind:"go",
+   h:"Rewrite",
+   mod:"Ballads",
+   line:"Open Ballads. Do Rewrite: six lines, and Ironbark is now Kew.",
+   notes:[
+     ["Say","Open Ballads and go to Rewrite. Six lines. Ironbark is now Kew, so check what that does to your rhymes."],
+     ["Keys","Left: back. Home: the first slide."] ] }
+];
+
+/* The words on the slide frame, in the grammar session decks' wording. */
+const FRAME = {
+  code:   "PO",
+  know:   "What you need to know",
+  reveal: "Reveal and model",
+  vote:   "Vote with your fingers, scan the room before revealing.",
+  legend: [["s","Changed word"],["c","Rhyme to fix"]]
+};
+/* ===================== end of content ===================== */
+
+/* Line-art icons from the grammar session decks, inlined so the file works
+   offline. f1 to f4 are the finger votes; there is no fist icon in the decks. */
+const ICONS = {
+ f1:'<svg viewBox="0 0 63.89 63.89" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.95" cy="31.95" r="30.98" stroke="#751400" stroke-width="1.94" fill="#FFFFFF"/><path d="M29.91 28.01C29.47 27.44 29.28 26.8 29.29 26.07 29.31 21.33 29.29 16.59 29.29 11.85 29.29 10.94 29.08 10.12 28.39 9.48 27.53 8.68 26.54 8.38 25.41 8.73 24.32 9.06 23.6 9.78 23.33 10.91 23.25 11.23 23.23 11.57 23.23 11.9 23.23 17.76 23.23 23.62 23.23 29.49"/><path d="M37.07 28.58C36.83 28.18 36.57 27.8 36.36 27.39 35.42 25.54 32.86 25.28 31.57 26.68 31.27 27 30.97 27.31 30.67 27.63"/><path d="M29.06 29.62C28.76 29.76 28.44 29.81 28.11 29.81 26.88 29.81 25.65 29.81 24.41 29.81 24.22 29.81 24 29.84 23.85 29.75 23.37 29.49 22.94 29.64 22.47 29.8 22 29.96 21.5 30.01 21.05 30.28 20.4 30.67 19.93 31.19 19.68 31.9 18.87 34.18 18.04 36.45 17.42 38.78 16.8 41.1 17.27 43.29 18.6 45.26 19.85 47.12 21.18 48.93 22.48 50.77 23.09 51.64 23.43 52.58 23.39 53.66 23.36 54.26 23.39 54.86 23.39 55.46"/><path d="M42.42 32.8C42.94 33.02 43.49 33 44.03 33.03 45.12 33.08 46.57 34.36 46.61 35.84 46.63 36.81 46.25 37.6 45.74 38.35 45.2 39.14 45.03 40.05 44.85 40.96 44.83 41.05 44.85 41.14 44.93 41.25 45.43 41.87 45.55 42.61 45.45 43.37 45.31 44.42 45.12 45.45 44.76 46.46 44.24 47.95 43.45 49.26 42.42 50.43 41.76 51.18 41.21 51.98 41.1 52.99 41.01 53.81 41.01 54.63 41.1 55.45"/><path d="M37.4 40.62C37.6 41.01 37.7 41.43 37.84 41.85 38.21 42.96 38.97 43.73 40.15 43.93 41.45 44.14 42.54 43.72 43.27 42.57 43.66 41.96 44.06 41.39 44.79 41.15"/><path d="M32.14 38.11C32.39 38.39 32.55 38.72 32.71 39.06 33.46 40.54 34.83 41.09 36.51 40.76 37.32 40.6 37.67 40.16 38.03 39.54 38.96 37.92 39.94 36.32 40.86 34.7 41.24 34.03 41.72 33.45 42.25 32.91 42.31 32.85 42.41 32.84 42.39 32.72 42.26 31.95 42.64 31.23 42.55 30.44 42.43 29.3 41.38 28.19 40.4 27.93 39.57 27.71 38.81 27.89 38.02 28.2 37.29 28.48 36.93 28.94 36.67 29.68 36.39 30.47 35.94 31.24 35.28 31.82"/><path d="M32.56 33.89C32.23 34 31.9 34.12 31.61 34.32 30.4 35.13 29.03 35.53 27.63 35.82 27.12 35.93 26.77 36.26 26.35 36.5"/><path d="M23.56 35.9C24.43 35.85 25.22 36.13 26.02 36.4 26.19 36.46 26.37 36.48 26.45 36.68 26.83 37.69 27.68 38.29 28.5 38.89 28.84 39.14 29.08 39.37 29.17 39.8 29.27 40.28 29.63 40.64 29.92 41.03 30.97 42.49 31.82 44.06 32.38 45.77 32.4 45.84 32.44 45.9 32.47 45.96"/><path d="M29.86 29.19C30.42 29.66 31.07 29.87 31.8 29.81 32.94 29.71 33.69 30.2 34.08 31.28 34.19 31.6 34.39 31.88 34.55 32.18"/><path d="M33.46 33.89C33.6 34.62 33.49 35.29 33.09 35.93 32.74 36.49 32.46 37.08 32.27 37.72 32.21 37.92 32.08 38.05 31.86 38.17 30.96 38.63 29.94 38.77 29.05 39.24"/></g></svg>',
+ f2:'<svg viewBox="0 0 63.98 63.98" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.99" cy="31.99" r="31.02" stroke="#751400" stroke-width="1.94" fill="#FFFFFF"/><path d="M29.1 28.85C28.55 28.38 27.55 27.22 27.35 26.49 26.17 22.11 25.16 16.12 24.19 11.48 24 10.59 23.63 9.83 22.82 9.35 21.82 8.74 20.78 8.65 19.74 9.23 18.74 9.78 18.18 10.63 18.15 11.79 18.15 12.12 18.19 12.46 18.26 12.78 19.46 18.52 20.67 24.26 21.87 29.99"/><path d="M29.1 29.36C28.8 29.5 28.48 29.55 28.15 29.55 26.92 29.55 25.69 29.55 24.45 29.55 24.26 29.55 24.04 29.58 23.89 29.49 23.41 29.23 22.98 29.38 22.51 29.54 22.04 29.7 21.54 29.75 21.09 30.02 20.44 30.41 19.97 30.93 19.72 31.64 18.82 34.19 18.01 36.47 17.46 38.52 16.84 40.84 17.31 43.03 18.64 45 19.89 46.86 21.22 48.67 22.52 50.51 23.13 51.38 23.47 52.32 23.43 53.4 23.4 54 23.43 54.6 23.43 55.2"/><path d="M42.47 32.84C42.99 33.06 43.54 33.04 44.08 33.07 45.17 33.12 46.62 34.4 46.66 35.88 46.68 36.85 46.3 37.64 45.79 38.39 45.25 39.18 45.08 40.09 44.9 41 44.88 41.09 44.9 41.18 44.98 41.29 45.48 41.91 45.6 42.65 45.5 43.41 45.36 44.46 45.17 45.49 44.81 46.5 44.29 47.99 43.5 49.3 42.47 50.47 41.81 51.22 41.26 52.02 41.15 53.03 41.06 53.85 41.06 54.67 41.15 55.49"/><path d="M37.44 40.66C37.64 41.05 37.74 41.47 37.88 41.89 38.25 43 39.01 43.77 40.19 43.97 41.49 44.18 42.58 43.76 43.31 42.61 43.7 42 44.1 41.43 44.83 41.19"/><path d="M32.18 38.15C32.43 38.43 32.59 38.76 32.75 39.1 33.5 40.58 34.87 41.13 36.55 40.8 37.36 40.64 37.71 40.2 38.07 39.58 39 37.96 39.98 36.36 40.9 34.74 41.28 34.07 41.76 33.49 42.29 32.95 42.35 32.89 42.45 32.88 42.43 32.76 42.3 31.99 42.68 31.27 42.59 30.48 42.47 29.34 41.42 28.23 40.44 27.97 39.61 27.75 38.85 27.93 38.06 28.24 37.33 28.52 36.97 28.98 36.71 29.72 36.43 30.51 35.98 31.28 35.32 31.86"/><path d="M32.61 33.63C32.28 33.74 31.95 33.86 31.66 34.06 30.45 34.87 29.08 35.27 27.68 35.56 27.17 35.67 26.82 36 26.4 36.24"/><path d="M23.6 35.64C24.47 35.59 25.26 35.87 26.06 36.14 26.23 36.2 26.41 36.22 26.49 36.42 26.87 37.43 27.72 38.03 28.54 38.63 28.88 38.88 29.12 39.11 29.21 39.54 29.31 40.02 29.67 40.38 29.96 40.77 31.01 42.23 31.86 43.8 32.42 45.51 32.44 45.58 32.48 45.64 32.51 45.7"/><path d="M36.72 28.14C36.4 27.49 36.34 26.83 36.48 26.11 37.41 21.46 38.31 16.81 39.23 12.16 39.41 11.27 39.35 10.42 38.8 9.66 38.11 8.71 37.2 8.22 36.02 8.35 34.89 8.47 34.04 9.03 33.56 10.08 33.42 10.38 33.34 10.71 33.27 11.04 32.13 16.79 31.01 22.54 29.88 28.3"/><path d="M29.91 28.93C30.47 29.4 31.12 29.61 31.85 29.55 32.99 29.45 33.74 29.94 34.13 31.02 34.24 31.34 34.44 31.62 34.6 31.92"/><path d="M33.51 33.63C33.65 34.36 33.54 35.03 33.14 35.67 32.79 36.23 32.51 36.82 32.32 37.46 32.26 37.66 32.74 37.23 31.91 37.91"/></g></svg>',
+ f3:'<svg viewBox="0 0 62.73 62.73" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.36" cy="31.36" r="30.41" stroke="#751400" stroke-width="1.9" fill="#FFFFFF"/><path d="M28.47 28.23C27.92 27.76 26.92 26.6 26.72 25.87 25.54 21.49 24.53 15.5 23.56 10.86 23.37 9.97 23 9.21 22.19 8.73 21.19 8.12 20.15 8.03 19.11 8.61 18.11 9.16 17.55 10.01 17.52 11.17 17.52 11.5 17.56 11.84 17.63 12.16 18.83 17.9 20.04 23.64 21.24 29.37"/><path d="M28.47 29.04C28.17 29.18 27.85 29.23 27.52 29.23 26.29 29.23 25.06 29.23 23.82 29.23 23.63 29.23 23.41 29.26 23.26 29.17 22.78 28.91 22.35 29.06 21.88 29.22 21.41 29.38 20.91 29.43 20.46 29.7 19.81 30.09 19.34 30.61 19.09 31.32 18.28 33.6 17.45 35.87 16.83 38.2 16.21 40.52 16.68 42.71 18.01 44.68 19.26 46.54 20.59 48.35 21.89 50.19 22.5 51.06 22.84 52 22.8 53.08 22.77 53.68 22.8 54.28 22.8 54.88"/><path d="M41.84 32.21C42.36 32.43 42.91 32.41 43.45 32.44 44.54 32.49 45.99 33.77 46.03 35.25 46.05 36.22 45.67 37.01 45.16 37.76 44.62 38.55 44.45 39.46 44.27 40.37 44.25 40.46 44.27 40.55 44.35 40.66 44.85 41.28 44.97 42.02 44.87 42.78 44.73 43.83 44.54 44.86 44.18 45.87 43.66 47.36 42.87 48.67 41.84 49.84 41.18 50.59 40.63 51.39 40.52 52.4 40.43 53.22 40.43 54.04 40.52 54.86"/><path d="M37.82 39.26C37.68 39.68 37.32 40.79 37.45 41.2 37.82 42.31 38.38 43.15 39.56 43.34 40.86 43.55 41.95 43.13 42.68 41.98 43.07 41.37 43.47 40.8 44.2 40.56"/><path d="M36.07 29.07C36.33 28.33 37.31 27.24 37.51 26.59 38.55 24.4 41.76 16.42 44.21 12.91 44.8 12.07 45.83 11.55 46.82 11.8 51.83 13.05 44.21 25.42 41.95 29.84 41.59 30.54 41.66 31.35 41.79 32.12 41.81 32.24 41.71 32.25 41.65 32.31 40.52 33.11 37.91 38.61 37.63 39.88"/><path d="M33.97 31.74C33.37 33.1 31.28 33.74 31.03 33.73 29.82 34.54 28.45 34.94 27.05 35.23 26.54 35.34 26.19 35.67 25.77 35.91"/><path d="M22.98 35.32C23.85 35.27 24.64 35.55 25.44 35.82 25.61 35.88 25.79 35.9 25.87 36.1 26.25 37.11 27.1 37.71 27.92 38.31 28.26 38.56 28.5 38.79 28.59 39.22 28.69 39.7 29.05 40.06 29.34 40.45 30.39 41.91 31.24 43.48 31.8 45.19 31.82 45.26 31.86 45.32 31.89 45.38"/><path d="M29.28 28.61C29.84 29.08 30.49 29.29 31.22 29.23 32.36 29.13 33.11 29.62 33.5 30.7 33.61 31.02 33.81 31.3 33.97 31.6"/><path d="M35.83 28C35.68 27.7 35.21 26.35 35.3 25.62 35.89 20.92 36.45 16.21 37.02 11.5 37.13 10.6 37.02 9.76 36.41 9.04 35.66 8.14 34.71 7.72 33.54 7.93 32.42 8.13 31.61 8.76 31.21 9.84 31.1 10.15 31.03 10.49 30.99 10.81 30.28 16.63 29.58 22.45 28.87 28.27"/></g></svg>',
+ f4:'<svg viewBox="0 0 63.63 63.63" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#751400" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="31.81" cy="31.81" r="30.85" stroke="#751400" stroke-width="1.93" fill="#FFFFFF"/><path d="M25.5 28.03C25.4 27.53 25.31 26.97 25.09 26.11 24.45 23.52 22.23 14.82 21.54 12.24 21.21 11.01 20.41 10.22 19.19 9.96 17.96 9.7 16.9 10.14 16.14 11.14 15.52 11.96 15.46 12.91 15.71 13.86 16.41 16.53 17.13 19.19 17.86 21.85 18.43 23.94 19.01 26.03 19.57 28.12 19.65 28.41 19.64 28.72 19.67 29.03"/><path d="M32.02 29.51C31.45 28.89 31.29 28.17 31.29 27.31 31.32 23.87 31.96 14.44 31.98 11 31.99 9.37 30.85 7.98 29.05 7.86 27.86 7.78 26.69 8.4 26.05 9.86 25.86 10.28 25.77 10.78 25.76 11.24 25.73 14.16 25.51 23.31 25.5 26.23 25.5 26.61 25.53 27.41 25.45 27.79"/><path d="M30.55 30.32C29.91 29.39 28.98 29.3 27.96 29.36 27.27 29.4 26.56 29.46 25.9 29.14 25.84 29.11 25.73 29.11 25.67 29.14 25.2 29.41 24.69 29.38 24.18 29.38 23.08 29.38 21.98 29.38 20.88 29.38 20.77 29.38 20.64 29.42 20.55 29.38 19.95 29.09 19.38 29.26 18.77 29.36 17.43 29.58 16.46 30.25 16.02 31.49 15.24 33.67 14.53 35.88 13.86 38.09 13.14 40.45 13.54 42.69 14.87 44.73 16.16 46.7 17.56 48.61 18.93 50.53 19.55 51.4 19.82 52.36 19.83 53.4 19.83 54.2 19.8 54.99 19.79 55.79"/><path d="M37.67 55.78C37.67 54.85 37.67 53.93 37.67 53 37.67 52.04 38.08 51.23 38.68 50.52 40.64 48.17 41.93 45.51 42.6 42.53 42.89 41.24 43.03 39.93 43.07 38.61 43.1 37.65 43.12 36.69 43.18 35.74 43.2 35.48 43.34 35.22 43.46 34.98 44.63 32.7 47.72 26.51 48.89 24.23 49.28 23.47 49.68 22.72 49.98 21.93 50.47 20.63 49.67 19.16 48.65 18.54 47.52 17.85 46.19 17.83 45.28 18.91 44.87 19.09 41.12 27.2 40.66 27.85 40.41 28.2 39.2 29.91 38.94 30.26 38.52 29.5 38.9 27.83 39.11 27 39.38 25.93 40.36 21.8 40.62 20.73 41.21 18.38 42.18 14.22 42.12 13.29 42 12.24 41.84 11.55 40.91 10.97 39.19 9.9 36.87 10.7 36.33 12.75 35.52 15.82 34.12 24.88 33.34 27.96 33.26 28.28 32.28 29.32 32.12 29.62"/><path d="M20.01 35.42C20.79 35.37 21.48 35.7 22.21 35.89 22.35 35.92 22.44 36.13 22.55 36.26 22.82 36.61 23.05 37.01 23.37 37.3 25.8 39.46 27.61 42.03 28.77 45.06 28.86 45.29 28.9 45.54 28.96 45.78"/><path d="M30.63 30.45C30.63 31.05 30.59 31.9 30.01 32.38 29.35 32.92 28.72 33.51 27.99 33.95 26.74 34.71 25.36 35.17 23.89 35.38 23.39 35.45 22.93 35.77 22.45 35.98"/></g></svg>',
+ book:'<svg viewBox="0 0 63.12 63.12" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="31.56" cy="31.56" r="30.58" stroke="#751400" stroke-width="1.95" fill="#FFFFFF"/><path d="M31.21 50.29C24.37 47.5 15.26 48.71 10.14 49.45L10.14 18.23C17.17 17.43 25.37 16.59 31.28 19.11L31.28 50.24C31.28 50.24 31.24 50.31 31.2 50.29Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.38 50.83C38.89 48.33 45.7 48.27 52.07 49.58L52.07 18.56C46.45 16.03 38.02 16.33 31.28 19.65L31.28 50.76C31.28 50.76 31.33 50.84 31.37 50.82Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.36 50.03C24.89 47.09 17.37 46.56 12.19 47.65L12.19 16.43C18.95 15.63 25.75 16.33 31.43 18.85L31.43 49.98C31.43 49.98 31.39 50.05 31.35 50.03Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.52 50.02C38.75 47.1 44.65 46.19 50.13 47.64L50.13 16.43C44.73 13.9 37.91 15.52 31.43 18.85L31.43 49.96C31.43 49.96 31.48 50.04 31.52 50.02Z" stroke="#751400" stroke-width="0.68" fill="none"/><path d="M31.36 50.03C25.86 45.89 18.57 44.88 14.07 45.97L14.02 14.79C20.1 13.99 25.75 16.34 31.44 18.86L31.44 49.99C31.44 49.99 31.4 50.06 31.36 50.04Z" stroke="#89181A" stroke-width="0.68" fill="#FFFFFF"/><path d="M31.4 50.02C37.2 45.95 44.5 44.77 48.52 45.83L48.57 13.8C44.15 12.74 37.52 15.66 31.31 18.84L31.31 49.95C31.31 49.95 31.36 50.04 31.4 50.01Z" stroke="#89181A" stroke-width="0.68" fill="#FFFFFF"/><path d="M16.65 19.27C20.1 19.14 24.33 20.82 28.71 22.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 22.27C20.1 22.14 24.33 23.82 28.71 25.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 25.27C20.1 25.14 24.33 26.82 28.71 28.8" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 28.26C20.1 28.13 24.33 29.81 28.71 31.79" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 31.26C20.1 31.13 24.33 32.81 28.71 34.79" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 34.25C20.1 34.12 24.33 35.8 28.71 37.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 37.25C20.1 37.12 24.33 38.8 28.71 40.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M16.65 40.25C20.1 40.12 24.33 41.8 28.71 43.78" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 18.89C42.38 18.76 38.06 20.67 33.61 22.65" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 21.88C42.38 21.75 38.06 23.66 33.61 25.64" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 24.88C42.38 24.75 38.06 26.66 33.61 28.64" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 27.87C42.38 27.74 38.06 29.65 33.61 31.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 30.87C42.38 30.74 38.06 32.65 33.61 34.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 33.87C42.38 33.74 38.06 35.65 33.61 37.63" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 36.86C42.38 36.73 38.06 38.64 33.61 40.62" stroke="#791214" stroke-width="0.91" fill="none"/><path d="M45.89 39.86C42.38 39.73 38.06 41.64 33.61 43.62" stroke="#791214" stroke-width="0.91" fill="none"/></svg>',
+ think:'<svg viewBox="0 0 64.09 64.09" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="32.04" cy="32.04" r="31.07" stroke="#751400" stroke-width="1.95" fill="#FFFFFF"/><path d="M23.82 41.74C25.14 41.64 26.11 42.28 26.61 43.4 27.46 45.31 26.05 47.44 23.88 47.41 21.81 47.37 20.27 44.89 21.74 42.78" stroke="#751400" stroke-width="1.18" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M20.39 49.24C19.33 49.2 18.73 49.81 18.63 50.8 18.55 51.58 19.4 52.36 20.21 52.39 20.95 52.42 21.94 51.71 21.8 50.61" stroke="#751400" stroke-width="0.89" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M40.53 32.49C40.9 32.49 41.21 32.49 41.54 32.83 41.89 33.21 42.47 33.64 42.92 33.6 43.96 33.51 44.94 33.09 45.35 31.99 45.46 31.69 45.61 31.4 45.68 31.08L45.44 30.53C45.41 30.78 45.55 31 45.75 31 46.37 31 46.98 31.23 47.59 31.19 49.28 31.07 50.74 30.45 51.76 29 53.73 26.2 52.51 22.17 49.12 21.11 48.7 20.98 48.52 20.72 48.39 20.36 47.79 18.69 46.58 17.73 44.9 17.29 44.65 17.23 44.41 17.24 44.16 17.24 43.46 17.24 43.23 17.32 42.98 16.32 42.78 15.53 42.39 14.81 41.84 14.17 40.28 12.35 38.32 11.79 36.02 12.22 35.6 12.3 35.26 12.54 34.92 12.77L35.53 14.48C35.44 13.89 35.1 13.41 34.83 12.9 34.63 12.52 34.11 12.4 33.74 12.18 32.39 11.39 30.94 10.86 29.35 10.74 25.36 10.42 22.33 12.05 20.05 15.23 19.62 15.84 19.34 16.54 19.06 17.24 18.89 17.67 18.83 18.11 18.08 18.07 16.3 17.98 14.69 18.56 13.37 19.81 12.07 21.04 11.34 22.53 11.29 24.34 11.21 27.4 12.64 29.52 15.39 30.76 16.26 31.15 17.19 31.29 18.14 31.26 18.35 31.26 18.57 31.33 18.77 31.36 19.01 31.95 18.74 32.53 18.77 33.09 18.84 34.37 19.21 35.57 20.04 36.58 22.1 39.08 25.55 39.33 28.08 37.46 28.76 36.96 29.55 36.25 30.04 35.64 30.39 35.32 30.39 35.34 30.52 35.17L28.81 37.01C29.08 37.3 29.35 37.58 29.6 37.87 31.69 40.23 34.3 41.06 37.31 40.24 40.58 39.34 42.37 37.06 42.83 33.71" stroke="#751400" stroke-linecap="round" stroke-linejoin="round" fill="#FFFFFF"/><path d="M15.06 52.82C15.12 52.92 15.19 53.02 15.24 53.13 15.42 53.51 15.78 53.59 16.09 53.48 16.42 53.36 16.66 53.02 16.57 52.65 16.48 52.29 16.25 51.98 15.79 52.03 15.71 52.03 15.63 52.03 15.55 52.03" stroke="#751400" stroke-width="0.59" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>'
+};
+
+const TAGS = {s:"changed word", v:"long and short", p:"", c:"rhyme to fix"};
+const RUN = /\[([a-z]+):([^\[\]]*)\]/g;
+const esc = t => String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* The markup with the brackets taken away: the words as the source has them. */
+function plain(m){ return m.replace(RUN, (x,k,t) => t); }
+
+/* The markup as runs: [{t:"Kew", k:"s"}, {t:" and ", k:""}, ...] */
+function runsOf(m){
+  const out = []; let last = 0;
+  m.replace(RUN, (x, k, t, at) => {
+    if(at > last) out.push({t: m.slice(last, at), k: ""});
+    out.push({t, k});
+    last = at + x.length;
+    return x;
+  });
+  if(last < m.length) out.push({t: m.slice(last), k: ""});
+  return out;
+}
+
+/* The runs of one poem line. On a reveal that shows a rhyme letter, the end
+   word is marked (k "e"), so the rhyme is underlined where it sits. */
+function lineRuns(t, end, rev, markEnd){
+  if(rev && /\[[a-z]+:/.test(t)) return runsOf(t);
+  const p = plain(t);
+  if(rev && markEnd && end){
+    const i = p.lastIndexOf(end);
+    if(i >= 0){
+      const out = [];
+      if(i > 0) out.push({t:p.slice(0,i), k:""});
+      out.push({t:end, k:"e"});
+      if(i + end.length < p.length) out.push({t:p.slice(i + end.length), k:""});
+      return out;
+    }
+  }
+  return [{t:p, k:""}];
+}
+
+/* What shows to the right of a line on the reveal: [{t, k:"r"|"n"|"m"}]. */
+function tagParts(tag){
+  const o = [];
+  if(!tag) return o;
+  if(tag.r) o.push({t:tag.r, k:"r"});
+  if(tag.n != null) o.push({t:tag.n + " syllables", k:"n"});
+  if(tag.m) o.push({t:tag.m, k:"m"});
+  return o;
+}
+
+/* The rows of a poem, vote or move slide, for the display (rev false) or the
+   reveal (rev true). Both the web page and the PowerPoint build read this. */
+function rowsOf(sl, rev){
+  const rows = [], start = sl.first || 1;
+  const lines = (L, ends, tags, hit, shown, label) => {
+    if(label) rows.push({type:"label", text:label, hidden:!shown});
+    L.forEach((t, i) => rows.push({
+      type:"line", no:start + i, hidden:!shown,
+      runs: lineRuns(t, ends && ends[i], rev && shown, !!(tags && tags[i] && tags[i].r)),
+      tag: tags ? tagParts(tags[i]) : [], tagOn: rev && shown,
+      hit: !!(rev && hit && hit.indexOf(i) >= 0) }));
+  };
+  if(sl.kind === "move"){
+    lines(sl.from.lines, null, null, null, true, sl.from.label);
+    rows.push({type:"gap"});
+    lines(sl.to.lines, null, null, null, rev, sl.to.label);
+    return rows;
+  }
+  lines(sl.lines, sl.ends, sl.tags, sl.hit, true, null);
+  if(sl.opts){
+    rows.push({type:"gap"});
+    sl.opts.forEach((o, i) => rows.push({type:"line", no:i + 1, hidden:false, tag:[], tagOn:false,
+      runs:[{t:o, k:""}], hit: !!(rev && sl.hitOpt === i) }));
+  }
+  return rows;
+}
+
+/* The last alphabetic word of a line, for checking the "ends" lists. */
+function lastWord(s){ return (s.match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g) || []).pop() || ""; }
+
+/* Every problem a hand edit to the content block could cause. If there are
+   any, the deck shows them instead of a slide. */
+function problems(){
+  const out = [];
+  const look = (m, where) => {
+    m.replace(RUN, (x,k) => { if(!TAGS[k]) out.push(`${where}: unknown part "${k}"`); return x; });
+    if(/[\[\]]/.test(m.replace(RUN, ""))) out.push(`${where}: a bracket is not closed or not opened`);
+  };
+  const poemLines = (sl, w) => {
+    const n = sl.lines.length;
+    if(!n) out.push(w + ": no lines");
+    if(sl.ends){
+      if(sl.ends.length !== n) out.push(w + ": ends and lines are not the same length");
+      sl.lines.forEach((t, i) => { if(sl.ends[i] && lastWord(t).toLowerCase() !== sl.ends[i].toLowerCase())
+        out.push(`${w}: line ${i+1} ends in "${lastWord(t)}", not "${sl.ends[i]}"`); });
+    }
+    if(sl.tags){
+      if(sl.tags.length !== n) out.push(w + ": tags and lines are not the same length");
+      const count = {};
+      sl.tags.forEach(t => { if(t && t.r) count[t.r] = (count[t.r] || 0) + 1; });
+      Object.keys(count).forEach(r => { if(count[r] < 2) out.push(`${w}: rhyme letter ${r} is used once`); });
+      if(sl.scheme && sl.tags.map(t => t.r || "-").join("") !== sl.scheme)
+        out.push(`${w}: the letters ${sl.tags.map(t => t.r || "-").join("")} are not ${sl.scheme}`);
+    }
+    if(sl.hit) sl.hit.forEach(h => { if(!(h >= 0 && h < n)) out.push(w + ": hit is not a line"); });
+  };
+  SLIDES.forEach((sl, i) => {
+    const w = "Slide " + (i+1);
+    if(!sl.notes || !sl.notes.length) out.push(w + ": no teacher notes");
+    if(sl.kind === "title"){
+      look(sl.rule, w);
+      if(!sl.key || !sl.key.length) out.push(w + ": no key");
+    } else if(sl.kind === "poem"){
+      if(!sl.h) out.push(w + ": no heading");
+      poemLines(sl, w);
+      if(!sl.tags) out.push(w + ": a poem slide needs tags");
+    } else if(sl.kind === "vote"){
+      if(!sl.ask || !sl.key) out.push(w + ": a vote needs ask and key");
+      poemLines(sl, w);
+      if(!(sl.fingers >= 1 && sl.fingers <= 4)) out.push(w + ": fingers must be 1 to 4");
+      if(sl.opts && !(sl.hitOpt >= 0 && sl.hitOpt < sl.opts.length)) out.push(w + ": hitOpt is not an option");
+      if(!sl.opts && !(sl.hit && sl.hit.length)) out.push(w + ": a vote with no options needs a hit line");
+      if(sl.opts && sl.opts.length !== sl.fingers) out.push(w + ": one option for each finger");
+    } else if(sl.kind === "move"){
+      ["from","to"].forEach(s => (sl[s].lines || []).forEach(m => look(m, w + " " + s)));
+      if(sl.from.lines.length !== sl.to.lines.length) out.push(w + ": from and to have different numbers of lines");
+      if(sl.from.lines.map(plain).join("|") === sl.to.lines.map(plain).join("|")) out.push(w + ": nothing changes");
+    } else if(sl.kind === "go"){
+      if(!sl.line || !sl.h) out.push(w + ": a pointer slide needs h and line");
+    } else out.push(w + ": unknown kind " + sl.kind);
+    if(sl.kind !== "title" && sl.kind !== "go" && !(sl.ans && sl.ans.length)) out.push(w + ": no reveal lines");
+  });
+  return out;
+}
+
+/* ---------- state: in memory only, nothing is saved ---------- */
+const at = {i:0, rev:false};
+const $ = id => document.getElementById(id);
+const canReveal = i => /^(poem|vote|move)$/.test(SLIDES[i].kind);
+
+function forward(){
+  if(canReveal(at.i) && !at.rev) at.rev = true;
+  else if(at.i < SLIDES.length-1){ at.i++; at.rev = false; }
+  render();
+}
+function back(){
+  if(at.rev) at.rev = false;
+  else if(at.i > 0){ at.i--; at.rev = canReveal(at.i); }
+  render();
+}
+function next(){ if(at.i < SLIDES.length-1){ at.i++; at.rev = false; render(); } }
+function toggleReveal(){ if(canReveal(at.i)){ at.rev = !at.rev; render(); } }
+function toggleNotes(){
+  const on = document.body.classList.toggle("notes");
+  $("bNotes").setAttribute("aria-pressed", on);
+  fit();
+}
+
+/* The markup as HTML. Runs of k "e" are the marked end words. */
+function runsHtml(runs){
+  return runs.map(r =>
+    r.k === "e" ? `<span class="e">${esc(r.t)}</span>`
+    : r.k ? `<span class="k-${r.k}"><span class="b">${esc(r.t)}</span></span>`
+    : esc(r.t)).join("");
+}
+const marked = m => runsHtml(runsOf(m));
+
+function rowHtml(r){
+  if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
+  if(r.type === "gap") return `<div class="gap"></div>`;
+  const tag = r.tag.map(p => `<span class="${p.k}">${esc(p.t)}</span>`).join("");
+  return `<div class="row${r.hit ? " hit" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
+    `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
+}
+
+/* The finger icons for a vote: 1 to 4, never worked out from the answer. */
+function icons(sl){
+  if(sl.kind === "title" || sl.kind === "go") return ["book"];
+  if(at.rev) return ["think"];
+  if(sl.kind === "vote") return [1,2,3,4].slice(0, sl.fingers).map(j => "f" + j);
+  return ["book"];
+}
+
+function render(){
+  const sl = SLIDES[at.i], n = SLIDES.length;
+  $("count").textContent = `${at.i+1} / ${n}`;
+  $("bBack").disabled = at.i === 0 && !at.rev;
+  $("bNext").disabled = at.i === n-1;
+  $("bReveal").disabled = !canReveal(at.i);
+  $("bReveal").setAttribute("aria-pressed", at.rev);
+  const isVote = sl.kind === "vote" && !at.rev;
+  $("slide").className = `is-${sl.kind}` + (at.rev ? " rev" : "") + (isVote ? " vote" : "");
+
+  let html = "", h = "", sub = "", foot = "";
+  const ans = () => `<div class="ans">${sl.ans.map(a => `<span class="chip">${esc(a)}</span>`).join("")}</div>`;
+  if(sl.kind === "title"){
+    h = FRAME.know; sub = sl.h;
+    html = `<p class="rule fitme">${marked(sl.rule)}</p>
+      <p class="key">${sl.key.map(k => `<span class="no">${esc(k[0])}</span>${esc(k[1])}`).join("<br>")}</p>`;
+  } else if(sl.kind === "go"){
+    h = sl.h; sub = sl.mod;
+    html = `<p class="go fitme">${esc(sl.line)}</p>`;
+  } else {
+    const rows = rowsOf(sl, at.rev);
+    if(sl.kind === "vote"){ h = at.rev ? FRAME.reveal : sl.ask; sub = at.rev ? sl.ask : sl.key; }
+    else { h = at.rev ? FRAME.reveal : sl.h; sub = at.rev ? sl.h : (sl.sub || ""); }
+    html = `<div class="rows fitme">${rows.map(rowHtml).join("")}</div>` +
+      `<p class="src">${esc(sl.src)}</p>${ans()}`;
+    if(sl.kind === "move") foot = at.rev ? `<span class="legend">` + FRAME.legend.map(l =>
+      `<span class="k-${l[0]}"><span class="b">${esc(l[1])}</span></span>`).join("") + `</span>` : "";
+    else foot = (sl.kind === "vote" && !at.rev) ? esc(FRAME.vote) : "";
+  }
+  $("h").textContent = h;
+  $("sub").textContent = sub;
+  $("icons").innerHTML = icons(sl).map(k => ICONS[k] || "").join("");
+  $("wrap").innerHTML = html;
+  $("foot").innerHTML = foot;
+  $("code").textContent = FRAME.code;
+  $("notes").innerHTML = sl.notes.map(r =>
+    `<div class="nrow"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("");
+  fit();
+}
+
+/* The slide is the largest 16:9 box that fits under the control strip (and
+   above the notes, when they are open). Returns the scale against a
+   1280 x 720 slide. */
+function size(){
+  const f = $("frame"), s = $("slide");
+  const W = f.clientWidth - 16, H = f.clientHeight - 8;
+  const w = Math.max(160, Math.floor(Math.min(W, H * 16 / 9)));
+  s.style.width = w + "px";
+  s.style.height = Math.floor(w * 9 / 16) + "px";
+  s.style.setProperty("--k", (w / 1280).toFixed(4));
+  return w / 1280;
+}
+
+/* Largest type that fits the slide in one view. The tags and the answer lines
+   are present but hidden on the display, so the size does not change when
+   the reveal comes and nothing jumps. Sizes are for a 1280 x 720 slide. */
+const SIZES = {title:[60,32], go:[48,28], poem:[34,14], vote:[34,14], move:[34,14]};
+function fit(){
+  const k = size();
+  const sl = SLIDES[at.i], el = document.querySelector(".fitme");
+  if(!el) return;
+  const ans = document.querySelector(".ans");
+  if(ans) ans.classList.remove("hide");
+  const stage = $("stage"), wrap = $("wrap");
+  const fits = () => wrap.offsetHeight <= stage.clientHeight && wrap.scrollWidth <= wrap.clientWidth + 1
+    && el.scrollWidth <= el.clientWidth + 1
+    && ![...el.querySelectorAll(".tx")].some(t => t.scrollWidth > t.clientWidth + 1);
+  let [s, min] = SIZES[sl.kind].map(v => Math.round(v * k));
+  el.style.fontSize = s + "px";
+  while(s > min && !fits()){ s -= 1; el.style.fontSize = s + "px"; }
+  if(ans && !at.rev) ans.classList.add("hide");
+}
+
+/* ---------- controls ---------- */
+$("bBack").addEventListener("click", back);
+$("bNext").addEventListener("click", next);
+$("bReveal").addEventListener("click", toggleReveal);
+$("bNotes").addEventListener("click", toggleNotes);
+/* A mouse click should not leave a button focused, or the next Space would
+   press it again instead of moving the deck on. Tab focus is unaffected. */
+document.querySelectorAll("#bar button").forEach(b =>
+  b.addEventListener("mousedown", e => e.preventDefault()));
+document.addEventListener("keydown", e => {
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const onControl = /^(BUTTON|A)$/.test(e.target.tagName);
+  if(onControl && (e.key === " " || e.key === "Enter")) return;
+  if(e.key === "ArrowRight" || e.key === " " || e.key === "PageDown"){ e.preventDefault(); forward(); }
+  else if(e.key === "ArrowLeft" || e.key === "PageUp"){ e.preventDefault(); back(); }
+  else if(e.key === "n" || e.key === "N"){ e.preventDefault(); toggleNotes(); }
+  else if(e.key === "Home"){ e.preventDefault(); at.i = 0; at.rev = false; render(); }
+  else if(e.key === "End"){ e.preventDefault(); at.i = SLIDES.length-1; at.rev = false; render(); }
+});
+addEventListener("resize", fit);
+
+/* #4 opens on slide 4, #4r on its reveal, so a lesson plan can link straight in. */
+(function start(){
+  const bad = problems();
+  if(bad.length){
+    size();
+    $("wrap").innerHTML = `<p class="broken">The content block has a problem, so the deck will not run:\n${esc(bad.join("\n"))}</p>`;
+    return;
+  }
+  const h = /^#(\d+)(r?)$/.exec(location.hash);
+  if(h){ const i = +h[1]-1; if(i >= 0 && i < SLIDES.length){ at.i = i; at.rev = !!h[2] && canReveal(i); } }
+  render();
+})();
+</script>
+</body>
+</html>
