@@ -102,6 +102,9 @@ rt{font:700 calc(var(--k)*15px)/1 var(--font);font-style:normal;letter-spacing:.
 .pass .s{display:block;margin:0 0 .55em;border-radius:4px}
 .pass .s:last-child{margin-bottom:0}
 .len + .src{margin-top:calc(var(--k)*16px)}
+.ctx + .len .bars{height:calc(var(--k)*170px)}
+.ctx{font-size:calc(var(--k)*23px);line-height:1.35;margin:0 0 calc(var(--k)*14px);padding-left:calc(var(--k)*14px);
+     border-left:calc(var(--k)*5px) solid var(--maroon)}
 .rev .pass .s.hit{outline:2px solid var(--maroon);outline-offset:.1em;text-decoration:underline;
                   text-decoration-thickness:.07em;text-underline-offset:.15em}
 .bars{display:flex;align-items:flex-end;gap:calc(var(--k)*18px);height:calc(var(--k)*290px)}
@@ -228,23 +231,42 @@ const SLIDES = [
      ["Teaching point","Put the judgement you want remembered last: after but, or in the main clause after an although clause."] ] },
 
  { kind:"length",
-   src:"The Guardian, review of Dear Santa · “the former”: the first film named, the kids movie",
-   context:"From a review of Dear Santa, a Christmas comedy.",
-   ask:"Which sentence is the reviewer’s verdict?",
+   src:"The Courier Mail",
+   context:"A persuasive article. The writer has just described the problem. Now they want the reader to feel it must stop.",
+   ask:"Which sentence fits here?",
    key:"Fingers: 1 or 2.",
    sentences:[
-     "We’re trapped between a sweet-natured kids movie full of life lessons about family and acceptance and a black-hearted adult comedy about a devil trying to steal the soul of a pre-teen.",
-     "Unsurprisingly, and less interestingly, the former wins out." ],
+     "That is why I think that, as parents, teachers and young people, we should all start to think seriously about whether this is something we want to keep on accepting.",
+     "This has to change." ],
    lands:1,
-   after:"the long sentence sets out the two films; the short one judges them",
+   tag:"fits",
+   answer:"Sentence 2 fits: 4 words, straight after the problem",
+   after:"Sentence 2 is the writer’s. Sentence 1 is a rewrite: it says the same thing slowly, so the push is lost.",
    notes:[
-     ["Display","“This is from a review of Dear Santa, a Christmas comedy. Which sentence is the reviewer’s verdict?” Fingers: 1 or 2."],
-     ["Answer","Sentence 2. Sentence 1 sets out the two films the reviewer is stuck between, in 31 words. Sentence 2 judges them in 8. The verdict hits hard because the long sentence comes first."],
-     ["Gloss","“the former” means the first of the two things just named: the sweet-natured kids movie."],
-     ["Ask","Read both sentences aloud. “What does the long one let the reviewer do? What does the short one do?”"],
-     ["If students disagree","One finger usually means the long sentence was read as the judgement because it has the strong words (sweet-natured, black-hearted). Ask: “Does it say which film is better?” It only describes them. Then: “What would weaken sentence 2?” Put it first, or stretch it with a reason."],
-     ["Choppy version","Read aloud, not on screen: “We’re trapped between two films. One is a sweet kids movie. One is a dark adult comedy. The kids movie wins.” Every sentence the same length, so the verdict does not stand out."],
-     ["Teaching point","A short sentence after a long one makes a verdict stand out. Long sentences allow nuance and analysis. The contrast does the work; a run of short sentences reads as choppy."] ] }
+     ["Display","Read the context aloud. “Which sentence fits here?” Fingers: 1 or 2."],
+     ["Answer","Sentence 2, “This has to change.” The writer has spent a paragraph on the problem. Four words after that hit hard."],
+     ["Ask","“Both sentences say the same thing. What does the long one do to the push?”"],
+     ["If students disagree","One finger usually means the long one sounded more grown-up. Read sentence 1 aloud, then sentence 2. “Which one would make you stop and think?”"],
+     ["Teaching point","A short sentence after a long build-up makes the point stand out. Use it for the line you want remembered."] ] },
+
+ { kind:"length",
+   src:"Perfect Fudgy Brownies, inspiredtaste.net",
+   context:"A recipe. The reader is deciding whether to bake these brownies.",
+   ask:"Which sentence fits here?",
+   key:"Fingers: 1 or 2.",
+   sentences:[
+     "They are super easy to make, taste like rich dark chocolate, have the fudgiest middles, and have crinkly, shiny tops.",
+     "They are easy and fudgy." ],
+   lands:0,
+   tag:"fits",
+   answer:"Sentence 1 fits: every detail the reader needs to decide",
+   after:"Sentence 1 is the recipe writer’s. Sentence 2 is a rewrite: short, but it drops the details that sell the brownies.",
+   notes:[
+     ["Display","Read the context aloud. “Which sentence fits here?” Fingers: 1 or 2."],
+     ["Answer","Sentence 1. The reader is deciding whether to bake, so they need the details: easy, rich, fudgy, crinkly. One long sentence lists them all."],
+     ["Ask","“What does sentence 2 leave out? Would it make you bake them?”"],
+     ["If students disagree","Two fingers usually means short was taken as always better after the last slide. “Short worked for a push. What job does this sentence have?” It sells, so it needs the details."],
+     ["Teaching point","Length follows the job. Short for a verdict or a push. Long when the reader needs the detail."] ] }
 ];
 
 /* The words on the slide frame, in the grammar session decks' wording. */
@@ -300,7 +322,8 @@ function words(s){ return s.trim().split(/\s+/).filter(w => /[A-Za-z0-9]/.test(w
 function lengthAns(sl){
   const n = sl.sentences.map(words), i = sl.lands;
   const before = n.slice(Math.max(0,i-2), i);
-  return [`Sentence ${i+1} is the verdict: ${n[i]} words, after ${before.join(" and ")}`, sl.after];
+  if(sl.answer) return [sl.answer, sl.after];
+  return [`Sentence ${i+1}: ${n[i]} words, after ${before.join(" and ")}`, sl.after];
 }
 
 /* Every problem a hand edit to the content block could cause. If there are
@@ -386,13 +409,13 @@ function render(){
     foot = at.rev ? legend() : esc(FRAME.vote);
   } else if(sl.kind === "length"){
     h = at.rev ? FRAME.reveal : sl.ask;
-    sub = at.rev ? sl.ask : [sl.context, sl.key].filter(Boolean).join(" ");
+    sub = at.rev ? sl.ask : sl.key;
     const counts = sl.sentences.map(words), max = Math.max(...counts);
-    html = `<div class="len">
+    html = `${sl.context ? `<p class="ctx">${esc(sl.context)}</p>` : ""}<div class="len">
         <p class="pass fitme">${sl.sentences.map((s,j) =>
           `<span class="s${j===sl.lands?" hit":""}"><span class="no">${j+1}.</span>${esc(s)}</span>`).join(" ")}</p>
         <div class="bars" aria-label="Words per sentence">${counts.map((c,j) =>
-          `<div class="col${j===sl.lands?" hit":""}"><span class="tag">verdict</span><span class="num">${j+1}</span>
+          `<div class="col${j===sl.lands?" hit":""}"><span class="tag">${esc(sl.tag || "fits")}</span><span class="num">${j+1}</span>
              <div class="barbox"><div class="bar" style="height:${(c/max*100).toFixed(1)}%"></div></div>
              <span class="wc">${c} <small>words</small></span></div>`).join("")}</div>
       </div>

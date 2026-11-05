@@ -82,8 +82,9 @@ D.SLIDES.forEach((sl, i) => {
   if(sl.kind === "length"){
     const counts = sl.sentences.map(D.words);
     const nums = sl.sentences.map((s, j) => "f" + (j + 1)).filter(k => D.ICONS[k]);
-    const base = { n, kind: "length", sentences: sl.sentences, counts, lands: sl.lands, src: sl.src, notes: notes(sl) };
-    states.push(Object.assign({}, base, { rev: false, bg: "F7F0F1", h: sl.ask, sub: [sl.context, sl.key].filter(Boolean).join(" "), icons: nums,
+    const base = { n, kind: "length", sentences: sl.sentences, counts, lands: sl.lands, src: sl.src,
+      context: sl.context || "", tag: sl.tag || "fits", notes: notes(sl) };
+    states.push(Object.assign({}, base, { rev: false, bg: "F7F0F1", h: sl.ask, sub: sl.key, icons: nums,
       ans: [], foot: D.FRAME.vote }));
     states.push(Object.assign({}, base, { rev: true, bg: "FFFFFF", h: D.FRAME.reveal, sub: sl.ask, icons: ["think"],
       ans: D.lengthAns(sl).map(runs), foot: "" }));

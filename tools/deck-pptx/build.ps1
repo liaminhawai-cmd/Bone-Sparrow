@@ -187,6 +187,14 @@ foreach($st in $spec.states){
     }
   }
   elseif($st.kind -eq "length"){
+    # The context, if the slide has one, sits above the sentences with a maroon rule.
+    $top = 118
+    if($st.context){
+      # Left column only, so it never runs over the bars on the right.
+      $rule = $s.Shapes.AddShape(1, $L, $top, 4, 54); $rule.Line.Visible = 0; $rule.Fill.ForeColor.RGB = $C.head
+      [void](TextBox $s ($L + 14) $top 526 54 @( (Para @(@{ t=$st.context }) 19) ) $true)
+      $top = 184
+    }
     $paras = @()
     for($j=0; $j -lt $st.sentences.Count; $j++){
       $hit = $st.rev -and ($j -eq $st.lands)
@@ -194,7 +202,7 @@ foreach($st in $spec.states){
       if($hit){ $body.underline=$true; $body.color=$C.head }
       $paras += (Para @(@{ t=("" + ($j+1) + ".  "); bold=$true; color=$C.numgrey }, $body) 22 @{ before=($(if($j -gt 0){14}else{0})) })
     }
-    [void](TextBox $s $L 118 540 270 $paras $true)
+    [void](TextBox $s $L $top 540 (388 - $top) $paras $true)
     # Bars: words per sentence, worked out by extract.js from the same text.
     $max = ($st.counts | Measure-Object -Maximum).Maximum
     $bw = 80; $bgap = 40; $bottom = 380; $bmax = 210; $x0 = 660
@@ -205,7 +213,7 @@ foreach($st in $spec.states){
       $bar = $s.Shapes.AddShape(1, $x, $bottom - $hgt, $bw, $hgt)
       $bar.Line.Visible = 0
       $bar.Fill.ForeColor.RGB = $(if($hit){ $C.head } else { $C.bar })
-      [void](TextBox $s $x ($bottom - $hgt - 24) $bw 20 @( (Para @(@{ t=$(if($hit){"VERDICT  " + ($j+1)} else {"" + ($j+1)}); bold=$true; color=$(if($hit){$C.head}else{$C.grey}) }) 13 @{ align=2 }) ) $false)
+      [void](TextBox $s $x ($bottom - $hgt - 24) $bw 20 @( (Para @(@{ t=$(if($hit){($st.tag.ToUpper() + "  " + ($j+1))} else {"" + ($j+1)}); bold=$true; color=$(if($hit){$C.head}else{$C.grey}) }) 13 @{ align=2 }) ) $false)
       [void](TextBox $s ($x - 10) ($bottom + 4) ($bw + 20) 22 @( (Para @(@{ t=("" + $st.counts[$j] + " words"); bold=$true }) 16 @{ align=2 }) ) $false)
     }
     [void](TextBox $s $L 392 540 20 @( (Para @(@{ t=$st.src; color=$C.grey }) 13) ) $false)
