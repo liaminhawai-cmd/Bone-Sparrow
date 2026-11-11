@@ -58,8 +58,24 @@ D.SLIDES.forEach((sl, i) => {
     return;
   }
   if(sl.kind === "go"){
-    states.push({ n, kind: "go", bg: "FFFFFF", h: sl.h, sub: sl.mod, icons: ["book"], line: sl.line,
-      foot: "", notes: notes(sl) });
+    const st = { n, kind: "go", bg: "FFFFFF", h: sl.h, sub: sl.mod, icons: ["book"], line: sl.line,
+      foot: "", notes: notes(sl) };
+    /* Optional: the line as a link, a watch link in place of a video player,
+       numbered questions under the line. Relative links point at the live site. */
+    const abs = u => D.FRAME.site ? new URL(u, D.FRAME.site).href : u;
+    if(sl.href) st.href = abs(sl.href);
+    if(sl.video) st.link = { t: sl.video.label, href: abs(sl.video.watch) };
+    if(sl.list) st.list = sl.list;
+    states.push(st);
+    return;
+  }
+  if(sl.kind === "cols"){
+    /* Two places side by side; the reveal shows the turned-around pair. */
+    const base = { n, kind: "cols", src: sl.src, notes: notes(sl) };
+    states.push(Object.assign({}, base, { rev: false, bg: "FFFFFF", h: sl.h, sub: sl.sub || "", icons: ["book"],
+      cols: sl.cols, ans: [], foot: "" }));
+    states.push(Object.assign({}, base, { rev: true, bg: "FFFFFF", h: D.FRAME.reveal, sub: sl.h, icons: ["think"],
+      cols: sl.turned, ans: sl.ans.map(a => [{ t: a, k: "" }]), foot: "" }));
     return;
   }
   if(/^(poem|vote|move)$/.test(sl.kind)){
@@ -75,7 +91,8 @@ D.SLIDES.forEach((sl, i) => {
       rows: rowState(false), ans: [], foot: isVote ? D.FRAME.vote : "" }));
     const rv = Object.assign({}, base, { rev: true, bg: "FFFFFF", h: D.FRAME.reveal, sub: isVote ? sl.ask : sl.h,
       icons: ["think"], rows: rowState(true), ans: sl.ans.map(a => [{ t: a, k: "" }]), foot: "" });
-    if(sl.kind === "move") rv.footRuns = D.FRAME.legend.map(l => ({ t: l[1], k: l[0] }));
+    const lg = sl.kind === "move" ? D.FRAME.legend : sl.legend;
+    if(lg) rv.footRuns = lg.map(l => ({ t: l[1], k: l[0] }));
     states.push(rv);
     return;
   }

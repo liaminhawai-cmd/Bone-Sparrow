@@ -24,6 +24,8 @@ on:
       - "SentenceFluencyDeck.pptx"
       - "PoetryDeck.html"
       - "PoetryDeck.pptx"
+      - "BalladsDeck.html"
+      - "BalladsDeck.pptx"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -93,6 +95,8 @@ jobs:
           cp SentenceFluencyDeck.pptx dist/
           cp PoetryDeck.html dist/
           cp PoetryDeck.pptx dist/
+          cp BalladsDeck.html dist/
+          cp BalladsDeck.pptx dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/

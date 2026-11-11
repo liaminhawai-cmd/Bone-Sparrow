@@ -124,7 +124,45 @@ foreach($st in $spec.states){
     [void](TextBox $s $L 118 $BODYW 370 $paras $true)
   }
   elseif($st.kind -eq "go"){
-    [void](TextBox $s $L 170 $BODYW 200 @( (Para @(@{ t=$st.line }) 36) ) $true)
+    # Optional: numbered questions under the line, the line as a link, and a
+    # watch link where the web page has a video player.
+    $paras = @( (Para @(@{ t=$st.line }) 36) ); $gh = 200
+    if($st.list){
+      $j = 0
+      foreach($q in $st.list){ $j++; $paras += (Para @(@{ t=("" + $j + "   "); bold=$true; color=$C.numgrey }, @{ t=$q }) 26 @{ before=10 }) }
+      $gh = 300
+    }
+    $tb = TextBox $s $L 170 $BODYW $gh $paras $true
+    if($st.href){ $tb.TextFrame.TextRange.ActionSettings(1).Hyperlink.Address = $st.href }
+    if($st.link){
+      $lk = TextBox $s $L 400 $BODYW 30 @( (Para @(@{ t=$st.link.t; color=$C.head; underline=$true }) 22) ) $false
+      $lk.TextFrame.TextRange.ActionSettings(1).Hyperlink.Address = $st.link.href
+      [void](TextBox $s $L 432 $BODYW 20 @( (Para @(@{ t=$st.link.href; color=$C.grey }) 13) ) $false)
+    }
+  }
+  elseif($st.kind -eq "cols"){
+    # Two places side by side, a thin rule between them.
+    $cw = 400; $cg = 40
+    for($j=0; $j -lt $st.cols.Count; $j++){
+      $col = $st.cols[$j]
+      $paras = @( (Para @(@{ t=$col.label; bold=$true; color=$C.head }) 15),
+                  (Para @(@{ t=$col.place; bold=$true }) 30 @{ before=2 }) )
+      foreach($it in $col.items){ $paras += (Para @(@{ t=$it }) 22 @{ before=6 }) }
+      [void](TextBox $s ($L + $j * ($cw + $cg)) 122 $cw 250 $paras $true)
+    }
+    $ln = $s.Shapes.AddLine(($L + $cw + $cg / 2), 122, ($L + $cw + $cg / 2), 360)
+    $ln.Line.ForeColor.RGB = $C.bar; $ln.Line.Weight = 1.5
+    [void](TextBox $s $L 384 700 20 @( (Para @(@{ t=$st.src; color=$C.grey }) 13) ) $false)
+    if($st.ans.Count){
+      $paras = @(); $first = $true
+      foreach($a in $st.ans){
+        $runs = @($a | ForEach-Object { KindRun $_ })
+        if($first){ $runs = @($runs | ForEach-Object { $_.bold=$true; if(-not $_.k){ $_.color=$C.head }; $_ }) }
+        $paras += (Para $runs 20 @{ before=($(if($first){0}else{2})); indent=40 })
+        $first = $false
+      }
+      [void](TextBox $s $L 410 $BODYW 80 $paras $true)
+    }
   }
   elseif($st.kind -eq "rows"){
     # Poem, vote and move slides: number, line, then the tag shown on the reveal.
@@ -236,7 +274,9 @@ foreach($st in $spec.states){
 if(Test-Path $target){ Remove-Item $target -Force }
 $pres.SaveAs($target, 24)
 $pres.Close()
-$ppt.Quit()
+# PowerPoint runs one instance, so this may be the teacher's own open copy.
+# Quit only when nothing else is open in it.
+if($ppt.Presentations.Count -eq 0){ $ppt.Quit() }
 [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($ppt)
 
 # Empty the author fields and say where the file comes from.
