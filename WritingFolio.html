@@ -142,7 +142,8 @@ function mfStatus(){
 function vocabStatus(){
   const V = readJSON("writingfolio.vocabhub.v1");
   if(!V || !V.lessons) return "";
-  const done = Object.keys(V.lessons).filter(id=>V.lessons[id] && V.lessons[id].applyDone).length;
+  /* Lessons 01 to 08 are the folio sets; 09 on are the ballad word sets, counted on their own cards. */
+  const done = Object.keys(V.lessons).filter(id=>/^0[1-8]$/.test(id) && V.lessons[id] && V.lessons[id].applyDone).length;
   return done ? done+" of 8 done" : (Object.keys(V.lessons).length ? "in progress" : "");
 }
 

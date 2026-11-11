@@ -129,6 +129,7 @@
   .dtag.camp{color:var(--hazard-d);background:var(--hazardbg)}
   .dtag.feeling{color:var(--people-d);background:var(--peoplebg)}
   .dtag.world{color:var(--water-d);background:var(--waterbg)}
+  .dtag.ballad{color:var(--people-d);background:var(--peoplebg)}
 
   /* ---- word builder ---- */
   .buildword{font-family:Georgia,serif;font-size:22px;text-align:center;margin-bottom:2px;color:var(--muted)}
@@ -325,7 +326,7 @@
 
 <div class="screen active" id="scr-home">
   <h1>Writing Folio Vocab Hub</h1>
-  <p class="subtitle">Lessons 01 to 08</p>
+  <p class="subtitle">Lessons 01 to 09</p>
   <div id="home-map"></div>
   <div class="homerow">
     <div class="panelcard">
@@ -405,7 +406,8 @@
 "use strict";
 /* ============================================================
    WRITING FOLIO VOCAB HUB
-   Companion to the Year 7 English Writing Folio, Lessons 01 to 08.
+   Companion to the Year 7 English Writing Folio, Lessons 01 to 08, plus
+   one set of ballad words (09, The Man from Ironbark) to meet before reading the poem.
    Same build as the Bone Sparrow Vocab Hub, with the unit's words
    split lesson by lesson; scores live under their own key, sign-in
    is the suite's shared profile.
@@ -1390,6 +1392,214 @@ const LESSONS = [
         a:"Conveyed the feeling without naming it", opts:["Conveyed the feeling without naming it","Proofread the sentence","Resolved the problem","Added a rhetorical question"],
         explain:"The feeling travels to the reader by another road: it is <b>conveyed</b>, not stated." } ] },
   ] },
+
+/* ================= 09 BALLAD WORDS: THE MAN FROM IRONBARK =================
+   Glosses and word-parts are the ones in Ballads.html (its BALLAD data block),
+   so the two pages cannot disagree. Translations are that module's own.
+   Each eg is a line of the poem as printed there, with the stanza number.
+   A dash at the end of a poem line is left off the quotation. */
+{ id:"09", topic:"Part 6 · Ballad words", title:"Ballad words: The Man from Ironbark",
+  focus:"The Man from Ironbark, A. B. Paterson, 1892.",
+  words:[
+  { w:"Wandered", pos:"verb", domain:"ballad", type:"morph",
+    meaning:"Moved around without a clear route or purpose.",
+    eg:"He **wandered** over street and park, he wandered up and down. (The Man from Ironbark, stanza 1)",
+    tiles:[["wander","move without a fixed route"],["-ed","past tense"]],
+    decoys:[["-ing","action in progress"],["-er","a person who does an action"],["un-","not"]],
+    note:"Close in meaning to <b>loitered</b>: to wander is to keep moving with no route, to loiter is to hang around one place.",
+    apply:[
+      { id:"ap_bw_wand_cloze", type:"cloze",
+        before:"With no map and no track to follow, the stranger", after:"across the paddocks until sunset.",
+        a:"wandered", opts:["wandered","wondered","wavered","wanted"],
+        explain:"No fixed route is the clue: moving about with no plan is <b>wandered</b> (<i>wander</i> + <i>-ed</i>). <i>Wondered</i> means thought about something; <i>wavered</i> means could not decide." },
+      { id:"ap_bw_wand_scn", type:"scenario",
+        q:"A visitor reaches a big town with no plan. She walks down one street, turns into another and doubles back, never sure where she is going. Which describes her walking?",
+        a:"She wandered about", opts:["She wandered about","She marched to the station","She sprinted for the train","She hurried home again"],
+        explain:"Moving around with no clear route is <b>wandering</b>. Marching, sprinting and hurrying all have a place to get to." } ] },
+
+  { w:"Loitered", pos:"verb", domain:"ballad", type:"morph",
+    meaning:"Stayed or moved slowly in a place without an obvious purpose.",
+    eg:"He **loitered** here, he loitered there, till he was like to drop, (The Man from Ironbark, stanza 1)",
+    tiles:[["loiter","wait or move around idly"],["-ed","past tense"]],
+    decoys:[["-ing","action in progress"],["-ly","in this manner"],["re-","again"]],
+    note:"Wandered keeps moving; <b>loitered</b> hangs around one place with nothing to do.",
+    apply:[
+      { id:"ap_bw_loit_cloze", type:"cloze",
+        before:"The boys", after:"outside the shop for an hour, waiting for nothing in particular.",
+        a:"loitered", opts:["loitered","littered","loathed","lettered"],
+        explain:"Hanging around a place for no reason is <b>loitered</b> (<i>loiter</i> + <i>-ed</i>). <i>Littered</i> means dropped rubbish; <i>loathed</i> means hated." },
+      { id:"ap_bw_loit_scn", type:"scenario",
+        q:"Two people are in the same street. One is walking to the post office. The other has stood near the bank door for an hour with no reason. Who is loitering?",
+        a:"The one standing by the bank for no reason", opts:["The one standing by the bank for no reason","The one walking to the post office with a letter","Both, because they are both out in the street","Neither, because loitering only happens in crowds"],
+        explain:"Loitering is staying in a place without an obvious purpose. Walking to the post office has a purpose." } ] },
+
+  { w:"Despair", pos:"noun", domain:"ballad", type:"morph",
+    meaning:"A complete loss of hope.",
+    eg:"Until at last in sheer **despair** he sought a barber’s shop. (The Man from Ironbark, stanza 1)",
+    tiles:[["de-","away; without"],["spair","hope"]],
+    decoys:[["dis-","apart; not"],["re-","again"],["-ing","action in progress"]],
+    note:"To be without hope. It can also be a verb: to despair is to lose hope.",
+    apply:[
+      { id:"ap_bw_desp_cloze", type:"cloze",
+        before:"After the third dry year the farmer sat on the fence in", after:"and could not see how the farm would survive.",
+        a:"despair", opts:["despair","disrepair","desire","display"],
+        explain:"Having no hope left is <b>despair</b> (<i>de-</i> without + <i>spair</i> hope). <i>Disrepair</i> is about broken things; <i>desire</i> is wanting something." },
+      { id:"ap_bw_desp_scn", type:"scenario",
+        q:"A boy has searched all day for his lost dog and has run out of places to look. He sits down and says nothing. Which word fits his feeling?",
+        a:"Despair", opts:["Despair","Delight","Boredom","Pride"],
+        explain:"He has no hope left of finding the dog: <b>despair</b>. Delight and pride are good feelings; boredom is not caring." } ] },
+
+  { w:"Whiskers", pos:"noun", domain:"ballad", type:"morph",
+    meaning:"Hair growing on a man’s cheeks or around the mouth; facial hair.",
+    eg:"‘’Ere! shave my beard and **whiskers** off, I’ll be a man of mark, (The Man from Ironbark, stanza 1)",
+    tiles:[["whisker","a hair or group of facial hairs"],["-s","more than one"]],
+    decoys:[["-er","a person who does an action"],["-y","full of; having"],["-less","without"]],
+    note:"One hair or a small group is a whisker; <b>whiskers</b> names the whole growth on the face.",
+    apply:[
+      { id:"ap_bw_whisk_cloze", type:"cloze",
+        before:"The old shearer had grey", after:"down to his chest and a hat pulled low.",
+        a:"whiskers", opts:["whiskers","whispers","whisks","whiskeys"],
+        explain:"Hair on a man’s face is <b>whiskers</b> (<i>whisker</i> + <i>-s</i>). <i>Whispers</i> are quiet words; a <i>whisk</i> is a kitchen tool." },
+      { id:"ap_bw_whisk_scn", type:"scenario",
+        q:"A man shaves his cheeks and chin until his face is smooth. What has he cut off?",
+        a:"His whiskers", opts:["His whiskers","His eyebrows","His sideburns only","His freckles"],
+        explain:"Facial hair is <b>whiskers</b>. Eyebrows are not on the cheeks or chin, and freckles are marks on the skin, not hair." } ] },
+
+  { w:"Humorist", pos:"noun", domain:"ballad", type:"morph",
+    meaning:"A person skilled at making people laugh, especially through stories or writing.",
+    eg:"He was a **humorist** of note and keen at repartee, (The Man from Ironbark, stanza 2)",
+    tiles:[["humor","what is funny; comedy"],["-ist","a person who practises or specialises"]],
+    decoys:[["-less","without"],["-ic","relating to"],["-ous","full of"]],
+    note:"Australian spelling is <i>humour</i>; the <i>u</i> drops in <b>humorist</b>.",
+    apply:[
+      { id:"ap_bw_humo_cloze", type:"cloze",
+        before:"At the shearers’ dinner the", after:"had everyone laughing with one story after another.",
+        a:"humorist", opts:["humorist","humanist","optimist","hobbyist"],
+        explain:"A person who specialises in what is funny is a <b>humorist</b> (<i>humor</i> + <i>-ist</i>). <i>Optimist</i> and <i>hobbyist</i> end in <i>-ist</i> but have other roots." },
+      { id:"ap_bw_humo_scn", type:"scenario",
+        q:"A woman writes a funny column in the newspaper each week and tells jokes at dinners. Which word describes her?",
+        a:"A humorist", opts:["A humorist","A pessimist","A florist","A cyclist"],
+        explain:"<i>humor</i> (what is funny) + <i>-ist</i> (a person who specialises): <b>a humorist</b>. A pessimist expects the worst." } ] },
+
+  { w:"Tremendous", pos:"adjective", domain:"ballad", type:"morph",
+    meaning:"Extremely large, powerful or great.",
+    eg:"He lifted up his hairy paw, with one **tremendous** clout (The Man from Ironbark, stanza 6)",
+    tiles:[["tremend","cause awe or trembling; very great"],["-ous","full of; having the quality of"]],
+    decoys:[["-ic","relating to"],["-ful","full of"],["-ly","in this manner"]],
+    note:"Something <b>tremendous</b> is great enough to cause awe.",
+    apply:[
+      { id:"ap_bw_trem_cloze", type:"cloze",
+        before:"The wave hit the rocks with a", after:"crash that shook the whole jetty.",
+        a:"tremendous", opts:["tremendous","treacherous","tremulous","tedious"],
+        explain:"A crash that shakes a jetty is extremely great: <b>tremendous</b> (<i>tremend</i> + <i>-ous</i>). <i>Tremulous</i> means trembling lightly; <i>tedious</i> means boring." },
+      { id:"ap_bw_trem_scn", type:"scenario",
+        q:"A bushman hits a bully so hard that the bully falls over. The writer calls the hit tremendous. What does that tell you?",
+        a:"The hit was extremely powerful", opts:["The hit was extremely powerful","The hit was a gentle tap","The hit missed the bully","The hit was a joke between friends"],
+        explain:"<b>Tremendous</b> means extremely great or powerful. A gentle tap, a miss and a joke are all the opposite of tremendous." } ] },
+
+  { w:"Sought", pos:"verb", domain:"ballad", type:"origin",
+    meaning:"Looked for or tried to find.",
+    eg:"Until at last in sheer despair he **sought** a barber’s shop. (The Man from Ironbark, stanza 1)",
+    originQ:"<b>Sought</b> has no stem and ending to cut. In <i>The Man from Ironbark</i> the visitor ‘sought a barber’s shop’. What did he do?",
+    originA:"He looked for a barber’s shop",
+    originOpts:["He looked for a barber’s shop","He bought a barber’s shop","He fought in a barber’s shop","He thought about a barber’s shop"],
+    note:"Past tense of <i>seek</i>. The vowel changes (seek, sought), so it cannot be cut into a stem and <i>-ed</i>. <b>Struck</b> works the same way (strike, struck).",
+    apply:[
+      { id:"ap_bw_soug_cloze", type:"cloze",
+        before:"At the end of the long ride the travellers", after:"shelter from the storm in an old shearing shed.",
+        a:"sought", opts:["sought","bought","fought","thought"],
+        explain:"Looking for shelter is <b>sought</b>, the past tense of <i>seek</i>. <i>Bought</i> needs money, <i>fought</i> needs an enemy, and <i>thought</i> happens in the mind." },
+      { id:"ap_bw_soug_scn", type:"scenario",
+        q:"‘She sought the owner of the lost hat.’ What did she do?",
+        a:"She went looking for the owner", opts:["She went looking for the owner","She paid the owner for the hat","She fought the owner for the hat","She forgot about the owner"],
+        explain:"<b>Sought</b> is the past tense of <i>seek</i>: looked for or tried to find." } ] },
+
+  { w:"Toff", pos:"noun", domain:"ballad", type:"origin",
+    meaning:"An old mocking word for a fashionable upper-class person.",
+    eg:"I’ll go and do the Sydney **toff** up home in Ironbark.’ (The Man from Ironbark, stanza 1)",
+    originQ:"In <i>The Man from Ironbark</i> the visitor says he will ‘do the Sydney <b>toff</b>’. What is a toff?",
+    originA:"A fashionable, upper-class person",
+    originOpts:["A fashionable, upper-class person","A tough, hard-working country farmer","A lazy man who sleeps all day long","A barber who cuts hair very fast"],
+    note:"A slang word, used to mock. The speaker will ‘do the Sydney toff’: act the part of a fashionable city gentleman.",
+    apply:[
+      { id:"ap_bw_toff_cloze", type:"cloze",
+        before:"He wore a silk tie and shiny boots to look like a city", after:"at the races.",
+        a:"toff", opts:["toff","tough","tuft","tiff"],
+        explain:"A fashionable, upper-class person is a <b>toff</b>. <i>Tough</i> means hard to damage; a <i>tiff</i> is a small quarrel." },
+      { id:"ap_bw_toff_scn", type:"scenario",
+        q:"In The Man from Ironbark, the visitor says he will ‘do the Sydney toff’. What does he plan to do?",
+        a:"Act like a fashionable city gentleman", opts:["Act like a fashionable city gentleman","Win a fight against a rich city gentleman","Sell his farm to a rich city gentleman","Hide from every well-dressed city gentleman"],
+        explain:"A <b>toff</b> is a fashionable, upper-class person, so ‘do the toff’ means act the part." } ] },
+
+  { w:"Struck", pos:"verb", domain:"ballad", type:"origin",
+    meaning:"Reached or arrived in Sydney.",
+    eg:"It was the man from Ironbark who **struck** the Sydney town, (The Man from Ironbark, stanza 1)",
+    originQ:"Here <b>struck</b> does not mean ‘hit’. In <i>The Man from Ironbark</i>, what does it mean to have ‘struck the Sydney town’?",
+    originA:"To have arrived in Sydney",
+    originOpts:["To have arrived in Sydney","To have hit someone hard in Sydney","To have left Sydney and not come back","To have got stuck in Sydney for days"],
+    note:"Past tense of <i>strike</i>, which has many meanings. In this line ‘struck the town’ means reached it.",
+    apply:[
+      { id:"ap_bw_stru_cloze", type:"cloze",
+        before:"After three days on the road the drover finally", after:"the coastal town just as the shops were closing.",
+        a:"struck", opts:["struck","stuck","stroked","strung"],
+        explain:"Arriving at a place after a journey is <b>struck</b> in this old use, the past tense of <i>strike</i>. <i>Stuck</i> means unable to move." },
+      { id:"ap_bw_stru_scn", type:"scenario",
+        q:"In The Man from Ironbark, the man ‘struck the Sydney town’. What has just happened?",
+        a:"He has arrived in Sydney", opts:["He has arrived in Sydney","He has hit someone in Sydney","He has just left Sydney town","He has been stuck in Sydney"],
+        explain:"Here <b>struck</b> means reached or arrived at a place. The poem has not yet shown any fighting." } ] },
+
+  { w:"Repartee", pos:"noun", domain:"ballad", type:"origin",
+    meaning:"A quick exchange of clever, witty replies.",
+    eg:"He was a humorist of note and keen at **repartee**, (The Man from Ironbark, stanza 2)",
+    originQ:"In <i>The Man from Ironbark</i> the barber is ‘keen at <b>repartee</b>’. What is he good at?",
+    originA:"Quick, clever replies in a conversation",
+    originOpts:["Quick, clever replies in a conversation","Cutting hair quickly without a mirror","Running a barber shop all on his own","Telling long stories about the past"],
+    note:"English borrowed this word from French. Said ‘rep-ar-TEE’: the last syllable is stressed.",
+    apply:[
+      { id:"ap_bw_repa_cloze", type:"cloze",
+        before:"The two cousins were famous for their quick", after:": every joke was answered by a better one.",
+        a:"repartee", opts:["repartee","repeater","repertoire","repair"],
+        explain:"A fast back-and-forth of witty replies is <b>repartee</b>. A <i>repertoire</i> is a set of songs or skills a performer knows." },
+      { id:"ap_bw_repa_scn", type:"scenario",
+        q:"Two friends trade clever, funny replies for five minutes, each trying to top the other. What is this?",
+        a:"Repartee", opts:["Repartee","Whispers","Speeches","Lectures"],
+        explain:"Quick, witty replies passed back and forth are <b>repartee</b>. A speech is one person talking; a lecture is one person teaching." } ] },
+
+  { w:"Livid", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"Bluish-grey or dark purple, like a bruise.",
+    eg:"Upon the newly shaven skin it made a **livid** mark (The Man from Ironbark, stanza 4)",
+    originQ:"In <i>The Man from Ironbark</i> the razor leaves a <b>livid</b> mark on the skin. What does the mark look like?",
+    originA:"Dark purple, like a bruise",
+    originOpts:["Dark purple, like a bruise","Bright red, like fresh paint","Pale white, like chalk","Bright yellow, like a flower"],
+    note:"In the poem it is a colour: the colour of a bruise. Today people also use <b>livid</b> to mean furious, which is a different meaning.",
+    apply:[
+      { id:"ap_bw_livi_cloze", type:"cloze",
+        before:"A day after the fall, the bruise on his shin had turned a dark,", after:"purple.",
+        a:"livid", opts:["livid","vivid","lurid","lovely"],
+        explain:"The colour of a bruise is <b>livid</b>. <i>Vivid</i> means bright and clear; <i>lurid</i> means shockingly bright." },
+      { id:"ap_bw_livi_scn", type:"scenario",
+        q:"In The Man from Ironbark, the razor leaves a ‘livid mark’ on the skin. What does the mark look like?",
+        a:"Bluish-grey or dark purple, like a bruise", opts:["Bluish-grey or dark purple, like a bruise","Bright red and raw, like a fresh cut","Pale white and flat, like an old scar","Shiny gold and round, like a coin"],
+        explain:"<b>Livid</b> in this line is a colour: bluish-grey or dark purple, like a bruise." } ] },
+
+  { w:"Gloat", pos:"verb", domain:"ballad", type:"origin",
+    meaning:"Show pleasure at another person’s trouble or at your own expected success.",
+    eg:"He raised his hand, his brow grew black, he paused awhile to **gloat**, (The Man from Ironbark, stanza 4)",
+    originQ:"In <i>The Man from Ironbark</i> the barber ‘paused awhile to <b>gloat</b>’. What is he doing?",
+    originA:"Enjoying the trouble he is about to cause",
+    originOpts:["Enjoying the trouble he is about to cause","Feeling sorry for the trouble he has caused","Trying to remember what to do next","Asking the visitor to forgive him"],
+    note:"Gloating is usually unkind: the person enjoys someone else’s bad luck, or their own coming win. The barber pauses because he is enjoying the trick he is about to play.",
+    apply:[
+      { id:"ap_bw_gloa_cloze", type:"cloze",
+        before:"The champion stood over the beaten rival and began to", after:", enjoying every second of his trouble.",
+        a:"gloat", opts:["gloat","float","bloat","gloss"],
+        explain:"Enjoying someone else’s trouble is to <b>gloat</b>. <i>Float</i> and <i>bloat</i> only share the ending." },
+      { id:"ap_bw_gloa_scn", type:"scenario",
+        q:"A boy beats his brother at cards, then grins and says ‘Look how badly you lost!’ again and again. What is he doing?",
+        a:"Gloating over the win", opts:["Gloating over the win","Grieving for his brother","Gliding through the game","Groaning at his cards"],
+        explain:"Showing pleasure at another person’s loss is <b>gloating</b>." } ] },
+  ] },
+
 ];
 
 /* ---------------- KEY-WORD TRANSLATIONS ----------------
@@ -1456,6 +1666,21 @@ const TR = {
 "Resolution":{zh:"结局（问题的解决）",yue:"結局（問題的解決）",vi:"kết thúc (giải quyết vấn đề)",ar:"الحل (نهاية القصة)",fa:"گره‌گشایی (پایان داستان)"},
 "Refine":{zh:"润色（精炼）",yue:"潤色（精煉）",vi:"trau chuốt",ar:"يصقل (يحسّن)",fa:"پالایش کردن (بهبود دادن)"},
 "Convey":{zh:"传达",yue:"傳達",vi:"truyền đạt",ar:"ينقل (يوصل فكرة)",fa:"منتقل کردن"},
+/* Ballad words (lesson 09): copied from the Ironbark module in Ballads.html, with its
+   Mandarin, Cantonese, Vietnamese and Farsi. It has no Arabic, so that language shows
+   nothing for these words. */
+"Wandered":{"zh":"四处游荡","yue":"四處遊蕩","vi":"đi lang thang","fa":"بی‌هدف پرسه زد"},
+"Loitered":{"zh":"闲逛；逗留","yue":"閒逛；逗留","vi":"đi quanh quẩn; nấn ná","fa":"پرسه زد؛ بی‌هدف ماند"},
+"Despair":{"zh":"绝望","yue":"絕望","vi":"sự tuyệt vọng","fa":"ناامیدی کامل"},
+"Whiskers":{"zh":"胡须；络腮胡","yue":"鬍鬚；絡腮鬍","vi":"râu quai nón; ria","fa":"سبیل و موی صورت"},
+"Humorist":{"zh":"幽默家；爱讲笑话的人","yue":"幽默家；愛講笑話的人","vi":"nhà hài hước; người giỏi pha trò","fa":"طنزپرداز؛ شوخ‌طبع"},
+"Tremendous":{"zh":"巨大的；威力惊人的","yue":"巨大的；威力驚人的","vi":"cực lớn; mạnh khủng khiếp","fa":"بسیار بزرگ و نیرومند"},
+"Sought":{"zh":"寻找；寻求","yue":"尋找；尋求","vi":"tìm kiếm","fa":"جست‌وجو کرد"},
+"Toff":{"zh":"衣着讲究的上流人士（旧俚语）","yue":"衣著講究的上流人士（舊俚語）","vi":"người thượng lưu ăn diện (tiếng lóng cũ)","fa":"آدم اشرافی و شیک‌پوش (عامیانهٔ قدیمی)"},
+"Struck":{"zh":"到达悉尼城","yue":"到達雪梨城","vi":"đến thành phố Sydney","fa":"به شهر سیدنی رسید"},
+"Repartee":{"zh":"机智的对答","yue":"機智的對答","vi":"đối đáp dí dỏm","fa":"جواب‌های سریع و شوخ‌طبعانه"},
+"Livid":{"zh":"青紫色的（像淤青）","yue":"青紫色的（像淤青）","vi":"tím tái; thâm như vết bầm","fa":"کبود و مایل به بنفش"},
+"Gloat":{"zh":"幸灾乐祸地得意","yue":"幸災樂禍地得意","vi":"hả hê trước khó khăn của người khác","fa":"از گرفتاری دیگری با بدجنسی لذت بردن"},
 };
 
 const SVGS = { SVG_EVAP, SVG_BEND, SVG_OXBOW, SVG_GROUND };
@@ -1783,7 +2008,7 @@ function renderStudy(l){
   l.words.forEach(v=>{
     const map=(v.type==="origin")?"":morphLine(v);
     const d=document.createElement("div"); d.className="vcard";
-    const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT"}[v.domain]||v.domain;
+    const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT",ballad:"BALLAD"}[v.domain]||v.domain;
     d.innerHTML=`<div class="top"><span class="w">${(v.type==="origin")?esc(v.w):colourWord(v)}</span><span class="pos">${esc(v.pos)}</span>${trSpan(v.w)}
         <span class="dtag ${v.domain}">${domLabel}</span></div>
       <div class="meaning">${esc(v.meaning)}</div>
@@ -2568,7 +2793,7 @@ function drawGloss(q){
       const map=w.tiles
         ? morphLine(w)+" &nbsp;→&nbsp; <b>"+esc(w.w)+"</b>"
         : (w.note||"");
-      const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT"}[w.domain]||w.domain;
+      const domLabel={story:"WRITING CRAFT",world:"SENTENCES",camp:"ARGUMENT",feeling:"JUDGEMENT",ballad:"BALLAD"}[w.domain]||w.domain;
       const stt=wordState(w.w);
       html+=`<div class="vcard"><div class="top"><span class="w">${colourWord(w)}</span><span class="pos">${esc(w.pos)}</span>${trSpan(w.w)}
           <span class="wstate ${stt.k}">${esc(stt.label)}</span>
