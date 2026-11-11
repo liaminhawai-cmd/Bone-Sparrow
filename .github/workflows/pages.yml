@@ -26,6 +26,8 @@ on:
       - "PoetryDeck.pptx"
       - "BalladsDeck.html"
       - "BalladsDeck.pptx"
+      - "ClancyDeck.html"
+      - "ClancyDeck.pptx"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -97,6 +99,8 @@ jobs:
           cp PoetryDeck.pptx dist/
           cp BalladsDeck.html dist/
           cp BalladsDeck.pptx dist/
+          cp ClancyDeck.html dist/
+          cp ClancyDeck.pptx dist/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/

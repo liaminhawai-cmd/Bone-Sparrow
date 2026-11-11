@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ballads: projector</title>
+<title>The Man from Ironbark: projector</title>
 <style>
 :root{
   /* The grammar session decks' slide colours, measured from the .pptx. */
@@ -142,7 +142,7 @@ body.notes #notes{display:block}
 <body>
 <div id="bar">
   <a class="menulink" href="index.html">&#8962; Year 7 English</a>
-  <a class="menulink" href="Ballads.html">Ballads</a>
+  <a class="menulink" href="Ballads.html#ironbark">Ballads</a>
   <a class="menulink" href="WritingFolioVocabHub.html#set-09">Ballad words</a>
   <a class="menulink" href="BalladsDeck.pptx" download>Download PowerPoint</a>
   <span class="sp"></span>
@@ -209,7 +209,7 @@ const SLIDES = [
    notes:[
      ["Say","A ballad tells a story in verse. Today we take The Man from Ironbark apart: the story, the stanza, the rhyme, the syllables and the beat. When I ask a question, hold up your fingers on my signal: the number of your answer. For a rhyme question, 1 finger for yes, 2 for no."],
      ["Timing","Starter and video first. Slides 4 to 10 take about 15 minutes, under 2 minutes a slide: display, read aloud, fingers up, scan the room, reveal. Slides 12 and 13 come after the reading in Ballads."],
-     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes. BalladsDeck.html#12 opens slide 12; #14 opens Lesson 2."] ] },
+     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes. BalladsDeck.html#12 opens slide 12. Clancy of the Overflow is in ClancyDeck.html."] ] },
 
  { kind:"go",
    h:"Silent starter",
@@ -369,23 +369,23 @@ const SLIDES = [
 
  { kind:"vote",
    ask:"Which line has to change?",
-   key:"Ironbark is now Kew. Fingers: the number of the line.",
-   src:"A. B. Paterson, The Bulletin, 1892, with Ironbark changed to Kew",
-   lines:["It was the man from [s:Kew] who struck the Sydney [e:town],",
+   key:"The man from Ironbark is now the boy from Kew. Fingers: the number of the line.",
+   src:"A. B. Paterson, The Bulletin, 1892, with the man from Ironbark changed to the boy from Kew",
+   lines:["It was the [s:boy] from [s:Kew] who struck the Sydney [e:town],",
           "He wandered over street and park, he wandered up and down.",
           "He loitered here, he loitered there, till he was like to drop,",
           "Until at last in sheer despair he sought a barber’s shop.",
           "‘’Ere! shave my beard and whiskers off, I’ll be a man of [c:mark],",
           "I’ll go and do the Sydney toff up home in [s:Kew].’"],
    ends:["town","down","drop","shop","mark","Kew"],
-   tags:[{r:"A",m:"was Ironbark"},{r:"A"},{r:"B"},{r:"B"},{m:"no rhyme for Kew"},{m:"was Ironbark"}],
+   tags:[{r:"A",m:"was man from Ironbark"},{r:"A"},{r:"B"},{r:"B"},{m:"no rhyme for Kew"},{m:"was Ironbark"}],
    hit:[4], fingers:4,
    legend:[["s","Changed word"],["c","Rhyme to fix"]],
    ans:["Line 5","mark does not rhyme with Kew","line 5 needs a new last word that does"],
    notes:[
-     ["Display","Paterson’s stanza 1 with Ironbark changed to Kew in lines 1 and 6. Read it aloud. Which line has to change now? Five fingers is line 5. Scan the room before you reveal."],
+     ["Display","Paterson’s stanza 1 with the man from Ironbark changed to the boy from Kew in lines 1 and 6. Read it aloud. Which line has to change now? Five fingers is line 5. Scan the room before you reveal."],
      ["Answer","Line 5. Line 6 now ends in Kew, and mark does not rhyme with Kew. Line 1 still works: town and down still rhyme."],
-     ["Ask","“What rhymes with Kew?” Take answers and write them up: you, new, through, too, two, blue. Then rebuild line 5 together. Keep his voice: the man from the bush, talking. Keep about 7 beats: tap it."],
+     ["Ask","“What rhymes with Kew?” Take answers and write them up: you, new, through, too, two, blue. Then rebuild line 5 together. Keep his voice: the boy from Kew, talking. Keep about 7 beats: tap it."],
      ["Model","If the class is stuck: ‘’Ere! shave my beard and whiskers off, I’ll look as good as new, (’ere SHAVE my BEARD and WHIS-kers OFF, I’ll LOOK as GOOD as NEW: 7 beats)."],
      ["If students disagree","Some say line 1 has to change too. Its partner is line 2, and town and down still rhyme. Only the C pair broke."],
      ["Watch for","Kew has one syllable and Ironbark has three, so lines 1 and 6 are now a beat short. Tap line 6 to hear it. A stronger writer can fix that as well: up home in leafy Kew."],
@@ -396,147 +396,8 @@ const SLIDES = [
    mod:"Ballads",
    line:"Now your own Kew stanza, then export.",
    notes:[
-     ["Say","Open Ballads and go to Rewrite. Write your own Kew stanza. Check the rhyme pairs and tap the beat. When it is done, export it."],
-     ["Keys","Right arrow: Lesson 2, Clancy of the Overflow."] ] },
-
- /* ================= Lesson 2: Clancy of the Overflow ================= */
- { kind:"go",
-   h:"Silent starter",
-   mod:"Ballad words",
-   line:"Open Ballad words: Clancy of the Overflow. Meet and build the words.",
-   href:"WritingFolioVocabHub.html#set-10",
-   notes:[
-     ["Say","Open Ballad words: Clancy of the Overflow. Meet and build the words. Silent until I stop you."],
-     ["Keys","The line on the slide opens the word set. Right arrow: the recap."] ] },
-
- { kind:"title",
-   h:"Clancy of the Overflow",
-   rule:"Another [v:story] in verse. New: a rhyme [s:inside] the line.",
-   key:[["Rhyme","the last strong vowel sound and everything after it."],["Beat","the strong syllables."],["New","a rhyme inside a line."]],
-   notes:[
-     ["Say","Recap: a ballad tells a story in verse. A rhyme is the last strong vowel sound and everything after it. The beat falls on the strong syllables. Clancy of the Overflow is another Paterson ballad, from 1889. It adds one rule: a rhyme inside the line."],
-     ["Timing","The video, then about 10 minutes for the two rhyme slides, then students analyse Clancy in Ballads."],
-     ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes."] ] },
-
- { kind:"go",
-   h:"Listen",
-   mod:"Clancy of the Overflow",
-   line:"Listen for who, where and what happens.",
-   video:{ embed:"https://www.youtube-nocookie.com/embed/ZB6K85PuQ_M",
-           watch:"https://www.youtube.com/watch?v=ZB6K85PuQ_M",
-           label:"Clancy of the Overflow" },
-   notes:[
-     ["Say","Watch a reading of the whole poem. Listen for who it is about, where each of them is and what happens."],
-     ["Ask","“Who is speaking? Where is he? Where is Clancy? What does the speaker wish for?”"],
-     ["Answer","The speaker writes to Clancy, a shearer he met years ago, and a mate of Clancy’s writes back: Clancy has gone droving in Queensland. The speaker is stuck in a city office. He pictures Clancy’s life in the bush and wishes he could swap, but doubts Clancy would suit the office."],
-     ["Keys","The video needs the internet. If it will not play here, use the link under it. After the video, click the slide outside the player so the arrow keys move the deck again."] ] },
-
- { kind:"poem",
-   h:"Rhyme inside the line",
-   sub:"Clancy of the Overflow, stanza 1",
-   src:"A. B. Paterson, Clancy of the Overflow, The Bulletin, 1889",
-   lines:["I had written him a [e:letter] which I had, for want of [e:better]",
-          "Knowledge, sent to where I met him down the Lachlan, years ago,",
-          "He was shearing when I [e:knew him], so I sent the letter [e:to him],",
-          "Just 'on spec', addressed as follows, 'Clancy, of The Overflow'."],
-   ends:["better","ago","him","Overflow"],
-   tags:[{m:"inside: letter, better"},{r:"A"},{m:"inside: knew him, to him"},{r:"A"}],
-   legend:[["e","Rhyme"]],
-   ans:["Lines 2 and 4 rhyme at the end","lines 1 and 3 rhyme inside: a middle word and the end word"],
-   notes:[
-     ["Display","Read stanza 1 aloud. The speaker wrote to Clancy, a shearer he met years ago. Which lines rhyme at the end? Then listen inside lines 1 and 3."],
-     ["Answer","Lines 2 and 4 rhyme at the end: ago, Overflow. Lines 1 and 3 do not rhyme with each other, but each rhymes inside itself, a middle word with the end word. Line 1: letter, better. Line 3: knew him, to him."],
-     ["Ask","“Line 1 ends in better. Which word earlier in the line rhymes with it?”"],
-     ["If students disagree","knew him and to him is a two-word rhyme: the strong vowel is in knew and to, and him comes after it in both. Some will pair letter in line 3 with better in line 1. That is a rhyme too, but the pattern is inside each line: middle word against end word."],
-     ["Watch for","Clancy’s lines are longer than Ironbark’s: about 8 beats, and the beat comes first, DUM-da. I had WRIT-ten HIM a LET-ter WHICH I HAD, for WANT of BET-ter."],
-     ["Teaching point","An internal rhyme sits inside a line. Paterson puts it in the same place every time: the middle of lines 1 and 3."] ] },
-
- { kind:"vote",
-   ask:"Which word rhymes with the last word?",
-   key:"Stanza 5, line 1. Fingers: the number of your choice.",
-   src:"A. B. Paterson, Clancy of the Overflow, The Bulletin, 1889",
-   lines:["I am sitting in my [e:dingy] little office, where a [e:stingy]",
-          "Ray of sunlight struggles feebly down between the houses tall,"],
-   ends:["stingy","tall"],
-   tags:[{m:"DIN-gy, STIN-gy"},{}],
-   opts:["sitting","dingy","little","office"],
-   hitOpt:1, hit:[0], fingers:4,
-   legend:[["e","Rhyme"]],
-   ans:["2. dingy","DIN-gy, STIN-gy: the same from the strong vowel on","line 3 of this stanza does it too: gritty, city"],
-   notes:[
-     ["Display","Stanza 5. The speaker is in his office in the city. Which word in line 1 rhymes with its last word, stingy? Fingers on my signal."],
-     ["Answer","2, dingy. DIN-gy and STIN-gy: the strong vowel and everything after it match. Line 3 of this stanza does the same: And the foetid air and gritty of the dusty, dirty city."],
-     ["Ask","“Find the strong syllable of stingy. Say its vowel and what comes after. Which word in the line ends the same way?”"],
-     ["If students disagree","1 (sitting) matches letters, not sound: SIT-ting ends -itting, stingy ends -ingy. 3 (little) shares the short i, but the rest does not match: LIT-tle."],
-     ["Teaching point","Ask where the rhyme is, not only whether there is one. In Clancy it is the middle of lines 1 and 3, against the end."] ] },
-
- { kind:"go",
-   h:"Analyse Clancy",
-   mod:"Ballads",
-   line:"Analyse Clancy in Ballads.",
-   notes:[
-     ["Say","Open Ballads and analyse Clancy of the Overflow. Mark the end rhymes, and the rhymes inside lines 1 and 3."],
-     ["Keys","Right arrow: the last stanza, then the slides for Lesson 3."] ] },
-
- { kind:"poem",
-   h:"The last stanza",
-   sub:"What does the speaker wish for? What does the last line say?",
-   src:"A. B. Paterson, Clancy of the Overflow, The Bulletin, 1889",
-   lines:["And I somehow rather fancy that I'd like to change with Clancy,",
-          "Like to take a turn at droving where the seasons come and go,",
-          "While he faced the round eternal of the cash-book and the journal --",
-          "But I doubt he'd suit the office, Clancy, of 'The Overflow'."],
-   ends:["Clancy","go","journal","Overflow"],
-   tags:[{m:"the dream"},{m:"the dream"},{m:"Clancy in the office"},{m:"the twist"}],
-   ans:["The twist","the speaker dreams of swapping with Clancy","Clancy would not suit the office"],
-   notes:[
-     ["Display","Read the last stanza aloud. What does the speaker wish for? What does the last line say about that wish?"],
-     ["Answer","The speaker would like to change places with Clancy: the speaker droving in the bush, Clancy at the desk. The last line turns it around: Clancy would not suit the office. The swap only works in the dream."],
-     ["Ask","“If they did swap, who would be unhappy? Why?”"],
-     ["If students disagree","The he in line 4 is Clancy: the line names him. The speaker is saying Clancy would hate his job."],
-     ["Watch for","Lines 1 and 3 rhyme inside again: fancy, Clancy; eternal, journal. The -- at the end of line 3 is how the source prints a dash."],
-     ["Teaching point","Paterson’s shape: two places, the real one and the dreamed-of one, and a twist at the end: the dream would not suit them."] ] },
-
- { kind:"cols",
-   h:"Turn it around",
-   sub:"Clancy of the Overflow",
-   src:"A. B. Paterson, Clancy of the Overflow, The Bulletin, 1889",
-   cols:[{ label:"Where the speaker is", place:"The city",
-           items:["“my dingy little office”","“the dusty, dirty city”","“the hurrying people”"] },
-         { label:"Where Clancy is", place:"The bush",
-           items:["“the sunlit plains extended”","“the murmur of the breezes”","“the everlasting stars”"] }],
-   turned:[{ label:"Where your speaker is", place:"The bush",
-             items:["dust","flies","heat","distance"] },
-           { label:"The life they dream of", place:"The city",
-             items:["what they would see","what they would hear","what they would smell"] }],
-   ans:["Who would hate the city?","the twist: the dream would not suit them"],
-   notes:[
-     ["Display","Paterson’s two places. The speaker is stuck in the city; Clancy is free in the bush. Read the details aloud: each is something the speaker sees, hears or feels."],
-     ["Answer","Turned around: your speaker is stuck out bush, with the dust, the flies, the heat and the distance, and dreams of a life in the city. Or Clancy writes back from the stock route and envies the clerk his office."],
-     ["Ask","“Who would hate the city? A shearer? A drover? Someone who has never left the farm?” Take a few answers. That is the twist: they dream of the city, and the city would not suit them."],
-     ["If students disagree","Some will want the speaker to get the dream and love it. Paterson’s twist runs the other way: the swap would not work. Keep the twist, or ask what the poem loses without it."],
-     ["Teaching point","Keep Paterson’s shape: two places, details you can see, hear and smell for each, and a twist at the end."] ] },
-
- { kind:"go",
-   h:"Next lesson",
-   mod:"Your own ballad",
-   line:"Next lesson: your own ballad, turned around. Paper and the planner.",
-   notes:[
-     ["Say","Next lesson you write your own ballad on paper: Clancy, turned around."],
-     ["Structure","Two places: the real one and the dreamed-of one. Details for each: what you see, hear and smell. Lines 2 and 4 rhyme. A twist at the end: the dream would not suit them. A rhyme inside lines 1 and 3 is the stretch, not required."],
-     ["Model","Out here past the boundary fences, where the heat attacks the senses, / And the flies are in the billy and the dust is in my eyes, / And at night I lie there dreaming of the city’s windows gleaming, / Where the people never notice that there’s weather in the skies."],
-     ["About the model","Written for this lesson, not Paterson’s. Lines 2 and 4 rhyme: eyes, skies. Lines 1 and 3 rhyme inside: fences, senses; dreaming, gleaming. About 8 beats a line, like Clancy. Ask students what the twist could be in the stanzas that follow."] ] },
-
- { kind:"go",
-   h:"Ballads then and now",
-   mod:"I Was Only 19. Redgum, 1983. The Herd, 2005.",
-   line:"Listen for these.",
-   list:["Where is the refrain?","How many beats in a bar?","Find a rhyme inside a line.","What did it keep from the old ballads? What did it change?"],
-   notes:[
-     ["Say","Play your own recording. Read the questions first, then listen. If there is time, play it twice: once for the story, once for the questions."],
-     ["Answer","Check answers against the recording. The refrain is the part that comes back the same after the verses. Tap along to count the beats in a bar: most students will find four. It keeps a story in verse, told by one ordinary person, with a refrain. It changes the setting (the Vietnam War, not the bush), and The Herd’s version is hip hop."],
-     ["Ask","“What did it keep from Paterson? What did it change?”"],
-     ["Teaching point","Ballads are still being written: a story in verse, made to be heard."] ] }
+     ["Say","Open the ballad writing link (Ballads.html#write). Write your own Boy from Kew: start from the class stanza 1 or your own style. Check the rhyme pairs and tap the beat. When it is done, export it."],
+     ["Keys","Last slide. Clancy of the Overflow is its own deck: ClancyDeck.html."] ] }
 ];
 
 /* The words on the slide frame, in the grammar session decks' wording.
