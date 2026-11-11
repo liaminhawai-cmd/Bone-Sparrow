@@ -326,7 +326,7 @@
 
 <div class="screen active" id="scr-home">
   <h1>Writing Folio Vocab Hub</h1>
-  <p class="subtitle">Lessons 01 to 09</p>
+  <p class="subtitle">Lessons 01 to 10</p>
   <div id="home-map"></div>
   <div class="homerow">
     <div class="panelcard">
@@ -407,7 +407,8 @@
 /* ============================================================
    WRITING FOLIO VOCAB HUB
    Companion to the Year 7 English Writing Folio, Lessons 01 to 08, plus
-   one set of ballad words (09, The Man from Ironbark) to meet before reading the poem.
+   two sets of ballad words (09 The Man from Ironbark, 10 Clancy of the
+   Overflow) to meet before reading the poems.
    Same build as the Bone Sparrow Vocab Hub, with the unit's words
    split lesson by lesson; scores live under their own key, sign-in
    is the suite's shared profile.
@@ -1600,6 +1601,141 @@ const LESSONS = [
         explain:"Showing pleasure at another person’s loss is <b>gloating</b>." } ] },
   ] },
 
+/* ================= 10 BALLAD WORDS: CLANCY OF THE OVERFLOW =================
+   Copied from the CLANCY data block in Ballads.html: meaning, parts, note
+   (the module's "in this line" and word story) and the poem line are the
+   module's own, so the two pages cannot disagree. The tasks were written for this hub. No translations: the module
+   has none for Clancy, so EAL students see English only for this set.
+   A dash at the end of a poem line is left off the quotation. */
+{ id:"10", topic:"Part 6 · Ballad words", title:"Ballad words: Clancy of the Overflow",
+  focus:"Clancy of the Overflow, A. B. Paterson, 1889.",
+  words:[
+  { w:"Erratic", pos:"adjective", domain:"ballad", type:"morph",
+    meaning:"Wandering; not steady; jumping from one thing to another.",
+    eg:"In my wild **erratic** fancy visions come to me of Clancy (Clancy of the Overflow, stanza 3)",
+    tiles:[["err","wander; go wrong"],["-atic","having this quality"]],
+    decoys:[["-ic","relating to"],["-ly","in this way"],["re-","again"]],
+    note:"The narrator’s imagination wanders off to picture Clancy. From the Latin word erraticus, through French. It is related to err, ‘wander, make a mistake’.",
+    apply:[
+      {"id":"ap_cl_erra_cloze","type":"cloze","before":"The old dog’s path across the paddock was","after":": it zigzagged from one smell to the next.","a":"erratic","opts":["erratic","exotic","ecstatic","elastic"],"explain":"‘Zigzagged’ is the clue: wandering, jumping from one thing to another is <b>erratic</b> (<i>err</i> wander + <i>-atic</i>). <i>Exotic</i> means from a far-off place."},
+      {"id":"ap_cl_erra_scn","type":"scenario","q":"A drover’s thoughts jump from his horse to his dinner to a song to the weather, never staying on one thing. Which word describes his thinking?","a":"Erratic","opts":["Erratic","Steady","Careful","Silent"],"explain":"Thoughts that wander and jump about are <b>erratic</b>. Steady and careful thinking stays on one thing."} ] },
+
+  { w:"Verbatim", pos:"adverb", domain:"ballad", type:"morph",
+    meaning:"Word for word, exactly as it was written.",
+    eg:"’Twas his shearing mate who wrote it, and **verbatim** I will quote it: (Clancy of the Overflow, stanza 2)",
+    tiles:[["verb","word (from Latin)"],["-atim","in this way"]],
+    decoys:[["-al","relating to"],["-ose","full of"],["ad-","to, towards"]],
+    note:"The narrator copies the mate’s reply exactly, mistakes and all. From a Medieval Latin word meaning ‘word for word’, built from Latin verbum, ‘word’.",
+    apply:[
+      {"id":"ap_cl_verb_cloze","type":"cloze","before":"The clerk copied the drover’s message","after":", spelling mistakes and all.","a":"verbatim","opts":["verbatim","verbally","verbose","vertical"],"explain":"Copying every word exactly, mistakes and all, is <b>verbatim</b> (<i>verb</i> word + <i>-atim</i>). <i>Verbose</i> means using too many words."},
+      {"id":"ap_cl_verb_scn","type":"scenario","q":"A shearer reads out a letter from home, saying every word exactly as it is written. How has he read it?","a":"Verbatim","opts":["Verbatim","In summary","Loosely","In his own words"],"explain":"Every word exactly as written is <b>verbatim</b>. A summary and his own words would both change the wording."} ] },
+
+  { w:"Droving", pos:"noun", domain:"ballad", type:"morph",
+    meaning:"Moving a big mob of cattle or sheep over long distances, on horseback.",
+    eg:"‘Clancy’s gone to Queensland **droving**, and we don’t know where he are.’ (Clancy of the Overflow, stanza 2)",
+    tiles:[["drove","move animals in a herd"],["-ing","doing an action"]],
+    decoys:[["-er","a person who does an action"],["-ed","past tense"],["-ly","in this way"]],
+    note:"The <i>e</i> of <i>drove</i> drops before <i>-ing</i>. Clancy has left to drive cattle in Queensland.",
+    apply:[
+      {"id":"ap_cl_drov_cloze","type":"cloze","before":"Every winter he went","after":"with his brother, walking a big mob of cattle to the coast.","a":"droving","opts":["droving","diving","drawing","dozing"],"explain":"Moving a mob of cattle a long way is <b>droving</b> (<i>drove</i> + <i>-ing</i>). The clue is ‘walking a big mob of cattle’."},
+      {"id":"ap_cl_drov_scn","type":"scenario","q":"In Clancy of the Overflow, Clancy has gone to Queensland droving. What is he doing there?","a":"Moving a big mob of cattle a long way","opts":["Moving a big mob of cattle a long way","Cutting the wool off sheep in a big shed","Writing letters in a dingy city office","Building fences around a station"],"explain":"<b>Droving</b> is moving a big mob of cattle or sheep over long distances, on horseback. Cutting wool is shearing, which Clancy did before."} ] },
+
+  { w:"Lowing", pos:"verb (-ing form)", domain:"ballad", type:"morph",
+    meaning:"Mooing: the deep sound cattle make.",
+    eg:"And in place of **lowing** cattle, I can hear the fiendish rattle (Clancy of the Overflow, stanza 6)",
+    tiles:[["low","moo"],["-ing","doing an action"]],
+    decoys:[["-er","a person who does an action"],["-ly","in this way"],["-ed","past tense"]],
+    note:"Instead of cattle, the narrator hears city noise.",
+    apply:[
+      {"id":"ap_cl_lowi_cloze","type":"cloze","before":"At dusk we could hear the","after":"of the cattle from the far side of the creek.","a":"lowing","opts":["lowing","lowering","glowing","rowing"],"explain":"The deep sound cattle make is <b>lowing</b> (<i>low</i> moo + <i>-ing</i>). <i>Lowering</i> means letting something down."},
+      {"id":"ap_cl_lowi_scn","type":"scenario","q":"Out on a station at night, you hear cattle lowing. What sound is that?","a":"Cattle mooing","opts":["Cattle mooing","Horses neighing","Dogs barking","Birds singing"],"explain":"Here <i>low</i> means moo, so <b>lowing</b> cattle are mooing. It has nothing to do with low meaning not high."} ] },
+
+  { w:"Tramways", pos:"noun", domain:"ballad", type:"morph",
+    meaning:"Tracks for trams in the city streets; here, the trams running on them.",
+    eg:"Of the **tramways** and the ’buses making hurry down the street, (Clancy of the Overflow, stanza 6)",
+    tiles:[["tram","a vehicle on rails in the street"],["way","a track or road"],["-s","more than one"]],
+    decoys:[["-er","a person who does an action"],["-ing","doing an action"],["road","a way for traffic"]],
+    note:"The rattle of trams is one of the city noises. Made by joining tram and way: the track a tram runs on.",
+    apply:[
+      {"id":"ap_cl_tram_cloze","type":"cloze","before":"The city was loud with the rattle of trams on the","after":"and the clatter of horses’ hooves.","a":"tramways","opts":["tramways","trampolines","trapdoors","tramps"],"explain":"The tracks trams run on are the <b>tramways</b> (<i>tram</i> + <i>way</i> + <i>-s</i>). The clue is ‘trams on the’."},
+      {"id":"ap_cl_tram_scn","type":"scenario","q":"In the word tramways, what does way mean?","a":"A track or road","opts":["A track or road","A way of doing things","A distance to travel","A direction to face"],"explain":"In <b>tramways</b>, <i>way</i> is a track or road: the track a tram runs on."} ] },
+
+  { w:"Stunted", pos:"adjective", domain:"ballad", type:"morph",
+    meaning:"Small, because they have not grown properly.",
+    eg:"With their eager eyes and greedy, and their **stunted** forms and weedy, (Clancy of the Overflow, stanza 7)",
+    tiles:[["stunt","stop something growing"],["-ed","described as"]],
+    decoys:[["un-","not"],["-ing","doing an action"],["-er","a person who does an action"]],
+    note:"City life has kept the people from growing strong. The verb stunt, ‘hold back growth’, comes from an old word meaning ‘stubborn, dwarfed’.",
+    apply:[
+      {"id":"ap_cl_stun_cloze","type":"cloze","before":"Planted in poor, shady soil, the little gum tree stayed","after":"and never grew taller than a fence post.","a":"stunted","opts":["stunted","stunned","stilted","scented"],"explain":"Small because it did not grow properly is <b>stunted</b> (<i>stunt</i> stop something growing + <i>-ed</i>). <i>Stunned</i> means shocked."},
+      {"id":"ap_cl_stun_scn","type":"scenario","q":"Two calves are born on the same day. One gets good feed and grows big. The other gets little food and stays small. Which word describes the second calf?","a":"Stunted","opts":["Stunted","Startled","Spotted","Stubborn"],"explain":"Kept small because it could not grow properly: <b>stunted</b>. Startled, spotted and stubborn say nothing about growth."} ] },
+
+  { w:"Foetid", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"Smelling bad; stinking. Also spelt fetid.",
+    eg:"And the **foetid** air and gritty of the dusty, dirty city (Clancy of the Overflow, stanza 5)",
+    originQ:"In <i>Clancy of the Overflow</i> the city has ‘<b>foetid</b> air’. What is the air like?",
+    originA:"Smelling bad; stinking",
+    originOpts:["Smelling bad; stinking","Cool, fresh and clean","Sweet like summer flowers","Clear and bright"],
+    note:"The city air smells foul. Borrowed from the Latin word fetidus, ‘having a bad smell’, from a Latin word meaning ‘to stink’. Foetid is another spelling of fetid.",
+    apply:[
+      {"id":"ap_cl_foet_cloze","type":"cloze","before":"The water in the old trough had gone green and","after":", and the horses would not drink it.","a":"foetid","opts":["foetid","fluid","frigid","fervid"],"explain":"Water that stinks is <b>foetid</b>. The clue is ‘gone green’ and the horses refusing it. <i>Frigid</i> means very cold."},
+      {"id":"ap_cl_foet_scn","type":"scenario","q":"A still pond smells so bad that people hold their noses as they walk past. Which word describes its smell?","a":"Foetid","opts":["Foetid","Fragrant","Fresh","Faint"],"explain":"A stinking smell is <b>foetid</b>. <i>Fragrant</i> is the opposite: a sweet smell."} ] },
+
+  { w:"Dingy", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"Dark, dull and dirty-looking.",
+    eg:"I am sitting in my **dingy** little office, where a stingy (Clancy of the Overflow, stanza 5)",
+    originQ:"The narrator sits in his ‘<b>dingy</b> little office’. What is the office like?",
+    originA:"Dark, dull and dirty-looking",
+    originOpts:["Dark, dull and dirty-looking","Bright, clean and newly painted","Busy, loud and crowded","Large, grand and costly"],
+    note:"Said ‘DIN-jee’. The narrator’s office is gloomy and shabby.",
+    apply:[
+      {"id":"ap_cl_ding_cloze","type":"cloze","before":"The clerk’s room had one small window, grey walls and a","after":"carpet worn thin by years of boots.","a":"dingy","opts":["dingy","dizzy","dainty","dinky"],"explain":"Dark, dull and dirty-looking is <b>dingy</b>. The clues are ‘one small window’, ‘grey’ and ‘worn thin’."},
+      {"id":"ap_cl_ding_scn","type":"scenario","q":"Which of these rooms is dingy?","a":"A dark, dusty room with peeling paint","opts":["A dark, dusty room with peeling paint","A bright, airy room with fresh paint","A busy room full of laughing people","A large, grand room with gold mirrors"],"explain":"<b>Dingy</b> means dark, dull and dirty-looking. Bright, busy and grand rooms are none of those."} ] },
+
+  { w:"Stingy", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"Mean; giving very little. Here, only a thin bit of sunlight gets in.",
+    eg:"I am sitting in my dingy little office, where a **stingy** (Clancy of the Overflow, stanza 5)",
+    originQ:"Only ‘a <b>stingy</b> ray of sunlight’ reaches the narrator’s office. How much sunlight gets in?",
+    originA:"Very little, like a mean person giving almost nothing",
+    originOpts:["Very little, like a mean person giving almost nothing","A lot, like a kind friend sharing everything","Too much, like a fire burning in the room","None at all, because the window has been painted over"],
+    note:"Said ‘STIN-jee’. It rhymes with dingy in the poem. The sunlight is described like a mean person who gives almost nothing.",
+    apply:[
+      {"id":"ap_cl_stin_cloze","type":"cloze","before":"The","after":"boss paid the shearers as little as he possibly could.","a":"stingy","opts":["stingy","stinky","stony","stringy"],"explain":"Mean, giving very little, is <b>stingy</b>. The clue is ‘as little as he possibly could’. <i>Stinky</i> means smelly."},
+      {"id":"ap_cl_stin_scn","type":"scenario","q":"In Clancy of the Overflow, a ray of sunlight is called ‘stingy’. What does that tell you about the light?","a":"Very little of it gets in","opts":["Very little of it gets in","It is too bright to look at","It burns the skin like fire","It shines in every corner"],"explain":"<b>Stingy</b> means mean, giving very little: only a thin bit of sunlight reaches the office."} ] },
+
+  { w:"Daunt", pos:"verb", domain:"ballad", type:"origin",
+    meaning:"Make me feel worried and less brave.",
+    eg:"And the hurrying people **daunt** me, and their pallid faces haunt me (Clancy of the Overflow, stanza 7)",
+    originQ:"‘The hurrying people <b>daunt</b> me.’ How do the city crowds make the narrator feel?",
+    originA:"Worried and less brave",
+    originOpts:["Worried and less brave","Excited and ready to join","Bored and sleepy","Proud and important"],
+    note:"The rushing crowds make the narrator uneasy. From an Old French word meaning ‘to tame’, from the Latin word domito, ‘tame’.",
+    apply:[
+      {"id":"ap_cl_daun_cloze","type":"cloze","before":"The roaring flood was enough to","after":"even the bravest drover.","a":"daunt","opts":["daunt","haunt","taunt","jaunt"],"explain":"To make someone worried and less brave is to <b>daunt</b> them. <i>Haunt</i>, in the same line of the poem, means keep coming back into the mind; <i>taunt</i> means tease."},
+      {"id":"ap_cl_daun_scn","type":"scenario","q":"A boy from the bush arrives in a huge, noisy city and suddenly feels small and nervous. What has the city done to him?","a":"It has daunted him","opts":["It has daunted him","It has amused him","It has rested him","It has cheered him"],"explain":"Making someone feel worried and less brave is to <b>daunt</b> them. The clue is ‘small and nervous’."} ] },
+
+  { w:"Pallid", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"Pale, in an unhealthy way.",
+    eg:"And the hurrying people daunt me, and their **pallid** faces haunt me (Clancy of the Overflow, stanza 7)",
+    originQ:"‘Their <b>pallid</b> faces haunt me.’ What do the city people’s faces look like?",
+    originA:"Pale, in an unhealthy way",
+    originOpts:["Pale, in an unhealthy way","Red in the face with anger","Brown and tanned from the sun","Wet through from the heavy rain"],
+    note:"The city people look pale and unwell. From the Latin word pallidus. It has the same origin as the English word pale.",
+    apply:[
+      {"id":"ap_cl_pall_cloze","type":"cloze","before":"After months shut inside the office, the clerk had a","after":"face, as if he had never seen the sun.","a":"pallid","opts":["pallid","placid","timid","tepid"],"explain":"Pale in an unhealthy way is <b>pallid</b>. The clue is ‘never seen the sun’. <i>Placid</i> means calm."},
+      {"id":"ap_cl_pall_scn","type":"scenario","q":"In Clancy of the Overflow the townsfolk have ‘pallid faces’. What does that tell you about them?","a":"They look pale and unwell","opts":["They look pale and unwell","They look tanned and fit","They look angry and red-faced","They look happy and relaxed"],"explain":"<b>Pallid</b> means pale in an unhealthy way, the opposite of tanned and fit."} ] },
+
+  { w:"Eternal", pos:"adjective", domain:"ballad", type:"origin",
+    meaning:"The endless round: the same work, over and over, forever. Eternal means lasting forever.",
+    eg:"While he faced **the round eternal** of the cash-book and the journal (Clancy of the Overflow, stanza 8)",
+    originQ:"Clancy would face ‘<b>the round eternal</b> of the cash-book and the journal’. What would office life be for him?",
+    originA:"The same work, over and over, forever",
+    originOpts:["The same work, over and over, forever","A short break from the hard work of droving","A race around the city streets","A new adventure every single day"],
+    note:"Clancy would face the narrator’s endless, boring office work. Eternal came from the Latin word aeternus, from aevum, ‘age’, through French.",
+    apply:[
+      {"id":"ap_cl_eter_cloze","type":"cloze","before":"For forty years he kept the same books at the same desk: the","after":"of office work.","a":"round eternal","opts":["round eternal","round external","round internal","round infernal"],"explain":"The same work over and over, forever, is the <b>round eternal</b>. <i>Eternal</i> means lasting forever; <i>external</i> means outside."},
+      {"id":"ap_cl_eter_scn","type":"scenario","q":"What does eternal mean?","a":"Lasting forever","opts":["Lasting forever","Lasting one day","Coming from outside","Happening only once"],"explain":"<b>Eternal</b> means lasting forever, so the round eternal is work that never ends."} ] },
+  ] },
 ];
 
 /* ---------------- KEY-WORD TRANSLATIONS ----------------
