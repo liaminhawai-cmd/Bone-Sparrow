@@ -1908,7 +1908,70 @@ function idOk(){ const sid=(S.sid||"").trim(); return (S.fname||"").trim() && (S
   if(p.eal===false) S.lang=""; else if(p.lang) S.lang=p.lang;
   save();
 })();
+/* ================= FULLSCREEN GUARD (build step) =================
+   Keeps a student in fullscreen on the Build step so they cannot copy answers
+   from the word list in another tab. First exit warns; second restarts the
+   build. Leaving the Build step releases it with no penalty. Browsers without
+   the Fullscreen API (iPhone Safari) are not guarded. Nothing is stored.
+   Same logic as EAL-Vocabulary-Site/assets/js/focus-guard.js. */
+const FG=(function(){
+  const root=document.documentElement;
+  const fsOn=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  const fsOk=()=>!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(root.requestFullscreen||root.webkitRequestFullscreen);
+  let active=false, wasFs=false, strikes=0, lastAt=0, restartFn=null, overlay=null;
+  function req(){ try{ const p=(root.requestFullscreen||root.webkitRequestFullscreen).call(root); if(p&&p.catch) p.catch(()=>{}); }catch(e){} }
+  function leave(){ if(!fsOn()) return; try{ const p=(document.exitFullscreen||document.webkitExitFullscreen).call(document); if(p&&p.catch) p.catch(()=>{}); }catch(e){} }
+  function hide(){ if(overlay){ overlay.remove(); overlay=null; } }
+  function show(title, lines, label){
+    hide();
+    const o=document.createElement("div");
+    o.setAttribute("role","alertdialog"); o.setAttribute("aria-modal","true");
+    o.style.cssText="position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;background:#1e1b4b;font-family:inherit";
+    const box=document.createElement("div");
+    box.style.cssText="max-width:460px;background:#fff;color:#1f2937;border-radius:14px;padding:24px;text-align:center;line-height:1.45";
+    const h=document.createElement("h2"); h.textContent=title; h.style.cssText="margin:0 0 12px";
+    box.appendChild(h);
+    lines.forEach(t=>{ const p=document.createElement("p"); p.textContent=t; p.style.cssText="margin:0 0 12px"; box.appendChild(p); });
+    const b=document.createElement("button"); b.type="button"; b.textContent=label;
+    b.style.cssText="min-height:44px;padding:0 20px;font:inherit;font-weight:700;color:#fff;background:#4f46e5;border:0;border-radius:10px;cursor:pointer";
+    b.addEventListener("click",req);
+    box.appendChild(b); o.appendChild(box); document.body.appendChild(o); overlay=o; b.focus();
+  }
+  function strike(){
+    const now=Date.now(); if(now-lastAt<1500) return; lastAt=now;
+    wasFs=false; strikes+=1;
+    if(strikes===1){
+      show("Do not cheat",["Stay in this tab, in fullscreen, until you finish the words.","If you leave again, you will have to start the build again."],"Go back to fullscreen");
+    } else {
+      strikes=0; const again=restartFn;
+      show("Build restarted",["You left fullscreen twice, so you start the build again from the beginning."],"Start again in fullscreen");
+      if(again) again();
+    }
+  }
+  function onFs(){ if(!active) return; if(fsOn()){ wasFs=true; hide(); } else if(wasFs) strike(); }
+  document.addEventListener("fullscreenchange",onFs);
+  document.addEventListener("webkitfullscreenchange",onFs);
+  document.addEventListener("visibilitychange",()=>{ if(active&&wasFs&&document.hidden) strike(); });
+  return {
+    enter(restart){
+      restartFn=restart; if(active||!fsOk()) return;
+      active=true; wasFs=false; strikes=0;
+      if(fsOn()){ wasFs=true; return; }
+      req();
+      setTimeout(()=>{ if(active&&!fsOn()&&!overlay) show("Fullscreen needed",["The word builder runs in fullscreen so you cannot look at the word list while you build."],"Start in fullscreen"); },400);
+    },
+    release(){ active=false; wasFs=false; strikes=0; restartFn=null; hide(); leave(); }
+  };
+})();
+/* Restart = the words must be built again. First-try results (buildFirst) stay, so the teacher report is still honest. */
+function fgRestart(){
+  const l=LESSON_BY_ID[cur]; if(!l) return;
+  const st=L(l.id); st.buildDone={}; st.buildComplete=false; save();
+  startBuild(l);
+}
+
 function go(id){
+  if(id==="build"&&(typeof idOk!=="function"||idOk())) FG.enter(fgRestart); else FG.release();
   if(!idOk() && id!=="id") id="id";
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById("scr-"+id).classList.add("active");
@@ -2383,7 +2446,7 @@ function buildOriginPhase(l){
   }
   next();
 }
-function finishBuild(l){
+function finishBuild(l){ FG.release();
   const st=L(l.id); st.buildComplete=true; save();
   const b=buildCounts(l);
   const pct=Math.round(100*b.clean/b.total);
