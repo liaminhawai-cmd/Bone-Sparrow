@@ -175,29 +175,45 @@ foreach($st in $spec.states){
         if(@($r.tagSpace).Count){ $hasTag = $true }
       }
     }
-    $numW = 34; $tagW = $(if($hasTag){ 190 } else { 0 })
-    $textW = $BODYW - $numW - $tagW
+    # A poem of 12 or more lines (a sonnet) sits in two columns, lines 1 to 8
+    # and 9 on, so the type stays large and nothing runs off the slide.
+    $lineRows = @($st.rows | Where-Object { $_.type -eq "line" })
+    $twoCol = ($lineRows.Count -ge 12) -and (@($st.rows | Where-Object { $_.type -ne "line" }).Count -eq 0)
+    if($twoCol){
+      $colW = 440
+      $cols = @( @{ x=($L - 15); rows=@($lineRows[0..7]) }, @{ x=($L - 15 + $colW + 10); rows=@($lineRows[8..($lineRows.Count - 1)]) } )
+      $numW = $(if(@($lineRows | Where-Object { ("" + $_.no) -ne "" }).Count){ 34 } else { 0 })
+      $tagW = $(if($hasTag){ 70 } else { 0 })
+    } else {
+      $colW = $BODYW
+      $cols = @( @{ x=$L; rows=@($st.rows) } )
+      $numW = 34; $tagW = $(if($hasTag){ 190 } else { 0 })
+    }
+    $textW = $colW - $numW - $tagW
     $size = [Math]::Max(16, [Math]::Min(28, [Math]::Floor($textW / ($maxLen * 0.52))))
     $step = [Math]::Round($size * 1.7)
-    $tagX = [Math]::Min(($L + $numW + $textW + 10), ($L + $numW + 10 + $maxLen * $size * 0.47 + 24))
+    $yEnd = 118
+    foreach($col in $cols){
+    $cx = $col.x
+    $tagX = [Math]::Min(($cx + $numW + $textW + 10), ($cx + $numW + 10 + $maxLen * $size * 0.47 + 24))
     $y = 118
-    foreach($r in $st.rows){
+    foreach($r in $col.rows){
       if($r.type -eq "label"){
-        if(-not $r.hidden){ [void](TextBox $s $L $y 400 18 @( (Para @(@{ t=$r.text; bold=$true; color=$C.head }) 13) ) $false) }
+        if(-not $r.hidden){ [void](TextBox $s $cx $y 400 18 @( (Para @(@{ t=$r.text; bold=$true; color=$C.head }) 13) ) $false) }
         $y += 24
       }
       elseif($r.type -eq "gap"){ $y += 14 }
       else {
         if(-not $r.hidden){
           if($r.hit){
-            $hb = $s.Shapes.AddShape(1, ($L - 6), ($y - 2), ($BODYW + 12), ($step - 2))
+            $hb = $s.Shapes.AddShape(1, ($cx - 6), ($y - 2), ($colW + 12), ($step - 2))
             $hb.Line.Visible = 0
             $hb.Fill.ForeColor.RGB = (RGB "F0DDE2")
           }
-          [void](TextBox $s $L $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false)
+          if($numW -gt 0){ [void](TextBox $s $cx $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false) }
           $runs = @($r.runs | ForEach-Object { KindRun $_ })
           if($r.hit){ $runs = @($runs | ForEach-Object { $_.bold=$true; $_ }) }
-          $tb = TextBox $s ($L + $numW + 10) $y ($textW - 10 + $tagW) 24 @( (Para $runs $size) ) $false
+          $tb = TextBox $s ($cx + $numW + 10) $y ($textW - 10 + $tagW) 24 @( (Para $runs $size) ) $false
           $tb.TextFrame.WordWrap = 0
           $tagRuns = @()
           foreach($t in @($r.tag)){
@@ -212,6 +228,9 @@ foreach($st in $spec.states){
         $y += $step
       }
     }
+    if($y -gt $yEnd){ $yEnd = $y }
+    }
+    $y = $yEnd
     [void](TextBox $s $L ($y + 4) 700 20 @( (Para @(@{ t=$st.src; color=$C.grey }) 13) ) $false)
     if($st.ans.Count){
       $paras = @(); $first = $true

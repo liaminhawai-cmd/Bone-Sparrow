@@ -19,6 +19,10 @@ on:
       - "MicroFiction.html"
       - "Limericks.html"
       - "Ballads.html"
+      - "FindAndFix.html"
+      - "Sonnets.html"
+      - "SonnetsDeck.html"
+      - "SonnetsDeck.pptx"
       - "SentenceFluency.html"
       - "SentenceFluencyDeck.html"
       - "SentenceFluencyDeck.pptx"
@@ -92,6 +96,10 @@ jobs:
           cp MicroFiction.html dist/
           cp Limericks.html dist/
           cp Ballads.html dist/
+          cp FindAndFix.html dist/
+          cp Sonnets.html dist/
+          cp SonnetsDeck.html dist/
+          cp SonnetsDeck.pptx dist/
           cp SentenceFluency.html dist/
           cp SentenceFluencyDeck.html dist/
           cp SentenceFluencyDeck.pptx dist/

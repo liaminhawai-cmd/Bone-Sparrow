@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find and fix: Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+  /* The two rhymes. A is a solid ring and underline, B a dashed ring and a
+     wavy underline, and each carries its letter, so colour is never the only
+     signal. */
+  --rA:#1F5FA8; --rB:#A24800;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:18px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 4px}
+h2{font-family:Georgia,'Times New Roman',serif;font-size:20px;margin:0 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.55}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 8px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none;padding:10px 0}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block;min-height:40px}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+textarea{resize:vertical;line-height:1.5}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 13px;min-height:40px;
+     font-size:14.5px;font-family:inherit;color:inherit;cursor:pointer;line-height:1.4}
+.opt:hover{border-color:var(--accent)}
+.opt.on,.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);font-weight:700;color:var(--accent)}
+.opt.right{background:var(--okbg);border-color:var(--correct);box-shadow:inset 0 0 0 1px var(--correct)}
+.opt.wrong{background:var(--wrongbg);border-color:var(--wrong)}
+.opt:disabled{cursor:default}
+.btn:disabled{opacity:.45;cursor:default}
+.fb{border-radius:9px;padding:11px 14px;margin:10px 0 0;font-size:13.5px;line-height:1.6;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb.warn{background:var(--warnbg);border:1px solid var(--warn)}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.fb li{margin:3px 0}
+.fb .rule{display:block;font-weight:700;margin-bottom:3px}
+.fb .k{font-weight:700}
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:4px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted);min-height:48px}
+.deckbar b{color:var(--ink);font-size:14px}
+.pips{display:flex;gap:4px;flex-wrap:wrap}
+.pip{width:26px;height:26px;border-radius:13px;border:1px solid var(--line);background:var(--bg);font-size:12px;font-weight:800;
+     color:var(--muted);display:inline-flex;align-items:center;justify-content:center}
+.pip.cur{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 1px var(--accent)}
+.pip.clean{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.pip.retry{background:var(--warnbg);border:1px dashed var(--warn);color:var(--warn)}
+.cnt{font-weight:700;color:var(--ink)}
+.cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.cols>.cardbox{max-height:calc(100vh - 140px);overflow:auto}
+.topic{font-family:Georgia,serif;font-size:15px;color:var(--muted);margin:0 0 8px;font-style:italic}
+.unit{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:var(--bg);border:2px solid transparent;
+      border-radius:9px;padding:7px 12px;margin:0 0 6px;min-height:44px;font-family:Georgia,serif;font-size:17px;line-height:1.35;
+      color:var(--ink);cursor:pointer}
+.unit:hover:not(:disabled){border-color:var(--accent)}
+.unit .n{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;font:800 12px 'Segoe UI',Tahoma,sans-serif;
+         display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+.unit .tg{margin-left:auto;font:800 11px 'Segoe UI',Tahoma,sans-serif;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.unit.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(44,95,124,.2);background:#fff}
+.unit.wrong{border-color:var(--wrong);background:var(--wrongbg);opacity:.8}.unit.wrong .tg{color:var(--wrong)}
+.unit.right{border-color:var(--correct);background:var(--okbg)}.unit.right .tg{color:var(--correct)}
+.unit:disabled{cursor:default}
+.prompt{font-size:17px;font-weight:700;margin:0 0 10px;line-height:1.4;border-left:4px solid var(--accent);padding:1px 0 1px 10px}
+.rulebox{background:var(--bg);border-radius:8px;padding:8px 12px;margin:0 0 10px;font-size:13.5px;line-height:1.5}
+.rulebox b{display:block}
+.optlist{display:flex;flex-direction:column;gap:8px}
+.optlist .opt{display:flex;gap:10px;align-items:flex-start;width:100%;font-family:Georgia,serif;font-size:16px}
+.optlist .opt .L{flex:0 0 24px;height:24px;border-radius:50%;border:1px solid var(--line);font:800 12px 'Segoe UI',sans-serif;
+                  display:inline-flex;align-items:center;justify-content:center;background:var(--bg)}
+.optlist .opt>span:nth-child(2){flex:1}
+.opt.wrong .tg2{color:var(--wrong);font:800 11px 'Segoe UI',sans-serif;margin-left:auto;white-space:nowrap}
+.opt.right .tg2{color:var(--correct);font:800 11px 'Segoe UI',sans-serif;margin-left:auto;white-space:nowrap}
+.fix textarea{font-family:Georgia,serif;font-size:17px;line-height:1.4;min-height:84px}
+.dim{color:#6f685c;font-size:12.5px;margin:8px 0 0;line-height:1.5}
+.big{font-size:17px;padding:12px 26px}
+#fsguard{position:fixed;inset:0;z-index:99;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+         font-size:20px;font-weight:700;text-align:center;padding:20px}
+#fsguard[hidden]{display:none}
+table.rpt{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;width:190px}
+.rptwrap{max-height:calc(100vh - 250px);overflow:auto;margin:0 0 6px}
+.broken{background:var(--wrongbg);border:1px solid var(--wrong);border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.6}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:14px} .cols{grid-template-columns:1fr} .cols>.cardbox{max-height:none} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+<div id="fsguard" hidden role="alertdialog" aria-modal="true" aria-label="Full screen needed"><div>Full screen is needed to answer.</div>
+  <button class="btn btn-primary big" id="fsback" onclick="fsBack()">Back to full screen</button></div>
+
+<script>
+/* ============================================================================
+   CONTENT. Everything a teacher might change is in this block.
+
+   GENRES     Per genre: label (shown on the card) and ask (the checklist shown
+              after a wrong tap; it names the genre's rules, never the answer).
+   RULES      One card per rule. Per rule: id, genre, unit (what the student
+              taps: step, sentence or line), name and why (shown once the error
+              is found), fix (how the fix is judged, below), checks (what the
+              machine checks, shown under the answer box) and variants.
+              Each rule needs at least 4 variants. A card shows one variant; a
+              missed card returns later as a different variant of the same rule.
+   VARIANT    id, topic, units (the text, one tappable piece each), bad (the
+              unit numbers, from 0, that count as the error; two numbers for a
+              rhyming pair, either is accepted), start (optional first line
+              number shown, for the sonnet).
+   FIX TYPES
+     verb      typed. The first word must be a verb in VERBS. keep: words, one
+               of which must stay. model: a correct answer, shown after two misses.
+     split     typed. Two or more sentences, each starting with a verb. split:
+               two word groups, one per action, each in its own sentence.
+     modal     typed. None of the rule's weak words, one of its strong words,
+               and one keep word. Lists are on the rule.
+     register  typed. None of INFORMAL or the variant's own informal words,
+               and one keep word.
+     rhyme     typed. The student rewrites line fixLine. Its last word must
+               rhyme (checker below) with the end word of each line in rw, and
+               must not be the old end word. Unknown spellings get "not sure",
+               never a wrong.
+     choice    three rewrites: right, keep (keeps the error), other (breaks a
+               different rule, named on the rule as otherWhy). Shown in a random order.
+   The load-time check stops the page and lists the problem if a key points at
+   nothing, a rule has fewer than 4 variants, a typed list is empty, or a model
+   answer fails its own check.
+   ========================================================================== */
+const GENRES = {
+  "Procedural": { label:"Procedural text",  ask:"Does every step start with a verb? Is each step one action?" },
+  "Persuasive": { label:"Persuasive text",  ask:"Does the writer sound sure? Does every claim have a reason?" },
+  "Evaluative": { label:"Review",           ask:"Does the review judge, not just describe? Is the language formal?" },
+  "Informative":{ label:"Information text", ask:"Is every sentence a fact, with no opinion?" },
+  "Micro-fiction":{ label:"Micro-fiction",  ask:"Does the writer show each feeling through what the character does?" },
+  "Limerick":   { label:"Limerick",         ask:"Do lines 1, 2 and 5 rhyme? Are lines 3 and 4 the short lines?" },
+  "Ballad":     { label:"Ballad",           ask:"Do the lines rhyme in pairs: 1 and 2, 3 and 4, 5 and 6?" },
+  "Sentence":   { label:"Sentences",        ask:"Is each sentence complete? Is each one joined correctly?" },
+  "Sonnet":     { label:"Sonnet",           ask:"Do the last two lines rhyme with each other?" }
+};
+
+/* Ticks: a card is a clean tick only on its first showing with no misses. */
+const CLEAN_TICK = { maxMisses:0 };
+
+const VERBS = ["add","arrange","ask","attach","bake","beat","bend","blend","boil","bring","brush","build","carry","catch","check","chop","choose","circle","clean","click","clip","close","collect","combine","connect","cook","cool","copy","count","cover","crack","cross","crush","cut","dice","dig","dip","dissolve","divide","draw","drain","drizzle","drop","dry","dust","empty","enter","fill","find","fix","flatten","flip","fold","follow","gather","get","give","glue","grate","grease","grip","hammer","hang","heat","hold","hook","insert","keep","knead","label","lay","leave","lift","line","listen","lock","look","lower","make","mark","measure","melt","mix","move","open","order","pack","paint","pat","peel","pick","pinch","place","plant","plug","pour","press","pull","pump","push","put","read","remove","repeat","rinse","roll","rub","save","scoop","scrub","season","select","serve","set","sew","shake","share","sieve","sift","slice","slide","smooth","snap","sort","spin","spoon","spread","sprinkle","squeeze","stack","stand","start","step","stick","stir","stop","store","switch","take","tap","tape","tear","test","thread","tie","tighten","tilt","tip","toast","trim","tuck","turn","twist","unplug","unscrew","use","wait","walk","wash","watch","wear","whisk","wind","wipe","wrap","write","zip","go","do","try","let","come","finish","begin","continue","swap","rest","reach","clear","stretch","prepare","rotate"];
+/* Words a step must not start with. Words ending in -ly or -ing that are not
+   in VERBS are also refused. Any other first word gets "not sure". */
+const NONVERBS = ["the","a","an","you","your","we","i","it","its","they","he","she","this","that","these","those","then","next","first","now","also","and","but","so","if","when","after","once","before","while","because","there","what","how","why","who","which","my","our","one","two","three","some","all","each","every","to","in","on","at","with","for","of","is","are","was","will","should","can","could","would","might","maybe","perhaps"];
+const INFORMAL = ["heaps","kinda","sorta","gonna","wanna","awesome","super","stuff","cool","lol","yeah","nah","totally","guys","mate","epic","dunno","ok","okay"];
+/* Words that count as a verdict in a review. Used by the load-time check only. */
+const EVAL = ["gripping","vividly","thoughtful","fast","clever","fair","satisfying","worthwhile","welcoming","excellent","polite","quick","good","tense","convincing","beautifully","absorbing","powerful","moving","highlight","best","dull","weak","disappointing","impressive","engaging","enjoyable","brilliant","effective","memorable","cool","awesome","amazing","super"];
+
+const RULES = [
+ { id:"proc-verb", genre:"Procedural", unit:"step", fix:"verb",
+   name:"A step starts with a verb",
+   why:"A step names the action first (Put, Fold, Pour), so the reader knows what to do straight away.",
+   checks:"Checks: the first word is a verb the page knows, and the step still mentions the same job. It does not check that the step reads well.",
+   variants:[
+    { id:"proc-verb.1", topic:"How to make cheese on toast",
+      units:["Turn the grill on to high.","Put two slices of bread under the grill.","The next thing you will want to do is put the cheese on top of the toast.","Take it out when the cheese bubbles."],
+      bad:[2], keep:["cheese","toast"], model:"Put the cheese on top of the toast." },
+    { id:"proc-verb.2", topic:"How to plant a bean seed",
+      units:["Fill a small pot with soil.","It is a good idea to make a hole in the soil with your finger.","Drop the seed into the hole.","Water the soil every day."],
+      bad:[1], keep:["hole","soil"], model:"Make a hole in the soil with your finger." },
+    { id:"proc-verb.3", topic:"How to fold a paper boat",
+      units:["Fold a sheet of paper in half.","You should now take the two top corners and fold them to the middle.","Fold the bottom edges up on both sides.","Pull the sides apart and flatten the bottom."],
+      bad:[1], keep:["corners","middle"], model:"Take the two top corners and fold them to the middle." },
+    { id:"proc-verb.4", topic:"How to wash a bike",
+      units:["Fill a bucket with warm water.","Next, you will need to scrub the frame with a soft brush.","Rinse off the soap with a hose.","Dry the chain with an old towel."],
+      bad:[1], keep:["frame","brush"], model:"Scrub the frame with a soft brush." }
+   ] },
+ { id:"proc-jam", genre:"Procedural", unit:"step", fix:"split",
+   name:"One step, one action",
+   why:"Two actions in one sentence are easy to miss. Give each action its own step.",
+   checks:"Checks: two or more sentences, each starting with a verb, with the two actions in different sentences. It does not check the order or the wording.",
+   variants:[
+    { id:"proc-jam.1", topic:"How to make a fruit smoothie",
+      units:["Peel the banana.","Put the banana in the blender.","Pour in a cup of milk and press the start button.","Pour the smoothie into a glass."],
+      bad:[2], split:[["milk","pour"],["button","press","start"]], keep:["milk","button"], model:"Pour in a cup of milk. Press the start button." },
+    { id:"proc-jam.2", topic:"How to hang a poster",
+      units:["Choose a clean spot on the wall.","Hold the poster against the wall.","Press a piece of tape on each corner and smooth the poster flat.","Check that the poster is straight."],
+      bad:[2], split:[["tape"],["smooth","flat"]], keep:["tape","smooth"], model:"Press a piece of tape on each corner. Smooth the poster flat." },
+    { id:"proc-jam.3", topic:"How to boil an egg",
+      units:["Fill a small pot with water.","Bring the water to a gentle boil.","Lower the egg into the pot and set the timer for eight minutes.","Run the egg under cold water."],
+      bad:[2], split:[["lower"],["timer","set"]], keep:["egg","timer"], model:"Lower the egg into the pot. Set the timer for eight minutes." },
+    { id:"proc-jam.4", topic:"How to pack a school bag",
+      units:["Check your timetable for tomorrow.","Pack the books you need.","Slide your pencil case in the front pocket and zip the bag shut.","Hang the bag by the door."],
+      bad:[2], split:[["slide","pencil"],["zip","shut"]], keep:["pencil","zip"], model:"Slide your pencil case in the front pocket. Zip the bag shut." }
+   ] },
+ { id:"pers-modal", genre:"Persuasive", unit:"sentence", fix:"modal",
+   name:"Sound sure",
+   why:"A persuasive writer uses strong words (must, should, will) so the reader trusts the point. Might, maybe and perhaps give the argument away.",
+   weak:["might","maybe","perhaps","could","possibly","kind of","sort of","i think","i guess","probably","a bit","somewhat"],
+   strong:["must","should","will","need to","needs to","have to","has to","cannot","ought to"],
+   checks:"Checks: none of might, maybe, perhaps, could, possibly, kind of, sort of, I think, I guess, probably, a bit, somewhat; at least one of must, should, will, need to, have to, cannot, ought to; and the same topic. It does not check the argument.",
+   variants:[
+    { id:"pers-modal.1", topic:"A speech: shade on the oval",
+      units:["Our oval has almost no shade.","We might maybe need to put a shade sail over it.","Students who sit in the sun at lunch can get sunburnt and dizzy."],
+      bad:[1], keep:["shade","sail"], model:"We must put a shade sail over it." },
+    { id:"pers-modal.2", topic:"A letter to the principal: lunch",
+      units:["Students need time to eat and rest.","Perhaps the school could possibly make lunch ten minutes longer.","Tired students learn less in the afternoon."],
+      bad:[1], keep:["lunch","longer"], model:"The school must make lunch ten minutes longer." },
+    { id:"pers-modal.3", topic:"A speech: bike racks",
+      units:["Fifteen students ride to school, but only six bikes fit in the rack.","I think we should maybe add a second rack, kind of near the gate.","Bikes left on the path block the way for everyone."],
+      bad:[1], keep:["rack"], model:"We must add a second bike rack near the gate." },
+    { id:"pers-modal.4", topic:"A speech: litter bins",
+      units:["Wrappers blow across the yard every lunchtime.","Maybe we could possibly try putting more bins out there.","Clean grounds make the school a better place for everyone."],
+      bad:[1], keep:["bins"], model:"We should put more bins in the yard." }
+   ] },
+ { id:"pers-reason", genre:"Persuasive", unit:"sentence", fix:"choice",
+   name:"Back every claim with a reason",
+   why:"A claim with no reason or evidence is only an opinion. Add because, then a reason the reader can check.",
+   keepWhy:"This still states the claim with no reason or evidence. “Everyone knows” and “it is obvious” are not reasons.",
+   otherWhy:"This adds a reason, but the writer no longer sounds sure (might, could). A different rule is broken.",
+   variants:[
+    { id:"pers-reason.1", topic:"A speech: our school canteen",
+      units:["Every classroom should have a plant, because plants make the air fresher and the room calmer.","The canteen must sell fruit at every break.","Teachers deserve a quiet room at lunch, because marking needs concentration."],
+      bad:[1], right:"The canteen must sell fruit at every break, because many of us skip breakfast and are hungry by recess.",
+      keep:"The canteen must sell fruit at every break. Everyone knows that this is the right thing to do.",
+      other:"The canteen might sell fruit at every break, because many of us skip breakfast." },
+    { id:"pers-reason.2", topic:"A letter to the principal",
+      units:["We should be allowed to wear sports uniform every day, because it is comfortable and cheaper than two sets.","The oval should open at lunch on wet days, because the quad is too crowded to run in.","The library needs more beanbags."],
+      bad:[2], right:"The library needs more beanbags, because comfy seats keep students reading longer.",
+      keep:"The library needs more beanbags. It is obvious that it needs them, and it would be a good thing.",
+      other:"The library could use more beanbags, because comfy seats keep students reading for a longer time." },
+    { id:"pers-reason.3", topic:"A debate speech: recycling",
+      units:["Our school must recycle paper, because wasted paper fills our bins every week.","Every class should have a compost bin.","Students ought to carry reusable bottles, because plastic bottles take hundreds of years to break down."],
+      bad:[1], right:"Every class should have a compost bin, because food scraps in the bin rot and smell.",
+      keep:"Every class should have a compost bin. This is something that every class really needs.",
+      other:"Every class might need a compost bin, because food scraps in the bin rot." },
+    { id:"pers-reason.4", topic:"A speech: homework",
+      units:["Homework should stop on Fridays, because students need a break before the weekend.","Teachers must give clear instructions, because unclear tasks waste time.","Homework diaries should be digital."],
+      bad:[2], right:"Homework diaries should be digital, because paper ones get lost in the bottom of bags.",
+      keep:"Homework diaries should be digital. There are a lot of people who think the same.",
+      other:"Homework diaries could possibly be digital, because paper ones get lost." }
+   ] },
+ { id:"eval-describe", genre:"Evaluative", unit:"sentence", fix:"choice",
+   name:"A review judges",
+   why:"A review gives a verdict with an evaluative word (gripping, dull, clever). Describing what happens is not judging it.",
+   keepWhy:"This still only describes what happens. There is no evaluative word and no verdict.",
+   otherWhy:"This gives a verdict, but in informal language (heaps, super, kinda, awesome). A review stays formal.",
+   variants:[
+    { id:"eval-describe.1", topic:"Review: The Quiet Orchard (novel)",
+      units:["The Quiet Orchard is a gripping novel about a girl who inherits a farm.","The writer describes the barn so vividly that I could smell the hay.","In the last chapter, Mina decides to sell the farm and move to the city.","Overall, it is a thoughtful book that I would recommend to patient readers."],
+      bad:[2], right:"The last chapter is moving, because Mina’s choice to sell the farm and leave her childhood home feels both sad and fair.",
+      keep:"In the last chapter, Mina decides to sell the farm and then she moves to the city with her aunt.",
+      other:"The last chapter was heaps good, and Mina’s choice to sell the farm was sad." },
+    { id:"eval-describe.2", topic:"Review: Reef Runner (game)",
+      units:["Reef Runner is a fast and clever puzzle game set under the sea.","The levels get harder at a fair pace, which keeps the game satisfying.","In level six, the player swims a turtle through a maze of coral.","Overall, it is a worthwhile game for a wet afternoon."],
+      bad:[2], right:"Level six is the best of the set, as the coral maze rewards careful planning.",
+      keep:"In level six, the player must swim the turtle through a coral maze.",
+      other:"Level six is super cool, and the coral maze is awesome." },
+    { id:"eval-describe.3", topic:"Review: The Corner Bakery (café)",
+      units:["The Corner Bakery is a welcoming café with excellent pies.","The staff are polite and the service is quick.","The menu has pies, rolls and cakes, and a coffee machine behind the counter.","Overall, it is good value for a family lunch."],
+      bad:[2], right:"The pies are the highlight, as the pastry is flaky.",
+      keep:"The menu has pies, rolls and cakes, and the counter has a coffee machine and a small cake stand.",
+      other:"The pies are heaps good and the pastry is kinda amazing." },
+    { id:"eval-describe.4", topic:"Review: Storm over Marrow Bay (film)",
+      units:["Storm over Marrow Bay is a tense film about a fishing family caught in a cyclone.","The sea scenes are convincing and beautifully filmed.","The film ends with the family rebuilding their boat on the beach.","Overall, it is an absorbing film, though a little long."],
+      bad:[2], right:"The ending is quietly powerful, as the rebuilt boat shows the family’s strength.",
+      keep:"The film ends with the family rebuilding their boat on the beach as the sun comes up.",
+      other:"The ending is kinda cool, and the rebuilt boat is awesome." }
+   ] },
+ { id:"eval-register", genre:"Evaluative", unit:"sentence", fix:"register",
+   name:"Keep a review formal",
+   why:"A review is written in formal language. Words like heaps, kinda and awesome belong in speech.",
+   checks:"Checks: none of heaps, kinda, sorta, gonna, wanna, awesome, super, stuff, cool, lol, yeah, nah, totally, guys, mate, epic, and the sentence still mentions the same things. It does not check that the new words are the best ones.",
+   variants:[
+    { id:"eval-register.1", topic:"Review: Storm over Marrow Bay (film)",
+      units:["Storm over Marrow Bay is a tense film about a fishing family caught in a cyclone.","The ending was kinda boring and the plot was heaps slow.","The sea scenes are convincing and beautifully filmed."],
+      bad:[1], informal:["kinda","heaps"], keep:["ending","plot"], model:"The ending was dull and the plot was very slow." },
+    { id:"eval-register.2", topic:"Review: The Corner Bakery (café)",
+      units:["The Corner Bakery offers warm and friendly service.","The pies are heaps good, but the coffee is kinda weak.","The prices are reasonable for the portion sizes."],
+      bad:[1], informal:["heaps","kinda"], keep:["pies","coffee"], model:"The pies are excellent, but the coffee is weak." },
+    { id:"eval-register.3", topic:"Review: Reef Runner (game)",
+      units:["Reef Runner is a fast and clever puzzle game.","The music is awesome and the graphics are super cool.","Overall, it is a worthwhile game for a rainy afternoon."],
+      bad:[1], informal:["awesome","super","cool"], keep:["music","graphics"], model:"The music is excellent and the graphics are impressive." },
+    { id:"eval-register.4", topic:"Review: Hollow Creek Museum",
+      units:["The Hollow Creek Museum is an engaging place to spend an afternoon.","The fossil room is gonna impress anyone who likes dinosaurs.","The displays are clear and the guides are knowledgeable."],
+      bad:[1], informal:["gonna"], keep:["fossil","room","dinosaurs"], model:"The fossil room will impress anyone who likes dinosaurs." }
+   ] },
+ { id:"info-opinion", genre:"Informative", unit:"sentence", fix:"choice",
+   name:"Information has no opinion",
+   why:"An information text states facts. Words that judge (best, weirdest, terrifying, loveliest) turn a fact into an opinion.",
+   keepWhy:"This is still an opinion. Words like “easily the most” and “clearly the best” judge. They do not inform.",
+   otherWhy:"This has no opinion, but it is a personal story with “I” in it, not information about the topic.",
+   variants:[
+    { id:"info-opinion.1", topic:"The platypus",
+      units:["The platypus is a mammal that lays eggs.","It lives in rivers and creeks in eastern Australia.","The platypus is the weirdest and most amazing animal ever.","It uses its bill to find food underwater."],
+      bad:[2], right:"It is one of only five kinds of mammal in the world that lay eggs.",
+      keep:"The platypus is easily the most fascinating animal in the world.",
+      other:"I once saw a platypus in a creek near my gran’s house." },
+    { id:"info-opinion.2", topic:"Honey bees",
+      units:["Honey bees live in colonies of thousands of bees.","Each colony has one queen, who lays the eggs.","Bees are the best insects because everyone loves honey.","Worker bees collect nectar and turn it into honey."],
+      bad:[2], right:"One worker bee makes about a twelfth of a teaspoon of honey in its whole life.",
+      keep:"Bees are clearly the most useful insects, and honey is delicious.",
+      other:"I got stung by a bee at my cousin’s birthday party." },
+    { id:"info-opinion.3", topic:"Volcanoes",
+      units:["A volcano is an opening in the Earth’s crust.","Hot melted rock, called magma, rises through the opening.","Volcanoes are terrifying, and nobody should go near one.","Magma that reaches the surface is called lava."],
+      bad:[2], right:"Many volcanoes lie around the Pacific Ocean, in the Ring of Fire.",
+      keep:"Volcanoes are the scariest thing in nature, and they are awful to see.",
+      other:"I visited a volcano on holiday, and the walk was long." },
+    { id:"info-opinion.4", topic:"The Murray River",
+      units:["The Murray is Australia’s longest river.","It flows from the Australian Alps to the sea in South Australia.","The Murray is the most beautiful river, and everyone should visit it.","Many towns and farms rely on its water."],
+      bad:[2], right:"The river is about 2,500 kilometres long.",
+      keep:"It is clearly the loveliest river in the whole country.",
+      other:"My family went camping beside the Murray last summer." }
+   ] },
+ { id:"micro-show", genre:"Micro-fiction", unit:"sentence", fix:"choice",
+   name:"Show the feeling",
+   why:"Naming a feeling (sad, nervous, angry) tells the reader. Showing it through what the character does lets the reader work it out.",
+   keepWhy:"This still names the feeling. A named feeling is telling, not showing.",
+   otherWhy:"This shows the feeling, but it jumps to present tense. The rest of the story is in past tense.",
+   variants:[
+    { id:"micro-show.1", topic:"Micro-fiction: the bus",
+      units:["The bus pulled away from the only street Dev had ever known.","He was very sad.","In his pocket, the photo of his old school stayed folded."],
+      bad:[1], right:"He pressed his palm flat against the glass until the street was gone.",
+      keep:"He felt so sad and lonely inside, all the way down.",
+      other:"He presses his palm flat against the glass until the street is gone." },
+    { id:"micro-show.2", topic:"Micro-fiction: the stage",
+      units:["The curtain began to rise.","Mia was extremely nervous.","Out in the dark, someone coughed."],
+      bad:[1], right:"Her fingers shook so hard that the script rattled.",
+      keep:"She felt terrified, and her stomach was full of nerves.",
+      other:"Her fingers shake so hard that the script rattles." },
+    { id:"micro-show.3", topic:"Micro-fiction: the model plane",
+      units:["Tom found his model plane on the floor.","He was angry.","His brother backed out of the room."],
+      bad:[1], right:"His jaw clenched around the snapped wing in his fist.",
+      keep:"He felt furious, really cross and fed up about it, and could hardly speak.",
+      other:"His jaw clenches around the snapped wing in his tight fist." },
+    { id:"micro-show.4", topic:"Micro-fiction: the message",
+      units:["The phone buzzed on the desk.","Nina read the message twice.","She was overjoyed."],
+      bad:[2], right:"She grinned at the screen and spun her chair twice.",
+      keep:"She felt so happy and so excited.",
+      other:"She grins at the screen and spins her chair around twice." }
+   ] },
+ { id:"lim-rhyme", genre:"Limerick", unit:"line", fix:"rhyme",
+   name:"Lines 1, 2 and 5 rhyme",
+   why:"A limerick rhymes lines 1, 2 and 5 with each other, and lines 3 and 4 with each other.",
+   checks:"Checks: the last word of your new line 5 rhymes with the end words of lines 1 and 2. If the checker cannot hear a rhyme either way it says so, and you say it aloud. It does not check syllables or sense.",
+   variants:[
+    { id:"lim-rhyme.1", topic:"Limerick: the zoo",
+      units:["There was a young girl at the zoo,","Whose lunch was a wobbly stew.","A seal took her hat,","And a duck took her mat,","So she ate her lunch with a spoon."],
+      bad:[4], fixLine:4, rw:[0,1], model:"So she shared it with a kangaroo." },
+    { id:"lim-rhyme.2", topic:"Limerick: the bay",
+      units:["A fisher sat out on the bay,","And caught nothing all of the day.","He felt the line shake,","It was only a snake,","So he went home for a cup of tea."],
+      bad:[4], fixLine:4, rw:[0,1], model:"So he packed up his net and went away." },
+    { id:"lim-rhyme.3", topic:"Limerick: the clown",
+      units:["A clown came to visit our town,","In a hat that was floppy and brown.","He tripped on a log,","And fell on a frog,","And the crowd gave a roar."],
+      bad:[4], fixLine:4, rw:[0,1], model:"Now the frog wears a tiny gold crown." },
+    { id:"lim-rhyme.4", topic:"Limerick: the comet",
+      units:["A comet flew by in the night,","And it glowed with a silvery light.","It flew past the sun,","And said, “That was fun!”","Then it landed on top of my bed."],
+      bad:[4], fixLine:4, rw:[0,1], model:"Then it vanished right out of sight." }
+   ] },
+ { id:"lim-long", genre:"Limerick", unit:"line", fix:"choice",
+   name:"Lines 3 and 4 are short",
+   why:"In a limerick lines 3 and 4 are the short pair, about half the length of lines 1, 2 and 5.",
+   keepWhy:"This line is still long. Lines 3 and 4 are the short pair.",
+   otherWhy:"This line is short, but its end word no longer rhymes with the other short line.",
+   variants:[
+    { id:"lim-long.1", topic:"Limerick: the koala",
+      units:["A koala was stuck in a tree,","Shouting, “Somebody rescue me!”","A ranger came by on her bike on a bright summer day,","And carried him away,","Now he nibbles a leaf for his tea."],
+      bad:[2], partner:3, right:"A ranger came that day,",
+      keep:"A ranger arrived on her bike on the very next day,",
+      other:"A ranger came by with a rope," },
+    { id:"lim-long.2", topic:"Limerick: the cake",
+      units:["A baker named Sue made a cake,","It was wider than a great big lake,","She forgot to turn down the oven and it all came out far too hot,","So she ate the whole lot,","Then she needed a very long break."],
+      bad:[2], partner:3, right:"But it came out too hot,",
+      keep:"But she forgot to turn down the oven, so it came out far too hot,",
+      other:"But it came out too bright," },
+    { id:"lim-long.3", topic:"Limerick: the dragon",
+      units:["A dragon who longed to fly","Kept leaping from cliffs very high,","He crashed on his head,","Then he limped all the way home to his warm and cosy bed,","So he stayed home and baked a pie."],
+      bad:[3], partner:2, right:"Then limped off to bed,",
+      keep:"Then he limped all the way back to his warm and cosy bed,",
+      other:"Then went off to rest," },
+    { id:"lim-long.4", topic:"Limerick: the pirate",
+      units:["A pirate was lost on the shore,","But he found not a coin more,","He lay down on the sand and fell asleep in the hot afternoon sun,","And he ate a bun,","Then a ship came like none seen before."],
+      bad:[2], partner:3, right:"He sat in the sun,",
+      keep:"He lay down on the sand and slept in the hot afternoon sun,",
+      other:"He sat in shade," }
+   ] },
+ { id:"ball-pair", genre:"Ballad", unit:"line", fix:"rhyme",
+   name:"A ballad rhymes in pairs",
+   why:"A ballad in AABBCC rhymes each pair of lines: 1 and 2, 3 and 4, 5 and 6.",
+   checks:"Checks: the last word of your new line rhymes with the end word of the line it pairs with. If the checker cannot hear a rhyme either way it says so, and you say it aloud. It does not check rhythm or sense.",
+   variants:[
+    { id:"ball-pair.1", topic:"Ballad: the drover",
+      units:["The drover rode home through the night,","A lantern his only light.","His old dog trotted on ahead,","While the children slept in their bed.","At dawn he rode into the town,","And the baker gave him a plum."],
+      bad:[4,5], fixLine:5, rw:[4], model:"And the people all came down." },
+    { id:"ball-pair.2", topic:"Ballad: the kite",
+      units:["The wind was high, the sky was blue,","And Tom ran out with his kite too.","He gave it more string and it went high,","Then it flew past a bee.","At dusk the string went slack and slow,","And Tom pulled his kite down below."],
+      bad:[2,3], fixLine:3, rw:[2], model:"Till it looked like a speck in the sky." },
+    { id:"ball-pair.3", topic:"Ballad: the lost cat",
+      units:["A girl went out to find her cat,","She called it from the roof.","She followed the creek to the sea,","Where she heard a soft cry by a tree.","The cat was asleep on a log,","Beside a small, sleepy frog."],
+      bad:[0,1], fixLine:1, rw:[0], model:"She searched the shed and checked the mat." },
+    { id:"ball-pair.4", topic:"Ballad: the river boat",
+      units:["The boat set out at break of day,","And the river carried it away.","A pelican sat on a log,","And watched the water slide by.","At sunset they drifted to shore,","And the captain could row no more."],
+      bad:[2,3], fixLine:3, rw:[2], model:"While a frog croaked in the fog." }
+   ] },
+ { id:"sent-splice", genre:"Sentence", unit:"sentence", fix:"choice",
+   name:"No comma splice",
+   why:"A comma cannot join two full sentences. Use a full stop, a semicolon, or a comma with a joining word such as so or because.",
+   keepWhy:"This is still two full sentences joined by a comma alone, which is a comma splice.",
+   otherWhy:"The comma splice is gone, but the second part is now a fragment. It cannot stand as a sentence.",
+   variants:[
+    { id:"sent-splice.1", topic:"A school excursion",
+      units:["Mrs Tran’s class walked to the river.","The path was muddy, they slipped all the way.","Everyone’s shoes were ruined by the end."],
+      bad:[1], right:"The path was muddy, so they slipped all the way.",
+      keep:"The path was muddy, they slid and slipped all the way.",
+      other:"The path was muddy. All the way to the river." },
+    { id:"sent-splice.2", topic:"In the kitchen",
+      units:["Aroha pulled on the oven mitts.","The oven beeped, the cake was ready.","She set it on the bench to cool."],
+      bad:[1], right:"The oven beeped because the cake was ready.",
+      keep:"The oven beeped, the cake was finally ready.",
+      other:"The oven beeped. Because the cake was ready." },
+    { id:"sent-splice.3", topic:"Morning trouble",
+      units:["My alarm did not go off.","I missed the bus, I had to walk.","The walk took forty minutes."],
+      bad:[1], right:"I missed the bus, so I had to walk.",
+      keep:"I missed the bus, I had to walk all the way.",
+      other:"I missed the bus. All the way to school on foot." },
+    { id:"sent-splice.4", topic:"A storm",
+      units:["The sky turned black over the farm.","Rain hammered the roof, the dog hid under the bed.","By midnight the creek had risen."],
+      bad:[1], right:"Rain hammered the roof; the dog hid under the bed and would not come out.",
+      keep:"Rain hammered the roof, the dog hid under the bed and shivered.",
+      other:"Rain hammered the roof. The dog under the bed." }
+   ] },
+ { id:"sent-frag", genre:"Sentence", unit:"sentence", fix:"choice",
+   name:"Every sentence is complete",
+   why:"A sentence needs a subject and a verb and has to make sense by itself. A fragment leaves the idea unfinished.",
+   keepWhy:"This is still a fragment. It has no complete subject and verb, or it leaves the idea hanging.",
+   otherWhy:"This is complete, but it joins two sentences with only a comma, which is a comma splice.",
+   variants:[
+    { id:"sent-frag.1", topic:"Catching the bus",
+      units:["Kai grabbed his bag.","Down the hill to the bus stop.","He caught the bus just in time."],
+      bad:[1], right:"He ran down the hill to the bus stop.",
+      keep:"Down the steep hill to the bus stop.",
+      other:"Kai ran down the hill, he was fast." },
+    { id:"sent-frag.2", topic:"The flooded road",
+      units:["We could not drive to the shops.","Because the creek had flooded.","So we cooked pasta at home."],
+      bad:[1], right:"The creek had flooded the road by the shops.",
+      keep:"Because the creek had flooded the road.",
+      other:"The creek had flooded the road, we stayed home." },
+    { id:"sent-frag.3", topic:"Our street",
+      units:["Mia loves our street.","The old tree at the end of the street.","It shades the whole footpath in summer."],
+      bad:[1], right:"The old tree stands at the end of the street by the school.",
+      keep:"The old tree with the thick branches at the end of the street.",
+      other:"The old tree stands at the end of the street, it is huge." },
+    { id:"sent-frag.4", topic:"Camping",
+      units:["The campers zipped up the tent.","And waited for the storm to pass.","By morning the sky was clear."],
+      bad:[1], right:"They waited for the storm to pass over the tent.",
+      keep:"And waited for the thunder to pass.",
+      other:"They waited, the storm passed by morning." }
+   ] },
+ { id:"son-couplet", genre:"Sonnet", unit:"line", fix:"rhyme",
+   name:"The couplet rhymes",
+   why:"A Shakespearean sonnet ends with a couplet: the last two lines rhyme with each other.",
+   checks:"Checks: the last word of your new last line rhymes with the end word of the line before it. If the checker cannot hear a rhyme either way it says so, and you say it aloud. It does not check ten syllables or sense.",
+   variants:[
+    { id:"son-couplet.1", topic:"The last six lines of a sonnet", start:9,
+      units:["I watched the lanterns floating out at night,","And wished that I could follow to the sea;","Each flame grew smaller, but it held its light,","As if the water meant to set it free.","Whatever dark may come, the flame will stay,","And hold the dream I carried from the shore."],
+      bad:[4,5], fixLine:5, rw:[4], model:"For what we love will never fade away." },
+    { id:"son-couplet.2", topic:"The last six lines of a sonnet", start:9,
+      units:["My grandfather would plant a tree each year,","And talk about the way the seasons go;","He never seemed to hurry, never fear,","He knew that all good things are slow to grow.","Now every spring the branches reach the sky,","And shade the garden where we used to play."],
+      bad:[4,5], fixLine:5, rw:[4], model:"And blossoms drift like snow as time goes by." },
+    { id:"son-couplet.3", topic:"The last six lines of a sonnet", start:9,
+      units:["The ferry left beneath a sky of blue,","And I stood waving, small beside the shore;","I told myself that everything was new,","And I could ask the future for no more.","But when the city came into my sight,","I felt my courage sink down to the floor."],
+      bad:[4,5], fixLine:5, rw:[4], model:"I found I was much braver than the night." },
+    { id:"son-couplet.4", topic:"The last six lines of a sonnet", start:9,
+      units:["The team came running onto the field in May,","Each player knew the part that he must do;","We cheered the whole way through the endless day,","And not one single voice was feeling blue.","The final whistle blew, and now I know,","That we had done our best and played the game."],
+      bad:[4,5], fixLine:5, rw:[4], model:"That winning is not all, so let it go." }
+   ] }
+];
+
+/* Rhyme families, as in Limericks.html. */
+const FAMILIES = {
+  "-oo":    {ipa:"/ʉː/",   words:["Drew","zoo","blue","flew","too","stew","kangaroo","shampoo","threw","Sue","new","grew","true","crew","glue","chew","Lou"]},
+  "-ay":    {ipa:"/eɪ/",   words:["May","day","play","stay","away","tray","hooray","Ray","Jay","bay","say","way","pay","hay"]},
+  "-ight":  {ipa:"/aɪt/",  words:["light","night","bright","fright","kite","right","sight","flight","white","bite","write","might","quite"]},
+  "-y":     {ipa:"/aɪ/",   words:["sky","fly","my","why","try","cry","pie","tie","lie","dry","July"]},
+  "-ime":   {ipa:"/aɪm/",  words:["time","crime","lime","chime","dime","prime","slime"]},
+  "-ine":   {ipa:"/aɪn/",  words:["line","fine","mine","nine","wine","shine","dine","pine","spine"]},
+  "-at":    {ipa:"/æt/",   words:["cat","hat","bat","flat","mat","that","sat","rat","chat"]},
+  "-ot":    {ipa:"/ɒt/",   words:["hot","not","got","lot","pot","spot","dot","shot","forgot","plot"]},
+  "-ake":   {ipa:"/eɪk/",  words:["cake","lake","snake","shake","awake","mistake","Jake","take","make","wake","bake"]},
+  "-ore":   {ipa:"/ɔː/",   words:["more","roar","snore","shore","store","before","explore","saw","law","draw","straw","paw","jaw"]},
+  "-oon":   {ipa:"/ʉːn/",  words:["moon","spoon","soon","balloon","baboon","cartoon","June","noon"]},
+  "-ee":    {ipa:"/iː/",   words:["sea","tree","free","three","agree","knee","bee","Lee","see","tea"]},
+  "-ed":    {ipa:"/ed/",   words:["bed","red","shed","Fred","Ned","fed","led","sled"]},
+  "-og":    {ipa:"/ɔg/",   words:["dog","frog","log","jog","blog","fog"]},
+  "-eeling":{ipa:"/iːlɪŋ/", words:["Ealing","ceiling","feeling","kneeling","healing","dealing","stealing","peeling"]},
+  "-ow":    {ipa:"/aʊ/",   words:["cow","now","how","wow"]},
+  "-own":   {ipa:"/aʊn/",  words:["town","down","clown","brown","frown","crown","gown","drown"]},
+  "-oh":    {ipa:"/əʉ/",   words:["go","show","flow","snow","know","slow","grow","throw","blow","below","glow","low"]},
+  "-uff":   {ipa:"/ʌf/",   words:["stuff","puff","cuff"]},
+  "-off":   {ipa:"/ɒf/",   words:["off","scoff"]},
+  "-un":    {ipa:"/ʌn/",   words:["sun","fun","run","bun"]},
+  "-um":    {ipa:"/ʌm/",   words:["drum","plum","thumb"]},
+  "-ut":    {ipa:"/ʌt/",   words:["but","cut","hut","nut","shut"]},
+  "-oot":   {ipa:"/ʊt/",   words:["soot"]},
+  "-ohm":   {ipa:"/əʉm/",  words:["foam","roam"]},
+  "-awt":   {ipa:"/ɔːt/",  words:["caught","taught"]},
+  "-ird":   {ipa:"/ɜːd/",  words:["bird","third"]},
+  "-air":   {ipa:"/eː/",   words:["hair","chair","pair","care","stare"]},
+  "-ear":   {ipa:"/ɪə/",   words:["near","hear","deer","fear","clear","year"]},
+  "-ood":   {ipa:"/ʊd/",   words:["good","wood","could","would","should","stood","hood"]},
+  "-uv":    {ipa:"/ʌv/",   words:["love","glove","above","shove"]}
+};
+
+/* Words whose spelling hides their sound, and the family they rhyme with.
+   They count for their family, but the checker never learns a spelling from
+   them (paid does not rhyme with said). */
+const IRREGULAR = {
+  through:"-oo", two:"-oo", do:"-oo", you:"-oo", who:"-oo", shoe:"-oo", canoe:"-oo",
+  grey:"-ay", they:"-ay", weigh:"-ay", ballet:"-ay", buffet:"-ay",
+  height:"-ight", high:"-y", sigh:"-y", buy:"-y", bye:"-y", eye:"-y", goodbye:"-y",
+  rhyme:"-ime", climb:"-ime", sign:"-ine",
+  what:"-ot", yacht:"-ot",
+  break:"-ake", steak:"-ake",
+  door:"-ore", floor:"-ore", four:"-ore", pour:"-ore", your:"-ore",
+  me:"-ee", key:"-ee",
+  head:"-ed", said:"-ed", spread:"-ed", bread:"-ed", dead:"-ed", thread:"-ed", instead:"-ed", ahead:"-ed",
+  bough:"-ow", plough:"-ow",
+  though:"-oh", dough:"-oh", toe:"-oh", depot:"-oh",
+  rough:"-uff", tough:"-uff", enough:"-uff",
+  cough:"-off",
+  one:"-un", won:"-un", done:"-un", none:"-un",
+  come:"-um", some:"-um",
+  put:"-oot", foot:"-oot",
+  home:"-ohm", comb:"-ohm", dome:"-ohm",
+  thought:"-awt", bought:"-awt",
+  word:"-ird", heard:"-ird",
+  bear:"-air", where:"-air", there:"-air",
+  here:"-ear"
+};
+
+const AMBIGUOUS = ["ough","ought","ow","own","ows","ead","eath","ear","ears","eard","ere","ove","ood","ook","oot","one","ome","ose","ost","omb",
+                   "our","ord","ork","orse","ind","ild","ive","ave","int","ull","ush","ut","oll","ather","ou","ey","ea","eat","oe","e","o"];
+
+const SYLLABLES = { poem:2, poet:2, idea:3, area:3, beautiful:3, lion:2, cruel:2, science:2, diet:2, giant:2, piano:3,
+                    video:3, radio:3, museum:3, create:2, react:2, evening:2, every:3, violin:3, real:1, fire:1 };
+
+/* ========================== END OF CONTENT ================================ */
+
+const KEY = "writingfolio.findfix.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store;
+try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
+function blank(){ return { fname:"", lname:"", sid:"", startedAt:null, deckStart:null, lastAt:null, deck:null, first:{},
+  fsExits:0, tabSwitches:0, fsMode:"", fsFailed:0, unchecked:[], returns:0 }; }
+function load(){
+  try{ const s=JSON.parse(store.getItem(KEY)); if(!s||typeof s!=="object") return blank();
+    return Object.assign(blank(), s);
+  }catch(e){ return blank(); }
+}
+let S = load();
+/* Read, change, write: another folio page may be open in a second tab. */
+function bump(fn){
+  const cur=load(); fn(cur); cur.lastAt=Date.now();
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
+})();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+function shuffle(a){ const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=b[i]; b[i]=b[j]; b[j]=t; } return b; }
+
+const RULE={}, VAR={};
+RULES.forEach(r=>{ RULE[r.id]=r; (r.variants||[]).forEach(v=>{ VAR[v.id]=v; v.rule=r.id; }); });
+
+/* ====================== RHYME CHECKER ====================================
+   Three answers: yes, no, or not sure. "No" is given only when the checker
+   can show the endings sound different, so a pair it cannot hear is never
+   wrongly marked as not rhyming.
+   1. Both words in FAMILIES or IRREGULAR: same family yes, different
+      families no.
+   2. Same spelling of the rhyming part: yes, unless that ending is in
+      AMBIGUOUS (cow, snow), then not sure.
+   3. A word not listed whose rhyming part is spelt like exactly one
+      family's FAMILIES words is treated as that family.
+   4. Otherwise compare the final sound: a vowel against a consonant, or two
+      different consonants, is a no (cat, blue). So are two different short
+      vowels before the same consonant (cat, cut), and the same short vowel
+      before the same consonant is a yes (rich, pitch).
+   5. Anything else: not sure.
+   Australian English is non-rhotic, so a final r is a vowel sound (door
+   rhymes with saw). */
+function norm(w){ return String(w||"").toLowerCase().replace(/[^a-z]/g,""); }
+const FAM = {};
+Object.keys(FAMILIES).forEach(k=>FAMILIES[k].words.forEach(w=>{ FAM[norm(w)]=k; }));
+Object.keys(IRREGULAR).forEach(w=>{ FAM[norm(w)]=IRREGULAR[w]; });
+const WEAK = ["ing","er","ers","y","ey","ies","ie","ed","es","en","ent","ion","ions","ous","ure","al","el","e","ly","ful","ul","on","an","ow"];
+const ODDV = ["pretty","any","many","says","said","friend","busy","women","been","was","what","want","wash","watch","son","won","ton",
+              "done","none","one","front","month","money","honey","love","come","some","does","put","push","pull","bull","full","sugar"];
+function isV(w,i){ const c=w[i]; if(c==="u" && w[i-1]==="q") return false; return "aeiou".indexOf(c)>=0 || (c==="y" && i>0); }
+function parts(w){
+  const g=[]; let i=0;
+  while(i<w.length){ if(isV(w,i)){ const s=i; while(i<w.length && isV(w,i)) i++; g.push([s,i]); } else i++; }
+  const L=w.length, cons=i=>i>=0 && i<L && !isV(w,i) && w[i]!=="y";
+  let magic=false;
+  /* A final e after a consonant is silent (cake, home), except in -le and -re
+     after another consonant (table, centre), where it is its own syllable. */
+  if(g.length>1 && g[g.length-1][0]===L-1 && w[L-1]==="e" && cons(L-2) &&
+     !((w[L-2]==="l"||w[L-2]==="r") && cons(L-3))){ g.pop(); magic=true; }
+  if(!g.length) return { rime:w, tail:w, coda:w, magic, multi:false, stress:"", after:"" };
+  const last=g[g.length-1], tail=w.slice(last[0]);
+  let from=last;
+  if(g.length>1 && WEAK.indexOf(tail)>=0) from=g[g.length-2];
+  const coda=w.slice(last[1], magic?L-1:L);
+  return { rime:w.slice(from[0]), tail, coda, magic, multi:g.length>1, stress:w.slice(from[0],from[1]),
+           after:w.slice(from[1], from===last?(magic?L-1:L):g[g.length-1][0]), before:w.slice(0,from[0]),
+           le:tail==="e" && w[L-2]==="l" };
+}
+/* The consonant sound a word ends on: "V" for a vowel sound, a short code
+   for a consonant, or null when the spelling cannot say (laugh, walk, -ed). */
+function endSound(w, p){
+  if(p.multi && p.tail==="ed") return null;
+  if(p.le) return "l";
+  let x=p.coda;
+  if(x==="") return "V";
+  x=x.replace(/^r+/,"");
+  if(x===""||x==="w") return "V";
+  if(/gh|l[kfm]|w/.test(x)) return null;
+  x=x.replace(/ck/g,"k").replace(/mb$|mn$/,"m").replace(/gn$/,"n").replace(/bt$/,"t").replace(/(.)\1/g,"$1");
+  if(p.magic){ x=x.replace(/dg$/,"j").replace(/g$/,"j").replace(/c$/,"s"); }
+  x=x.replace(/tch$/,"ch").replace(/ck$/,"k").replace(/c$/,"k").replace(/ph$/,"f").replace(/x$/,"ks").replace(/z$/,"s");
+  return /^(ch|sh|th|ng|nk|[bdfgjklmnpstv])+$/.test(x) ? x : null;
+}
+function ambiguous(r){ return AMBIGUOUS.indexOf(r)>=0; }
+const RIME = {};
+Object.keys(FAMILIES).forEach(k=>FAMILIES[k].words.forEach(w0=>{ const w=norm(w0); if(ODDV.indexOf(w)>=0) return;
+  const r=parts(w).rime; (RIME[r]=RIME[r]||{})[k]=1; }));
+function familyOf(w){
+  if(FAM[w]) return FAM[w];
+  if(ODDV.indexOf(w)>=0) return null;
+  const r=parts(w).rime; if(ambiguous(r) || !RIME[r]) return null;
+  const k=Object.keys(RIME[r]); return k.length===1?k[0]:null;
+}
+function heard(w){ if(IRREGULAR[w]===undefined) return w; const f=FAMILIES[IRREGULAR[w]].words; return f.length?norm(f[0]):w; }
+function sayEnd(c){ return c==="V"?"a vowel sound":`the sound “${c}”`; }
+function shortV(w,p){
+  if(p.magic || p.stress.length!==1 || "aeiou".indexOf(p.stress)<0) return false;
+  if(!p.after || /^[rwy]/.test(p.after)) return false;
+  if(p.multi && p.after.length<2) return false;
+  if(/(w|qu)$/.test(p.before)) return false;
+  if(p.stress==="a" && /^l/.test(p.after)) return false;
+  return ODDV.indexOf(w)<0;
+}
+/* The same pair always gets the same answer, so answers are kept. */
+const RHYMED = new Map();
+function rhyme(a0, b0){ const k=a0+"|"+b0; if(!RHYMED.has(k)) RHYMED.set(k, rhyme1(a0,b0)); return RHYMED.get(k); }
+function rhyme1(a0, b0){
+  const a=norm(a0), b=norm(b0);
+  if(!a||!b) return null;
+  const A=String(a0).replace(/[^A-Za-z’']/g,""), B=String(b0).replace(/[^A-Za-z’']/g,"");
+  if(a===b) return { r:"same", why:`“${A}” is the same word twice. A rhyme needs a different word.` };
+  const fa=familyOf(a), fb=familyOf(b);
+  const yes={ r:"yes", why:`“${A}” and “${B}” rhyme.` };
+  const unsure={ r:"unsure", why:`The checker can’t tell whether “${A}” and “${B}” rhyme. Say them aloud.` };
+  if(FAM[a] && FAM[b]) return FAM[a]===FAM[b] ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${FAM[a]}, ${FAM[b]}).` };
+  /* An IRREGULAR word is heard through a regular word of its family (high
+     through sky), since its own spelling says nothing about its sound. */
+  const pa=parts(heard(a)), pb=parts(heard(b));
+  if(pa.rime===pb.rime) return (ambiguous(pa.rime) || ODDV.indexOf(a)>=0 || ODDV.indexOf(b)>=0) ? unsure : yes;
+  if(fa && fb) return fa===fb ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${fa}, ${fb}).` };
+  const ca=endSound(heard(a),pa), cb=endSound(heard(b),pb);
+  if(ca && cb && ca!==cb) return { r:"no", why:`“${A}” ends with ${sayEnd(ca)} and “${B}” ends with ${sayEnd(cb)}.` };
+  if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress===pb.stress) return yes;
+  if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress!==pb.stress &&
+     !(/[ou]/.test(pa.stress) && /[ou]/.test(pb.stress)))
+    return { r:"no", why:`“${A}” and “${B}” have different vowel sounds (${pa.stress}, ${pb.stress}).` };
+  return unsure;
+}
+function ipaOf(w){ const f=familyOf(norm(w)); return f?FAMILIES[f].ipa:""; }
+
+/* ====================== SYLLABLE ESTIMATE ================================
+   A spelling rule of thumb, so the screen says "about". SYLLABLES overrides
+   it word by word, and the student can correct any line with - and +. */
+function sylCore(w){
+  if(!w) return 0;
+  if(SYLLABLES[w]!=null) return SYLLABLES[w];
+  if(/n't$/.test(w)){
+    if(["don't","won't","can't","ain't","aren't","weren't","shan't"].indexOf(w)>=0) return 1;
+    return sylCore(w.slice(0,-3))+1;
+  }
+  w=w.replace(/'/g,"");
+  if(SYLLABLES[w]!=null) return SYLLABLES[w];
+  if(w.length>4 && /ing$/.test(w)) return sylCore(w.slice(0,-3))+1;
+  if(w.length<=3) return /[aeiouy]/.test(w)?1:0;
+  let x=w;
+  const keep=v=>/[aeiouy]/.test(v);
+  if(/[^td]ed$/.test(x) && keep(x.slice(0,-2))) x=x.slice(0,-2);
+  else if(/es$/.test(x) && !/([sxzcg]|ch|sh)es$/.test(x) && keep(x.slice(0,-2))) x=x.slice(0,-2);
+  else if((/[^laeiouy]e$/.test(x) || /[aeiouy]le$/.test(x)) && keep(x.slice(0,-1))) x=x.slice(0,-1);
+  x=x.replace(/^y/,"");
+  const m=x.match(/[aeiouy]{1,2}/g);
+  return m?m.length:0;
+}
+function sylWord(t){
+  const w=String(t).toLowerCase().replace(/’/g,"'").replace(/[^a-z']/g,"").replace(/^'+|'+$/g,"");
+  if(!w) return /[0-9]/.test(t)?1:0;
+  return Math.max(1, sylCore(w));
+}
+function sylLine(s){ return String(s).split(/[\s\-–]+/).reduce((n,t)=>n+sylWord(t),0); }
+function lastWord(s){ const t=String(s).trim().split(/\s+/).filter(x=>/[A-Za-z]/.test(x)); return t.length?t[t.length-1].replace(/^[^A-Za-z]+|[^A-Za-z]+$/g,""):""; }
+
+/* ====================== FIX JUDGES ======================================== */
+function words(t){ return String(t||"").toLowerCase().replace(/[’]/g,"'").match(/[a-z']+/g)||[]; }
+function hasAny(w, list){ return w.some(x=>list.some(k=>x.indexOf(k)===0)); }
+function padText(t){ return " "+words(t).join(" ")+" "; }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function unum(v,i){ return (v.start||1)+i; }
+const LY_OK = ["apply","supply","reply","rely","fly","bully","imply","multiply"];
+
+function verbFirst(seg){
+  const w=words(seg); if(!w.length) return { r:"no", tag:"empty", msg:"The step is empty." };
+  const f=w[0].replace(/'/g,"");
+  if(VERBS.indexOf(f)>=0) return { r:"yes", word:f };
+  if(NONVERBS.indexOf(f)>=0 || (/ly$/.test(f) && f.length>4 && LY_OK.indexOf(f)<0) || (/ing$/.test(f) && f.length>5))
+    return { r:"no", tag:`starts with “${f}”`, msg:`The step starts with “${cap(f)}”, which is not a verb. A step starts with the action: Put, Fold, Pour.` };
+  return { r:"unsure", word:f, tag:`“${f}” unknown`, msg:`The checker does not know “${cap(f)}” as a verb. Check it with your teacher.` };
+}
+function judgeFix(r, v, text){
+  const w=words(text), ptext=padText(text);
+  if(r.fix==="verb"){
+    if(w.length<3) return { r:"no", tag:"too short", msg:"That is too short to be a step." };
+    const f=verbFirst(text); if(f.r==="no") return f;
+    if(!hasAny(w,v.keep)) return { r:"no", tag:"lost the job", msg:`The step has lost its job. It should still be about ${v.keep.join(" or ")}.` };
+    return f.r==="unsure" ? f : { r:"yes", word:f.word, msg:`It starts with the verb “${cap(f.word)}”.` };
+  }
+  if(r.fix==="split"){
+    const segs=String(text||"").split(/[.!?;\n]+/).map(s=>s.trim()).filter(Boolean);
+    if(segs.length<2) return { r:"no", tag:"still one sentence", msg:"That is still one sentence. Each action needs its own step." };
+    let unsure=null;
+    for(const s of segs){
+      if(words(s).length<2) return { r:"no", tag:"step too short", msg:`“${s}” is too short to be a step.` };
+      const f=verbFirst(s); if(f.r==="no") return { r:"no", tag:f.tag, msg:`“${s}”: ${f.msg}` }; if(f.r==="unsure") unsure=f;
+    }
+    for(const g of v.split){ if(!segs.some(s=>hasAny(words(s),g))) return { r:"no", tag:"lost an action", msg:"One of the two actions is missing. Both stay, each in its own step." }; }
+    if(segs.some(s=>v.split.every(g=>hasAny(words(s),g)))) return { r:"no", tag:"actions still together", msg:"Both actions are still in the same sentence. Put each in its own step." };
+    return unsure ? unsure : { r:"yes", msg:"Each action has its own step, and each step starts with a verb." };
+  }
+  if(r.fix==="modal"){
+    const wk=r.weak.find(k=>ptext.indexOf(" "+k+" ")>=0);
+    if(wk) return { r:"no", tag:`weak word “${wk}”`, msg:`“${wk}” makes the writer sound unsure. A persuasive writer sounds sure.` };
+    if(!r.strong.some(k=>ptext.indexOf(" "+k+" ")>=0)) return { r:"no", tag:"no strong word", msg:"No strong word yet. The writer has to sound sure: must, should, will." };
+    if(!hasAny(w,v.keep)) return { r:"no", tag:"lost the topic", msg:`The sentence has lost its point. It should still be about ${v.keep.join(" or ")}.` };
+    return { r:"yes", msg:"The weak words are gone and the writer sounds sure." };
+  }
+  if(r.fix==="register"){
+    const bad=INFORMAL.concat(v.informal||[]).find(k=>w.indexOf(k)>=0);
+    if(bad) return { r:"no", tag:`informal “${bad}”`, msg:`“${bad}” is informal. A review is written in formal language.` };
+    if(!hasAny(w,v.keep)) return { r:"no", tag:"lost the point", msg:`The sentence has lost its point. It should still be about ${v.keep.join(" or ")}.` };
+    return { r:"yes", msg:"No informal words are left." };
+  }
+  if(r.fix==="rhyme"){
+    if(w.length<3) return { r:"no", tag:"too short", msg:"That is too short to be a line." };
+    const last=lastWord(text), old=lastWord(v.units[v.fixLine]);
+    if(norm(last)===norm(old)) return { r:"no", tag:"kept the end word", msg:`The line still ends with “${old}”. Change the end word.` };
+    let unsure=false;
+    for(const t of v.rw){
+      const end=lastWord(v.units[t]), x=rhyme(last,end);
+      if(!x) return { r:"no", tag:"no end word", msg:"The line needs an end word." };
+      if(x.r==="same") return { r:"no", tag:`same word “${last}”`, msg:`“${last}” is the word line ${unum(v,t)} ends with. A rhyme needs a different word.` };
+      if(x.r==="no") return { r:"no", tag:`“${last}” does not rhyme with “${end}”`, msg:`${x.why} Line ${unum(v,t)} ends with “${end}”.` };
+      if(x.r==="unsure") unsure=true;
+    }
+    return unsure ? { r:"unsure", word:last, tag:`“${last}” not sure`, msg:`The checker can’t tell whether “${last}” rhymes here. Say it aloud, and ask your teacher.` }
+                  : { r:"yes", word:last, msg:`“${cap(last)}” rhymes with ${v.rw.map(t=>`“${lastWord(v.units[t])}”`).join(" and ")}.` };
+  }
+  return { r:"no", tag:"unknown", msg:"" };
+}
+function prefill(r,v,i){ return v.units[r.fix==="rhyme"?v.fixLine:i]; }
+
+/* ====================== CONTENT CHECK ==================================== */
+function contentErrors(){
+  const e=[];
+  [["VERBS",VERBS],["NONVERBS",NONVERBS],["INFORMAL",INFORMAL],["EVAL",EVAL]].forEach(([n,l])=>{ if(!l||!l.length) e.push(`${n} is empty.`); });
+  const seen={};
+  RULES.forEach(r=>{
+    const W=`Rule ${r.id}`;
+    if(!GENRES[r.genre]) e.push(`${W}: genre “${r.genre}” is not in GENRES.`);
+    if(!r.variants||r.variants.length<4) e.push(`${W} has fewer than 4 variants.`);
+    if(["verb","split","modal","register","rhyme","choice"].indexOf(r.fix)<0) e.push(`${W}: unknown fix type “${r.fix}”.`);
+    if(r.fix==="modal" && (!r.weak||!r.weak.length||!r.strong||!r.strong.length)) e.push(`${W}: weak and strong lists must not be empty.`);
+    if(r.fix==="choice" && (!r.keepWhy||!r.otherWhy)) e.push(`${W}: needs keepWhy and otherWhy.`);
+    if(r.fix!=="choice" && !r.checks) e.push(`${W}: needs a checks line.`);
+    (r.variants||[]).forEach(v=>{
+      const V=`Variant ${v.id}`;
+      if(seen[v.id]) e.push(`${V} is used twice.`); seen[v.id]=1;
+      if(!Array.isArray(v.units)||v.units.length<2){ e.push(`${V}: units needs at least two lines.`); return; }
+      if(!Array.isArray(v.bad)||!v.bad.length||v.bad.some(i=>!(i>=0&&i<v.units.length))){ e.push(`${V}: bad does not point at a real unit.`); return; }
+      const t=prefill(r,v,v.bad[0]);
+      if(!t){ e.push(`${V}: nothing to fix at the key.`); return; }
+      if(r.fix==="choice"){
+        ["right","keep","other"].forEach(k=>{ if(!v[k]) e.push(`${V}: missing ${k}.`); });
+        if(!(v.right&&v.keep&&v.other)) return;
+        if(new Set([v.right,v.keep,v.other,t]).size<4) e.push(`${V}: two of the options, or an option and the faulty text, are the same.`);
+        const lw=s=>lastWord(s);
+        if(r.id==="pers-reason"){
+          if(words(v.right).indexOf("because")<0) e.push(`${V}: right has no because.`);
+          if(words(v.keep).indexOf("because")>=0) e.push(`${V}: keep must have no because.`);
+          if(!(" "+words(v.other).join(" ")+" ").match(/ (might|could|maybe|perhaps) /)) e.push(`${V}: other must contain a weak word.`);
+        }
+        if(r.id==="eval-describe"){
+          const ev=s=>hasAny(words(s),EVAL), inf=s=>hasAny(words(s),INFORMAL);
+          v.units.forEach((u,i)=>{ if(v.bad.indexOf(i)>=0){ if(ev(u)) e.push(`${V}: the faulty unit has an evaluative word.`); } else if(!ev(u)) e.push(`${V} unit ${i+1}: no evaluative word, so it also only describes.`); });
+          if(!ev(v.right)) e.push(`${V}: right needs an evaluative word.`);
+          if(ev(v.keep)) e.push(`${V}: keep must have no evaluative word.`);
+          if(!ev(v.other)||!inf(v.other)) e.push(`${V}: other needs an evaluative and an informal word.`);
+          v.units.forEach((u,i)=>{ if(inf(u)) e.push(`${V} unit ${i+1}: informal word in a unit that should be formal.`); });
+        }
+        if(r.id==="info-opinion"){ const w=words(v.other); if(w.indexOf("i")<0&&w.indexOf("my")<0) e.push(`${V}: other must be first person.`); }
+        if(r.id==="lim-long"){
+          const p=v.partner; if(!(p>=0&&p<v.units.length)) { e.push(`${V}: partner is not a unit.`); return; }
+          const pe=lw(v.units[p]);
+          [["right",1],["keep",1],["other",0]].forEach(([k,want])=>{ const x=rhyme(lw(v[k]),pe);
+            if(!x||(want&&x.r!=="yes")||(!want&&x.r!=="no")) e.push(`${V}: ${k} “${lw(v[k])}” with “${pe}” should be ${want?"a clear yes":"a clear no"}, the checker says ${x?x.r:"nothing"}.`); });
+          const ox=rhyme(lw(t),pe); if(!ox||ox.r!=="yes") e.push(`${V}: the faulty line does not rhyme with its partner.`);
+          [[0,1],[0,4]].forEach(([a,b])=>{ const x=rhyme(lw(v.units[a]),lw(v.units[b])); if(!x||x.r!=="yes") e.push(`${V}: lines ${a+1} and ${b+1} should rhyme (${x?x.r:"?"}).`); });
+          if(sylLine(v.right)>sylLine(v.units[p])+2) e.push(`${V}: right is not short enough (about ${sylLine(v.right)}).`);
+          if(sylLine(v.keep)<9||sylLine(t)<9) e.push(`${V}: keep and the faulty line must be long (about 9 or more).`);
+        }
+        return;
+      }
+      /* typed fixes: the model must pass its own check, and the faulty text must fail it. */
+      if(!v.model) e.push(`${V}: missing model.`);
+      if(r.fix==="verb"||r.fix==="modal"||r.fix==="register"){ if(!v.keep||!v.keep.length) e.push(`${V}: keep must not be empty.`); }
+      if(r.fix==="split"&&(!v.split||v.split.length!==2||v.split.some(g=>!g.length))) e.push(`${V}: split needs two non-empty word groups.`);
+      if(r.fix==="rhyme"){
+        if(!(v.fixLine>=0&&v.fixLine<v.units.length)) e.push(`${V}: fixLine is not a unit.`);
+        if(!v.rw||!v.rw.length||v.rw.some(i=>!(i>=0&&i<v.units.length))) e.push(`${V}: rw does not point at real lines.`);
+        if(v.fixLine>=0&&v.units[v.fixLine]&&!lastWord(v.units[v.fixLine])) e.push(`${V}: the line has no end word.`);
+        const lw=i=>lastWord(v.units[i]), chk=(a,b,want)=>{ const x=rhyme(lw(a),lw(b));
+          if(!x||x.r!==want) e.push(`${V}: “${lw(a)}” (line ${unum(v,a)}) with “${lw(b)}” (line ${unum(v,b)}) should be a clear ${want}, the checker says ${x?x.r:"nothing"}.`); };
+        if(r.id==="lim-rhyme"){ chk(0,1,"yes"); chk(2,3,"yes"); chk(4,0,"no"); chk(4,1,"no"); }
+        else if(r.id==="ball-pair"){ for(let p=0;p<v.units.length;p+=2){ if(p===v.bad[0]) chk(p,p+1,"no"); else chk(p,p+1,"yes"); } }
+        else if(r.id==="son-couplet"){ chk(0,2,"yes"); chk(1,3,"yes"); chk(4,5,"no"); }
+      }
+      if(v.model){
+        const jm=judgeFix(r,v,v.model); if(jm.r!=="yes") e.push(`${V}: the model answer fails its own check (${jm.r}: ${jm.tag||""}).`);
+        const jb=judgeFix(r,v,t); if(jb.r!=="no") e.push(`${V}: the faulty text passes the check (${jb.r}).`);
+      }
+    });
+  });
+  return e;
+}
+
+/* ====================== DECK ============================================== */
+function newDeck(){
+  const order={}; RULES.forEach(r=>{ order[r.id]=shuffle(r.variants.map(v=>v.id)); });
+  return { queue:shuffle(RULES.map(r=>r.id)), done:{}, seen:{}, order, cur:null, finished:false };
+}
+/* A returned card is a different variant. When the pool has all been shown,
+   a new cycle starts, never with the variant just shown. */
+function pickVariant(d, rid){
+  let seen=d.seen[rid]||(d.seen[rid]=[]);
+  let rem=d.order[rid].filter(x=>seen.indexOf(x)<0);
+  if(!rem.length){ const last=seen[seen.length-1]; d.seen[rid]=seen=[last];
+    rem=shuffle(d.order[rid].filter(x=>x!==last)); }
+  seen.push(rem[0]); return rem[0];
+}
+function startCard(c){
+  const d=c.deck; if(!d.queue.length){ d.finished=true; d.cur=null; return; }
+  const rid=d.queue[0], vid=pickVariant(d,rid), fresh=!c.first[rid];
+  if(fresh) c.first[rid]={ v:vid, find:null, fix:null, miss:[], unchecked:false };
+  d.cur={ rule:rid, v:vid, stage:"find", sel:null, fm:[], xm:[], fRev:false, xRev:false, found:null, perm:shuffle([0,1,2]),
+          first:fresh, fb:null, text:null, unch:false, failed:false };
+}
+/* A card leaves the front of the queue when it is settled. A missed card
+   (answer revealed at either step) goes back 2 or 3 cards later. */
+function settle(s){
+  const d=s.deck, c=d.cur, failed=c.fRev||c.xRev;
+  d.queue.shift();
+  if(failed){ s.returns++; d.queue.splice(Math.min(d.queue.length, 2+Math.floor(Math.random()*2)), 0, c.rule); }
+  else d.done[c.rule]={ clean: c.first && (c.fm.length+c.xm.length)<=CLEAN_TICK.maxMisses };
+  c.failed=failed; c.stage="result";
+}
+function pickUnit(i){
+  const c=S.deck&&S.deck.cur; if(!c||c.stage!=="find"||c.fm.indexOf(i)>=0||blocking()) return;
+  bump(s=>{ s.deck.cur.sel=i; }); render();
+  const b=document.querySelector(`[data-u="${i}"]`); if(b) b.focus();
+}
+function pickOpt(p){
+  const c=S.deck&&S.deck.cur; if(!c||c.stage!=="fix"||c.xm.indexOf(p)>=0||blocking()) return;
+  bump(s=>{ s.deck.cur.sel=p; }); render();
+  const b=document.querySelector(`[data-o="${p}"]`); if(b) b.focus();
+}
+function checkFind(){
+  const cur=S.deck&&S.deck.cur; if(!cur||cur.stage!=="find"||cur.sel==null||blocking()) return;
+  const r=RULE[cur.rule], v=VAR[cur.v], i=cur.sel, ok=v.bad.indexOf(i)>=0, g=GENRES[r.genre];
+  bump(s=>{ const c=s.deck.cur, f=s.first[c.rule];
+    if(ok){ c.found=i; c.stage="fix"; c.sel=null; c.fb=null; if(c.first&&f.find===null) f.find=(c.fm.length===0); }
+    else{
+      c.fm.push(i); c.sel=null; if(c.first) f.miss.push(`find: tapped ${r.unit} ${unum(v,i)}`);
+      if(c.fm.length>=2){ c.fRev=true; c.found=v.bad[0]; c.stage="fix"; c.fb=null; if(c.first&&f.find===null) f.find=false; }
+      else c.fb={ cls:"bad", html:`<span class="rule">Not ${esc(r.unit)} ${unum(v,i)}.</span>Nothing is broken there. Ask of each ${esc(r.unit)}: ${esc(g.ask)}` };
+    } });
+  render();
+}
+function checkFix(){
+  const cur=S.deck&&S.deck.cur; if(!cur||cur.stage!=="fix"||blocking()) return;
+  const r=RULE[cur.rule], v=VAR[cur.v]; let j;
+  if(r.fix==="choice"){
+    if(cur.sel==null) return;
+    const oi=cur.perm[cur.sel];
+    j = oi===0 ? { r:"yes", msg:"That keeps the point and follows the rule." }
+      : { r:"no", tag:oi===1?"kept the error":"broke another rule", msg:oi===1?r.keepWhy:r.otherWhy, opt:cur.sel };
+  }else{
+    const el=$("ft"), t=el?el.value:(cur.text||""); j=judgeFix(r,v,t); j.text=t;
+  }
+  bump(s=>{ const c=s.deck.cur, f=s.first[c.rule];
+    if(j.text!=null) c.text=j.text;
+    if(j.r==="no"){
+      c.xm.push(j.opt!=null?j.opt:-1); c.sel=null; if(c.first) f.miss.push("fix: "+j.tag);
+      c.fb={ cls:"bad", html:`<span class="rule">Not fixed.</span>${esc(j.msg)}` };
+      if(c.xm.length>=2){ c.xRev=true; if(c.first&&f.fix===null) f.fix=false; settle(s); }
+    }else{
+      if(c.first&&f.fix===null){ f.fix=(c.xm.length===0); if(j.r==="unsure") f.unchecked=true; }
+      if(j.r==="unsure"){ c.unch=true; s.unchecked.push(c.v+": "+j.word); c.fb={ cls:"warn", html:`<span class="rule">Not sure.</span>${esc(j.msg)}` }; }
+      else c.fb={ cls:"ok", html:`<span class="rule">Fixed.</span>${esc(j.msg)}` };
+      settle(s);
+    } });
+  render();
+}
+function nextCard(){
+  if(blocking()) return;
+  bump(s=>{ s.deck.cur=null; startCard(s); });
+  if(S.deck.finished){ fsLeave(); }
+  render();
+}
+
+/* ====================== FULL SCREEN ======================================
+   A browser cannot stop a student leaving full screen. So the page counts each
+   exit and each tab switch, and covers the cards until the student is back. */
+const FS={ leaving:false };
+function fsSupported(){ const el=document.documentElement; return document.fullscreenEnabled!==false && !!(el.requestFullscreen||el.webkitRequestFullscreen); }
+function isFull(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function reqFull(){ const el=document.documentElement, f=el.requestFullscreen||el.webkitRequestFullscreen;
+  try{ return Promise.resolve(f.call(el)); }catch(e){ return Promise.reject(e); } }
+function fsLeave(){ FS.leaving=true; try{ const f=document.exitFullscreen||document.webkitExitFullscreen;
+  if(isFull()&&f) Promise.resolve(f.call(document)).catch(()=>{}).then(()=>{ FS.leaving=false; }); else FS.leaving=false; }catch(e){ FS.leaving=false; } }
+function deckActive(){ return view.screen==="deck" && !!S.deck && !S.deck.finished; }
+function blocking(){ return deckActive() && S.fsMode==="on" && (!isFull() || document.hidden); }
+function guard(){
+  const g=$("fsguard"), on=blocking(); g.hidden=!on; $("body").inert=on;
+  if(on&&!g.dataset.shown){ g.dataset.shown="1"; $("fsback").focus(); }
+  if(!on) delete g.dataset.shown;
+}
+function fsBack(){
+  reqFull().then(guard).catch(()=>{ bump(c=>{ c.fsMode="unavailable"; c.fsFailed++; }); guard(); });
+}
+function onFsChange(){
+  if(!isFull() && deckActive() && S.fsMode==="on" && !FS.leaving) bump(c=>{ c.fsExits++; });
+  guard();
+}
+document.addEventListener("fullscreenchange", onFsChange);
+document.addEventListener("webkitfullscreenchange", onFsChange);
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden && deckActive()) bump(c=>{ c.tabSwitches++; });
+  guard();
+});
+
+/* ====================== SCREENS =========================================== */
+let view={ screen:"home" };
+function go(screen){
+  if(!idOk() && screen!=="id") screen="id";
+  view={ screen }; window.scrollTo(0,0); render();
+}
+function render(){
+  ({ id:renderId, home:renderHome, deck:renderDeck, report:renderReport })[view.screen]();
+  guard();
+}
+function crumbs(){
+  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
+}
+function topbar(){ return `<div class="topbar"><span class="sp">${crumbs()}</span></div>`; }
+
+function renderId(){
+  $("body").innerHTML=topbar()+`<h1>Find and fix</h1>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start &rarr;</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile(); go("home");
+}
+function doneCount(){ return S.deck?Object.keys(S.deck.done).length:0; }
+function renderHome(){
+  const n=doneCount(), tot=RULES.length, fin=S.deck&&S.deck.finished;
+  $("body").innerHTML=topbar()+`<h1>Find and fix</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>
+    ${S.deck?`<p class="cnt" style="font-size:17px;margin:0 0 4px">${fin?`All ${tot} cards done.`:`${n} of ${tot} cards done.`}</p>`:""}
+    <div class="btnrow">
+      ${fin?"":`<button class="btn btn-primary big" onclick="startDeck()">${S.deck?"Continue":"Start"}</button>`}
+      <button class="btn ${fin?"btn-primary big":""}" onclick="go('report')">Report for your teacher</button>
+    </div>`;
+}
+function startDeck(){
+  const enter=()=>{ bump(c=>{ c.deckStart=c.deckStart||Date.now(); if(!c.deck) c.deck=newDeck(); if(!c.deck.cur&&!c.deck.finished) startCard(c); }); go("deck"); };
+  if(!fsSupported()){ bump(c=>{ c.fsMode="unavailable"; }); enter(); return; }
+  /* A browser that never answers the request must not leave the student stuck
+     on Start: after 2 seconds the deck opens without full screen, and a late
+     yes still turns it on. */
+  let settled=false;
+  const timer=setTimeout(()=>{ if(settled) return; settled=true; bump(c=>{ c.fsMode="unavailable"; c.fsFailed++; }); enter(); }, 2000);
+  reqFull().then(()=>{ clearTimeout(timer); bump(c=>{ c.fsMode="on"; }); if(settled){ guard(); return; } settled=true; enter(); })
+           .catch(()=>{ clearTimeout(timer); if(settled) return; settled=true; bump(c=>{ c.fsMode="unavailable"; c.fsFailed++; }); enter(); });
+}
+
+function pipsHtml(d){
+  return RULES.map(r=>{
+    const x=d.done[r.id], cur=d.cur&&d.cur.rule===r.id;
+    const cls=x?(x.clean?"clean":"retry"):(cur?"cur":""), g=x?(x.clean?"✓":"~"):(cur?"▸":"");
+    const lab=`${GENRES[r.genre].label}: ${x?(x.clean?"done first go":"done after more than one go"):(cur?"this card":"not done")}`;
+    return `<span class="pip ${cls}" title="${esc(lab)}" aria-label="${esc(lab)}">${g}</span>`;
+  }).join("");
+}
+function renderDeck(){
+  const d=S.deck; if(!d){ go("home"); return; }
+  if(d.finished){ renderFinished(); return; }
+  const c=d.cur, r=RULE[c.rule], v=VAR[c.v], g=GENRES[r.genre];
+  const bar=`<div class="deckbar"><b>${esc(g.label)}</b><span class="pips">${pipsHtml(d)}</span>
+    <span class="cnt">${doneCount()} of ${RULES.length} done</span><span>✓ first go &nbsp; ~ more goes</span>
+    <span style="margin-left:auto;display:flex;gap:14px;align-items:center">${crumbs()}</span></div>`;
+  let units="";
+  v.units.forEach((u,i)=>{
+    let cls="", tg="", dis=true;
+    if(c.stage==="find"){ dis=false; if(c.sel===i) cls="sel"; if(c.fm.indexOf(i)>=0){ cls="wrong"; tg="Not this one"; dis=true; } }
+    else{ const isErr=c.fRev?v.bad.indexOf(i)>=0:c.found===i; if(isErr){ cls="right"; tg="Error"; } }
+    units+=`<button class="unit ${cls}" data-u="${i}" ${dis?"disabled":""} ${c.stage==="find"?`aria-pressed="${c.sel===i}"`:""} onclick="pickUnit(${i})">
+      <span class="n">${unum(v,i)}</span><span>${esc(u)}</span><span class="tg">${tg}</span></button>`;
+  });
+  let side="";
+  const fb=c.fb?`<div class="fb ${c.fb.cls} on">${c.fb.html}</div>`:`<div class="fb"></div>`;
+  if(c.stage==="find"){
+    side=`<p class="prompt">Tap the ${esc(r.unit)} that breaks a rule.</p>
+      <div class="btnrow" style="margin-top:0"><button class="btn btn-primary" onclick="checkFind()" ${c.sel==null?"disabled":""}>Check</button></div>${fb}`;
+  }else{
+    const head=`<div class="rulebox"><b>${c.fRev?`Missed. The error is ${esc(r.unit)} ${unum(v,v.bad[0])}${v.bad.length>1?` or ${unum(v,v.bad[1])}`:""}: `:""}${esc(r.name)}</b>${esc(r.why)}</div>`;
+    if(c.stage==="fix"&&r.fix==="choice"){
+      const texts=[v.right,v.keep,v.other];
+      side=head+`<p class="prompt">Choose the rewrite that fixes ${esc(r.unit)} ${unum(v,v.bad[0])}.</p><div class="optlist">`+
+        c.perm.map((oi,p)=>{ const wrong=c.xm.indexOf(p)>=0, on=c.sel===p;
+          return `<button class="opt ${wrong?"wrong":""} ${on?"on":""}" data-o="${p}" ${wrong?"disabled":""} aria-pressed="${on}" onclick="pickOpt(${p})">
+            <span class="L">${"ABC"[p]}</span><span>${esc(texts[oi])}</span>${wrong?`<span class="tg2">Not this one</span>`:""}</button>`; }).join("")+
+        `</div><div class="btnrow"><button class="btn btn-primary" onclick="checkFix()" ${c.sel==null?"disabled":""}>Check</button></div>${fb}`;
+    }else if(c.stage==="fix"){
+      const val=c.text!=null?c.text:prefill(r,v,c.found);
+      side=head+`<div class="fix"><p class="prompt">${r.fix==="rhyme"?`Rewrite line ${unum(v,v.fixLine)}.`:r.fix==="split"?"Rewrite it as separate steps.":`Rewrite ${esc(r.unit)} ${unum(v,c.found)}.`}</p>
+        <label for="ft" class="vh" style="position:absolute;left:-9999px">Your rewrite</label>
+        <textarea id="ft" rows="3" oninput="bump(s=>{s.deck.cur.text=this.value})" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();checkFix();}">${esc(val)}</textarea>
+        <div class="btnrow"><button class="btn btn-primary" onclick="checkFix()">Check</button></div>${fb}
+        <p class="dim">${esc(r.checks)}</p></div>`;
+    }else{
+      const model=r.fix==="choice"?v.right:v.model;
+      side=head+(c.failed?`${c.fb&&c.fb.cls==="bad"?`<div class="fb bad on">${c.fb.html}</div>`:""}<div class="fb warn on"><span class="rule">Missed.</span>This rule comes back in a few cards, in a different version.${c.xRev?`<br><span class="k">One answer:</span> ${esc(model)}`:""}</div>`
+                         :c.fb?`<div class="fb ${c.fb.cls} on">${c.fb.html}</div>`:"")+
+        `<div class="btnrow"><button class="btn btn-primary" id="nextb" onclick="nextCard()">${d.queue.length?"Next card":"Finish"}</button></div>`;
+    }
+  }
+  $("body").innerHTML=bar+`<div class="cols"><div class="cardbox"><p class="topic">${esc(v.topic)}</p>${units}</div><div class="cardbox">${side}</div></div>`;
+  if(c.stage==="result"){ const b=$("nextb"); if(b&&!blocking()) b.focus(); }
+  else if(c.stage==="fix"&&r.fix!=="choice"&&!c.fb){ const t=$("ft"); if(t&&!blocking()) t.focus(); }
+}
+function renderFinished(){
+  const d=S.deck, clean=Object.keys(d.done).filter(k=>d.done[k].clean).length;
+  $("body").innerHTML=topbar()+`<h1>Find and fix</h1><p class="cnt" style="font-size:17px">All ${RULES.length} cards done. ${clean} of ${RULES.length} on the first go.</p>
+    <div class="btnrow"><button class="btn btn-primary big" onclick="go('report')">Report for your teacher</button></div>`;
+}
+
+/* ====================== REPORT ===========================================
+   One tab-separated row. First tries only. Misses are named by rule. */
+function reportData(){
+  const gs=Object.keys(GENRES), d=S.deck;
+  const genreCells=gs.map(g=>{
+    const rs=RULES.filter(r=>r.genre===g); let ok=0, tried=0;
+    rs.forEach(r=>{ const f=S.first[r.id]; if(f&&f.find!==null&&f.fix!==null){ tried++; if(f.find&&f.fix) ok++; } });
+    return d||tried ? `${ok}/${rs.length}`+(tried<rs.length?` (${tried} tried)`:"") : "not tried";
+  });
+  const misses=RULES.map(r=>{ const f=S.first[r.id]; return f&&f.miss.length?`${r.name} [${f.v}]: ${f.miss.join(", ")}`:""; }).filter(Boolean).join(" | ");
+  const mins=(S.deckStart&&S.lastAt)?Math.max(1,Math.round((S.lastAt-S.deckStart)/60000)):"";
+  const dt=new Date();
+  const fsTxt = S.fsMode==="on" ? "used" : S.fsMode==="unavailable" ? "unavailable, not enforced" : "not started";
+  return { cols:["Date","First name","Last name","Code","Minutes","Cards done"].concat(gs.map(g=>g+", first try"),
+            ["Misses, by rule and version","Cards returned","Fixes the checker was not sure about","Full screen exits","Tab switches","Full screen"]),
+           row:[ dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0"),
+                 S.fname,S.lname,S.sid,String(mins),`${doneCount()}/${RULES.length}`].concat(genreCells,
+                 [misses||(d?"none":"not tried"), String(S.returns), S.unchecked.join("; ")||"none", String(S.fsExits), String(S.tabSwitches),
+                  fsTxt+(S.fsFailed?` (refused ${S.fsFailed}x)`:"")]) };
+}
+function renderReport(){
+  const r=reportData();
+  $("body").innerHTML=topbar()+`<div class="rptwrap"><table class="rpt">${r.cols.map((c,i)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[i])}</td></tr>`).join("")}</table></div>
+    <p class="dim" style="margin-top:0">First tries only: a card counts as right when the error was found and fixed with no miss. A fix the checker was not sure about counts as right and is listed. Typed fixes are judged only by the checks shown on each card, so whether a rewrite reads well is for you to see. Exits and tab switches are counted, not prevented, and a reload is not counted.</p>
+    <div class="btnrow" style="margin-top:8px"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
+      <button class="btn btn-ghost" onclick="go('home')">Back</button></div>
+    <div class="fb" id="fb"></div>`;
+}
+function copyRow(){
+  const tsv=reportData().row.map(v=>String(v).replace(/[\t\n\r]+/g," ")).join("\t");
+  const done=()=>{ const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Copied. Paste it into the class sheet."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, ()=>fallback(tsv,done));
+  else fallback(tsv,done);
+}
+function fallback(t, done){
+  const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); done(); }catch(e){} a.remove();
+}
+
+/* ---- boot ---- */
+(function boot(){
+  const bad=contentErrors();
+  if(bad.length){
+    $("body").innerHTML=`<h1>Find and fix</h1><div class="broken"><b>This page will not run until its content is fixed.</b>
+      <ul>${bad.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  if(!idOk()){ go("id"); return; }
+  go("home");
+})();
+</script>
+</body>
+</html>
