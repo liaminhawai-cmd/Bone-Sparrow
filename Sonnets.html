@@ -1000,8 +1000,9 @@ function route(){
 function setPoem(id){ const h="#"+id+(OPEN?"&open":""); if(location.hash!==h) history.replaceState(null,"",h); readHash(); go("home"); }
 window.addEventListener("hashchange", route);
 const HOMELINKS=`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
-function links(){ return HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
-function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():HOMELINKS}</span></div>`; }
+function deckLink(){ return `<a class="menulink" href="SonnetsDeck.html">Teacher deck</a>`; }
+function links(){ return deckLink()+HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
+function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():deckLink()+HOMELINKS}</span></div>`; }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 
 function renderId(){
@@ -1100,7 +1101,7 @@ function modelHTML(s){
   const scheme=L.map(l=>l.rhyme).join("");
   const pairs=rhymePairs(s).map(([a,b])=>`${L[a].end} / ${L[b].end}`).join("; ");
   const counts=L.map((l,k)=>info(P,s,k).total).join(", ");
-  return `<p class="task">Section 1 is worked for you: rhyme letters, syllables, strong syllables and what happens. Read it, then go to section 2.</p>
+  return `<p class="task"><b>Worked example</b></p>
     <dl class="model"><dt>Who</dt><dd>${esc(m.who)}</dd><dt>What happens</dt><dd>${esc(m.what)}</dd><dt>Where</dt><dd>${esc(m.where)}</dd><dt>Comparison</dt><dd>${esc(m.why)}</dd>
     <dt>Rhyme letters</dt><dd>${esc(scheme)}: ${esc(pairs)}.</dd><dt>Syllables, lines ${g(s,0)} to ${g(s,L.length-1)}</dt><dd>${esc(counts)}</dd></dl>`;
 }
@@ -1322,7 +1323,7 @@ function renderClass(){
         <span class="met" id="syl${k}"></span></span></div>`; }).join("");
   $("body").innerHTML=`<div class="slide">
     <div class="slidehead"><h1>Kew at dawn</h1><span class="tools"><span class="copied" id="fb" role="status"></span>
-      <button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class lines</button></span></div>
+      <a class="btn" style="text-decoration:none" href="SonnetsDeck.html#16">Teacher deck</a><button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class lines</button></span></div>
     <input id="linkOut" readonly hidden aria-label="Class link">
     <div class="rows">${rows}</div>
     <div class="foot" id="checks"></div>

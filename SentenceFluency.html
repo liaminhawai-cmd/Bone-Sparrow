@@ -506,7 +506,7 @@ function links(){
     <a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`;
 }
 function topbar(deck){
-  return `<div class="topbar">${deck?`<a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a>`:""}<span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`}</span></div>`;
+  return `<div class="topbar"><a class="menulink" href="SentenceFluencyDeck.html">Teacher deck</a><span class="sp">${idOk()?links():`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`}</span></div>`;
 }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 

@@ -1268,8 +1268,9 @@ function route(){
 function setPoem(id){ const h="#"+id+(OPEN?"&open":""); if(location.hash!==h) history.replaceState(null,"",h); readHash(); go("home"); }
 window.addEventListener("hashchange", route);
 const HOMELINKS=`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
-function links(){ return HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
-function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():HOMELINKS}</span></div>`; }
+function deckLink(){ return `<a class="menulink" href="${PID==="clancy"?"ClancyDeck.html":"BalladsDeck.html"}">Teacher deck</a>`; }
+function links(){ return deckLink()+HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
+function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():deckLink()+HOMELINKS}</span></div>`; }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 function stanzaPips(on, fn, mark){
   return `<span class="pips">${P.stanzas.map((s,i)=>`<button class="pip ${i===on?"on":""} ${mark&&mark(i)?"seen":""}" onclick="${fn}(${i})"
@@ -1368,7 +1369,7 @@ function drawQs(i, focusQi){
   let h="";
   if(i===0){
     const m=s.model;
-    h=`<p class="task">Stanza 1 is worked for you: rhyme letters, syllables, strong syllables and what happens. Read it, then go to stanza 2.</p><dl class="model"><dt>Who</dt><dd>${esc(m.who)}</dd><dt>What happens</dt><dd>${esc(m.what)}</dd><dt>Where</dt><dd>${esc(m.where)}</dd><dt>Why</dt><dd>${esc(m.why)}</dd></dl>`;
+    h=`<p class="task"><b>Worked example</b></p><dl class="model"><dt>Who</dt><dd>${esc(m.who)}</dd><dt>What happens</dt><dd>${esc(m.what)}</dd><dt>Where</dt><dd>${esc(m.where)}</dd><dt>Why</dt><dd>${esc(m.why)}</dd></dl>`;
   } else h=`<p class="task">Answer each question, then press Check. Two misses show the answer. Tap an underlined word for its meaning.</p>`+qsOf(i).map((q,qi)=>itemHTML(i,qi)).join("");
   box.innerHTML=h+`<div class="next" id="nextwrap">${nextHTML(i)}</div>`;
   box.scrollTop=top;
@@ -1728,7 +1729,7 @@ function renderClass(){
         <span class="met" id="syl${k}"></span></span></div>`; }).join("");
   $("body").innerHTML=`<div class="slide">
     <div class="slidehead"><h1>The Boy from Kew</h1><span class="tools"><span class="copied" id="fb" role="status"></span>
-      <button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class stanza</button></span></div>
+      <a class="btn" style="text-decoration:none" href="BalladsDeck.html#12">Teacher deck</a><button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class stanza</button></span></div>
     <input id="linkOut" readonly hidden aria-label="Class link">
     <div class="rows">${rows}</div>
     <div class="foot"><div class="cards" id="checks" style="display:contents"></div>

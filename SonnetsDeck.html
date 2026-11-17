@@ -200,7 +200,7 @@ const SLIDES = [
    key:[["1 to 4","Fingers up: the number of your answer."],["Tap","Tap the strong syllables on the desk."]],
    notes:[
      ["Say","You know ballads: a story, pairs of rhymes, long lines. A sonnet is a different shape. It is short, it has a fixed pattern of lines, syllables and rhymes, and it has a turn in the middle. We will take two sonnets apart, then you write one as a class."],
-     ["Timing","Lesson order: silent starter Find and fix (about 10 minutes), this deck (about 20 minutes), then the Sonnets module. Slides 3 to 11 are under 3 minutes each: show, read aloud, take answers, reveal."],
+     ["Timing","Lesson order: silent starter Find and fix (about 10 minutes), the Sonnet words set (about 7 minutes, slide 3), the rest of this deck (about 20 minutes), then the Sonnets module. Slides 4 to 13 are under 3 minutes each: show, read aloud, take answers, reveal."],
      ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes. SonnetsDeck.html#7 opens slide 7, and #7r opens its reveal."] ] },
 
  { kind:"go",
@@ -212,7 +212,36 @@ const SLIDES = [
      ["Say","Open Find and fix. Fix the errors. Silent until I stop you."],
      ["Timing","About 10 minutes. Stop the class when most have finished the set."],
      ["Check","Students can copy their report from the module at any time: ask for it before they leave, or collect it at the end of the lesson."],
-     ["Keys","The line on the slide opens the module. Right arrow: the first sonnet."] ] },
+     ["Keys","The line on the slide opens the module. Right arrow: the sonnet words."] ] },
+
+ { kind:"go",
+   h:"Words first",
+   mod:"Vocab Hub: Sonnet words",
+   line:"Open Sonnet words. Build each word, then use it.",
+   href:"WritingFolioVocabHub.html#set-11",
+   notes:[
+     ["Say","Before we read, the hard words. Open Sonnet words. Build each word from its parts, then use it."],
+     ["Timing","About 7 minutes. The words come back in the module: any underlined word there opens its meaning."],
+     ["Check","Walk past and ask two students: what is the opposite of eternal? What does temperate mean in a sentence about weather?"] ] },
+
+ { kind:"cols",
+   h:"Shakespeare’s English",
+   sub:"How do we say it today?",
+   src:"Sonnet 18, Westminster Bridge",
+   cols:[ {label:"Then", place:"In the poems",
+           items:["Thou art more lovely","Shall I compare thee","thy eternal summer","lease hath all too short a date","The river glideth","This City now doth wear"]},
+          {label:"Now", place:"Today",
+           items:["___ more lovely","Shall I compare ___","___ eternal summer","lease ___ all too short a date","The river ___","This City now ___"]} ],
+   turned:[ {label:"Then", place:"In the poems",
+           items:["Thou art more lovely","Shall I compare thee","thy eternal summer","lease hath all too short a date","The river glideth","This City now doth wear"]},
+          {label:"Now", place:"Today",
+           items:["You are more lovely","Shall I compare you","your eternal summer","lease has all too short a date","The river glides","This City now wears"]} ],
+   ans:["thou, thee = you. thy = your. art = are","-th and -eth = -s today: hath = has, doth = does, glideth = glides"],
+   notes:[
+     ["Display","Pairs fill the Now column out loud before you reveal. Do the first one together: Thou art more lovely, you are more lovely."],
+     ["Answer","You are more lovely. Shall I compare you. Your eternal summer. Has all too short a date. The river glides. The city now wears."],
+     ["Teaching point","This is not Old English: it is the English of 400 years ago. Thou and thee were the friendly, close way to say you. An -st ending goes with thou: thou ow’st means you own, thou wander’st means you wander."],
+     ["If students ask","Why not just say you? Thou is close and personal, like talking to a friend. It also fitted the beat."] ] },
 
  { kind:"poem",
    h:"A sonnet",
@@ -332,7 +361,7 @@ const SLIDES = [
          {r:"E"},{r:"F"},{r:"E"},{r:"F"},
          {r:"G"},{r:"G"}],
    scheme:"ABABCDCDEFEFGG",
-   ans:["A B A B   C D C D   E F E F   G G","Three quatrains of four lines, then a couplet of two","Shakespearean sonnet"],
+   ans:["A B A B   C D C D   E F E F   G G","Three quatrains of four lines, then a couplet of two","Shakespearean sonnet","Temperate rhymed with date in Shakespeare’s accent: say it temper-ATE"],
    notes:[
      ["Display","Read the end words of lines 1 to 4: day, temperate, May, date. Which two sound the same? Give them letters. Let the class do the next four before you reveal."],
      ["Answer","A B A B, C D C D, E F E F, G G. Day and May are A. Temperate and date are B. Shines and declines are C. Dimm’d and untrimm’d are D. Fade and shade are E. Ow’st and grow’st are F. See and thee are G."],
@@ -364,7 +393,7 @@ const SLIDES = [
    tags:[{r:"A",m:"octave"},{r:"B"},{r:"B"},{r:"A"},{r:"A"},{r:"B"},{r:"B"},{r:"A"},
          {r:"C",m:"sestet"},{r:"D"},{r:"C"},{r:"D"},{r:"C"},{r:"D"}],
    scheme:"ABBAABBACDCDCD",
-   ans:["A B B A A B B A   C D C D C D","An octave of eight lines, then a sestet of six","Petrarchan sonnet"],
+   ans:["A B B A A B B A   C D C D C D","An octave of eight lines, then a sestet of six","Petrarchan sonnet","Majesty rhymed with by, lie and sky in 1802 poems: say it majes-TIE"],
    notes:[
      ["Display","Look at the end words of lines 1 to 8: fair, by, majesty, wear, bare, lie, sky, air. Letters for the first four, then check lines 5 to 8. Then lines 9 to 14."],
      ["Answer","A B B A A B B A, then C D C D C D. Fair, wear, bare and air are A. By, majesty, lie and sky are B. Steep, deep and asleep are C. Hill, will and still are D."],
@@ -404,7 +433,7 @@ const SLIDES = [
      ["Answer","3: line 9. But thy eternal summer shall not fade. The word But turns the poem. Summer fades, but the person will not. This change is the volta, or turn. In a Shakespearean sonnet it usually comes at line 9 and again, with a final twist, at the couplet."],
      ["Ask","“What word tells you it turns?” But. “What changes between line 8 and line 9?” The poem stops describing summer and starts promising something about the person."],
      ["Link","The Man from Ironbark has a turn too. In the last stanza the story about the razor is finished, and the poem ends on a joke: flowing beards are all the go in Ironbark. Ask which twist your class chose. A turn is a change of direction near the end."],
-     ["Couplet","Lines 13 and 14, on slides 6 and 7, say how the person stays alive: so long lives this, and this gives life to thee. This is the poem. As long as someone reads it, the person is alive. Ask: what does this refer to?"],
+     ["Couplet","Lines 13 and 14, on slides 8 and 9, say how the person stays alive: so long lives this, and this gives life to thee. This is the poem. As long as someone reads it, the person is alive. Ask: what does this refer to?"],
      ["If students disagree","1 or 2 fingers (lines 7 and 8) are still about summer fading: they finish the faults. The turn word is But, in line 9."],
      ["Teaching point","The turn (volta) changes the direction of the poem. It does a job: first the problem, then the answer."] ] },
 
