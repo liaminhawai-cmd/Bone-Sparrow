@@ -194,7 +194,7 @@ function drawBar(){
   $("bar").innerHTML=ACTS.map((a,i)=>
     `<button class="${i===S.act?'on':''}" data-a="${i}">${i+1} · ${esc(a.name)}</button>`).join("")+
     `<span class="sp"></span><button id="restart">again</button>`+
-    `<a href="index.html">⌂ Year 7 English</a><a href="teacher/">Teacher hub</a>`;
+    `<a href="index.html">⌂ Year 7 English</a><a href="BoneSparrow.html">The Bone Sparrow</a><a href="BoneSparrowThreeWays.html">Student module</a><a href="teacher/">Teacher hub</a>`;
   [...$("bar").querySelectorAll("button[data-a]")].forEach(b=>
     b.addEventListener("click",()=>startAct(+b.dataset.a)));
   $("restart").addEventListener("click",()=>startAct(S.act));
