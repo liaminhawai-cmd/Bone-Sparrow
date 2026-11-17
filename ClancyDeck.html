@@ -97,6 +97,10 @@ body{background:var(--frame);font-family:var(--font);color:var(--ink);display:fl
 .rows .gap{grid-column:1 / -1;height:.45em}
 .rows .hidden{visibility:hidden}
 .rev .rows .row.hit > *{background:#F0DDE2}
+/* The turn of a sonnet: a gold band and "turn" beside the line, the same on every slide. */
+.rev .rows .row.turn > *{background:#FBE3A6}
+.rev .rows .row.turn .tx{font-weight:700}
+.rows .tag .t{font-weight:700;color:#6B4400}
 .rev .rows .row.hit .tx{font-weight:700}
 .rev .rows .row.hit .tag .m{color:var(--maroon)}
 /* Each rhyme sound has its own colour on the reveal, on the letter and on the
@@ -436,8 +440,9 @@ function rowsOf(sl, rev){
     L.forEach((t, i) => rows.push({
       type:"line", no: sl.nonum ? "" : start + i, hidden:!shown,
       runs: lineRuns(t, ends && ends[i], rev && shown, (tags && tags[i] && tags[i].r) || false),
-      tag: tags ? tagParts(tags[i]) : [], tagOn: rev && shown,
-      hit: !!(rev && hit && hit.indexOf(i) >= 0) }));
+      tag: (tags ? tagParts(tags[i]) : []).concat(L === sl.lines && sl.turn && sl.turn.indexOf(i) >= 0 ? [{t:"↻ turn", k:"t"}] : []), tagOn: rev && shown,
+      hit: !!(rev && hit && hit.indexOf(i) >= 0),
+      turn: !!(rev && shown && L === sl.lines && sl.turn && sl.turn.indexOf(i) >= 0) }));
   };
   if(sl.kind === "move"){
     lines(sl.from.lines, null, null, null, true, sl.from.label);
@@ -556,7 +561,7 @@ function rowHtml(r){
   if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
   if(r.type === "gap") return `<div class="gap"></div>`;
   const tag = r.tag.map(p => `<span class="${p.k}${p.l ? " L" + p.l : ""}">${esc(p.t)}</span>`).join("");
-  return `<div class="row${r.hit ? " hit" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
+  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
     `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
 }
 

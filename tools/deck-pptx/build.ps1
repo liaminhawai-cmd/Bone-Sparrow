@@ -192,7 +192,7 @@ foreach($st in $spec.states){
       $numW = 34; $tagW = $(if($hasTag){ 190 } else { 0 })
     }
     $textW = $colW - $numW - $tagW
-    $size = [Math]::Max(16, [Math]::Min(28, [Math]::Floor($textW / ($maxLen * 0.52))))
+    $size = [Math]::Max($(if($twoCol){ 14 } else { 16 }), [Math]::Min(28, [Math]::Floor($textW / ($maxLen * 0.52))))
     $step = [Math]::Round($size * 1.7)
     $yEnd = 118
     foreach($col in $cols){
@@ -207,19 +207,19 @@ foreach($st in $spec.states){
       elseif($r.type -eq "gap"){ $y += 14 }
       else {
         if(-not $r.hidden){
-          if($r.hit){
+          if($r.hit -or $r.turn){
             $hb = $s.Shapes.AddShape(1, ($cx - 6), ($y - 2), ($colW + 12), ($step - 2))
             $hb.Line.Visible = 0
-            $hb.Fill.ForeColor.RGB = (RGB "F0DDE2")
+            $hb.Fill.ForeColor.RGB = $(if($r.turn){ (RGB "FBE3A6") } else { (RGB "F0DDE2") })
           }
           if($numW -gt 0){ [void](TextBox $s $cx $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false) }
           $runs = @($r.runs | ForEach-Object { KindRun $_ })
-          if($r.hit){ $runs = @($runs | ForEach-Object { $_.bold=$true; $_ }) }
+          if($r.hit -or $r.turn){ $runs = @($runs | ForEach-Object { $_.bold=$true; $_ }) }
           $tb = TextBox $s ($cx + $numW + 10) $y ($textW - 10 + $tagW) 24 @( (Para $runs $size) ) $false
           $tb.TextFrame.WordWrap = 0
           $tagRuns = @()
           foreach($t in @($r.tag)){
-            if($t.k -eq "r"){ $tagRuns += @{ t=$t.t; bold=$true; color=$(if($t.l -and $RC.ContainsKey([string]$t.l)){ $RC[[string]$t.l] } else { $C.head }) } } else { $tagRuns += @{ t=$t.t; color=$C.grey } }
+            if($t.k -eq "r"){ $tagRuns += @{ t=$t.t; bold=$true; color=$(if($t.l -and $RC.ContainsKey([string]$t.l)){ $RC[[string]$t.l] } else { $C.head }) } } elseif($t.k -eq "t"){ $tagRuns += @{ t=$t.t; bold=$true; color=(RGB "6B4400") } } else { $tagRuns += @{ t=$t.t; color=$C.grey } }
             $tagRuns += @{ t="   " }
           }
           if($tagRuns.Count){

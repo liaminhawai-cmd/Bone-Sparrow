@@ -100,6 +100,10 @@ body{background:var(--frame);font-family:var(--font);color:var(--ink);display:fl
 .rows .gap{grid-column:1 / -1;height:.45em}
 .rows .hidden{visibility:hidden}
 .rev .rows .row.hit > *{background:#F0DDE2}
+/* The turn of a sonnet: a gold band and "turn" beside the line, the same on every slide. */
+.rev .rows .row.turn > *{background:#FBE3A6}
+.rev .rows .row.turn .tx{font-weight:700}
+.rows .tag .t{font-weight:700;color:#6B4400}
 .rev .rows .row.hit .tx{font-weight:700}
 .rev .rows .row.hit .tag .m{color:var(--maroon)}
 /* Each rhyme sound has its own colour on the reveal, on the letter and on the
@@ -211,7 +215,7 @@ const SLIDES = [
    key:[["1 to 4","Fingers up: the number of your answer."],["Tap","Tap the strong syllables on the desk."]],
    notes:[
      ["Say","You know ballads: a story, pairs of rhymes, long lines. A sonnet is a different shape. It is short, it has a fixed pattern of lines, syllables and rhymes, and it has a turn in the middle. We will take two sonnets apart, then you write one as a class."],
-     ["Timing","Lesson order: silent starter Find and fix (about 10 minutes), the Sonnet words set (about 7 minutes, slide 3), the rest of this deck (about 22 minutes, with the reading on slide 5), then the Sonnets module. Slides 4 to 16 are under 3 minutes each: show, read aloud, take answers, reveal."],
+     ["Timing","Lesson order: silent starter Find and fix (about 10 minutes), the sonnet about sonnets (slide 3), the Sonnet words set (about 7 minutes, slide 4), the rest of this deck (about 22 minutes, with the reading on slide 6), then the Sonnets module. Slides 5 to 17 are under 3 minutes each: show, read aloud, take answers, reveal."],
      ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes. SonnetsDeck.html#7 opens slide 7, and #7r opens its reveal."] ] },
 
  { kind:"go",
@@ -223,8 +227,37 @@ const SLIDES = [
      ["Say","Open Find and fix. Fix the errors. Silent until I stop you."],
      ["Timing","About 10 minutes. Stop the class when most have finished the set."],
      ["Check","Students can copy their report from the module at any time: ask for it before they leave, or collect it at the end of the lesson."],
-     ["Keys","The line on the slide opens the module. Right arrow: the sonnet words."] ] },
+     ["Keys","The line on the slide opens the module. Right arrow: a sonnet about sonnets."] ] },
 
+ { kind:"poem",
+   h:"What is a sonnet?",
+   sub:"A sonnet about sonnets. Read it aloud, then check it against itself.",
+   src:"A sonnet written for this lesson",
+   lines:["I am a sonnet: fourteen lines, no more.",
+          "Each line has ten small sounds, and five are strong:",
+          "da-DUM, da-DUM, like footsteps on the floor,",
+          "a heartbeat walking steady all along.",
+          "My rhymes are set in letters, A and B,",
+          "then C and D, then E and F take hold.",
+          "Each group of four’s a quatrain, plain to see:",
+          "so three times four, then two. The plan is old.",
+          "But wait! Line nine is where I turn around:",
+          "the problem’s done, and now the answer’s due.",
+          "A little word like ‘But’ is often found",
+          "to show the reader something fresh and new.",
+          "A couplet ties the knot and pulls it tight.",
+          "Now count my lines: you’ll find I got it right."],
+   ends:["more","strong","floor","along","B","hold","see","old","around","due","found","new","tight","right"],
+   tags:[{r:"A"},{r:"B"},{r:"A"},{r:"B"},{r:"C"},{r:"D"},{r:"C"},{r:"D"},{r:"E"},{r:"F"},{r:"E"},{r:"F"},{r:"G"},{r:"G"}],
+   scheme:"ABABCDCDEFEFGG",
+   turn:[8],
+   ans:["14 lines: three quatrains, then a couplet","10 syllables and 5 beats a line: da-DUM","Line 9 turns: But wait!"],
+   notes:[
+     ["Say","Read it aloud once, slowly, and pause at But wait! It tells you every rule of a sonnet, and it follows every rule as it goes."],
+     ["Ask","“Does it keep its own rules? Count the lines. Count the syllables in line 2. Which line turns?” Take answers, then reveal."],
+     ["Answer","14 lines. Line 2 has 10 syllables: each LINE has TEN small SOUNDS and FIVE are STRONG. Rhymes ABAB CDCD EFEF GG. Line 9 turns on But. Lines 13 and 14 are the couplet."],
+     ["Writing link","This is the shape students imitate later: four lines, four lines, four lines, a turn at line 9, a couplet to finish."],
+     ["Keys","Right arrow: the sonnet words."] ] },
  { kind:"go",
    h:"Words first",
    mod:"Vocab Hub: Sonnet words",
@@ -384,11 +417,13 @@ const SLIDES = [
          {r:"E"},{r:"F"},{r:"E"},{r:"F"},
          {r:"G"},{r:"G"}],
    scheme:"ABABCDCDEFEFGG",
+   turn:[8],
    ans:["A B A B   C D C D   E F E F   G G","Three quatrains of four lines, then a couplet of two","Shakespearean sonnet","Temperate rhymed with date in Shakespeare’s accent: say it temper-ATE"],
    notes:[
      ["Display","Read the end words of lines 1 to 4: day, temperate, May, date. Which two sound the same? Give them letters. Let the class do the next four before you reveal."],
      ["Answer","A B A B, C D C D, E F E F, G G. Day and May are A. Temperate and date are B. Shines and declines are C. Dimm’d and untrimm’d are D. Fade and shade are E. Ow’st and grow’st are F. See and thee are G."],
      ["Ask","“What is the pattern in each group of four? What is different about the last two lines?” The last two rhyme as a pair."],
+     ["Turn","The gold line is the turn, as in the sonnet about sonnets: line 9, But thy eternal summer shall not fade."],
      ["Words","A group of four lines is a quatrain. A pair of rhyming lines at the end is a couplet. This pattern is the Shakespearean sonnet, ABAB CDCD EFEF GG."],
      ["If students disagree","Temperate and date are a close rhyme, not an exact one: ate and ate. Grow’st and ow’st sound the same from the strong vowel on. Accept any rhyme that matches the sounds."],
      ["Teaching point","The Shakespearean sonnet is three quatrains and a couplet. Compare the ballad: AABBCC, pairs all the way."] ] },
@@ -413,14 +448,16 @@ const SLIDES = [
           "Dear God! the very houses seem asleep;",
           "And all that mighty heart is lying still!"],
    ends:["fair","by","majesty","wear","bare","lie","sky","air","steep","hill","deep","will","asleep","still"],
-   tags:[{r:"A",m:"octave"},{r:"B"},{r:"B"},{r:"A"},{r:"A"},{r:"B"},{r:"B"},{r:"A"},
-         {r:"C",m:"sestet"},{r:"D"},{r:"C"},{r:"D"},{r:"C"},{r:"D"}],
+   tags:[{r:"A"},{r:"B"},{r:"B"},{r:"A"},{r:"A"},{r:"B"},{r:"B"},{r:"A"},
+         {r:"C"},{r:"D"},{r:"C"},{r:"D"},{r:"C"},{r:"D"}],
    scheme:"ABBAABBACDCDCD",
+   turn:[8],
    ans:["A B B A A B B A   C D C D C D","An octave of eight lines, then a sestet of six","Petrarchan sonnet","Majesty rhymed with by, lie and sky in 1802 poems: say it majes-TIE"],
    notes:[
      ["Display","Look at the end words of lines 1 to 8: fair, by, majesty, wear, bare, lie, sky, air. Letters for the first four, then check lines 5 to 8. Then lines 9 to 14."],
      ["Answer","A B B A A B B A, then C D C D C D. Fair, wear, bare and air are A. By, majesty, lie and sky are B. Steep, deep and asleep are C. Hill, will and still are D."],
      ["Ask","“Where does the pattern change? How many lines in the first part? In the second?” Eight, then six, with the change at line 9."],
+     ["Turn","The gold line is the turn, as in the sonnet about sonnets. Line 9: after eight lines on the city, he turns to the sun on the hills and to what he feels. In this kind of sonnet the turn comes between the eight and the six."],
      ["Words","Eight lines is an octave. Six lines is a sestet. This pattern is the Petrarchan sonnet, named after the Italian poet Petrarch. Majesty is the odd one: today it ends on a weak ee sound, but in Wordsworth’s time it was said to rhyme with by and sky, so it still counts as a B."],
      ["If students disagree","Majesty and by are the hard pair. Today they do not sound the same: it is an old rhyme, and worth pointing out. Sky and lie do rhyme."],
      ["Teaching point","Two kinds of sonnet, both 14 lines. Shakespeare: three quatrains and a couplet. Wordsworth: an octave and a sestet. Look for the change at line 9 in both."] ] },
@@ -458,7 +495,7 @@ const SLIDES = [
           "And all of Kew wakes up to sing with me."],
    ends:["grey","tight","away","light","tree","me"],
    tags:[{r:"A",m:"problem"},{r:"B",m:"problem"},{r:"A",m:"problem"},{r:"B",m:"problem"},{r:"G",m:"the turn: But"},{r:"G",m:"answer"}],
-   hit:[4],
+   turn:[4],
    ans:["Line 5 turns on But","Lines 1 to 4: Kew is grey, shut and empty","Lines 5 and 6: the magpies wake it up"],
    notes:[
      ["Model","Think aloud: lines 1 to 4 all say the same thing, Kew is dead at six in the morning. Then But. Line 5 points the other way: the magpies. Lines 5 and 6 are the answer to the problem."],
@@ -475,14 +512,14 @@ const SLIDES = [
           "But thy eternal summer shall not fade,",
           "Nor lose possession of that fair thou ow’st,",
           "Nor shall death brag thou wander’st in his shade,"],
-   hit:[2], opts:["Line 7","Line 8","Line 9","Line 10"],
+   turn:[2], opts:["Line 7","Line 8","Line 9","Line 10"],
    hitOpt:2, fingers:4,
    ans:["3. Line 9 turns on But","Lines 1 to 8: summer is short, too hot, and fades","From line 9: you will never fade, because this poem keeps you"],
    notes:[
      ["Display","Lines 1 to 8 listed what is wrong with summer. Find the line where the poem changes direction. Fingers on my signal: 1 for line 7, 2 for line 8, 3 for line 9, 4 for line 10."],
      ["Answer","3: line 9. But thy eternal summer shall not fade. The word But turns the poem. Summer fades, but the person will not. This change is the volta, or turn. In a Shakespearean sonnet it usually comes at line 9 and again, with a final twist, at the couplet."],
      ["Ask","“What word tells you it turns?” But. “What changes between line 8 and line 9?” The poem stops describing summer and starts promising something about the person."],
-     ["Couplet","Lines 13 and 14, on slides 9 and 10, say how the person stays alive: so long lives this, and this gives life to thee. This is the poem. As long as someone reads it, the person is alive. Ask: what does this refer to?"],
+     ["Couplet","Lines 13 and 14, on slides 10 and 11, say how the person stays alive: so long lives this, and this gives life to thee. This is the poem. As long as someone reads it, the person is alive. Ask: what does this refer to?"],
      ["If students disagree","1 or 2 fingers (lines 7 and 8) are still about summer fading: they finish the faults. The turn word is But, in line 9."],
      ["Teaching point","The turn (volta) changes the direction of the poem. It does a job: first the problem, then the answer."] ] },
 
@@ -617,8 +654,9 @@ function rowsOf(sl, rev){
     L.forEach((t, i) => rows.push({
       type:"line", no: sl.nonum ? "" : start + i, hidden:!shown,
       runs: lineRuns(t, ends && ends[i], rev && shown, (tags && tags[i] && tags[i].r) || false),
-      tag: tags ? tagParts(tags[i]) : [], tagOn: rev && shown,
-      hit: !!(rev && hit && hit.indexOf(i) >= 0) }));
+      tag: (tags ? tagParts(tags[i]) : []).concat(L === sl.lines && sl.turn && sl.turn.indexOf(i) >= 0 ? [{t:"↻ turn", k:"t"}] : []), tagOn: rev && shown,
+      hit: !!(rev && hit && hit.indexOf(i) >= 0),
+      turn: !!(rev && shown && L === sl.lines && sl.turn && sl.turn.indexOf(i) >= 0) }));
   };
   if(sl.kind === "move"){
     lines(sl.from.lines, null, null, null, true, sl.from.label);
@@ -737,7 +775,7 @@ function rowHtml(r){
   if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
   if(r.type === "gap") return `<div class="gap"></div>`;
   const tag = r.tag.map(p => `<span class="${p.k}${p.l ? " L" + p.l : ""}">${esc(p.t)}</span>`).join("");
-  return `<div class="row${r.hit ? " hit" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
+  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
     `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
 }
 
