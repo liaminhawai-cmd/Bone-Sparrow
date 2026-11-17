@@ -87,6 +87,15 @@ body{background:var(--frame);font-family:var(--font);color:var(--ink);display:fl
 .rev .rows .row.hit > *{background:#F0DDE2}
 .rev .rows .row.hit .tx{font-weight:700}
 .rev .rows .row.hit .tag .m{color:var(--maroon)}
+/* Each rhyme sound has its own colour on the reveal, on the letter and on the
+   underlined end word. The letter stays, so colour is never the only signal. */
+.rows .e.LA,.rows .tag .r.LA{color:#1F5FA8;font-weight:700}
+.rows .e.LB,.rows .tag .r.LB{color:#A24800;font-weight:700}
+.rows .e.LC,.rows .tag .r.LC{color:#0F6E4D;font-weight:700}
+.rows .e.LD,.rows .tag .r.LD{color:#7A2FA0;font-weight:700}
+.rows .e.LE,.rows .tag .r.LE{color:#B0174F;font-weight:700}
+.rows .e.LF,.rows .tag .r.LF{color:#00707A;font-weight:700}
+.rows .e.LG,.rows .tag .r.LG{color:#7A5A00;font-weight:700}
 .rev .rows .e{text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.14em}
 .k-s .b{color:var(--subj);font-weight:700}
 .k-c .b{color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-thickness:.08em;
@@ -399,7 +408,7 @@ function lineRuns(t, end, rev, markEnd){
     if(i >= 0){
       const out = [];
       if(i > 0) out.push({t:p.slice(0,i), k:""});
-      out.push({t:end, k:"e"});
+      out.push({t:end, k:"e", l:typeof markEnd === "string" ? markEnd : ""});
       if(i + end.length < p.length) out.push({t:p.slice(i + end.length), k:""});
       return out;
     }
@@ -411,7 +420,7 @@ function lineRuns(t, end, rev, markEnd){
 function tagParts(tag){
   const o = [];
   if(!tag) return o;
-  if(tag.r) o.push({t:tag.r, k:"r"});
+  if(tag.r) o.push({t:tag.r, k:"r", l:tag.r});
   if(tag.n != null) o.push({t:tag.n + " syllables", k:"n"});
   if(tag.m) o.push({t:tag.m, k:"m"});
   return o;
@@ -425,7 +434,7 @@ function rowsOf(sl, rev){
     if(label) rows.push({type:"label", text:label, hidden:!shown});
     L.forEach((t, i) => rows.push({
       type:"line", no:start + i, hidden:!shown,
-      runs: lineRuns(t, ends && ends[i], rev && shown, !!(tags && tags[i] && tags[i].r)),
+      runs: lineRuns(t, ends && ends[i], rev && shown, (tags && tags[i] && tags[i].r) || false),
       tag: tags ? tagParts(tags[i]) : [], tagOn: rev && shown,
       hit: !!(rev && hit && hit.indexOf(i) >= 0) }));
   };
@@ -528,7 +537,7 @@ function toggleNotes(){
 /* The markup as HTML. Runs of k "e" are the marked end words. */
 function runsHtml(runs){
   return runs.map(r =>
-    r.k === "e" ? `<span class="e">${esc(r.t)}</span>`
+    r.k === "e" ? `<span class="e${r.l ? " L" + r.l : ""}">${esc(r.t)}</span>`
     : r.k ? `<span class="k-${r.k}"><span class="b">${esc(r.t)}</span></span>`
     : esc(r.t)).join("");
 }
@@ -537,7 +546,7 @@ const marked = m => runsHtml(runsOf(m));
 function rowHtml(r){
   if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
   if(r.type === "gap") return `<div class="gap"></div>`;
-  const tag = r.tag.map(p => `<span class="${p.k}">${esc(p.t)}</span>`).join("");
+  const tag = r.tag.map(p => `<span class="${p.k}${p.l ? " L" + p.l : ""}">${esc(p.t)}</span>`).join("");
   return `<div class="row${r.hit ? " hit" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
     `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
 }

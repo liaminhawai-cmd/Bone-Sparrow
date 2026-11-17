@@ -1748,7 +1748,9 @@ const LESSONS = [
    Meanings, word-parts and origins are the ones in the vocab blocks of
    Sonnets.html (its WESTMINSTER and S18 data), so the two pages cannot
    disagree. Words that helper gives no parts for (majesty, splendour) are
-   origin words, as in the ballad sets. Eternal is not repeated here: it is
+   origin words, as in the ballad sets. The old forms (thou, thee, thy, thine,
+   art, hath, doth) are type "plain": no parts and no build step, but they are
+   in Meet the words, the word list and Use the words (buildCounts skips them). Eternal is not repeated here: it is
    already in set 10. Each eg is the poem line as printed in Sonnets.html,
    with the line number. The tasks were written for this hub. Translations
    are the Sonnets.html helper's own; possession, beautifully and smokeless
@@ -1858,6 +1860,62 @@ const LESSONS = [
     apply:[
       {"id":"ap_sn_migh_cloze","type":"cloze","before":"The","after":"river pushed a whole tree down the valley.","a":"mighty","opts":["mighty","mightily","misty","tidy"],"explain":"Very strong and powerful is <b>mighty</b> (<i>might</i> + <i>-y</i>). <i>Mightily</i> says how something is done, so it does not fit before ‘river’."},
       {"id":"ap_sn_migh_scn","type":"scenario","q":"A writer calls a city ‘mighty’. What does that tell you about it?","a":"It is huge and powerful","opts":["It is huge and powerful","It is small and very quiet","It is old and worn out","It is dull and empty"],"explain":"<b>Mighty</b> means very strong, large and powerful. Small, worn out and empty are the opposite."} ] },
+
+  { w:"Thou", pos:"pronoun", domain:"sonnet", type:"plain",
+    meaning:"You, said to one person. The old form for the one doing the action.",
+    eg:"**Thou** art more lovely and more temperate: (Sonnet 18, line 2)",
+    note:"Thou goes with <b>art</b>: thou art means you are. It was used for one person. Today <i>you</i> is used for one person or many.",
+    apply:[
+      {"id":"ap_sn_thou_cloze","type":"cloze","before":"In the old poem the speaker says ‘","after":"art more lovely’ and means ‘You are more lovely.’","a":"thou","opts":["thou","thee","thy","thine"],"explain":"The one doing the action is <b>thou</b>: ‘thou art’ means ‘you are’. <i>Thee</i> is the one something is done to."},
+      {"id":"ap_sn_thou_scn","type":"scenario","q":"An old poem says ‘Thou art kind.’ Who is thou?","a":"The one person he is speaking to","opts":["The one person he is speaking to","The speaker, talking about himself","A whole crowd of people listening","The writer of the poem"],"explain":"<b>Thou</b> means you, said to one person. Here it is the person the speaker is talking to."} ] },
+
+  { w:"Thee", pos:"pronoun", domain:"sonnet", type:"plain",
+    meaning:"You, said to one person. The old form for the one something is done to.",
+    eg:"Shall I compare **thee** to a summer’s day? (Sonnet 18, line 1)",
+    note:"Thee comes after the verb: compare thee means compare you. <b>Thou</b> does the action; <b>thee</b> has it done to them.",
+    apply:[
+      {"id":"ap_sn_thee_cloze","type":"cloze","before":"‘Shall I compare","after":"to a summer’s day?’ means ‘Shall I compare you to a summer’s day?’","a":"thee","opts":["thee","thou","thy","thine"],"explain":"The person being compared is the one something is done to: <b>thee</b>. <i>Thou</i> is the one doing the action."},
+      {"id":"ap_sn_thee_scn","type":"scenario","q":"An old poem says ‘I love thee.’ Which modern word does thee match?","a":"you","opts":["you","your","yours","we"],"explain":"<b>Thee</b> means you. Here it is the person being loved."} ] },
+
+  { w:"Thy", pos:"adjective", domain:"sonnet", type:"plain",
+    meaning:"Your. The old form.",
+    eg:"But **thy** eternal summer shall not fade, (Sonnet 18, line 9)",
+    note:"Thy goes before a noun, like your: thy summer is your summer.",
+    apply:[
+      {"id":"ap_sn_thy_cloze","type":"cloze","before":"‘But","after":"eternal summer shall not fade’ means ‘But your summer will never fade.’","a":"thy","opts":["thy","thee","thine","you"],"explain":"<b>Thy</b> means your and goes before a noun (thy summer). <i>Thine</i> stands alone, without a noun after it."},
+      {"id":"ap_sn_thy_scn","type":"scenario","q":"In ‘thy eternal summer’, whose summer is it?","a":"The summer of the one he speaks to","opts":["The summer of the one he speaks to","The speaker’s own summer","The summer of every person on earth","The summer season, not a person"],"explain":"<b>Thy</b> means your: it is the summer of the person the speaker is talking to."} ] },
+
+  { w:"Thine", pos:"pronoun", domain:"sonnet", type:"plain",
+    meaning:"Yours. The old form.",
+    eg:"‘This gift is **thine**.’ (Not in these poems, but it goes with thy.)",
+    note:"Not in these poems, but it goes with <b>thy</b>. Thy goes before a noun (thy gift); thine stands alone (the gift is thine).",
+    apply:[
+      {"id":"ap_sn_thine_cloze","type":"cloze","before":"An old speaker says, ‘The lovely garden is","after":", not mine.’ It means ‘The garden is yours, not mine.’","a":"thine","opts":["thine","thy","thee","thyself"],"explain":"<b>Thine</b> means yours and stands alone. <i>Thy</i> needs a noun after it (thy garden)."},
+      {"id":"ap_sn_thine_scn","type":"scenario","q":"Which modern word means the same as thine?","a":"Yours","opts":["Yours","Yourself","You","Mine"],"explain":"<b>Thine</b> means yours."} ] },
+
+  { w:"Art", pos:"verb", domain:"sonnet", type:"plain",
+    meaning:"Are. The old form that goes with thou.",
+    eg:"Thou **art** more lovely and more temperate: (Sonnet 18, line 2)",
+    note:"Not the school subject: here art is the old verb are. It goes with <b>thou</b>.",
+    apply:[
+      {"id":"ap_sn_art_cloze","type":"cloze","before":"‘Thou","after":"more lovely’ means ‘You are more lovely.’","a":"art","opts":["art","are","hath","doth"],"explain":"‘Thou art’ is the old way to say ‘you are’. Modern <i>are</i> does not go with thou."},
+      {"id":"ap_sn_art_scn","type":"scenario","q":"‘Thou art more lovely.’ Which modern words does ‘thou art’ match?","a":"You are","opts":["You are","You have","You do","You were"],"explain":"<b>Art</b> is the old form of are, so ‘thou art’ means ‘you are’."} ] },
+
+  { w:"Hath", pos:"verb", domain:"sonnet", type:"plain",
+    meaning:"Has. An old form.",
+    eg:"And summer’s lease **hath** all too short a date: (Sonnet 18, line 4)",
+    note:"Same job as has. The old -th ending: hath is has, and <b>doth</b> is does.",
+    apply:[
+      {"id":"ap_sn_hath_cloze","type":"cloze","before":"‘Summer’s lease","after":"all too short a date’ means ‘Summer’s lease has all too short a date.’","a":"hath","opts":["hath","doth","art","thou"],"explain":"<b>Hath</b> is the old form of has. <i>Doth</i> is the old form of does."},
+      {"id":"ap_sn_hath_scn","type":"scenario","q":"Which modern word means hath?","a":"has","opts":["has","does","is","had"],"explain":"<b>Hath</b> is the old form of has."} ] },
+
+  { w:"Doth", pos:"verb", domain:"sonnet", type:"plain",
+    meaning:"Does. An old form.",
+    eg:"This City now **doth**, like a garment, wear (Composed upon Westminster Bridge, line 4)",
+    note:"Same -th ending as <b>hath</b>: doth is does. ‘This City now doth wear’ means the city now wears the morning.",
+    apply:[
+      {"id":"ap_sn_doth_cloze","type":"cloze","before":"In old poems, ‘he","after":"love’ means ‘he does love’.","a":"doth","opts":["doth","hath","art","thee"],"explain":"<b>Doth</b> is the old form of does. <i>Hath</i> is the old form of has."},
+      {"id":"ap_sn_doth_scn","type":"scenario","q":"‘This City now doth, like a garment, wear’. What does doth stand for?","a":"Does","opts":["Does","Was","Is","Dares"],"explain":"<b>Doth</b> is the old form of does."} ] },
   ] },
 ];
 
@@ -1950,6 +2008,12 @@ const TR = {
 "Splendour":{"zh":"光辉；壮丽","yue":"光輝；壯麗","vi":"vẻ rực rỡ","fa":"شکوه و درخشش"},
 "Untrimmed":{"zh":"失去装饰的","yue":"失去裝飾的","vi":"mất đi vẻ trang hoàng","fa":"بی‌آرایه؛ از زینت افتاده"},
 "Glittering":{"zh":"闪闪发光的","yue":"閃閃發光的","vi":"lấp lánh","fa":"درخشان"},
+"Thou":{"zh":"你（古体，主格）","yue":"你（古體，主格）","vi":"(cổ) bạn, ngươi","fa":"(قدیمی) تو"},
+"Thee":{"zh":"你（古体，宾格）","yue":"你（古體，賓格）","vi":"(cổ) bạn, ngươi","fa":"(قدیمی) تو را"},
+"Thy":{"zh":"你的（古体）","yue":"你的（古體）","vi":"(cổ) của bạn","fa":"(قدیمی) مال تو"},
+"Art":{"zh":"是（古体）","yue":"是（古體）","vi":"(cổ) là","fa":"(قدیمی) هستی"},
+"Hath":{"zh":"有（古体）","yue":"有（古體）","vi":"(cổ) có","fa":"(قدیمی) دارد"},
+"Doth":{"zh":"（古体）做","yue":"（古體）做","vi":"(cổ) làm; dạng cũ của does","fa":"(قدیمی) انجام می‌دهد"},
 "Mighty":{"zh":"强大的；巨大的","yue":"強大的；巨大的","vi":"hùng mạnh; to lớn","fa":"نیرومند؛ عظیم"},
 };
 
@@ -2184,9 +2248,11 @@ function trSpan(w, big){
 /* ================= SCORE HELPERS ================= */
 function buildCounts(l){
   const st=L(l.id);
-  const done=l.words.filter(w=>st.buildDone[w.w]).length;
-  const clean=l.words.filter(w=>st.buildFirst[w.w]===true).length;
-  return {done, clean, total:l.words.length};
+  /* words of type "plain" (the old thou/thee forms) have no parts, so the build step skips them */
+  const bw=l.words.filter(w=>w.type!=="plain");
+  const done=bw.filter(w=>st.buildDone[w.w]).length;
+  const clean=bw.filter(w=>st.buildFirst[w.w]===true).length;
+  return {done, clean, total:bw.length};
 }
 /* apply sample = descriptors: {k:"a",id} authored, or {k:"g",g:type,w:name} generated */
 function applyKey(d){ return d.k==="a" ? d.id : ("g:"+d.g+":"+d.w); }
@@ -2460,8 +2526,8 @@ function startBuild(l){
 }
 function buildProgressText(l){
   const st=L(l.id);
-  const done=l.words.filter(w=>st.buildDone[w.w]).length;
-  document.getElementById("build-prog").textContent=`STEP 2 · BUILD · ${done}/${l.words.length} words`;
+  const bc=buildCounts(l);
+  document.getElementById("build-prog").textContent=`STEP 2 · BUILD · ${bc.done}/${bc.total} words`;
 }
 function renderBuildTable(l, buildable){
   const st=L(l.id);

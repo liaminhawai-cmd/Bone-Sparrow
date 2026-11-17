@@ -21,6 +21,8 @@ function RGB([string]$hex){ $r=[Convert]::ToInt32($hex.Substring(0,2),16); $g=[C
 $C = @{ head=(RGB "8C072D"); ink=(RGB "212121"); grey=(RGB "6B6B6B"); numgrey=(RGB "888888");
         s=(RGB "A24800"); v=(RGB "0F6E4D"); p=(RGB "1F5FA8"); c=(RGB "212121"); bar=(RGB "E6D8DA") }
 $FONT = "Aptos"
+# Rhyme sounds, one colour each, as on the web decks (the letter stays too).
+$RC = @{ A=(RGB "1F5FA8"); B=(RGB "A24800"); C=(RGB "0F6E4D"); D=(RGB "7A2FA0"); E=(RGB "B0174F"); F=(RGB "00707A"); G=(RGB "7A5A00") }
 
 # A run: @{ t="text"; k="s|v|p|c|"; bold; italic; underline; color }
 function KindRun($r){
@@ -30,7 +32,7 @@ function KindRun($r){
     "v" { $o.color=$C.v; $o.bold=$true; $o.italic=$true }
     "p" { $o.color=$C.p; $o.bold=$true }
     "c" { $o.color=$C.c; $o.bold=$true; $o.underline=$true }
-    "e" { $o.underline=$true }   # a marked rhyme word on a poem reveal
+    "e" { $o.underline=$true; if($r.l -and $RC.ContainsKey([string]$r.l)){ $o.color=$RC[[string]$r.l]; $o.bold=$true } }   # a marked rhyme word on a poem reveal
   }
   return $o
 }
@@ -217,7 +219,7 @@ foreach($st in $spec.states){
           $tb.TextFrame.WordWrap = 0
           $tagRuns = @()
           foreach($t in @($r.tag)){
-            if($t.k -eq "r"){ $tagRuns += @{ t=$t.t; bold=$true; color=$C.head } } else { $tagRuns += @{ t=$t.t; color=$C.grey } }
+            if($t.k -eq "r"){ $tagRuns += @{ t=$t.t; bold=$true; color=$(if($t.l -and $RC.ContainsKey([string]$t.l)){ $RC[[string]$t.l] } else { $C.head }) } } else { $tagRuns += @{ t=$t.t; color=$C.grey } }
             $tagRuns += @{ t="   " }
           }
           if($tagRuns.Count){
