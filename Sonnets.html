@@ -45,9 +45,10 @@ textarea{resize:vertical;line-height:1.45}
 
 .poemsw{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .step{display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;background:#fff;
-      border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin:0 0 9px;
+      border:1px solid var(--line);border-radius:10px;padding:9px 15px;margin:0 0 6px;
       font-family:inherit;font-size:15px;color:inherit;cursor:pointer;transition:border-color .15s}
 .step:hover{border-color:var(--accent)}
+a.step{text-decoration:none;color:inherit}
 .step .num{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
            display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
 .step.done .num{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
@@ -281,26 +282,87 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media screen and (max-width:860px){ .container{padding:14px} .cols,.cols.ana,.cols.even,.cols.wide{grid-template-columns:1fr} .cols>.cardbox{max-height:none} }
 
+/* ---- report: export screen (shared by the strip and the writing blocks with the printout) ---- */
+.sstrip{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.rpsb{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;padding:4px 8px;border:2px solid var(--line);border-radius:8px;background:#fff;line-height:1.2;text-align:center}
+.rpsb i{font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
+.rpsb b{font-size:15px;white-space:nowrap}
+.rpsb em{font-style:normal;font-size:10.5px;color:var(--muted)}
+.rpsb.ok{border-color:var(--correct);background:var(--okbg)} .rpsb.ok b{color:var(--correct)}
+.rpsb.miss{border-color:var(--wrong);border-style:dashed;background:var(--wrongbg)} .rpsb.miss b{color:var(--wrong)}
+.rpsb.none b{color:var(--muted)}
+.rpsb.all{border-width:3px}
+.rxcols{align-items:stretch}
+.rxwho{margin:0 0 6px;font-size:13.5px}
+.rxh{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 5px}
+.rxwho+.rxh{margin-top:2px}
+.rxg{margin:0 0 7px}
+.rxg h4{margin:0 0 2px;font-size:13px}
+.rxg ul{margin:0;padding:0 0 0 18px;font-size:13px;line-height:1.45}
+.rxnotes{margin:8px 0 0;padding:0 0 0 18px;font-size:12.5px;line-height:1.5;color:#6f685c}
+.rprw .rprb{margin:0 0 9px}
+.rprw h4,.rprb h4{margin:0 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.rsub{margin:0 0 2px;font-size:12.5px;color:#6f685c;font-style:italic}
+.rprb .rptx,.rprb .rplx{font-family:Georgia,serif;font-size:15.5px;line-height:1.5;white-space:pre-wrap}
+.rprl{display:grid;grid-template-columns:22px minmax(0,1fr) 54px;gap:8px;align-items:baseline}
+.rprl .rplt{font:700 11px 'Segoe UI',sans-serif;border:1px solid var(--line);border-radius:5px;text-align:center;padding:1px 0}
+.rprl .rpsy{font:12px 'Segoe UI',sans-serif;color:var(--muted);text-align:right}
+.rprk2 span{font-size:11.5px;font-weight:700;color:var(--muted)}
+.rprk2{margin:0 0 4px}
+.rpbl{color:#6f685c;font:italic 13px 'Segoe UI',sans-serif}
+.rnote{margin:2px 0 0;font-size:12px;color:#6f685c}
+details.rxrow{margin:10px 0 0}
+details.rxrow summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--accent);min-height:40px;display:flex;align-items:center}
+details.rxrow table{margin-top:4px}
 /* ---- printout: hidden on screen ---- */
 #print{display:none}
 @media print{
-  @page{size:A4;margin:13mm 14mm}
-  body{background:#fff;padding:0;display:block;font-size:10.5pt}
-  .container{display:none}
-  #print{display:block;color:#000}
-  #print h1{font-size:17pt;margin:0 0 2pt}
-  #print .who{margin:0 0 6pt;font-size:10pt}
-  #print .key{font-size:9pt;margin:0 0 8pt;color:#333}
-  #print section{break-inside:avoid;border-top:1px solid #999;padding:5pt 0 4pt}
-  #print h3{font-size:10.5pt;margin:0 0 3pt}
-  #print .pg{display:grid;grid-template-columns:minmax(0,44fr) minmax(0,56fr);gap:10pt}
-  #print ul{overflow-wrap:anywhere}
-  #print .pt{font-family:Georgia,serif;font-size:9pt;line-height:1.4}
-  #print .pt div.ind{padding-left:12pt}
-  #print ul{margin:0;padding:0 0 0 12pt;font-size:9pt;line-height:1.35}
-  #print li{margin:0 0 2pt}
-  #print .own{font-family:Georgia,serif;font-style:italic;white-space:pre-wrap}
-  #print .mine{font-size:10pt;line-height:1.5}
+  @page{size:A4;margin:12mm 13mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;padding:0;display:block;font-size:10pt}
+  .container,dialog#wordDialog{display:none}
+  #print{display:block;color:#000;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+  #print .rh{border-bottom:2pt solid #000;padding:0 0 6pt;margin:0 0 8pt}
+  #print h1{font-size:16pt;margin:0 0 3pt}
+  #print .rmeta{display:flex;flex-wrap:wrap;gap:4pt 16pt;font-size:10pt;margin:0 0 6pt}
+  #print .sstrip{gap:4pt;margin:0}
+  #print .rpsb{min-width:46pt;padding:2pt 6pt;border:1.2pt solid #000;border-radius:3pt;background:#fff}
+  #print .rpsb i{font-size:7.5pt;color:#000}
+  #print .rpsb b{font-size:10.5pt;color:#000}
+  #print .rpsb em{font-size:7pt;color:#222}
+  #print .rpsb.miss{border-style:dashed;background:#e4e4e4}
+  #print .rpsb.miss b{color:#000;text-decoration:underline}
+  #print .rpsb.none{border-color:#666;color:#333} #print .rpsb.none b{color:#333}
+  #print .rpsb.all{border-width:2pt;margin-left:auto}
+  #print .rwrap{border:1.5pt solid #000;padding:6pt 9pt 2pt;margin:0 0 9pt}
+  #print h2{font-size:11pt;margin:0 0 4pt}
+  #print .rah{margin:0 0 3pt}
+  #print .rprb{break-inside:avoid;margin:0 0 6pt}
+  #print .rprb h4{font-size:7.5pt;letter-spacing:.5pt;color:#000;margin:0 0 1pt}
+  #print .rsub{font-size:8.5pt;color:#222;margin:0 0 1pt}
+  #print .rprb .rptx,#print .rprb .rplx{font-size:12pt;line-height:1.45}
+  #print .rprl{grid-template-columns:15pt minmax(0,1fr) 34pt;gap:6pt}
+  #print .rprl .rplt{font-size:8.5pt;border:1pt solid #000;border-radius:2pt}
+  #print .rprl .rpsy{font-size:8.5pt;color:#000}
+  #print .rprk2 span{font-size:8.5pt;color:#000}
+  #print .rpbl{font-size:9pt;color:#333}
+  #print .rnote{font-size:8.5pt;color:#222}
+  #print .rprs{break-inside:avoid;border-top:1pt solid #777;padding:4pt 0 5pt}
+  #print .rprs h3{font-size:10pt;margin:0 0 3pt;display:flex;justify-content:space-between}
+  #print .rprs .rpsc{font-weight:700}
+  #print .rppg{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);gap:10pt;align-items:start}
+  #print .rppt{font-family:Georgia,"Times New Roman",serif;font-size:9.5pt;line-height:1.35}
+  #print .rppt div{padding-left:22pt;text-indent:-22pt}
+  #print .rppt div.ind{padding-left:34pt}
+  #print .rppt .rpln{text-indent:0;display:inline-block;min-width:14pt;font-family:'Segoe UI',sans-serif;font-size:7.5pt;color:#444}
+  #print .rmod{font-size:9pt;margin:0}
+  #print .rprt{width:100%;border-collapse:collapse;font-size:8.5pt;table-layout:fixed}
+  #print .rprt th{text-align:left;font-size:7pt;text-transform:uppercase;letter-spacing:.4pt;border-bottom:1pt solid #000;padding:1pt 3pt}
+  #print .rprt th:nth-child(1){width:31%} #print .rprt th:nth-child(2){width:25%}
+  #print .rprt td{padding:2pt 3pt;border-bottom:.5pt solid #aaa;vertical-align:top;overflow-wrap:anywhere}
+  #print .rprt .rpg{font-weight:700;font-size:10pt}
+  #print .rprt tr.second td.rpres,#print .rprt tr.shown td.rpres{font-weight:700}
+  #print .rprt tr.shown td{background:#e4e4e4}
 }
 
 /* ---- sonnets: whole poem on the left, current section highlighted ---- */
@@ -1001,8 +1063,9 @@ function setPoem(id){ const h="#"+id+(OPEN?"&open":""); if(location.hash!==h) hi
 window.addEventListener("hashchange", route);
 const HOMELINKS=`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
 function deckLink(){ return `<a class="menulink" href="SonnetsDeck.html">Teacher deck</a>`; }
-function links(){ return deckLink()+HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
-function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():deckLink()+HOMELINKS}</span></div>`; }
+function wordsLink(){ return `<a class="menulink" href="WritingFolioVocabHub.html#set-${wordsSet()}">Words</a>`; }
+function links(){ return deckLink()+wordsLink()+HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
+function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():deckLink()+wordsLink()+HOMELINKS}</span></div>`; }
 function bar(title, mid){ return `<div class="deckbar"><b>${esc(title)}</b>${mid||""}<span style="margin-left:auto;display:flex;gap:14px">${links()}</span></div>`; }
 
 function renderId(){
@@ -1028,11 +1091,16 @@ function idSubmit(){
 }
 
 function nWritten(){ const d=D(), n=FORMS[d.form]?FORMS[d.form].letters.length:14; return d.lines.slice(0,n).filter(l=>String(l).trim()).length; }
+/* Word set in the Vocab Hub. Read only: the hub owns this key. */
+function wordsSet(){ return "11"; }
+function wordsDone(){ try{ const V=JSON.parse(window.localStorage.getItem("writingfolio.vocabhub.v1")); const x=V&&V.lessons&&V.lessons[wordsSet()]; return !!(x&&x.applyDone); }catch(e){ return false; } }
 function renderHome(){
   const st=START(P), n=P.stanzas.length-st, answered=P.stanzas.filter((s,i)=>i>=st&&stanzaDone(i)).length;
   const allClean=P.stanzas.every((s,i)=>i<st||stanzaClean(i));
   const w=nWritten();
-  const steps=[{ s:"read", t:"Read and analyse", d:`${P.short}. ${P.stanzas.length} sections, one at a time.`,
+  const wd=wordsDone();
+  const steps=[{ href:`WritingFolioVocabHub.html#set-${wordsSet()}`, t:"Words first", d:"The words in the poems, in the Vocab Hub.", tag:wd?"Done":"", done:wd },
+    { s:"read", t:"Read and analyse", d:`${P.short}. ${P.stanzas.length} sections, one at a time.`,
                  tag:answered?`${answered} of ${n} sections answered`:"", done:answered===n && allClean },
     { s:"write", t:"Write your own sonnet", d:"A quatrain and a couplet, or a whole sonnet, with the syllables and rhymes checked.",
       tag:w?`${w} line${w>1?"s":""} written`:"", done:false },
@@ -1040,10 +1108,10 @@ function renderHome(){
   let h=topbar()+`<h1>Sonnets</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>
     <div class="poemsw" role="group" aria-label="Poem">${ORDER.map(id=>`<button class="tg btn" aria-pressed="${id===PID}" onclick="setPoem('${id}')">${id===PID?"✓ ":""}${esc(POEMS[id].short)}</button>`).join("")}</div>`;
   steps.forEach((x,i)=>{
-    h+=`<button class="step ${x.done?"done":""}" onclick="go('${x.s}')">
-      <span class="num">${x.done?"✓":i+1}</span>
+    const inner=`<span class="num">${x.done?"✓":i+1}</span>
       <span><span class="t">${esc(x.t)}</span><br><span class="d">${esc(x.d)}</span></span>
-      <span class="tag">${esc(x.tag)}</span></button>`;
+      <span class="tag">${esc(x.tag)}</span>`;
+    h+=x.href?`<a class="step ${x.done?"done":""}" href="${x.href}">${inner}</a>`:`<button class="step ${x.done?"done":""}" onclick="go('${x.s}')">${inner}</button>`;
   });
   $("body").innerHTML=h;
 }
@@ -1401,15 +1469,117 @@ function reportData(){
   row.push(w.length?FORMS[formOf()].name:"not started", String(w.length), w.map(x=>`${x.L} ${x.t}`).join(" / "), w.length?firstText(D().first):"");
   return { cols, row };
 }
+/* Per-module hooks for the shared report code below. */
+const RPT={
+  first:()=>START(P),
+  tag:s=>"S"+(s+1),
+  head:s=>"Section "+(s+1)+": "+P.stanzas[s].title,
+  title:()=>"Sonnets: "+P.title,
+  short:()=>P.short,
+  line:(s,k)=>'<span class="rpln">'+g(s,k)+'</span>',
+  missHit:(e,q)=>e[1](q),
+  cannot:()=>"The report cannot tell whether you read the poem aloud, whether your own words are right, whether your writing keeps the metre or says anything, or how much help you had.",
+  writing(){
+    const d=D(), f=FORMS[formOf()], lines=f.letters.map((L,k)=>{ const t=String(d.lines[k]||"");
+      return { k:L, t, n:t.trim()?Math.max(0,lineSyllables(t)+(d.adj[k]||0)):null }; });
+    if(!lines.some(l=>l.t.trim())) return [{ h:"Your sonnet: not started", text:"" }];
+    return [{ h:"Your sonnet: "+f.name, lines, note:"Rhyme check, first try: "+firstText(d.first) }];
+  }
+};
+/* ====================== REPORT: SCREEN AND PRINTOUT =======================
+   Shared between Ballads.html and Sonnets.html (the per-module hooks are RPT
+   above). reportData() and copyRow() are the spreadsheet row and are not
+   touched by anything below. */
+const tn=q=>typeof tname==="function"?tname(q):TYPE[q.type];
+function qShort(s,q){
+  switch(q.type){
+    case "rhymes": return "Rhyme pairs";
+    case "letters": return "Rhyme letters";
+    case "split": return "Syllable cuts: "+q.words.map(splitWordText).join(", ");
+    case "count": return `L${q.line} syllable count`;
+    case "nth": return `L${q.line} syllable ${q.n}`;
+    case "beats": return `L${q.line} beats`;
+    case "internal": return `L${q.line} rhymes with ${q.with}`;
+    case "mc": return tn(q)+(q.short&&q.short.toLowerCase()!==tn(q).toLowerCase()?": "+q.short:"");
+    case "own": return "Your own words";
+  }
+  return tn(q)||"";
+}
+function shownText(s,q,j){
+  try{
+    if(q.type==="beats" && j.req){ const I=info(P,s,q.line-1); return j.req.map(k=>I.toks[k].w).join(" "); }
+    let t=String(j.reveal||""); const i=t.indexOf(". "); if(i>0) t=t.slice(0,i);
+    return t.length>110?t.slice(0,107)+"…":t;
+  }catch(e){ return ""; }
+}
+function rptModel(){
+  const rd=reportData(), col=c=>rd.row[rd.cols.indexOf(c)], first=RPT.first();
+  const secs=[], misses=[]; let clean=0, tot=0, answered=0;
+  P.stanzas.forEach((st,s)=>{
+    const model=s<first, rows=[]; let c=0, d=0, n=0;
+    if(!model) qsOf(s).forEach((q,qi)=>{
+      if(q.type==="own") return;
+      const r=rec(s,qi); n++;
+      const row={ lab:qShort(s,q), res:r.res||"" };
+      if(r.res){ d++; row.a1=r.a1; row.a=r.a; if(r.res==="clean") c++;
+        if(r.res==="shown"){ let j=null; try{ j=judge(s,q,r.sv); }catch(e){} row.shown=j?shownText(s,q,j):""; } }
+      rows.push(row);
+    });
+    clean+=c; tot+=n; answered+=d;
+    secs.push({ s, model, rows, c, d, n });
+  });
+  MISS.forEach(entry=>{
+    const items=[];
+    for(let s=RPT.first();s<P.stanzas.length;s++) qsOf(s).forEach((q,qi)=>{ if(!RPT.missHit(entry,q)) return; const x=rec(s,qi); if(x.res && x.res!=="clean") items.push(missName(s,q,x)); });
+    if(items.length){ const l=entry[0].replace(/^Misses: /,""); misses.push({ lab:l.charAt(0).toUpperCase()+l.slice(1), items }); }
+  });
+  return { rd, secs, misses, clean, tot, answered,
+    name:`${S.fname} ${S.lname}`.trim(), sid:S.sid, date:ymd(), mins:col("Minutes")||"" };
+}
+function stripHtml(m){
+  const box=(lab,g,txt,cls,sub)=>`<span class="rpsb ${cls}" role="listitem"><i>${esc(lab)}</i><b><span class="rpgl" aria-hidden="true">${g}</span> ${esc(txt)}</b>${sub?`<em>${esc(sub)}</em>`:""}</span>`;
+  let h=m.secs.filter(x=>!x.model&&x.n).map(x=>{
+    const g=x.d>x.c?"✗":(x.c===x.n?"✓":"–"), cls=x.d>x.c?"miss":(x.c===x.n?"ok":"none");
+    const sub=x.d===0?"not started":x.d<x.n?`${x.d} of ${x.n} answered`:"";
+    return box(RPT.tag(x.s),g,`${x.c}/${x.n}`,cls,sub);
+  }).join("");
+  const allOk=m.tot>0&&m.clean===m.tot;
+  h+=box("All",allOk?"✓":(m.answered?"✗":"–"),`${m.clean}/${m.tot}`,"all "+(allOk?"ok":m.answered?"miss":"none"),"right first time");
+  return `<div class="sstrip" role="list" aria-label="Right first time">${h}</div>`;
+}
+function writingHtml(blocks){
+  const bl=`<span class="rpbl">blank</span>`;
+  return blocks.map(b=>{
+    let body="";
+    if(b.pairs) body=b.pairs.map(([k,v])=>`<div class="rprk2"><span>${esc(k)}</span><div class="rptx">${v.trim()?esc(v.trim()):bl}</div></div>`).join("");
+    else if(b.lines) body=b.lines.map(l=>`<div class="rprl"><span class="rplt">${esc(l.k)}</span><span class="rplx">${l.t.trim()?esc(l.t.trim()):bl}</span><span class="rpsy">${l.n==null?"":"≈ "+l.n}</span></div>`).join("");
+    else body=`<div class="rptx">${(b.text||"").trim()?esc(b.text.trim()):bl}</div>`;
+    return `<div class="rprb"><h4>${esc(b.h)}</h4>${b.sub?`<p class="rsub">${esc(b.sub)}</p>`:""}${body}${b.note?`<p class="rnote">${esc(b.note)}</p>`:""}</div>`;
+  }).join("");
+}
+function ownBlocks(){
+  const out=[];
+  for(let s=RPT.first();s<P.stanzas.length;s++) qsOf(s).forEach((q,qi)=>{ if(q.type!=="own") return; out.push({ h:`Own words, ${RPT.tag(s)}`, sub:q.q, text:rec(s,qi).text||"" }); });
+  return out;
+}
 function renderExport(){
-  const r=reportData();
-  $("body").innerHTML=bar("Export", `<span>${esc(P.short)}</span>`)+`<div class="cols ana"><div class="cardbox">
-      <table class="rpt">${r.cols.map((c,k)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[k])||"&nbsp;"}</td></tr>`).join("")}</table></div>
+  const m=rptModel();
+  const groups=m.misses.map(g=>`<div class="rxg"><h4>${esc(g.lab)}</h4><ul>${g.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")
+    ||`<p class="dim">${m.answered?"No misses.":"Nothing answered yet."}</p>`;
+  const wb=RPT.writing();
+  $("body").innerHTML=bar("Export", `<span>${esc(RPT.short())}</span>`)+`<div class="cols ana rxcols"><div class="cardbox">
+      <p class="rxwho"><b>${esc(m.name)}</b> · ${esc(m.sid)} · ${esc(m.date)} · ${esc(m.mins||"?")} minute${m.mins==="1"?"":"s"}</p>
+      <h3 class="rxh">Right first time</h3>${stripHtml(m)}
+      <h3 class="rxh">Misses by skill</h3>${groups}
+    </div>
     <div class="cardbox">
       <div class="btnrow" style="margin-top:0"><button class="btn btn-primary" onclick="window.print()">Print or save as PDF</button>
         <button class="btn" onclick="copyRow()">Copy the row</button><span class="copied" id="fb" role="status"></span></div>
-      <p class="dim">The row is one line for the class sheet. Scores and misses are first tries only; the page shows second tries too. Minutes run from the first save to the last, breaks included.</p>
-      <p class="dim">The row cannot tell whether you read the poem aloud, whether your own words are right, whether your writing keeps the metre or says anything, or how much help you had.</p>
+      <ul class="rxnotes"><li>Scores and misses are first tries only. The printout also shows second tries.</li>
+        <li>Minutes run from the first save to the last, breaks included.</li>
+        <li>${esc(RPT.cannot())}</li></ul>
+      <details class="rxrow"><summary>Show the row</summary><table class="rpt">${m.rd.cols.map((c,k)=>`<tr><th>${esc(c)}</th><td>${esc(m.rd.row[k])||"&nbsp;"}</td></tr>`).join("")}</table></details>
+      <h3 class="rxh">Writing</h3><div class="rprw">${writingHtml(ownBlocks().concat(wb))}</div>
     </div></div>`;
   buildPrint();
 }
@@ -1424,27 +1594,28 @@ function fallback(t, done, fail){
   let ok=false; try{ ok=document.execCommand("copy"); }catch(e){} a.remove();
   if(ok) done(); else if(fail) fail();
 }
-function printItem(s,q,qi){
-  const r=rec(s,qi), lab=`<b>${tname(q)}.</b> ${esc(prompt(s,q))}`;
-  if(q.type==="own") return `<li>${lab}<br><span class="own">${esc((r.text||"").trim())||"(blank)"}</span></li>`;
-  if(!r.res) return `<li>${lab} <i>Not answered.</i></li>`;
-  const j=judge(s,q,r.sv);
-  const tail=r.res==="clean"?"✓ first try":r.res==="second"?`✗ first try; right on the second: ${esc(r.a)}`:`✗ first try; second: ${esc(r.a)}. Shown: ${esc(j.reveal)}`;
-  return `<li>${lab} First try: <b>${esc(r.a1)}</b>. ${tail}</li>`;
+function trimEnd(t){ return String(t==null?"":t).replace(/[\s.:;,]+$/,""); }
+function resultHtml(x){
+  if(!x.res) return `<span class="rpg">–</span> not answered`;
+  if(x.res==="clean") return `<span class="rpg">✓</span> first try`;
+  if(x.res==="second") return `<span class="rpg">✗</span> right on the second try: ${esc(trimEnd(x.a))}`;
+  return `<span class="rpg">✗</span> second try: ${esc(trimEnd(x.a))}.${x.shown?` Answer: ${esc(x.shown)}`:""}`;
 }
 function buildPrint(){
-  const rd=reportData(), col=c=>rd.row[rd.cols.indexOf(c)], st=START(P);
-  let h=`<h1>Sonnets: ${esc(P.title)}</h1><p class="who">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)} · ${ymd()} · ${esc(col("Minutes")||"?")} minute${col("Minutes")==="1"?"":"s"} · right first time: ${esc(col("Right first time, all sections"))}</p>
-    <p class="key">✓ right on the first try. ✗ wrong on the first try: the second try, or the answer shown after two misses, follows.</p>`;
-  P.stanzas.forEach((sec,s)=>{
-    const text=sec.lines.map((l,k)=>`<div class="${l.ind?"ind":""}">${g(s,k)}. ${esc(strip(l.t))}</div>`).join("");
-    const items=s<st?`<li>Modelled in class: every answer shown.</li>`:qsOf(s).map((q,qi)=>printItem(s,q,qi)).join("");
-    h+=`<section><h3>Section ${s+1}: ${esc(sec.title)}</h3><div class="pg"><div class="pt">${text}</div><ul>${items}</ul></div></section>`;
+  const m=rptModel();
+  let h=`<header class="rh"><h1>${esc(RPT.title())}</h1>
+    <div class="rmeta"><span><b>${esc(m.name)}</b></span><span>Code ${esc(m.sid)}</span><span>${esc(m.date)}</span><span>${esc(m.mins||"?")} minute${m.mins==="1"?"":"s"}</span></div>
+    ${stripHtml(m)}</header>`;
+  h+=`<section class="rwrap"><h2>Your writing</h2>${writingHtml(ownBlocks().concat(RPT.writing()))}</section>`;
+  h+=`<h2 class="rah">Answers</h2>`;
+  m.secs.forEach(x=>{
+    const st=P.stanzas[x.s];
+    const text=st.lines.map((l,k)=>`<div class="${l.ind?"ind":""}">${RPT.line(x.s,k)}${esc(strip(l.t))}</div>`).join("");
+    const g=x.model?"":(x.d>x.c?"✗":(x.c===x.n?"✓":"–"));
+    const tbl=x.model?`<p class="rmod">Modelled in class: every answer shown.</p>`
+      :x.n?`<table class="rprt"><thead><tr><th>Question</th><th>First try</th><th>Result</th></tr></thead><tbody>${x.rows.map(r=>`<tr class="${r.res||"none"}"><td>${esc(r.lab)}</td><td>${r.res?esc(r.a1):""}</td><td class="rpres">${resultHtml(r)}</td></tr>`).join("")}</tbody></table>`:"";
+    h+=`<section class="rprs"><h3><span>${esc(RPT.head(x.s))}</span>${x.model||!x.n?"":`<span class="rpsc">${g} ${x.c}/${x.n}</span>`}</h3><div class="rppg"><div class="rppt">${text}</div><div>${tbl}</div></div></section>`;
   });
-  const w=writtenLines().filter(x=>x.t);
-  h+=`<section><h3>Writing: ${esc(w.length?FORMS[formOf()].name:"not started")} · ${w.length} line${w.length===1?"":"s"} written</h3>
-    <ul class="mine">${w.map(x=>`<li><b>${esc(x.L)}</b>&nbsp; ${esc(x.t)}</li>`).join("")}</ul>
-    <p style="font-size:9pt;margin:2pt 0 0">Rhyme check, first try: ${esc(w.length?firstText(D().first):"not checked")}</p></section>`;
   $("print").innerHTML=h;
 }
 window.addEventListener("beforeprint", ()=>{ if(idOk() && view.screen!=="class") buildPrint(); });

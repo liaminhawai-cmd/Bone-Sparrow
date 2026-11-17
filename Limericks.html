@@ -176,10 +176,92 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 @media screen and (max-width:860px){ .container{padding:14px} .cols,.cols.even{grid-template-columns:1fr} .cols>.cardbox,.single{max-height:none} }
+/* ---- report: export screen (shared by the strip and the writing blocks with the printout) ---- */
+.sstrip{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
+.rpsb{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;padding:4px 8px;border:2px solid var(--line);border-radius:8px;background:#fff;line-height:1.2;text-align:center}
+.rpsb i{font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
+.rpsb b{font-size:15px;white-space:nowrap}
+.rpsb em{font-style:normal;font-size:10.5px;color:var(--muted)}
+.rpsb.ok{border-color:var(--correct);background:var(--okbg)} .rpsb.ok b{color:var(--correct)}
+.rpsb.miss{border-color:var(--wrong);border-style:dashed;background:var(--wrongbg)} .rpsb.miss b{color:var(--wrong)}
+.rpsb.none b{color:var(--muted)}
+.rpsb.all{border-width:3px}
+.rxcols{align-items:stretch}
+.rxwho{margin:0 0 6px;font-size:13.5px}
+.rxh{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 5px}
+.rxwho+.rxh{margin-top:2px}
+.rxg{margin:0 0 7px}
+.rxg h4{margin:0 0 2px;font-size:13px}
+.rxg ul{margin:0;padding:0 0 0 18px;font-size:13px;line-height:1.45}
+.rxnotes{margin:8px 0 0;padding:0 0 0 18px;font-size:12.5px;line-height:1.5;color:#6f685c}
+.rprw .rprb{margin:0 0 9px}
+.rprw h4,.rprb h4{margin:0 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted)}
+.rsub{margin:0 0 2px;font-size:12.5px;color:#6f685c;font-style:italic}
+.rprb .rptx,.rprb .rplx{font-family:Georgia,serif;font-size:15.5px;line-height:1.5;white-space:pre-wrap}
+.rprl{display:grid;grid-template-columns:22px minmax(0,1fr) 54px;gap:8px;align-items:baseline}
+.rprl .rplt{font:700 11px 'Segoe UI',sans-serif;border:1px solid var(--line);border-radius:5px;text-align:center;padding:1px 0}
+.rprl .rpsy{font:12px 'Segoe UI',sans-serif;color:var(--muted);text-align:right}
+.rprk2 span{font-size:11.5px;font-weight:700;color:var(--muted)}
+.rprk2{margin:0 0 4px}
+.rpbl{color:#6f685c;font:italic 13px 'Segoe UI',sans-serif}
+.rnote{margin:2px 0 0;font-size:12px;color:#6f685c}
+details.rxrow{margin:10px 0 0}
+details.rxrow summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--accent);min-height:40px;display:flex;align-items:center}
+details.rxrow table{margin-top:4px}
+.rprl.ind .rplx{padding-left:18px}
+#print{display:none}
+@media print{
+  @page{size:A4;margin:12mm 13mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;padding:0;display:block;font-size:10pt}
+  .container,dialog#wordDialog{display:none}
+  #print{display:block;color:#000;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+  #print .rh{border-bottom:2pt solid #000;padding:0 0 6pt;margin:0 0 8pt}
+  #print h1{font-size:16pt;margin:0 0 3pt}
+  #print .rmeta{display:flex;flex-wrap:wrap;gap:4pt 16pt;font-size:10pt;margin:0 0 6pt}
+  #print .sstrip{gap:4pt;margin:0}
+  #print .rpsb{min-width:46pt;padding:2pt 6pt;border:1.2pt solid #000;border-radius:3pt;background:#fff}
+  #print .rpsb i{font-size:7.5pt;color:#000}
+  #print .rpsb b{font-size:10.5pt;color:#000}
+  #print .rpsb em{font-size:7pt;color:#222}
+  #print .rpsb.miss{border-style:dashed;background:#e4e4e4}
+  #print .rpsb.miss b{color:#000;text-decoration:underline}
+  #print .rpsb.none{border-color:#666;color:#333} #print .rpsb.none b{color:#333}
+  #print .rpsb.all{border-width:2pt;margin-left:auto}
+  #print .rwrap{border:1.5pt solid #000;padding:6pt 9pt 2pt;margin:0 0 9pt}
+  #print h2{font-size:11pt;margin:0 0 4pt}
+  #print .rah{margin:0 0 3pt}
+  #print .rprb{break-inside:avoid;margin:0 0 6pt}
+  #print .rprb h4{font-size:7.5pt;letter-spacing:.5pt;color:#000;margin:0 0 1pt}
+  #print .rsub{font-size:8.5pt;color:#222;margin:0 0 1pt}
+  #print .rprb .rptx,#print .rprb .rplx{font-size:12pt;line-height:1.45}
+  #print .rprl{grid-template-columns:15pt minmax(0,1fr) 34pt;gap:6pt}
+  #print .rprl .rplt{font-size:8.5pt;border:1pt solid #000;border-radius:2pt}
+  #print .rprl .rpsy{font-size:8.5pt;color:#000}
+  #print .rprk2 span{font-size:8.5pt;color:#000}
+  #print .rpbl{font-size:9pt;color:#333}
+  #print .rnote{font-size:8.5pt;color:#222}
+  #print .rprs{break-inside:avoid;border-top:1pt solid #777;padding:4pt 0 5pt}
+  #print .rprs h3{font-size:10pt;margin:0 0 3pt;display:flex;justify-content:space-between}
+  #print .rprs .rpsc{font-weight:700}
+  #print .rppg{display:grid;grid-template-columns:minmax(0,46fr) minmax(0,54fr);gap:10pt;align-items:start}
+  #print .rppt{font-family:Georgia,"Times New Roman",serif;font-size:9.5pt;line-height:1.35}
+  #print .rppt div.ind{padding-left:12pt}
+  #print .rppt .rpln{display:inline-block;min-width:14pt;font-family:'Segoe UI',sans-serif;font-size:7.5pt;color:#444}
+  #print .rmod{font-size:9pt;margin:0}
+  #print .rprt{width:100%;border-collapse:collapse;font-size:8.5pt;table-layout:fixed}
+  #print .rprt th{text-align:left;font-size:7pt;text-transform:uppercase;letter-spacing:.4pt;border-bottom:1pt solid #000;padding:1pt 3pt}
+  #print .rprt th:nth-child(1){width:31%} #print .rprt th:nth-child(2){width:25%}
+  #print .rprt td{padding:2pt 3pt;border-bottom:.5pt solid #aaa;vertical-align:top;overflow-wrap:anywhere}
+  #print .rprt .rpg{font-weight:700;font-size:10pt}
+  #print .rprt tr.second td.rpres,#print .rprt tr.shown td.rpres{font-weight:700}
+  #print .rprt tr.shown td{background:#e4e4e4}
+}
 </style>
 </head>
 <body>
 <div class="container"><div id="body"></div></div>
+<div id="print"></div>
 
 <script>
 /* ============================================================================
@@ -1070,13 +1152,76 @@ function reportData(){
                  S.lines.map(l=>l.trim()).join(" / "), S.plan.who.trim(), S.plan.twist.trim(), S.plan.aud.trim(), S.purpose.trim() ] };
 }
 function renderReport(){
+  const m=limModel();
+  const groups=m.misses.map(g=>`<div class="rxg"><h4>${esc(g.lab)}</h4><ul>${g.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")
+    ||`<p class="dim">${m.answered?"No misses.":"Nothing answered yet."}</p>`;
   const r=reportData();
-  $("body").innerHTML=bar()+`<div class="rptwrap"><table class="rpt">${r.cols.map((c,i)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[i])}</td></tr>`).join("")}</table></div>
-    <p class="dim" style="margin-top:0">First tries only. Syllable counts in Write are estimates. It cannot tell whether the student's own limerick has the rhythm or is funny: hear it read aloud.</p>
-    <div class="btnrow" style="margin-top:8px"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
-      <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
-    <div class="fb" id="fb"></div>`;
+  $("body").innerHTML=bar()+`<div class="cols even rxcols"><div class="cardbox">
+      <p class="rxwho"><b>${esc(m.name)}</b> · ${esc(m.sid)} · ${esc(m.date)} · ${esc(m.mins||"?")} minute${m.mins==="1"?"":"s"}</p>
+      <h3 class="rxh">Right first time</h3>${limStrip(m)}
+      <h3 class="rxh">Misses by skill</h3>${groups}
+    </div>
+    <div class="cardbox">
+      <div class="btnrow" style="margin-top:0"><button class="btn btn-primary" onclick="window.print()">Print or save as PDF</button>
+        <button class="btn" onclick="copyRow()">Copy the row</button>
+        <button class="btn btn-ghost" onclick="go('home')">All steps</button></div>
+      <div class="fb" id="fb"></div>
+      <ul class="rxnotes"><li>Scores and misses are first tries only.</li><li>Syllable counts are estimates.</li>
+        <li>The report cannot tell whether the limerick has the rhythm or is funny. Hear it read aloud.</li></ul>
+      <details class="rxrow"><summary>Show the row</summary><div class="rptwrap"><table class="rpt">${r.cols.map((c,i)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[i])}</td></tr>`).join("")}</table></div></details>
+      <h3 class="rxh">Writing</h3><div class="rprw">${limWriting(m)}</div>
+    </div></div>`;
+  buildPrint();
 }
+/* ---- report model: one row per first-try result, grouped by step ---- */
+function limModel(){
+  const rows=[], misses=[], note=(g,a)=>{ if(a.length){ let x=misses.find(y=>y.lab===g); if(!x) misses.push(x={lab:g,items:[]}); x.items.push(...a); } };
+  NEARMISS.forEach((it,k)=>{ const r=S.first["nm."+k];
+    rows.push({ grp:"Model", lab:"Find the broken line: "+it.name, a1:r&&r.pick!=null?"line "+r.pick:"", res:r?(r.ok?"clean":"miss"):"", why:r&&!r.ok?"the broken line was line "+(it.bad+1):"" });
+    if(r&&!r.ok) note("Model",[`${it.name}: picked line ${r.pick}`]); });
+  const b1=S.first["b1."+LSET().id], b2=S.first["b2."+ESET().id], W=S.first.write;
+  const one=(grp,lab,x,ok,miss,a1)=>{ rows.push({ grp, lab, a1:x?a1:"", res:x?(ok?"clean":"miss"):"", why:x&&!ok?miss.join("; "):"" }); if(x&&!ok) note(grp,miss); };
+  one("Build lines","Put the lines in order",b1,b1&&b1.ok,b1?b1.miss:[],b1&&b1.ok?"yes":"no");
+  one("Build end words","Fill the end words",b2,b2&&b2.ok,b2?b2.miss:[],b2&&b2.ok?"yes":"no");
+  one("Rhyme check","Your limerick: rhyme",W,W&&W.rhyme==="yes",W?W.rmiss:[],W?W.rhyme:"");
+  one("Length check","Your limerick: line length",W,W&&W.length==="yes",W?W.lmiss:[],W?W.length:"");
+  const groups=[]; rows.forEach(x=>{ let g=groups.find(y=>y.grp===x.grp); if(!g) groups.push(g={grp:x.grp,c:0,d:0,n:0}); g.n++; if(x.res){ g.d++; if(x.res==="clean") g.c++; } });
+  const c=rows.filter(x=>x.res==="clean").length, d=rows.filter(x=>x.res).length;
+  const mins=(S.startedAt&&S.lastAt)?String(Math.max(1,Math.round((S.lastAt-S.startedAt)/60000))):"";
+  const dt=new Date();
+  return { rows, groups, misses, clean:c, tot:rows.length, answered:d, name:`${S.fname} ${S.lname}`.trim(), sid:S.sid, mins,
+    date:dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0") };
+}
+function limStrip(m){
+  const box=(lab,g,txt,cls,sub)=>`<span class="rpsb ${cls}" role="listitem"><i>${esc(lab)}</i><b><span class="rpgl" aria-hidden="true">${g}</span> ${esc(txt)}</b>${sub?`<em>${esc(sub)}</em>`:""}</span>`;
+  let h=m.groups.map(x=>{
+    const g=x.d>x.c?"✗":(x.c===x.n?"✓":"–"), cls=x.d>x.c?"miss":(x.c===x.n?"ok":"none");
+    return box(x.grp,g,`${x.c}/${x.n}`,cls,x.d===0?"not tried":x.d<x.n?`${x.d} of ${x.n} tried`:"");
+  }).join("");
+  const allOk=m.tot>0&&m.clean===m.tot;
+  h+=box("All",allOk?"✓":(m.answered?"✗":"–"),`${m.clean}/${m.tot}`,"all "+(allOk?"ok":m.answered?"miss":"none"),"right first time");
+  return `<div class="sstrip" role="list" aria-label="Right first time">${h}</div>`;
+}
+function limWriting(m){
+  const bl=`<span class="rpbl">blank</span>`, c=counts(), A=["A","A","B","B","A"];
+  const lines=S.lines.map((t,i)=>`<div class="rprl ${i===2||i===3?"ind":""}"><span class="rplt">${A[i]}</span><span class="rplx">${t.trim()?esc(t.trim()):bl}</span><span class="rpsy">${c[i]?"≈ "+c[i]:""}</span></div>`).join("");
+  const pair=(k,v)=>`<div class="rprk2"><span>${k}</span><div class="rptx">${v.trim()?esc(v.trim()):bl}</div></div>`;
+  return `<div class="rprb"><h4>Your limerick</h4>${lines}</div>
+    <div class="rprb"><h4>Plan</h4>${pair("About",S.plan.who)}${pair("Twist",S.plan.twist)}${pair("For",S.plan.aud)}</div>
+    <div class="rprb"><h4>Purpose and audience</h4><div class="rptx">${S.purpose.trim()?esc(S.purpose.trim()):bl}</div></div>`;
+}
+function trimEnd(t){ return String(t==null?"":t).replace(/[\s.:;,]+$/,""); }
+function buildPrint(){
+  const m=limModel();
+  const res=x=>!x.res?`<span class="rpg">–</span> not tried`:x.res==="clean"?`<span class="rpg">✓</span> first try`:`<span class="rpg">✗</span> ${esc(x.why||"missed")}`;
+  $("print").innerHTML=`<header class="rh"><h1>Limericks</h1>
+    <div class="rmeta"><span><b>${esc(m.name)}</b></span><span>Code ${esc(m.sid)}</span><span>${esc(m.date)}</span><span>${esc(m.mins||"?")} minute${m.mins==="1"?"":"s"}</span></div>
+    ${limStrip(m)}</header>
+    <section class="rwrap"><h2>Your writing</h2>${limWriting(m)}</section>
+    <h2 class="rah">Answers</h2>
+    <section class="rprs"><table class="rprt"><thead><tr><th>Question</th><th>First try</th><th>Result</th></tr></thead><tbody>${m.rows.map(x=>`<tr class="${x.res||"none"}"><td>${esc(x.lab)}</td><td>${esc(x.a1)}</td><td class="rpres">${res(x)}</td></tr>`).join("")}</tbody></table></section>`;
+}
+window.addEventListener("beforeprint", ()=>{ if(idOk() && view.screen!=="id") buildPrint(); });
 function copyRow(){
   const tsv=reportData().row.map(v=>String(v).replace(/[\t\n\r]+/g," ")).join("\t");
   const done=()=>{ const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Copied. Paste it into the class sheet."; };
