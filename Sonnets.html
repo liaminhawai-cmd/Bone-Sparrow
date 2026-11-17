@@ -12,7 +12,7 @@
   --warn:#8a5a12; --warnbg:#fdf4e3;
   /* Rhyme pairs. Each badge also prints its letter, so colour is never the
      only signal. */
-  --ra:#1f5fa8; --rabg:#e3ecf7; --rb:#6b3f7e; --rbbg:#efe5f3; --rc:#2f6a3e; --rcbg:#e5f1e7; --rd:#8a5a12; --rdbg:#fdf4e3;
+  --ra:#1F5FA8; --rabg:#e3ecf7; --rb:#A24800; --rbbg:#f9eadc; --rc:#0F6E4D; --rcbg:#dff1ea; --rd:#7A2FA0; --rdbg:#f0e4f6;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -244,7 +244,6 @@ body.proj .word-pop{max-height:calc((100vh - 26px)/1.4)}
 @media (min-width:1600px){ body.proj dialog#wordDialog{zoom:1.9;max-height:calc((100vh - 24px)/1.9)} body.proj .word-pop{max-height:calc((100vh - 26px)/1.9)} }
 
 /* ---- rewrite ---- */
-.rw{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:3px 8px;align-items:start;margin:0 0 9px}
 .rl{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin-top:5px;border:1px solid}
 .rl.A{color:var(--ra);background:var(--rabg);border-color:var(--ra)}
 .rl.B{color:var(--rb);background:var(--rbbg);border-color:var(--rb)}
@@ -344,6 +343,9 @@ details.rxrow table{margin-top:4px}
   #print .rprl{grid-template-columns:15pt minmax(0,1fr) 34pt;gap:6pt}
   #print .rprl .rplt{font-size:8.5pt;border:1pt solid #000;border-radius:2pt}
   #print .rprl .rpsy{font-size:8.5pt;color:#000}
+  #print .rprl.rpturn{background:#d9d9d9}
+  #print .rpt{font-size:7pt;color:#000;border:.8pt solid #000}
+  #print .rpsame{font-size:8pt;color:#222}
   #print .rprk2 span{font-size:8.5pt;color:#000}
   #print .rpbl{font-size:9pt;color:#333}
   #print .rnote{font-size:8.5pt;color:#222}
@@ -372,9 +374,16 @@ details.rxrow table{margin-top:4px}
 .pl .bd{margin-left:8px;vertical-align:1px}
 .sgap{height:8px}
 .rk.E,.rk.F,.rk.G{color:var(--rd);background:var(--rdbg);border-color:var(--rd)}
-body.proj .foot{grid-template-columns:repeat(3,minmax(0,1fr))}
-.fixbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
-.fixbar select{width:auto;min-height:40px}
+.kw{padding:5px 8px;margin:0 -8px 4px;border-radius:8px}
+.kw.turn{background:#FBE3A6}
+.kw .pat{display:flex;gap:6px}
+.kw .pat .n{flex:0 0 auto;font:700 11px 'Segoe UI',sans-serif;color:var(--muted);padding-top:3px;min-width:16px}
+.turnw{font:800 12px 'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.5px;color:#4a2f00;border:1.5px solid #4a2f00;border-radius:99px;padding:2px 10px}
+.grp{margin:10px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.rprl.rpturn{background:#FBE3A6}
+.rpt{font:800 10px 'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.4px;color:#4a2f00;border:1px solid #4a2f00;border-radius:99px;padding:0 7px;margin-left:8px;white-space:nowrap;vertical-align:2px}
+.rpsame{font:italic 12px 'Segoe UI',sans-serif;color:#6f685c;margin-left:8px;white-space:nowrap}
+body.proj .foot{grid-template-columns:repeat(2,minmax(0,1fr))}
 </style>
 </head>
 <body>
@@ -484,8 +493,8 @@ const WEST = {
      {"t":"All bright and [[glittering|glittering]] in the smokeless air.","rhyme":"A","end":"air","snd":"-air",
       "syl":"all BRIGHT and GLIT.ter.ing|2 in the SMOKE.less AIR"} ],
     q:[ {type:"letters"},
-        {type:"split", line:6, words:["the.a.tres"]},
-        {type:"count", line:6},
+        {type:"split", line:8, words:["smoke.less"]},
+        {type:"count", line:5},
         {type:"mc", short:"when he looks", q:"In Clancy of the Overflow the city is ‘dusty, dirty’ with ‘foetid air and gritty’. Line 8 here calls the air ‘smokeless’. When is Wordsworth looking at the city?", key:1, opts:[
           ["At night, when the lamps are lit","Line 5 names the time: ‘the beauty of the morning’. Night is not mentioned."],
           ["In the morning, before the smoke starts","Line 5: ‘the beauty of the morning’. Line 8: ‘smokeless air’. Clancy’s ‘dusty, dirty city’ is the same city later in the day."],
@@ -555,7 +564,7 @@ const S18 = {
      {"t":"And summer’s [[lease|lease]] [[hath|hath]] all too short a date:","rhyme":"B","end":"date","snd":"-ate",
       "syl":"and SUM.mer’s LEASE hath ?ALL ?TOO SHORT a DATE"} ],
     q:[ {type:"rhymes"},
-        {type:"count", line:2},
+        {type:"count", line:1},
         {type:"mc", short:"the comparison", q:"Line 1 asks whether he should compare the person to a summer’s day. What does line 2 answer?", key:1, opts:[
           ["The person is less lovely than the summer’s day","Line 2 says ‘more lovely’. ‘More’ means a greater amount than the day has, not a smaller one."],
           ["The person is lovelier and milder than the day","‘Thou art more lovely and more temperate’: ‘more … and more’ puts the person ahead of the day on both counts."],
@@ -577,7 +586,7 @@ const S18 = {
      {"t":"By chance, or nature’s changing course [[untrimmd|untrimm’d]]:","rhyme":"D","end":"untrimm’d","snd":"-immed",
       "syl":"by CHANCE or NA.ture’s CHANG.ing COURSE un.TRIMM’D"} ],
     q:[ {type:"letters"},
-        {type:"count", line:5},
+        {type:"count", line:6},
         {type:"beats", line:8},
         {type:"mc", short:"faults, lines 5 to 8", q:"Lines 5 to 8 add more faults of summer. Which set is right?", key:0, opts:[
           ["The sun burns, cloud dims it, and every beautiful thing fades","Line 5: too hot. Line 6: the sun’s gold face dimmed. Line 7: ‘every fair from fair sometime declines’, so beauty fades."],
@@ -641,6 +650,12 @@ const S18 = {
 /* ========================== END OF CONTENT ================================ */
 
 const POEMS={ westminster:WEST, s18:S18 }, ORDER=["westminster","s18"];
+/* The writing step remixes Westminster Bridge: 14 lines, octave ABBAABBA and
+   sestet CDCDCD, the turn at line 9. WL is Wordsworth's text as printed above. */
+const MODES={ kew:"Kew at dawn", own:"Your own place at dawn" };
+const LETTERS="ABBAABBACDCDCD".split(""), TURN=9, N=14;
+const WL=WEST.stanzas.reduce((a,sec)=>a.concat(sec.lines.map(l=>strip(l.t))),[]);
+function startLines(){ const w=WL.slice(); w[0]=w[0].replace(/^Earth\b/,"Kew"); return w; }
 const KEY = "writingfolio.sonnet.v1";
 const PKEY = "bonesparrow.profile.v1";
 let store;
@@ -648,7 +663,7 @@ try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem()
 
 /* ---- which poem: #westminster (default) or #s18. #open opens every section.
    #class is the teacher's board, #write the writing step. #sn=[...] carries
-   the class lines. ---- */
+   the four class lines. ---- */
 let PID="westminster", OPEN=false, P=WEST, PENDING=null;
 function hashTokens(){ return (location.hash||"").replace(/^#/,"").replace(/(^|&)sn=[^&]*/,"").toLowerCase().split(/[&,+\/ ]+/).filter(Boolean); }
 function readHash(){
@@ -656,23 +671,39 @@ function readHash(){
   const m=(location.hash||"").match(/(?:^#|&)sn=([^&]*)/);
   PENDING=null;
   if(m){ try{ const a=JSON.parse(decodeURIComponent(m[1]));
-      if(Array.isArray(a) && a.length>=6 && a.slice(0,6).every(x=>typeof x==="string")) PENDING={ lines:a.slice(0,6).map(x=>x.slice(0,300)) }; }catch(e){} }
+      if(Array.isArray(a) && a.length===4 && a.every(x=>typeof x==="string")) PENDING={ lines:a.map(x=>x.slice(0,300)) }; }catch(e){} }
   return t;
 }
 
 /* ---- storage: one record per poem, the student's draft, and the teacher's
    class board under "class" (never part of a student's report) ---- */
 function blankPoem(){ return { startedAt:null, lastAt:null, at:0, items:{}, checks:0 }; }
-function blankDraft(){ return { form:"shakespeare", lines:new Array(14).fill(""), adj:new Array(14).fill(0), first:null, last:null }; }
+/* The draft keeps one set of 14 lines per mode. kew stays null until the
+   student types, so it follows startLines() until then. */
+function blankDraft(){ return { mode:"kew", kew:null, own:{ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }, first:null, last:null }; }
+function cleanDraft(d){
+  d=d&&typeof d==="object"?d:{};
+  const pad=(a,f)=>{ const o=Array.isArray(a)?a.slice(0,N):[]; while(o.length<N) o.push(f); return o; };
+  const str=a=>pad(a,"").map(x=>typeof x==="string"?x:""), num=a=>pad(a,0).map(x=>Number.isFinite(x)?x:0);
+  const out=blankDraft();
+  if(d.mode===undefined && Array.isArray(d.lines)){   /* the first draft shape: a form and 14 lines. Kept as Your own place at dawn. */
+    out.own={ lines:str(d.lines), adj:num(d.adj) };
+    out.mode=out.own.lines.some(l=>l.trim())?"own":"kew";
+  } else {
+    out.mode=d.mode==="own"?"own":"kew";
+    if(d.own) out.own={ lines:str(d.own.lines), adj:num(d.own.adj) };
+    if(d.kew) out.kew={ lines:str(d.kew.lines), adj:num(d.kew.adj) };
+  }
+  out.first=d.first||null; out.last=d.last||null;
+  return out;
+}
 function blank(){ return { v:1, fname:"", lname:"", sid:"", glossLang:"", poems:{}, class:null, draft:blankDraft() }; }
 function load(){
   let s=null; try{ s=JSON.parse(store.getItem(KEY)); }catch(e){}
   if(!s || typeof s!=="object") s=blank();
   s=Object.assign(blank(), s); s.poems=Object.assign({}, s.poems||{});
   ORDER.forEach(id=>{ s.poems[id]=Object.assign(blankPoem(), s.poems[id]||{}); });
-  s.draft=Object.assign(blankDraft(), s.draft||{});
-  if(!Array.isArray(s.draft.lines)||s.draft.lines.length!==14) s.draft.lines=new Array(14).fill("");
-  if(!Array.isArray(s.draft.adj)||s.draft.adj.length!==14) s.draft.adj=new Array(14).fill(0);
+  s.draft=cleanDraft(s.draft);
   return s;
 }
 let S=load();
@@ -816,7 +847,7 @@ function rhymeStatus(x, y, i, j){
 }
 const SYLL={ kew:1,sydney:2,melbourne:2,yarra:2,poem:2,poet:2,being:2,going:2,doing:2,seeing:2,quiet:2,lion:2,giant:2,riot:2,create:2,
   every:2,different:3,business:2,family:3,chocolate:3,evening:2,fire:1,hour:1,idea:3,area:3,video:3,radio:3,violin:3,beautiful:3,
-  poetry:3,flower:2,power:2,tower:2,shower:2,real:1,really:2,again:2,people:2,heaven:2,towers:2,wires:1,eternal:3,temperate:3 };
+  poetry:3,flower:2,power:2,tower:2,shower:2,real:1,really:2,again:2,people:2,heaven:2,towers:2,wires:1,eternal:3,temperate:3,any:2,theatre:3,theatres:3,temples:2,smokeless:2,lying:2,glittering:3 };
 function wordSyllables(raw){
   let w=normalWord(raw); if(!w) return 0;
   if(SYLL[w]) return SYLL[w];
@@ -836,11 +867,6 @@ function metText(n, short){
   return { t, c:"met "+(a<=1?"good":a===2?"warn":"bad") };
 }
 function cardHTML(r){ return `<div class="rc ${r.k}"><span class="v">${r.k==="ok"?"✓":r.k==="bad"?"✗":"?"} ${esc(r.L)} · ${esc(r.x||"?")} / ${esc(r.y||"?")}: ${esc(r.v)}</span>${esc(r.why)}</div>`; }
-const FORMS={
-  quatrain:{ name:"Quatrain and couplet (6 lines)", letters:["A","B","A","B","G","G"] },
-  shakespeare:{ name:"Shakespearean sonnet (14 lines)", letters:"ABABCDCDEFEFGG".split("") },
-  petrarchan:{ name:"Petrarchan sonnet (14 lines)", letters:"ABBAABBACDCDCD".split("") }
-};
 function letterPairs(lets){
   const out=[]; [...new Set(lets)].forEach(L=>{ const ix=lets.map((x,j)=>x===L?j:-1).filter(j=>j>=0); for(let j=1;j<ix.length;j++) out.push([ix[0],ix[j],L]); });
   return out;
@@ -895,16 +921,17 @@ function judge(s,q,sel){
     }
     case "split": {
       const W=q.words.map(splitWordText), parts=q.words.map(w=>w.split("."));
-      const res=W.map((w,i)=>{ const gp=groupsOf(w, sel[i]||[]); return { w, g:gp, n:parts[i].length, bad:gp.findIndex((x,j)=>vowelState(x, j===gp.length-1)!=="ok") }; });
-      const ok=res.every(r=>r.g.length===r.n && r.bad<0);
+      const res=W.map((w,i)=>{ const gp=groupsOf(w, sel[i]||[]); return { w, g:gp, n:parts[i].length, exact:gp.join("|")===parts[i].join("|"), bad:gp.findIndex((x,j)=>vowelState(x, j===gp.length-1)!=="ok") }; });
+      const ok=res.every(r=>r.g.length===r.n && r.bad<0 && r.exact);
       const name=(w,gp)=>`${w}: ${gp.length} syllable${gp.length>1?"s":""}, ${gp.join(" and ")}`;
       let msg;
       if(ok) msg=res.map(r=>name(r.w,r.g)).join("; ")+". Each syllable has one vowel sound.";
       else {
-        const r=res.find(r=>r.bad>=0 || r.g.length!==r.n);
+        const r=res.find(r=>r.bad>=0 || r.g.length!==r.n || !r.exact);
         if(r.bad>=0){ const gp=r.g[r.bad], st=vowelState(gp, r.bad===r.g.length-1);
           msg = st==="silent" ? `${q1(gp)} has only the silent e at the end of the word, so it is not a syllable on its own.` : `${q1(gp)} has no vowel. Every syllable needs one vowel sound.`; }
-        else msg=`You cut ${q1(r.w)} into ${r.g.length} part${r.g.length>1?"s":""}. Say it slowly and count the vowel sounds you hear: one syllable for each. Two vowels side by side can be two sounds.`;
+        else if(r.g.length!==r.n) msg=`You cut ${q1(r.w)} into ${r.g.length} part${r.g.length>1?"s":""}. Say it slowly and count the vowel sounds you hear: one syllable for each. Two vowels side by side can be two sounds.`;
+        else msg=`You cut ${q1(r.w)} into ${r.g.map(q1).join(" and ")}. Each part has a vowel, but the word does not break there. Cuts follow the sound, not the spelling: say the word slowly and listen for where it splits.`;
       }
       return { ok, ans:res.map(r=>r.g.join("|")).join(" "), msg, reveal:W.map((w,i)=>name(w,parts[i])).join("; ")+". Each syllable has one vowel sound." };
     }
@@ -1044,7 +1071,7 @@ function go(screen){
   if(screen!=="class" && !idOk() && screen!=="id") screen="id";
   view = { screen, checked:null, sel:{}, claps:{}, lastWrong:{} };
   document.body.classList.toggle("proj", screen==="class");
-  if(screen==="class") P=S18;
+  if(screen==="class") P=WEST;
   closeWord();
   window.scrollTo({top:0});
   SCREENS[screen]();
@@ -1090,7 +1117,6 @@ function idSubmit(){
   go(TARGET||"home");
 }
 
-function nWritten(){ const d=D(), n=FORMS[d.form]?FORMS[d.form].letters.length:14; return d.lines.slice(0,n).filter(l=>String(l).trim()).length; }
 /* Word set in the Vocab Hub. Read only: the hub owns this key. */
 function wordsSet(){ return "11"; }
 function wordsDone(){ try{ const V=JSON.parse(window.localStorage.getItem("writingfolio.vocabhub.v1")); const x=V&&V.lessons&&V.lessons[wordsSet()]; return !!(x&&x.applyDone); }catch(e){ return false; } }
@@ -1102,7 +1128,7 @@ function renderHome(){
   const steps=[{ href:`WritingFolioVocabHub.html#set-${wordsSet()}`, t:"Words first", d:"The words in the poems, in the Vocab Hub.", tag:wd?"Done":"", done:wd },
     { s:"read", t:"Read and analyse", d:`${P.short}. ${P.stanzas.length} sections, one at a time.`,
                  tag:answered?`${answered} of ${n} sections answered`:"", done:answered===n && allClean },
-    { s:"write", t:"Write your own sonnet", d:"A quatrain and a couplet, or a whole sonnet, with the syllables and rhymes checked.",
+    { s:"write", t:"Write your own sonnet", d:"Remix Westminster Bridge line by line: Kew at dawn, or your own place at dawn.",
       tag:w?`${w} line${w>1?"s":""} written`:"", done:false },
     { s:"export", t:"Export", d:"A page to print or save as PDF, and one row for your teacher.", tag:"", done:false }];
   let h=topbar()+`<h1>Sonnets</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>
@@ -1310,82 +1336,118 @@ function check(s,qi){
 }
 
 /* ====================== WRITE (student) ==================================
-   Never locked. The student chooses the form: a quatrain and a couplet, a
-   Shakespearean sonnet or a Petrarchan sonnet. Lines save as they are typed
-   and carry across forms. The first rhyme check after something is written
-   is the one the report keeps. */
-function formOf(){ const d=D(); return FORMS[d.form]?d.form:"shakespeare"; }
-function renderWrite(){
-  const d=D(), f=formOf(), lets=FORMS[f].letters, n=lets.length;
-  const offer=PENDING?`<div class="offer" role="region" aria-label="Class lines"><b>Class quatrain and couplet</b>
-      <ol>${PENDING.lines.map(l=>`<li>${esc(l)}</li>`).join("")}</ol>
-      <div class="btnrow" style="margin-top:6px"><button class="btn btn-primary" onclick="useClass()">Use the class lines</button><button class="btn btn-ghost" onclick="dropOffer()">Not now</button></div></div>`:"";
-  const rows=lets.map((L,k)=>`<div class="rw"><span class="rl ${L}" aria-hidden="true">${L}</span>
-      <textarea class="rt" id="ln${k}" rows="1" aria-label="Line ${k+1}, rhyme ${L}" oninput="typeLine(${k},this.value)">${esc(d.lines[k]||"")}</textarea>
+   Never locked. The student remixes Westminster Bridge line by line. Kew at
+   dawn starts from Wordsworth's own lines with Earth moved to Kew; Your own
+   place at dawn starts blank. Both keep the 14-line pattern: octave ABBAABBA,
+   sestet CDCDCD, the turn at line 9. Each mode keeps its own lines. Lines save
+   as they are typed. The first rhyme check after something is written is the
+   one the report keeps. */
+function modeNow(){ return D().mode==="own"?"own":"kew"; }
+function slotOf(d,m){ if(m==="own") return d.own; if(!d.kew) d.kew={ lines:startLines(), adj:new Array(N).fill(0) }; return d.kew; }
+function kewNow(){ const d=D(); return d.kew?d.kew.lines:startLines(); }
+function linesNow(){ return modeNow()==="own"?D().own.lines:kewNow(); }
+function adjNow(){ const d=D(); return modeNow()==="own"?d.own.adj:(d.kew?d.kew.adj:new Array(N).fill(0)); }
+/* Kew at dawn counts a line as written once it differs from Wordsworth's; the
+   blank mode counts any text. */
+function isWritten(k){ const t=String(linesNow()[k]||"").trim(); return modeNow()==="own"?!!t:(!!t && t!==startLines()[k].trim()); }
+function nWritten(){ return LETTERS.filter((_,k)=>isWritten(k)).length; }
+/* The class lines come from the class link, or from the board on this device
+   once someone has changed it. */
+let BOARDHIDE=false;
+function offerSource(){
+  if(PENDING) return PENDING.lines.map(l=>l.trim());
+  if(BOARDHIDE) return null;
+  const c=S.class; if(!c || !Array.isArray(c.lines) || c.lines.length!==4) return null;
+  const ls=c.lines.map(l=>String(l).trim()), st=startLines();
+  return ls.some((l,k)=>l!==st[k].trim())?ls:null;
+}
+function offerHTML(){
+  const src=offerSource(); if(!src) return "";
+  const mine=kewNow();
+  if(modeNow()==="kew" && src.every((l,k)=>l===String(mine[k]).trim())) return "";
+  return `<div class="offer" role="region" aria-label="Class lines"><b>Class lines 1 to 4</b>
+      <ol>${src.map(l=>`<li>${esc(l)}</li>`).join("")}</ol>
+      <div class="btnrow" style="margin-top:6px"><button class="btn btn-primary" onclick="useClass()">Use the class lines</button><button class="btn btn-ghost" onclick="dropOffer()">Not now</button></div></div>`;
+}
+function rowHTML(k){
+  const L=LETTERS[k], turn=k===TURN-1, t=linesNow()[k]||"";
+  return (k===0?`<p class="grp">Octave: lines 1 to 8 · ABBAABBA</p>`:k===8?`<p class="grp">Sestet: lines 9 to 14 · CDCDCD</p>`:"")
+    +`<div class="kw${turn?" turn":""}"><span class="rl ${L}" aria-hidden="true">${L}</span>
+      <span class="pat"><span class="n" aria-hidden="true">${k+1}</span><span>${esc(WL[k])}</span></span>
+      <textarea class="rt" id="ln${k}" rows="1" aria-label="Line ${k+1}, rhyme ${L}${turn?", the turn":""}" oninput="typeLine(${k},this.value)">${esc(t)}</textarea>
       <span class="fix"><button type="button" onclick="nudge(${k},-1)" aria-label="Line ${k+1}: one syllable fewer">−</button><button type="button" onclick="nudge(${k},1)" aria-label="Line ${k+1}: one syllable more">+</button></span>
-      <div class="under"><span class="job">${k+1}.</span><span class="met" id="end${k}"></span><span class="met" id="syl${k}"></span></div></div>`).join("");
-  $("body").innerHTML=bar("Write")+`<div class="cols wide"><div class="cardbox">${offer}
-      <div class="fixbar"><label class="lab" for="form" style="margin:0">Form</label>
-        <select id="form" onchange="setForm(this.value)">${Object.keys(FORMS).map(k=>`<option value="${k}" ${k===f?"selected":""}>${esc(FORMS[k].name)}</option>`).join("")}</select></div>
-      ${rows}</div>
+      <div class="under">${turn?`<span class="turnw">turn</span>`:""}<span class="job"></span><span class="met" id="end${k}"></span><span class="met" id="syl${k}"></span></div></div>`;
+}
+function renderWrite(){
+  const mode=modeNow();
+  const sw=`<span class="poemsw" role="group" aria-label="Remix" style="margin:0">${Object.keys(MODES).map(m=>
+    `<button class="tg btn" aria-pressed="${m===mode}" onclick="setMode('${m}')">${m===mode?"✓ ":""}${esc(MODES[m])}</button>`).join("")}</span>`;
+  $("body").innerHTML=bar("Write", sw)+`<div class="cols wide"><div class="cardbox">${offerHTML()}
+      <div class="kwcols" aria-hidden="true"><span></span><span class="lab">Wordsworth</span><span class="lab">Yours</span></div>
+      ${LETTERS.map((_,k)=>rowHTML(k)).join("")}</div>
     <div class="cardbox">
       <button class="btn btn-primary" onclick="checkWrite()">Check rhymes</button>
       <div id="checks"></div>
       <p class="dim">Syllable counts are estimates. Use − or + to correct one.</p>
-      <div class="btnrow"><button class="btn btn-primary" onclick="go('export')">Export →</button></div>
+      <div class="btnrow"><button class="btn btn-ghost" onclick="restart()">Start again</button><button class="btn btn-primary" onclick="go('export')">Export →</button></div>
     </div></div>`;
-  for(let k=0;k<n;k++){ metrics(k); fit($("ln"+k)); }
+  for(let k=0;k<N;k++){ metrics(k); fit($("ln"+k)); }
   drawChecks();
 }
-function setForm(v){ if(!FORMS[v]) return; bumpD(d=>{ d.form=v; }); view.checked=null; renderWrite(); }
+function setMode(m){ if(!MODES[m]) return; bumpD(d=>{ d.mode=m; }); view.checked=null; renderWrite(); }
 function useClass(){
-  if(!PENDING) return;
-  const d=D(), mine=d.lines.slice(0,6).some(l=>String(l).trim()) && d.lines.slice(0,6).some((l,k)=>l.trim()!==PENDING.lines[k].trim());
-  if(mine && !confirm("Replace lines 1 to 6 of your draft with the class lines? Your own lines 1 to 6 will be lost.")) return;
-  const p=PENDING;
-  bumpD(dd=>{ dd.form="quatrain"; p.lines.forEach((l,k)=>{ dd.lines[k]=l; dd.adj[k]=0; }); });
+  const src=offerSource(); if(!src) return;
+  const mine=kewNow().slice(0,4), st=startLines();
+  const differs=mine.some((l,k)=>l.trim()!==st[k].trim()) && mine.some((l,k)=>l.trim()!==src[k]);
+  if(differs && !confirm("Replace lines 1 to 4 of your Kew at dawn with the class lines? Your own lines 1 to 4 will be lost.")) return;
+  bumpD(d=>{ d.mode="kew"; const sl=slotOf(d,"kew"); src.forEach((l,k)=>{ sl.lines[k]=l; sl.adj[k]=0; }); });
   dropOffer();
 }
-function dropOffer(){ PENDING=null; history.replaceState(null,"","#write"+(OPEN?"&open":"")); view.checked=null; renderWrite(); }
+function dropOffer(){ PENDING=null; BOARDHIDE=true; history.replaceState(null,"","#write"+(OPEN?"&open":"")); view.checked=null; renderWrite(); }
+function restart(){
+  const m=modeNow();
+  if(!confirm(m==="own"?"Clear all 14 lines of Your own place at dawn?":"Put Wordsworth’s 14 lines back, with only Earth moved to Kew? Your lines in Kew at dawn will be replaced.")) return;
+  bumpD(d=>{ if(m==="own") d.own={ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }; else d.kew=null; });
+  view.checked=null; renderWrite();
+}
 function typeLine(k, v){
-  bumpD(d=>{ d.lines[k]=v; d.adj[k]=0; });
+  bumpD(d=>{ const sl=slotOf(d,d.mode==="own"?"own":"kew"); sl.lines[k]=v; sl.adj[k]=0; });
   fit($("ln"+k)); metrics(k);
   if(view.checked){ view.checked=null; drawChecks(); }
 }
-function nudge(k, dlt){ bumpD(d=>{ d.adj[k]+=dlt; }); metrics(k); }
+function nudge(k, dlt){ bumpD(d=>{ const sl=slotOf(d,d.mode==="own"?"own":"kew"); sl.adj[k]+=dlt; }); metrics(k); }
 function metrics(k){
-  const d=D(), t=d.lines[k]||"", m=metText(Math.max(0,lineSyllables(t)+(d.adj[k]||0)));
+  const t=linesNow()[k]||"", m=metText(Math.max(0,lineSyllables(t)+(adjNow()[k]||0)));
   $("end"+k).textContent="ends: "+(endWord(t)||"nothing yet");
   const el=$("syl"+k); el.textContent=m.t; el.className=m.c;
 }
 function checkWrite(){
-  const d=D(), lets=FORMS[formOf()].letters;
-  const res=letterPairs(lets).map(([a,b,L])=>{ const x=endWord(d.lines[a]), y=endWord(d.lines[b]);
+  const ls=linesNow();
+  const res=letterPairs(LETTERS).map(([a,b,L])=>{ const x=endWord(ls[a]), y=endWord(ls[b]);
     return Object.assign({ L:`${L}: lines ${a+1} and ${b+1}`, x, y }, rhymeStatus(x,y,a,b)); });
-  const sum=summarise(res), written=d.lines.slice(0,lets.length).some(l=>String(l).trim());
-  bumpD(dd=>{ dd.last=sum; if(written && !dd.first) dd.first=sum; });
+  const sum=summarise(res), any=nWritten()>0;
+  bumpD(dd=>{ dd.last=sum; if(any && !dd.first) dd.first=sum; });
   view.checked=res; drawChecks();
 }
 function drawChecks(){ const box=$("checks"); if(box) box.innerHTML=(view.checked||[]).map(cardHTML).join(""); }
 
 /* ====================== CLASS MODE (#class) ==============================
-   The teacher's board: a quatrain (ABAB) and a couplet (GG) built with the
-   class. No sign-in, and nothing here reaches a student's record or report:
-   it lives under "class" in the same storage key. Beside each line is the
-   matching line of Sonnet 18. The class link carries the six lines. */
-const CLASSLETTERS=["A","B","A","B","G","G"], CLASSMODEL=[0,1,2,3,12,13];
+   The teacher's board: lines 1 to 4 of Kew at dawn (ABBA), written with the
+   class beside Wordsworth's lines 1 to 4. No sign-in, and nothing here
+   reaches a student's record or report: it lives under "class" in the same
+   storage key. It starts as Wordsworth's lines with Earth moved to Kew. The
+   class link carries the four lines. */
 function classState(){
   const c=S.class&&typeof S.class==="object"?S.class:{};
-  return { lines:Array.isArray(c.lines)&&c.lines.length===6?c.lines:["","","","","",""],
-           adj:Array.isArray(c.adj)&&c.adj.length===6?c.adj:[0,0,0,0,0,0] };
+  return { lines:Array.isArray(c.lines)&&c.lines.length===4&&c.lines.every(x=>typeof x==="string")?c.lines:startLines().slice(0,4),
+           adj:Array.isArray(c.adj)&&c.adj.length===4?c.adj:[0,0,0,0] };
 }
 function bumpClass(fn){ const c=load(); S=c; const s=classState(); fn(s); c.class=s; write(c); }
-function s18Line(n){ let at=n; for(let i=0;i<S18.stanzas.length;i++){ const L=S18.stanzas[i].lines; if(at<L.length) return { t:L[at].t, st:i+1 }; at-=L.length; } return { t:"", st:1 }; }
 function renderClass(){
-  const st=classState();
-  const rows=st.lines.map((t,k)=>{ const L=CLASSLETTERS[k], m=s18Line(CLASSMODEL[k]);
+  const st=classState(), W=WEST.stanzas[0].lines;
+  const rows=st.lines.map((t,k)=>{ const L=LETTERS[k];
     return `<div class="cl"><span class="rl ${L}" aria-hidden="true">${L}</span>
-      <span class="pat">${marked(m.t,m.st)}</span>
+      <span class="pat">${marked(W[k].t,1)}</span>
       <textarea class="rt" id="ln${k}" rows="1" aria-label="Line ${k+1}, rhyme ${L}" oninput="classLine(${k},this.value)">${esc(t)}</textarea>
       <span class="clm"><span class="fix"><button type="button" onclick="classNudge(${k},-1)" aria-label="Line ${k+1}: one syllable fewer">−</button><button type="button" onclick="classNudge(${k},1)" aria-label="Line ${k+1}: one syllable more">+</button></span>
         <span class="met" id="syl${k}"></span></span></div>`; }).join("");
@@ -1406,13 +1468,13 @@ function classMetric(k){
 /* The board shows the rhyme cards live, as the teacher types. */
 function classCards(){
   const st=classState();
-  $("checks").innerHTML=letterPairs(CLASSLETTERS).map(([a,b,L])=>{ const x=endWord(st.lines[a]), y=endWord(st.lines[b]);
+  $("checks").innerHTML=letterPairs(LETTERS.slice(0,4)).map(([a,b,L])=>{ const x=endWord(st.lines[a]), y=endWord(st.lines[b]);
     return cardHTML(Object.assign({ L:`${L}: lines ${a+1} and ${b+1}`, x, y }, rhymeStatus(x,y,a,b))); }).join("");
 }
 function classLine(k,v){ bumpClass(s=>{ s.lines=s.lines.slice(); s.adj=s.adj.slice(); s.lines[k]=v; s.adj[k]=0; }); fit($("ln"+k)); classMetric(k); classCards(); }
 function classNudge(k,dl){ bumpClass(s=>{ s.adj=s.adj.slice(); s.adj[k]+=dl; }); classMetric(k); }
 function classClear(){
-  if(!confirm("Clear the class lines? All six lines will be emptied.")) return;
+  if(!confirm("Clear the class lines? The four lines go back to Wordsworth’s, with Earth moved to Kew.")) return;
   bumpNames(c=>{ c.class=null; }); renderClass();
 }
 function classLink(){
@@ -1445,7 +1507,7 @@ function missName(s,q,r){
   }
 }
 function firstText(f){ return f?`${f.ok} ok · ${f.unsure} not sure · ${f.bad} not ok`+(f.miss.length?` (${f.miss.join("; ")})`:""):"not checked"; }
-function writtenLines(){ const d=D(), lets=FORMS[formOf()].letters; return lets.map((L,k)=>({ L, t:String(d.lines[k]||"").trim() })); }
+function writtenLines(){ const ls=linesNow(); return LETTERS.map((L,k)=>({ L, t:isWritten(k)?String(ls[k]).trim():"" })); }
 function reportData(){
   const r=R(), st=START(P);
   const mins=(r.startedAt&&r.lastAt)?String(Math.max(1,Math.round((r.lastAt-r.startedAt)/60000))):"";
@@ -1466,7 +1528,7 @@ function reportData(){
   for(let s=st;s<P.stanzas.length;s++) qsOf(s).forEach((q,qi)=>{ if(q.type!=="own") return; cols.push(`Own words S${s+1}`); row.push((rec(s,qi).text||"").trim()); });
   const w=writtenLines().filter(x=>x.t);
   cols.push("Writing form","Lines written","Writing","Writing rhyme check, first try");
-  row.push(w.length?FORMS[formOf()].name:"not started", String(w.length), w.map(x=>`${x.L} ${x.t}`).join(" / "), w.length?firstText(D().first):"");
+  row.push(w.length?MODES[modeNow()]:"not started", String(w.length), w.map(x=>`${x.L} ${x.t}`).join(" / "), w.length?firstText(D().first):"");
   return { cols, row };
 }
 /* Per-module hooks for the shared report code below. */
@@ -1480,10 +1542,11 @@ const RPT={
   missHit:(e,q)=>e[1](q),
   cannot:()=>"The report cannot tell whether you read the poem aloud, whether your own words are right, whether your writing keeps the metre or says anything, or how much help you had.",
   writing(){
-    const d=D(), f=FORMS[formOf()], lines=f.letters.map((L,k)=>{ const t=String(d.lines[k]||"");
-      return { k:L, t, n:t.trim()?Math.max(0,lineSyllables(t)+(d.adj[k]||0)):null }; });
-    if(!lines.some(l=>l.t.trim())) return [{ h:"Your sonnet: not started", text:"" }];
-    return [{ h:"Your sonnet: "+f.name, lines, note:"Rhyme check, first try: "+firstText(d.first) }];
+    const d=D(), ls=linesNow(), adj=adjNow(), kew=modeNow()==="kew";
+    if(!nWritten()) return [{ h:"Your sonnet: not started", text:"" }];
+    const lines=LETTERS.map((L,k)=>{ const t=String(ls[k]||"");
+      return { k:L, t, n:t.trim()?Math.max(0,lineSyllables(t)+(adj[k]||0)):null, turn:k===TURN-1, same:kew&&!isWritten(k) }; });
+    return [{ h:"Your sonnet: "+MODES[modeNow()], lines, note:"Rhyme check, first try: "+firstText(d.first) }];
   }
 };
 /* ====================== REPORT: SCREEN AND PRINTOUT =======================
@@ -1552,7 +1615,7 @@ function writingHtml(blocks){
   return blocks.map(b=>{
     let body="";
     if(b.pairs) body=b.pairs.map(([k,v])=>`<div class="rprk2"><span>${esc(k)}</span><div class="rptx">${v.trim()?esc(v.trim()):bl}</div></div>`).join("");
-    else if(b.lines) body=b.lines.map(l=>`<div class="rprl"><span class="rplt">${esc(l.k)}</span><span class="rplx">${l.t.trim()?esc(l.t.trim()):bl}</span><span class="rpsy">${l.n==null?"":"≈ "+l.n}</span></div>`).join("");
+    else if(b.lines) body=b.lines.map(l=>`<div class="rprl${l.turn?" rpturn":""}"><span class="rplt">${esc(l.k)}</span><span class="rplx">${l.t.trim()?esc(l.t.trim()):bl}${l.turn?`<b class="rpt">turn</b>`:""}${l.same?`<i class="rpsame">unchanged</i>`:""}</span><span class="rpsy">${l.n==null?"":"≈ "+l.n}</span></div>`).join("");
     else body=`<div class="rptx">${(b.text||"").trim()?esc(b.text.trim()):bl}</div>`;
     return `<div class="rprb"><h4>${esc(b.h)}</h4>${b.sub?`<p class="rsub">${esc(b.sub)}</p>`:""}${body}${b.note?`<p class="rnote">${esc(b.note)}</p>`:""}</div>`;
   }).join("");
