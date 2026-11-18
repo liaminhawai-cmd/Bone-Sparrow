@@ -81,7 +81,7 @@ D.SLIDES.forEach((sl, i) => {
   if(/^(poem|vote|move)$/.test(sl.kind)){
     /* Rows come from the deck's own rowsOf(), so the PowerPoint shows what the page shows. */
     const rowState = rev => D.rowsOf(sl, rev).map(r => r.type === "line"
-      ? { type: "line", no: r.no, runs: r.runs, tag: r.tagOn ? r.tag : [], tagSpace: r.tag, hit: r.hit, turn: r.turn, hidden: r.hidden }
+      ? { type: "line", no: r.no, runs: r.runs, tag: r.tagOn ? r.tag : [], tagSpace: r.tag, hit: r.hit, turn: r.turn, finger: r.finger, hidden: r.hidden }
       : r);
     const base = { n, kind: "rows", src: sl.src, notes: notes(sl) };
     const isVote = sl.kind === "vote";

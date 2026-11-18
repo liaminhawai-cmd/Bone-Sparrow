@@ -194,6 +194,13 @@ foreach($st in $spec.states){
     $textW = $colW - $numW - $tagW
     $size = [Math]::Max($(if($twoCol){ 14 } else { 16 }), [Math]::Min(28, [Math]::Floor($textW / ($maxLen * 0.52))))
     $step = [Math]::Round($size * 1.7)
+    # Fit the rows above the source line, the footer and the answer lines, so a
+    # long vote (lines plus options) never pushes the reveal off the slide.
+    $ansN = @($st.ans).Count; $ansH = $(if($ansN){ 26 * $ansN + 12 } else { 0 })
+    $avail = 540 - 118 - 34 - $ansH - 22
+    $most = 0; $gaps = 0
+    foreach($col in $cols){ $nl = @($col.rows | Where-Object { $_.type -ne "gap" -and $_.type -ne "label" }).Count; $ng = @($col.rows | Where-Object { $_.type -eq "gap" }).Count; if($nl -gt $most){ $most = $nl; $gaps = 14 * $ng } }
+    if($most -gt 0 -and ($most * $step + $gaps) -gt $avail){ $step = [Math]::Floor(($avail - $gaps) / $most); $size = [Math]::Max(12, [Math]::Floor($step / 1.7)) }
     $yEnd = 118
     foreach($col in $cols){
     $cx = $col.x
@@ -212,7 +219,8 @@ foreach($st in $spec.states){
             $hb.Line.Visible = 0
             $hb.Fill.ForeColor.RGB = $(if($r.turn){ (RGB "FBE3A6") } else { (RGB "F0DDE2") })
           }
-          if($numW -gt 0){ [void](TextBox $s $cx $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false) }
+          if($r.finger){ $fz = [Math]::Max(22, $step - 6); [void]$s.Shapes.AddPicture((Join-Path $out ("f" + $r.finger + ".svg")), 0, -1, ($cx + $numW - $fz + 2), ($y - 4), $fz, $fz) }
+          elseif($numW -gt 0){ [void](TextBox $s $cx $y $numW 24 @( (Para @(@{ t=("" + $r.no); bold=$true; color=$C.numgrey }) $size @{ align=3 }) ) $false) }
           $runs = @($r.runs | ForEach-Object { KindRun $_ })
           if($r.hit -or $r.turn){ $runs = @($runs | ForEach-Object { $_.bold=$true; $_ }) }
           $tb = TextBox $s ($cx + $numW + 10) $y ($textW - 10 + $tagW) 24 @( (Para $runs $size) ) $false

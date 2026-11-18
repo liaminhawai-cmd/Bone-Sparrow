@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sonnets: projector</title>
+<title>Westminster Bridge: projector</title>
 <style>
 :root{
   /* The grammar session decks' slide colours, measured from the .pptx. */
@@ -84,6 +84,9 @@ body{background:var(--frame);font-family:var(--font);color:var(--ink);display:fl
 .rows{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:.55em;align-items:baseline;
       line-height:1.5}
 .rows .no{margin:0;text-align:right}
+/* A vote option shows its finger icon, not a number, so it does not read as more line numbers. */
+.rows .no .fing{display:inline-block;vertical-align:middle}
+.rows .no .fing svg{display:block;width:1.45em;height:1.45em}
 .rows .tx{white-space:nowrap}
 .rows .row{display:contents}
 /* A sonnet sits in two columns, lines 1 to 8 and 9 to 14, so the type stays large. */
@@ -161,8 +164,8 @@ body.notes #notes{display:block}
   <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span>
   <a class="menulink" href="WritingFolio.html">Writing Folio</a>
   <span aria-hidden="true" style="color:#8a8378">&rsaquo;</span>
-  <a class="menulink" href="Sonnets.html">Sonnets</a>
-  <a class="menulink" href="WritingFolioVocabHub.html#set-11">Sonnet words</a>
+  <a class="menulink" href="Sonnets.html#westminster">Sonnets</a>
+  <a class="menulink" href="WritingFolioVocabHub.html#set-11">Westminster words</a>
   <a class="menulink" href="teacher/">Teacher hub</a>
   <a class="menulink" href="SonnetsDeck.pptx" download>Download PowerPoint</a>
   <span class="sp"></span>
@@ -215,7 +218,7 @@ const SLIDES = [
    key:[["1 to 4","Fingers up: the number of your answer."],["Tap","Tap the strong syllables on the desk."]],
    notes:[
      ["Say","You know ballads: a story, pairs of rhymes, long lines. A sonnet is a different shape. It is short, it has a fixed pattern of lines, syllables and rhymes, and it has a turn in the middle. We will take two sonnets apart, then you write one as a class."],
-     ["Timing","Lesson order: silent starter Find and fix (about 10 minutes), the sonnet about sonnets (slide 3), the Sonnet words set (about 7 minutes, slide 4), the rest of this deck (about 22 minutes, with the reading on slide 6), then the Sonnets module. Slides 5 to 17 are under 3 minutes each: show, read aloud, take answers, reveal."],
+     ["Timing","Lesson 1 of 2, Westminster Bridge: silent starter Find and fix (about 10 minutes), the sonnet about sonnets (slide 3), the Westminster words (about 7 minutes, slide 4), the reading (slide 5), the rules and the turn, then the class remix, Kew at dawn. Lesson 2 is Sonnet18Deck.html."],
      ["Keys","Right arrow or Space: reveal, then next. Left: back. N: these notes. SonnetsDeck.html#7 opens slide 7, and #7r opens its reveal."] ] },
 
  { kind:"go",
@@ -251,41 +254,23 @@ const SLIDES = [
    tags:[{r:"A"},{r:"B"},{r:"A"},{r:"B"},{r:"C"},{r:"D"},{r:"C"},{r:"D"},{r:"E"},{r:"F"},{r:"E"},{r:"F"},{r:"G"},{r:"G"}],
    scheme:"ABABCDCDEFEFGG",
    turn:[8],
-   ans:["14 lines: three quatrains, then a couplet","10 syllables and 5 beats a line: da-DUM","Line 9 turns: But wait!"],
+   ans:["14 lines: three quatrains, then a couplet","10 syllables and 5 beats a line: da-DUM","The turn, line 9: it changes direction (But wait!) from the rules to what they are for"],
    notes:[
      ["Say","Read it aloud once, slowly, and pause at But wait! It tells you every rule of a sonnet, and it follows every rule as it goes."],
      ["Ask","“Does it keep its own rules? Count the lines. Count the syllables in line 2. Which line turns?” Take answers, then reveal."],
      ["Answer","14 lines. Line 2 has 10 syllables: each LINE has TEN small SOUNDS and FIVE are STRONG. Rhymes ABAB CDCD EFEF GG. Line 9 turns on But. Lines 13 and 14 are the couplet."],
      ["Writing link","This is the shape students imitate later: four lines, four lines, four lines, a turn at line 9, a couplet to finish."],
      ["Keys","Right arrow: the sonnet words."] ] },
+
  { kind:"go",
    h:"Words first",
-   mod:"Vocab Hub: Sonnet words",
-   line:"Open Sonnet words. Build each word, then use it.",
+   mod:"Vocab Hub: Westminster words",
+   line:"Open Westminster words. Build each word, then use it.",
    href:"WritingFolioVocabHub.html#set-11",
    notes:[
      ["Say","Before we read, the hard words. Open Sonnet words. Build each word from its parts, then use it."],
      ["Timing","About 7 minutes. The words come back in the module: any underlined word there opens its meaning."],
      ["Check","Walk past and ask two students: what is the opposite of eternal? What does temperate mean in a sentence about weather?"] ] },
-
- { kind:"cols",
-   h:"Shakespeare’s English",
-   sub:"How do we say it today?",
-   src:"Sonnet 18, Westminster Bridge",
-   cols:[ {label:"Then", place:"In the poems",
-           items:["Thou art more lovely","Shall I compare thee","thy eternal summer","lease hath all too short a date","The river glideth","This City now doth wear"]},
-          {label:"Now", place:"Today",
-           items:["___ more lovely","Shall I compare ___","___ eternal summer","lease ___ all too short a date","The river ___","This City now ___"]} ],
-   turned:[ {label:"Then", place:"In the poems",
-           items:["Thou art more lovely","Shall I compare thee","thy eternal summer","lease hath all too short a date","The river glideth","This City now doth wear"]},
-          {label:"Now", place:"Today",
-           items:["You are more lovely","Shall I compare you","your eternal summer","lease has all too short a date","The river glides","This City now wears"]} ],
-   ans:["thou, thee = you. thy = your. art = are","-th and -eth = -s today: hath = has, doth = does, glideth = glides"],
-   notes:[
-     ["Display","Pairs fill the Now column out loud before you reveal. Do the first one together: Thou art more lovely, you are more lovely."],
-     ["Answer","You are more lovely. Shall I compare you. Your eternal summer. Has all too short a date. The river glides. The city now wears."],
-     ["Teaching point","This is not Old English: it is the English of 400 years ago. Thou and thee were the friendly, close way to say you. An -st ending goes with thou: thou ow’st means you own, thou wander’st means you wander."],
-     ["If students ask","Why not just say you? Thou is close and personal, like talking to a friend. It also fitted the beat."] ] },
 
  { kind:"go",
    h:"Listen",
@@ -299,6 +284,7 @@ const SLIDES = [
      ["Ask","“Where is he standing? What time of day is it? Is the city busy or still?”"],
      ["Answer","On Westminster Bridge in London, early in the morning. The city is silent and asleep: ships, towers, domes and theatres lie open to the sky, and the air has no smoke yet."],
      ["Keys","The video needs the internet. If it will not play here, use the link under it. After the video, click the slide outside the player so the arrow keys move the deck again."] ] },
+
  { kind:"poem",
    h:"A sonnet",
    sub:"Read it aloud, then count the lines.",
@@ -342,91 +328,6 @@ const SLIDES = [
      ["Ask","“How many syllables? How many taps? Where does your last tap land?” On fair."],
      ["If students disagree","11 usually comes from counting any as three syllables. It is two: an-y. Some readers put the first tap on Earth. Accept it if they can still show five taps and ten syllables."],
      ["Teaching point","A ballad line has about 14 syllables and 7 beats. A sonnet line is shorter: 10 syllables and 5 beats."] ] },
-
- { kind:"vote",
-   ask:"How many beats in this line?",
-   key:"Clap the strong syllables. Fingers: the number of your choice.",
-   src:"William Shakespeare, Sonnet 18, line 3",
-   nonum:true,
-   lines:["Rough [p:winds] do [p:shake] the [p:dar]ling [p:buds] of [p:May],"],
-   ends:["May"],
-   opts:["4 beats","5 beats","6 beats","10 beats"],
-   hitOpt:1, fingers:4,
-   legend:[["p","Strong syllable"]],
-   ans:["2. Five beats","rough WINDS do SHAKE the DAR-ling BUDS of MAY","10 syllables, five da-DUM: iambic pentameter again"],
-   notes:[
-     ["Display","Say the line together and clap the strong syllables. Fingers on my signal: 1 for 4 beats, 2 for 5, 3 for 6, 4 for 10."],
-     ["Answer","2: five beats. Rough WINDS do SHAKE the DAR-ling BUDS of MAY. Ten syllables, five beats, the same da-DUM pattern as Wordsworth."],
-     ["Ask","“How many syllables? Do the beats fall on every second one?”"],
-     ["If students disagree","4 fingers (10) counted syllables, not beats. 3 fingers (6) often taps both rough and winds. In natural speech winds is the stronger one. Accept 6 if the student can show which six."],
-     ["Watch for","Shakespeare and Wordsworth are about 200 years apart. Both use the same line: 10 syllables, 5 beats."],
-     ["Teaching point","Iambic pentameter is the sonnet's line. Five beats, weak then strong."] ] },
-
- { kind:"poem",
-   h:"What is wrong with summer?",
-   sub:"Sonnet 18 compares a person to summer. Find the faults of summer.",
-   src:"William Shakespeare, Sonnet 18",
-   nonum:true,
-   lines:["Shall I compare thee to a summer’s day?",
-          "Thou art more lovely and more temperate:",
-          "Rough winds do shake the darling buds of May,",
-          "And summer’s lease hath all too short a date:",
-          "Sometime too hot the eye of heaven shines,",
-          "And often is his gold complexion dimm’d,",
-          "And every fair from fair sometime declines,",
-          "By chance, or nature’s changing course untrimm’d:",
-          "But thy eternal summer shall not fade,",
-          "Nor lose possession of that fair thou ow’st,",
-          "Nor shall death brag thou wander’st in his shade,",
-          "When in eternal lines to time thou grow’st,",
-          "So long as men can breathe, or eyes can see,",
-          "So long lives this, and this gives life to thee."],
-   tags:[{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
-   hit:[2,3,4,5,6],
-   ans:["Rough winds, too short, too hot, clouded over, it fades","Lines 1 to 8: why summer is not good enough"],
-   notes:[
-     ["Display","Read the poem aloud. Then, in pairs, find every fault Shakespeare gives summer. Take answers and write them up before you reveal. Prompt with lines 3 to 7."],
-     ["Answer","Line 3: rough winds shake the buds. Line 4: summer’s lease, its time, is too short. Line 5: sometimes too hot. Line 6: the sun’s gold face is often dimmed by cloud. Line 7: every beautiful thing fades in the end. Four to five faults is a good result."],
-     ["Ask","“Who is Shakespeare talking to? What does he say is better than summer? In which line does he say it?” Line 2: the person is more lovely and more temperate, which here means calmer and more even."],
-     ["Words","lease: the length of time you hold something. date: its end. eye of heaven: the sun. complexion: colour and look. declines: gets worse. untrimm’d: stripped of its beauty. ow’st: owns."],
-     ["If students disagree","Some students put line 2 in as a fault. It is the opposite: it says the person is better than summer. Lines 3 to 7 give the faults."],
-     ["Teaching point","The first eight lines say what is wrong with summer. Keep them in mind: line 9 is where the poem changes direction."] ] },
-
- { kind:"poem",
-   h:"Rhyme letters",
-   sub:"Say the last word of each line. Which ones sound the same?",
-   src:"William Shakespeare, Sonnet 18",
-   nonum:true,
-   lines:["Shall I compare thee to a summer’s day?",
-          "Thou art more lovely and more temperate:",
-          "Rough winds do shake the darling buds of May,",
-          "And summer’s lease hath all too short a date:",
-          "Sometime too hot the eye of heaven shines,",
-          "And often is his gold complexion dimm’d,",
-          "And every fair from fair sometime declines,",
-          "By chance, or nature’s changing course untrimm’d:",
-          "But thy eternal summer shall not fade,",
-          "Nor lose possession of that fair thou ow’st,",
-          "Nor shall death brag thou wander’st in his shade,",
-          "When in eternal lines to time thou grow’st,",
-          "So long as men can breathe, or eyes can see,",
-          "So long lives this, and this gives life to thee."],
-   ends:["day","temperate","May","date","shines","dimm’d","declines","untrimm’d","fade","ow’st","shade","grow’st","see","thee"],
-   tags:[{r:"A"},{r:"B"},{r:"A"},{r:"B"},
-         {r:"C"},{r:"D"},{r:"C"},{r:"D"},
-         {r:"E"},{r:"F"},{r:"E"},{r:"F"},
-         {r:"G"},{r:"G"}],
-   scheme:"ABABCDCDEFEFGG",
-   turn:[8],
-   ans:["A B A B   C D C D   E F E F   G G","Three quatrains of four lines, then a couplet of two","Shakespearean sonnet","Temperate rhymed with date in Shakespeare’s accent: say it temper-ATE"],
-   notes:[
-     ["Display","Read the end words of lines 1 to 4: day, temperate, May, date. Which two sound the same? Give them letters. Let the class do the next four before you reveal."],
-     ["Answer","A B A B, C D C D, E F E F, G G. Day and May are A. Temperate and date are B. Shines and declines are C. Dimm’d and untrimm’d are D. Fade and shade are E. Ow’st and grow’st are F. See and thee are G."],
-     ["Ask","“What is the pattern in each group of four? What is different about the last two lines?” The last two rhyme as a pair."],
-     ["Turn","The gold line is the turn, as in the sonnet about sonnets: line 9, But thy eternal summer shall not fade."],
-     ["Words","A group of four lines is a quatrain. A pair of rhyming lines at the end is a couplet. This pattern is the Shakespearean sonnet, ABAB CDCD EFEF GG."],
-     ["If students disagree","Temperate and date are a close rhyme, not an exact one: ate and ate. Grow’st and ow’st sound the same from the strong vowel on. Accept any rhyme that matches the sounds."],
-     ["Teaching point","The Shakespearean sonnet is three quatrains and a couplet. Compare the ballad: AABBCC, pairs all the way."] ] },
 
  { kind:"poem",
    h:"A different pattern",
@@ -474,74 +375,34 @@ const SLIDES = [
      ["Answer","Time of day and who is looking. Clancy’s speaker is stuck in an office at noon among crowds and trams. Wordsworth stands on the bridge at dawn, before anyone is up and before the fires make smoke."],
      ["Writing link","This is a writing unit: these are mentor lines. Ask which words do the work (dusty, dirty; silent, bare; smokeless). Students borrow one pattern for Kew at dawn: two adjectives with and, or a place that seems asleep."],
      ["Source","Short extracts, exact words, from the Ballads module text (Clancy) and the Gutenberg text (Westminster)."] ] },
+
  { kind:"title",
    h:"The turn",
-   rule:"A sonnet [v:turns]: it sets up a [s:problem], then changes direction to an [s:answer].",
-   key:[["Turn words","But, Yet, And yet, So, Then"],["Where","Often line 9, or the last two lines"],["Test","Read the lines before and after: do they point different ways?"]],
+   rule:"The turn is the line where a sonnet [s:changes direction]. It [s:answers] the problem the lines before it set up.",
+   key:[["What it is","The line where the poem changes direction"],["What it does","Before it: a problem. After it: the answer"],["Turn words","But, Yet, And yet, So, Then"],["Where","Line 9, or the last two lines"]],
    notes:[
-     ["Say","A ballad tells a story. A sonnet argues. It sets up a problem, then turns, usually on a word like But, and gives an answer. The turn is the hinge of the poem."],
-     ["Everyday example","I hate Mondays: early alarm, cold, a test first period. But on Monday we have sport last. The first part is the problem; But turns it."],
-     ["Ask","Pairs: make up a two-sentence turn of your own about school, with But in the middle. Take two or three."] ] },
+     ["Say","You have seen the turn in the sonnet about sonnets. A turn is the hinge of a sonnet. The first lines set up a problem or a picture. At the turn the poem changes direction, often on But, and the rest gives the answer. Say both parts out loud: what it is, and what it does."],
+     ["Everyday example","I hate Mondays: early alarm, cold, a test first period. But on Monday we have sport last. The first part is the problem; But turns it; the end is the answer."],
+     ["Ask","Pairs: make up a two-sentence turn of your own about school, with But in the middle. Take two or three, and ask the class: where is the turn, and what does it do?"] ] },
 
- { kind:"poem",
-   h:"A turn, modelled",
-   sub:"Kew at dawn: where does it change direction?",
-   src:"A model written for this lesson",
-   lines:["The station clock says six, the sky is grey,",
-          "The tram lines hum, the shops are shut up tight,",
-          "No one is out to wave the dark away,",
-          "And Kew is cold and empty in the light.",
-          "But then the magpies sing from every tree,",
-          "And all of Kew wakes up to sing with me."],
-   ends:["grey","tight","away","light","tree","me"],
-   tags:[{r:"A",m:"problem"},{r:"B",m:"problem"},{r:"A",m:"problem"},{r:"B",m:"problem"},{r:"G",m:"the turn: But"},{r:"G",m:"answer"}],
-   turn:[4],
-   ans:["Line 5 turns on But","Lines 1 to 4: Kew is grey, shut and empty","Lines 5 and 6: the magpies wake it up"],
-   notes:[
-     ["Model","Think aloud: lines 1 to 4 all say the same thing, Kew is dead at six in the morning. Then But. Line 5 points the other way: the magpies. Lines 5 and 6 are the answer to the problem."],
-     ["Ask","“Which word turns it? What was the problem? What is the answer?”"],
-     ["Writing link","This is the shape for Kew at dawn: four lines of problem, rhyming ABAB, then a couplet that turns on But. Students can keep the pattern and change every detail."],
-     ["Check","Every line is 10 syllables, 5 beats: the STA-tion CLOCK says SIX, the SKY is GREY."] ] },
  { kind:"vote",
    ask:"Which line is the turn?",
-   key:"Lines 1 to 8 gave the faults of summer. Fingers: the number of your choice.",
-   src:"William Shakespeare, Sonnet 18, lines 7 to 11",
+   key:"Lines 1 to 8 show London at dawn. Fingers: the number of your choice.",
+   src:"William Wordsworth, Composed upon Westminster Bridge, lines 7 to 11",
    first:7,
-   lines:["And every fair from fair sometime declines,",
-          "By chance, or nature’s changing course untrimm’d:",
-          "But thy eternal summer shall not fade,",
-          "Nor lose possession of that fair thou ow’st,",
-          "Nor shall death brag thou wander’st in his shade,"],
+   lines:["Open unto the fields, and to the sky;",
+          "All bright and glittering in the smokeless air.",
+          "Never did sun more beautifully steep",
+          "In his first splendour, valley, rock, or hill;",
+          "Ne’er saw I, never felt, a calm so deep!"],
    turn:[2], opts:["Line 7","Line 8","Line 9","Line 10"],
    hitOpt:2, fingers:4,
-   ans:["3. Line 9 turns on But","Lines 1 to 8: summer is short, too hot, and fades","From line 9: you will never fade, because this poem keeps you"],
+   ans:["3. Line 9 is the turn","Before it: what London looks like at dawn","After it: how still it is, and what he feels"],
    notes:[
-     ["Display","Lines 1 to 8 listed what is wrong with summer. Find the line where the poem changes direction. Fingers on my signal: 1 for line 7, 2 for line 8, 3 for line 9, 4 for line 10."],
-     ["Answer","3: line 9. But thy eternal summer shall not fade. The word But turns the poem. Summer fades, but the person will not. This change is the volta, or turn. In a Shakespearean sonnet it usually comes at line 9 and again, with a final twist, at the couplet."],
-     ["Ask","“What word tells you it turns?” But. “What changes between line 8 and line 9?” The poem stops describing summer and starts promising something about the person."],
-     ["Couplet","Lines 13 and 14, on slides 10 and 11, say how the person stays alive: so long lives this, and this gives life to thee. This is the poem. As long as someone reads it, the person is alive. Ask: what does this refer to?"],
-     ["If students disagree","1 or 2 fingers (lines 7 and 8) are still about summer fading: they finish the faults. The turn word is But, in line 9."],
-     ["Teaching point","The turn (volta) changes the direction of the poem. It does a job: first the problem, then the answer."] ] },
-
- { kind:"cols",
-   h:"Ballad and sonnet",
-   sub:"What does a sonnet have instead?",
-   src:"The Man from Ironbark, Sonnet 18",
-   cols:[ {label:"Ballad", place:"The Man from Ironbark",
-           items:["Six lines in a stanza","AABBCC, rhyming pairs","About 14 syllables a line","Tells a story, a step to a line"]},
-          {label:"Sonnet", place:"Sonnet 18",
-           items:["How many lines?","What rhyme pattern?","How many syllables a line?","What does it do?"]} ],
-   turned:[ {label:"Ballad", place:"The Man from Ironbark",
-           items:["Six lines in a stanza","AABBCC, rhyming pairs","About 14 syllables a line","Tells a story, a step to a line"]},
-          {label:"Sonnet", place:"Sonnet 18",
-           items:["14 lines in all","ABAB CDCD EFEF GG","10 syllables a line","Makes an argument and turns"]} ],
-   ans:["A ballad tells a story. A sonnet makes a short argument","A ballad is long and loose. A sonnet is short and tight"],
-   notes:[
-     ["Display","The ballad column is filled in. Ask pairs to predict the sonnet column from the last six slides before you reveal."],
-     ["Answer","Sonnet: 14 lines in all. ABAB CDCD EFEF GG (or ABBAABBA CDCDCD). 10 syllables a line. It makes a short argument with a turn: first the problem, then the answer."],
-     ["Ask","“Which one has longer lines? Which one has more rhyme sounds? Which one tells a story?”"],
-     ["If students disagree","Some say a sonnet has no story. Sonnet 18 does not tell what happened to anyone: it argues a point. Westminster Bridge describes one moment."],
-     ["Teaching point","Ballads tell a story in pairs. Sonnets pack an idea into 14 tight lines with a turn."] ] },
+     ["Display","Lines 1 to 8 describe the city: ships, towers, domes, the smokeless air. Where does the poem change direction? Fingers on my signal."],
+     ["Answer","3: line 9, Never did sun more beautifully steep. The turn: he stops listing what the city looks like and turns to how it makes him feel: never saw I, never felt, a calm so deep."],
+     ["What it does","Before the turn: the picture. After the turn: what the picture means to him. In this kind of sonnet the turn comes between the eight lines and the six."],
+     ["If students disagree","Westminster has no But. The turn is a change of direction, not a word: from the city to the feeling."] ] },
 
  { kind:"go",
    h:"Read the sonnets",
@@ -551,15 +412,6 @@ const SLIDES = [
    notes:[
      ["Say","Open Sonnets. Start with Westminster Bridge. Read it, then answer the questions in the module. I will show you the next one when most of you are finished."],
      ["Keys","The line on the slide opens the module at Westminster Bridge: Sonnets.html#westminster. Right arrow: Sonnet 18."] ] },
-
- { kind:"go",
-   h:"Read the sonnets",
-   mod:"Sonnets",
-   line:"Now Sonnet 18: read it and answer the questions.",
-   href:"Sonnets.html#s18",
-   notes:[
-     ["Say","Now Sonnet 18. Find the faults of summer, the rhyme scheme and the turn, in the module."],
-     ["Keys","The line on the slide opens the module at Sonnet 18: Sonnets.html#s18. Right arrow: the class sonnet."] ] },
 
  { kind:"go",
    h:"The class sonnet",
@@ -668,7 +520,7 @@ function rowsOf(sl, rev){
   lines(sl.lines, sl.ends, sl.tags, sl.hit, true, null);
   if(sl.opts){
     rows.push({type:"gap"});
-    sl.opts.forEach((o, i) => rows.push({type:"line", no:i + 1, hidden:false, tag:[], tagOn:false,
+    sl.opts.forEach((o, i) => rows.push({type:"line", no:i + 1, finger:i + 1, hidden:false, tag:[], tagOn:false,
       runs:[{t:o, k:""}], hit: !!(rev && sl.hitOpt === i) }));
   }
   return rows;
@@ -776,7 +628,7 @@ function rowHtml(r){
   if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
   if(r.type === "gap") return `<div class="gap"></div>`;
   const tag = r.tag.map(p => `<span class="${p.k}${p.l ? " L" + p.l : ""}">${esc(p.t)}</span>`).join("");
-  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
+  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.finger ? `<span class="fing" role="img" aria-label="${r.finger} finger${r.finger > 1 ? "s" : ""}">${ICONS["f" + r.finger]}</span>` : r.no}</span>` +
     `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
 }
 

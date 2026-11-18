@@ -384,6 +384,11 @@ details.rxrow table{margin-top:4px}
 .rpt{font:800 10px 'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.4px;color:#4a2f00;border:1px solid #4a2f00;border-radius:99px;padding:0 7px;margin-left:8px;white-space:nowrap;vertical-align:2px}
 .rpsame{font:italic 12px 'Segoe UI',sans-serif;color:#6f685c;margin-left:8px;white-space:nowrap}
 body.proj .foot{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kw.free{grid-template-columns:32px minmax(0,1fr) auto}
+.kw.free .under{grid-column:2 / 4}
+.rl.E,.rk.E{color:#8a5a12;background:#fdf4e3;border-color:#8a5a12}
+.rl.F,.rk.F{color:#2c5f7c;background:#e3eef3;border-color:#2c5f7c}
+.rl.G,.rk.G{color:#a83232;background:#fbeeee;border-color:#a83232}
 </style>
 </head>
 <body>
@@ -653,7 +658,7 @@ const POEMS={ westminster:WEST, s18:S18 }, ORDER=["westminster","s18"];
 /* The writing step remixes Westminster Bridge: 14 lines, octave ABBAABBA and
    sestet CDCDCD, the turn at line 9. WL is Wordsworth's text as printed above. */
 const MODES={ kew:"Kew at dawn", own:"Your own place at dawn" };
-const LETTERS="ABBAABBACDCDCD".split(""), TURN=9, N=14;
+const LETTERS="ABBAABBACDCDCD".split(""), FREE="ABABCDCDEFEFGG".split(""), TURN=9, N=14;
 const WL=WEST.stanzas.reduce((a,sec)=>a.concat(sec.lines.map(l=>strip(l.t))),[]);
 function startLines(){ const w=WL.slice(); w[0]=w[0].replace(/^Earth\b/,"Kew"); return w; }
 const KEY = "writingfolio.sonnet.v1";
@@ -667,7 +672,7 @@ try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem()
 let PID="westminster", OPEN=false, P=WEST, PENDING=null;
 function hashTokens(){ return (location.hash||"").replace(/^#/,"").replace(/(^|&)sn=[^&]*/,"").toLowerCase().split(/[&,+\/ ]+/).filter(Boolean); }
 function readHash(){
-  const t=hashTokens(); PID=t.indexOf("s18")>=0?"s18":"westminster"; OPEN=t.indexOf("open")>=0; P=POEMS[PID];
+  const t=hashTokens(); PID=(t.indexOf("s18")>=0||t.indexOf("own")>=0)?"s18":"westminster"; OPEN=t.indexOf("open")>=0; P=POEMS[PID];
   const m=(location.hash||"").match(/(?:^#|&)sn=([^&]*)/);
   PENDING=null;
   if(m){ try{ const a=JSON.parse(decodeURIComponent(m[1]));
@@ -680,7 +685,8 @@ function readHash(){
 function blankPoem(){ return { startedAt:null, lastAt:null, at:0, items:{}, checks:0 }; }
 /* The draft keeps one set of 14 lines per mode. kew stays null until the
    student types, so it follows startLines() until then. */
-function blankDraft(){ return { mode:"kew", kew:null, own:{ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }, first:null, last:null }; }
+function blankDraft(){ return { mode:"kew", kew:null, own:{ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }, first:null, last:null,
+  free:{ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }, firstFree:null, lastFree:null }; }
 function cleanDraft(d){
   d=d&&typeof d==="object"?d:{};
   const pad=(a,f)=>{ const o=Array.isArray(a)?a.slice(0,N):[]; while(o.length<N) o.push(f); return o; };
@@ -695,6 +701,8 @@ function cleanDraft(d){
     if(d.kew) out.kew={ lines:str(d.kew.lines), adj:num(d.kew.adj) };
   }
   out.first=d.first||null; out.last=d.last||null;
+  if(d.free) out.free={ lines:str(d.free.lines), adj:num(d.free.adj) };
+  out.firstFree=d.firstFree||null; out.lastFree=d.lastFree||null;
   return out;
 }
 function blank(){ return { v:1, fname:"", lname:"", sid:"", glossLang:"", poems:{}, class:null, draft:blankDraft() }; }
@@ -1066,18 +1074,19 @@ function closeWord(){ const d=$("wordDialog"); if(d && d.open) d.close(); }
 /* ====================== ROUTER =========================================== */
 let view = { screen:"home" };
 const SCREENS={ id:()=>renderId(), home:()=>renderHome(), read:()=>renderRead(), write:()=>renderWrite(),
-  export:()=>renderExport(), class:()=>renderClass() };
+  export:()=>renderExport(), class:()=>renderClass(), own:()=>renderFree() };
 function go(screen){
   if(screen!=="class" && !idOk() && screen!=="id") screen="id";
   view = { screen, checked:null, sel:{}, claps:{}, lastWrong:{} };
   document.body.classList.toggle("proj", screen==="class");
-  if(screen==="class") P=WEST;
+  if(screen==="class"||screen==="write"){ PID="westminster"; P=WEST; }
+  if(screen==="own"){ PID="s18"; P=S18; }
   closeWord();
   window.scrollTo({top:0});
   SCREENS[screen]();
 }
 /* Deep links: #westminster and #s18 open the reading, #write the writing step,
-   #class the teacher's board. Sign-in comes first, then the link's screen. */
+   #class the teacher's board, #own the Sonnet 18 writing. Sign-in comes first, then the link's screen. */
 let TARGET="home";
 function route(){
   const t=readHash();
@@ -1089,7 +1098,7 @@ function route(){
 function setPoem(id){ const h="#"+id+(OPEN?"&open":""); if(location.hash!==h) history.replaceState(null,"",h); readHash(); go("home"); }
 window.addEventListener("hashchange", route);
 const HOMELINKS=`<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
-function deckLink(){ return `<a class="menulink" href="SonnetsDeck.html">Teacher deck</a>`; }
+function deckLink(){ return `<a class="menulink" href="${PID==="s18"?"Sonnet18Deck.html":"SonnetsDeck.html"}">Teacher deck</a>`; }
 function wordsLink(){ return `<a class="menulink" href="WritingFolioVocabHub.html#set-${wordsSet()}">Words</a>`; }
 function links(){ return deckLink()+wordsLink()+HOMELINKS+`<a class="menulink" href="#" onclick="go('home');return false;">All steps</a>`; }
 function topbar(){ return `<div class="topbar"><span class="sp">${idOk()?links():deckLink()+wordsLink()+HOMELINKS}</span></div>`; }
@@ -1118,17 +1127,20 @@ function idSubmit(){
 }
 
 /* Word set in the Vocab Hub. Read only: the hub owns this key. */
-function wordsSet(){ return "11"; }
+function wordsSet(){ return PID==="s18"?"12":"11"; }
 function wordsDone(){ try{ const V=JSON.parse(window.localStorage.getItem("writingfolio.vocabhub.v1")); const x=V&&V.lessons&&V.lessons[wordsSet()]; return !!(x&&x.applyDone); }catch(e){ return false; } }
 function renderHome(){
   const st=START(P), n=P.stanzas.length-st, answered=P.stanzas.filter((s,i)=>i>=st&&stanzaDone(i)).length;
   const allClean=P.stanzas.every((s,i)=>i<st||stanzaClean(i));
-  const w=nWritten();
+  const w=PID==="s18"?nFree():nWritten();
   const wd=wordsDone();
-  const steps=[{ href:`WritingFolioVocabHub.html#set-${wordsSet()}`, t:"Words first", d:"The words in the poems, in the Vocab Hub.", tag:wd?"Done":"", done:wd },
+  const steps=[{ href:`WritingFolioVocabHub.html#set-${wordsSet()}`, t:"Words first", d:"The words in the poem, in the Vocab Hub.", tag:wd?"Done":"", done:wd },
     { s:"read", t:"Read and analyse", d:`${P.short}. ${P.stanzas.length} sections, one at a time.`,
                  tag:answered?`${answered} of ${n} sections answered`:"", done:answered===n && allClean },
-    { s:"write", t:"Write your own sonnet", d:"Remix Westminster Bridge line by line: Kew at dawn, or your own place at dawn.",
+    PID==="s18"
+      ? { s:"own", t:"Write your own sonnet", d:"Your own subject: three quatrains and a couplet.",
+          tag:w?`${w} line${w>1?"s":""} written`:"", done:false }
+      : { s:"write", t:"Write: Kew at dawn", d:"Wordsworth’s sonnet moved to Kew, line by line beside his, or your own place at dawn.",
       tag:w?`${w} line${w>1?"s":""} written`:"", done:false },
     { s:"export", t:"Export", d:"A page to print or save as PDF, and one row for your teacher.", tag:"", done:false }];
   let h=topbar()+`<h1>Sonnets</h1><p class="sub">${esc(S.fname)} ${esc(S.lname)} · ${esc(S.sid)}</p>
@@ -1186,7 +1198,7 @@ function renderRead(){
 }
 function nextHTML(i){
   const last=i===P.stanzas.length-1, done=i<START(P)||stanzaDone(i);
-  const to=last?`<button class="btn btn-primary" onclick="go('write')">Write →</button><button class="btn" onclick="go('export')">Export →</button>`
+  const to=last?`<button class="btn btn-primary" onclick="go('${PID==="s18"?"own":"write"}')">Write →</button><button class="btn" onclick="go('export')">Export →</button>`
     :`<button class="btn btn-primary" ${done||OPEN?"":"disabled"} onclick="readAt(${i+1})">Section ${i+2} →</button>`;
   return `<div class="btnrow">${to}${!done&&!last&&!OPEN?`<span class="dim">Opens when every question here is answered.</span>`:""}</div>`;
 }
@@ -1431,6 +1443,59 @@ function checkWrite(){
 }
 function drawChecks(){ const box=$("checks"); if(box) box.innerHTML=(view.checked||[]).map(cardHTML).join(""); }
 
+/* ====================== OWN SONNET (Sonnet 18, #own) =====================
+   The freer step: the student's own subject in a Shakespearean sonnet, three
+   quatrains and a couplet (ABAB CDCD EFEF GG), with the turn at line 9. No
+   poet's line beside the boxes. Never locked. Lines save as they are typed
+   under draft.free, and the first rhyme check after something is written is
+   the one the report keeps (draft.firstFree). */
+function frRowHTML(k){
+  const L=FREE[k], turn=k===TURN-1, t=D().free.lines[k]||"";
+  const head=k===0?"Quatrain 1: lines 1 to 4 · ABAB":k===4?"Quatrain 2: lines 5 to 8 · CDCD":k===8?"Quatrain 3: lines 9 to 12 · EFEF":k===12?"Couplet: lines 13 and 14 · GG":"";
+  return (head?`<p class="grp">${head}</p>`:"")
+    +`<div class="kw free${turn?" turn":""}"><span class="rl ${L}" aria-hidden="true">${L}</span>
+      <textarea class="rt" id="ln${k}" rows="1" aria-label="Line ${k+1}, rhyme ${L}${turn?", the turn":""}${k>=12?", couplet":""}" oninput="frType(${k},this.value)">${esc(t)}</textarea>
+      <span class="fix"><button type="button" onclick="frNudge(${k},-1)" aria-label="Line ${k+1}: one syllable fewer">−</button><button type="button" onclick="frNudge(${k},1)" aria-label="Line ${k+1}: one syllable more">+</button></span>
+      <div class="under">${turn?`<span class="turnw">turn</span>`:""}<span class="job"></span><span class="met" id="end${k}"></span><span class="met" id="syl${k}"></span></div></div>`;
+}
+function renderFree(){
+  $("body").innerHTML=bar("Your own sonnet")+`<div class="cols wide"><div class="cardbox">
+      ${FREE.map((_,k)=>frRowHTML(k)).join("")}</div>
+    <div class="cardbox">
+      <button class="btn btn-primary" onclick="frCheck()">Check rhymes</button>
+      <div id="checks"></div>
+      <p class="dim">Syllable counts are estimates. Use − or + to correct one.</p>
+      <div class="btnrow"><button class="btn btn-ghost" onclick="frRestart()">Start again</button><button class="btn btn-primary" onclick="go('export')">Export →</button></div>
+    </div></div>`;
+  for(let k=0;k<N;k++){ frMetrics(k); fit($("ln"+k)); }
+  drawChecks();
+}
+function nFree(){ return D().free.lines.filter(l=>String(l).trim()).length; }
+function frType(k, v){
+  bumpD(d=>{ d.free.lines[k]=v; d.free.adj[k]=0; });
+  fit($("ln"+k)); frMetrics(k);
+  if(view.checked){ view.checked=null; drawChecks(); }
+}
+function frNudge(k, dlt){ bumpD(d=>{ d.free.adj[k]+=dlt; }); frMetrics(k); }
+function frMetrics(k){
+  const f=D().free, t=f.lines[k]||"", m=metText(Math.max(0,lineSyllables(t)+(f.adj[k]||0)));
+  $("end"+k).textContent="ends: "+(endWord(t)||"nothing yet");
+  const el=$("syl"+k); el.textContent=m.t; el.className=m.c;
+}
+function frCheck(){
+  const ls=D().free.lines;
+  const res=letterPairs(FREE).map(([a,b,L])=>{ const x=endWord(ls[a]), y=endWord(ls[b]);
+    return Object.assign({ L:`${L}: lines ${a+1} and ${b+1}`, x, y }, rhymeStatus(x,y,a,b)); });
+  const sum=summarise(res), any=nFree()>0;
+  bumpD(dd=>{ dd.lastFree=sum; if(any && !dd.firstFree) dd.firstFree=sum; });
+  view.checked=res; drawChecks();
+}
+function frRestart(){
+  if(!confirm("Clear all 14 lines of your own sonnet?")) return;
+  bumpD(d=>{ d.free={ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }; });
+  view.checked=null; renderFree();
+}
+
 /* ====================== CLASS MODE (#class) ==============================
    The teacher's board: lines 1 to 4 of Kew at dawn (ABBA), written with the
    class beside Wordsworth's lines 1 to 4. No sign-in, and nothing here
@@ -1453,7 +1518,7 @@ function renderClass(){
         <span class="met" id="syl${k}"></span></span></div>`; }).join("");
   $("body").innerHTML=`<div class="slide">
     <div class="slidehead"><h1>Kew at dawn</h1><span class="tools"><span class="copied" id="fb" role="status"></span>
-      <a class="btn" style="text-decoration:none" href="SonnetsDeck.html#20">Teacher deck</a><button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class lines</button></span></div>
+      <a class="btn" style="text-decoration:none" href="SonnetsDeck.html#13">Teacher deck</a><button class="btn" onclick="classLink()">Copy class link</button><button class="btn btn-ghost" onclick="classClear()">Clear the class lines</button></span></div>
     <input id="linkOut" readonly hidden aria-label="Class link">
     <div class="rows">${rows}</div>
     <div class="foot" id="checks"></div>
@@ -1507,7 +1572,13 @@ function missName(s,q,r){
   }
 }
 function firstText(f){ return f?`${f.ok} ok · ${f.unsure} not sure · ${f.bad} not ok`+(f.miss.length?` (${f.miss.join("; ")})`:""):"not checked"; }
-function writtenLines(){ const ls=linesNow(); return LETTERS.map((L,k)=>({ L, t:isWritten(k)?String(ls[k]).trim():"" })); }
+/* The writing that belongs to the current poem: the Kew remix for Westminster
+   Bridge, the own sonnet for Sonnet 18. */
+function wState(){
+  if(PID==="s18"){ const f=D().free; return { form:"Your own sonnet", letters:FREE, lines:f.lines, adj:f.adj, written:k=>!!String(f.lines[k]||"").trim(), first:D().firstFree, kew:false }; }
+  return { form:MODES[modeNow()], letters:LETTERS, lines:linesNow(), adj:adjNow(), written:isWritten, first:D().first, kew:modeNow()==="kew" };
+}
+function writtenLines(){ const W=wState(); return W.letters.map((L,k)=>({ L, t:W.written(k)?String(W.lines[k]).trim():"" })); }
 function reportData(){
   const r=R(), st=START(P);
   const mins=(r.startedAt&&r.lastAt)?String(Math.max(1,Math.round((r.lastAt-r.startedAt)/60000))):"";
@@ -1528,7 +1599,7 @@ function reportData(){
   for(let s=st;s<P.stanzas.length;s++) qsOf(s).forEach((q,qi)=>{ if(q.type!=="own") return; cols.push(`Own words S${s+1}`); row.push((rec(s,qi).text||"").trim()); });
   const w=writtenLines().filter(x=>x.t);
   cols.push("Writing form","Lines written","Writing","Writing rhyme check, first try");
-  row.push(w.length?MODES[modeNow()]:"not started", String(w.length), w.map(x=>`${x.L} ${x.t}`).join(" / "), w.length?firstText(D().first):"");
+  row.push(w.length?wState().form:"not started", String(w.length), w.map(x=>`${x.L} ${x.t}`).join(" / "), w.length?firstText(wState().first):"");
   return { cols, row };
 }
 /* Per-module hooks for the shared report code below. */
@@ -1542,11 +1613,11 @@ const RPT={
   missHit:(e,q)=>e[1](q),
   cannot:()=>"The report cannot tell whether you read the poem aloud, whether your own words are right, whether your writing keeps the metre or says anything, or how much help you had.",
   writing(){
-    const d=D(), ls=linesNow(), adj=adjNow(), kew=modeNow()==="kew";
-    if(!nWritten()) return [{ h:"Your sonnet: not started", text:"" }];
-    const lines=LETTERS.map((L,k)=>{ const t=String(ls[k]||"");
-      return { k:L, t, n:t.trim()?Math.max(0,lineSyllables(t)+(adj[k]||0)):null, turn:k===TURN-1, same:kew&&!isWritten(k) }; });
-    return [{ h:"Your sonnet: "+MODES[modeNow()], lines, note:"Rhyme check, first try: "+firstText(d.first) }];
+    const W=wState();
+    if(!W.letters.some((_,k)=>W.written(k))) return [{ h:"Your sonnet: not started", text:"" }];
+    const lines=W.letters.map((L,k)=>{ const t=String(W.lines[k]||"");
+      return { k:L, t, n:t.trim()?Math.max(0,lineSyllables(t)+(W.adj[k]||0)):null, turn:k===TURN-1, same:W.kew&&!W.written(k) }; });
+    return [{ h:"Your sonnet: "+W.form, lines, note:"Rhyme check, first try: "+firstText(W.first) }];
   }
 };
 /* ====================== REPORT: SCREEN AND PRINTOUT =======================

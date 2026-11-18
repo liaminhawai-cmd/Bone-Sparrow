@@ -72,6 +72,9 @@ body{background:var(--frame);font-family:var(--font);color:var(--ink);display:fl
 .rows{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:.55em;align-items:baseline;
       line-height:1.5}
 .rows .no{margin:0;text-align:right}
+/* A vote option shows its finger icon, not a number, so it does not read as more line numbers. */
+.rows .no .fing{display:inline-block;vertical-align:middle}
+.rows .no .fing svg{display:block;width:1.45em;height:1.45em}
 .rows .tx{white-space:nowrap}
 .rows .row{display:contents}
 .rows .tag{font-size:.62em;color:var(--grey-text);white-space:nowrap;padding-left:1em;visibility:hidden;
@@ -452,7 +455,7 @@ function rowsOf(sl, rev){
   lines(sl.lines, sl.ends, sl.tags, sl.hit, true, null);
   if(sl.opts){
     rows.push({type:"gap"});
-    sl.opts.forEach((o, i) => rows.push({type:"line", no:i + 1, hidden:false, tag:[], tagOn:false,
+    sl.opts.forEach((o, i) => rows.push({type:"line", no:i + 1, finger:i + 1, hidden:false, tag:[], tagOn:false,
       runs:[{t:o, k:""}], hit: !!(rev && sl.hitOpt === i) }));
   }
   return rows;
@@ -552,7 +555,7 @@ function rowHtml(r){
   if(r.type === "label") return `<div class="lab${r.hidden ? " hidden" : ""}">${esc(r.text)}</div>`;
   if(r.type === "gap") return `<div class="gap"></div>`;
   const tag = r.tag.map(p => `<span class="${p.k}${p.l ? " L" + p.l : ""}">${esc(p.t)}</span>`).join("");
-  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.no}</span>` +
+  return `<div class="row${r.hit ? " hit" : ""}${r.turn ? " turn" : ""}${r.hidden ? " hidden" : ""}"><span class="no">${r.finger ? `<span class="fing" role="img" aria-label="${r.finger} finger${r.finger > 1 ? "s" : ""}">${ICONS["f" + r.finger]}</span>` : r.no}</span>` +
     `<span class="tx">${runsHtml(r.runs)}</span><span class="tag">${tag}</span></div>`;
 }
 

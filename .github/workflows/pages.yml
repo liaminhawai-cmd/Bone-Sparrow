@@ -23,6 +23,8 @@ on:
       - "Sonnets.html"
       - "SonnetsDeck.html"
       - "SonnetsDeck.pptx"
+      - "Sonnet18Deck.html"
+      - "Sonnet18Deck.pptx"
       - "SentenceFluency.html"
       - "SentenceFluencyDeck.html"
       - "SentenceFluencyDeck.pptx"
@@ -100,6 +102,8 @@ jobs:
           cp Sonnets.html dist/
           cp SonnetsDeck.html dist/
           cp SonnetsDeck.pptx dist/
+          cp Sonnet18Deck.html dist/
+          cp Sonnet18Deck.pptx dist/
           cp SentenceFluency.html dist/
           cp SentenceFluencyDeck.html dist/
           cp SentenceFluencyDeck.pptx dist/

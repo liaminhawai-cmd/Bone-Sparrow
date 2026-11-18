@@ -412,7 +412,7 @@
    WRITING FOLIO VOCAB HUB
    Companion to the Year 7 English Writing Folio, Lessons 01 to 08, plus
    two sets of ballad words (09 The Man from Ironbark, 10 Clancy of the
-   Overflow) and one of sonnet words (11 Westminster Bridge and Sonnet 18)
+   Overflow) and two of sonnet words (11 Westminster Bridge, 12 Sonnet 18)
    to meet before reading the poems.
    Same build as the Bone Sparrow Vocab Hub, with the unit's words
    split lesson by lesson; scores live under their own key, sign-in
@@ -1744,51 +1744,19 @@ const LESSONS = [
       {"id":"ap_cl_eter_scn","type":"scenario","q":"What does eternal mean?","a":"Lasting forever","opts":["Lasting forever","Lasting one day","Coming from outside","Happening only once"],"explain":"<b>Eternal</b> means lasting forever, so the round eternal is work that never ends."} ] },
   ] },
 
-/* ================= 11 SONNET WORDS: WESTMINSTER BRIDGE AND SONNET 18 =================
-   Meanings, word-parts and origins are the ones in the vocab blocks of
-   Sonnets.html (its WESTMINSTER and S18 data), so the two pages cannot
-   disagree. Words that helper gives no parts for (majesty, splendour) are
-   origin words, as in the ballad sets. The old forms (thou, thee, thy, thine,
-   art, hath, doth) are type "plain": no parts and no build step, but they are
-   in Meet the words, the word list and Use the words (buildCounts skips them). Eternal is not repeated here: it is
-   already in set 10. Each eg is the poem line as printed in Sonnets.html,
-   with the line number. The tasks were written for this hub. Translations
-   are the Sonnets.html helper's own; possession, beautifully and smokeless
-   are not in it, so those show English only. */
-{ id:"11", topic:"Part 7 · Sonnet words", title:"Sonnet words: Westminster Bridge and Sonnet 18",
-  next:{ href:"Sonnets.html", label:"Sonnets", deck:"SonnetsDeck.html" },
-  focus:"Composed upon Westminster Bridge, William Wordsworth, 1802. Sonnet 18, William Shakespeare, 1609.",
+/* ================= 11 SONNET WORDS: COMPOSED UPON WESTMINSTER BRIDGE =================
+   Meanings, word-parts and origins are the ones in the WESTMINSTER vocab block of
+   Sonnets.html, so the two pages cannot disagree. Words that helper gives no parts
+   for (majesty, splendour) are origin words, as in the ballad sets. Doth is type
+   "plain" (see set 12): no parts and no build step, but it is in Meet the words,
+   the word list and Use the words (buildCounts skips plain words). Each eg is the
+   poem line as printed in Sonnets.html, with the line number. The tasks were written
+   for this hub. Translations are the Sonnets.html helper's own; beautifully and
+   smokeless are not in it, so those show English only. */
+{ id:"11", topic:"Part 7 · Sonnet words", title:"Sonnet words: Composed upon Westminster Bridge",
+  next:{ href:"Sonnets.html#westminster", label:"Westminster Bridge in Sonnets", deck:"SonnetsDeck.html" },
+  focus:"Composed upon Westminster Bridge, William Wordsworth, 1802.",
   words:[
-  { w:"Temperate", pos:"adjective", domain:"sonnet", type:"morph",
-    meaning:"Mild and steady, not too hot and not too cold.",
-    eg:"Thou art more lovely and more **temperate**: (Sonnet 18, line 2)",
-    tiles:[["temper","mix in the right amounts; keep steady"],["-ate","having this quality"]],
-    decoys:[["-ment","the result of"],["-ly","in this way"],["un-","not"]],
-    note:"From Latin <i>temperare</i>, ‘to mix in the right amounts’. Related to <b>temperature</b>. The speaker says the person is gentler and more even than summer weather.",
-    apply:[
-      {"id":"ap_sn_temp_cloze","type":"cloze","before":"The town has a","after":"climate: warm summers, cool winters, and never a day of extreme heat or cold.","a":"temperate","opts":["temperate","temporary","temperamental","tempestuous"],"explain":"Mild and steady, never too hot or too cold, is <b>temperate</b> (<i>temper</i> + <i>-ate</i>). <i>Temporary</i> means lasting a short time."},
-      {"id":"ap_sn_temp_scn","type":"scenario","q":"One country has mild, steady weather all year. Another swings from freezing to scorching. Which word describes the first country’s weather?","a":"Temperate","opts":["Temperate","Changeable","Unpredictable","Freezing"],"explain":"Mild and steady is <b>temperate</b>. Changeable and unpredictable describe weather that swings about, and freezing is far from mild."} ] },
-
-  { w:"Complexion", pos:"noun", domain:"sonnet", type:"morph",
-    meaning:"The natural colour and look of a face. Here, the sun’s golden face.",
-    eg:"And often is his gold **complexion** dimm’d, (Sonnet 18, line 6)",
-    tiles:[["com-","together"],["plex","fold or weave (Latin)"],["-ion","the act or result of"]],
-    decoys:[["de-","down, away"],["-ive","tending to"],["pre-","before"]],
-    note:"The same <i>plex</i> is in <b>complex</b> and <b>complicated</b>. In the poem the sun is given a face, and cloud can dim its gold colour.",
-    apply:[
-      {"id":"ap_sn_comp_cloze","type":"cloze","before":"After a week at the beach, his pale","after":"had turned brown.","a":"complexion","opts":["complexion","competition","completion","complication"],"explain":"The colour and look of a face is its <b>complexion</b>. <i>Completion</i> means finishing something; a <i>complication</i> is a problem."},
-      {"id":"ap_sn_comp_scn","type":"scenario","q":"A friend says, ‘You have a lovely complexion.’ What is she talking about?","a":"The colour and look of your face","opts":["The colour and look of your face","The way you walk into a room","The way you speak to other people","How kind you are to your friends"],"explain":"<b>Complexion</b> is the natural colour and look of a face, not a walk, a voice or a kind nature."} ] },
-
-  { w:"Possession", pos:"noun", domain:"sonnet", type:"morph",
-    meaning:"Owning or holding something; the thing you own.",
-    eg:"Nor lose **possession** of that fair thou ow’st, (Sonnet 18, line 10)",
-    tiles:[["possess","own; hold as yours"],["-ion","the act or result of"]],
-    decoys:[["-ive","tending to"],["re-","again"],["-ness","the state of"]],
-    note:"The speaker says the person will not lose what they own: their beauty. Spelling: <i>possess</i> has a double <i>s</i> twice.",
-    apply:[
-      {"id":"ap_sn_poss_cloze","type":"cloze","before":"The bike is in my","after":", so please ask me before you borrow it.","a":"possession","opts":["possession","procession","profession","position"],"explain":"Owning or holding something is <b>possession</b> (<i>possess</i> + <i>-ion</i>). A <i>procession</i> is a line of people walking together."},
-      {"id":"ap_sn_poss_scn","type":"scenario","q":"A guard finds a stolen phone in a thief’s bag. The guard says the thief was in possession of it. What does that mean?","a":"The thief had it with him","opts":["The thief had it with him","The thief had already mended it","The thief had sold it","The thief had lost it somewhere"],"explain":"Being in <b>possession</b> of something means having it. Mending, selling and losing are different actions."} ] },
-
   { w:"Majesty", pos:"noun", domain:"sonnet", type:"origin",
     meaning:"Grand, noble beauty; the dignity of a king or queen.",
     eg:"A sight so touching in its **majesty**: (Composed upon Westminster Bridge, line 3)",
@@ -1831,16 +1799,6 @@ const LESSONS = [
       {"id":"ap_sn_smok_cloze","type":"cloze","before":"The new heater is","after":": it gives out warmth but no smoke at all.","a":"smokeless","opts":["smokeless","smoky","spotless","smokestack"],"explain":"Without smoke is <b>smokeless</b> (<i>smoke</i> + <i>-less</i>). <i>Smoky</i> means full of smoke, the opposite."},
       {"id":"ap_sn_smok_scn","type":"scenario","q":"A campfire burns with a clear flame and no smoke at all. Which word describes it?","a":"Smokeless","opts":["Smokeless","Smoky","Smouldering","Smothered"],"explain":"<b>Smokeless</b> means without smoke. <i>Smoky</i> and <i>smouldering</i> both give off smoke."} ] },
 
-  { w:"Untrimmed", pos:"adjective", domain:"sonnet", type:"morph",
-    meaning:"Stripped of its decoration; no longer neat or beautiful.",
-    eg:"By chance, or nature’s changing course **untrimm’d**: (Sonnet 18, line 8)",
-    tiles:[["un-","not; the opposite of"],["trimm","make neat and decorate"],["-ed","past tense"]],
-    decoys:[["re-","again"],["-ing","action in progress"],["-er","a person who does an action"]],
-    note:"The poem prints <i>untrimm’d</i>; the apostrophe shows <i>-ed</i> is not a syllable of its own. The <i>m</i> doubles before <i>-ed</i>, as in <b>stopped</b>.",
-    apply:[
-      {"id":"ap_sn_untr_cloze","type":"cloze","before":"Nobody had cut it for years, so the","after":"hedge had grown over the gate.","a":"untrimmed","opts":["untrimmed","untied","unlimited","unlit"],"explain":"Not cut back or made neat is <b>untrimmed</b> (<i>un-</i> not + <i>trimm</i> + <i>-ed</i>). <i>Unlimited</i> means without an end."},
-      {"id":"ap_sn_untr_scn","type":"scenario","q":"A dress had ribbons and lace down the front, and then all of it was cut off. How is the dress now?","a":"Untrimmed","opts":["Untrimmed","Decorated","Brand new","Tightened"],"explain":"A dress with its decoration taken off is <b>untrimmed</b>. Decorated is the opposite."} ] },
-
   { w:"Glittering", pos:"adjective", domain:"sonnet", type:"morph",
     meaning:"Shining with small flashes of light.",
     eg:"All bright and **glittering** in the smokeless air. (Composed upon Westminster Bridge, line 8)",
@@ -1860,6 +1818,68 @@ const LESSONS = [
     apply:[
       {"id":"ap_sn_migh_cloze","type":"cloze","before":"The","after":"river pushed a whole tree down the valley.","a":"mighty","opts":["mighty","mightily","misty","tidy"],"explain":"Very strong and powerful is <b>mighty</b> (<i>might</i> + <i>-y</i>). <i>Mightily</i> says how something is done, so it does not fit before ‘river’."},
       {"id":"ap_sn_migh_scn","type":"scenario","q":"A writer calls a city ‘mighty’. What does that tell you about it?","a":"It is huge and powerful","opts":["It is huge and powerful","It is small and very quiet","It is old and worn out","It is dull and empty"],"explain":"<b>Mighty</b> means very strong, large and powerful. Small, worn out and empty are the opposite."} ] },
+
+  { w:"Doth", pos:"verb", domain:"sonnet", type:"plain",
+    meaning:"Does. An old form.",
+    eg:"This City now **doth**, like a garment, wear (Composed upon Westminster Bridge, line 4)",
+    note:"Same -th ending as <b>hath</b>: doth is does. ‘This City now doth wear’ means the city now wears the morning.",
+    apply:[
+      {"id":"ap_sn_doth_cloze","type":"cloze","before":"In old poems, ‘he","after":"love’ means ‘he does love’.","a":"doth","opts":["doth","hath","art","thee"],"explain":"<b>Doth</b> is the old form of does. <i>Hath</i> is the old form of has."},
+      {"id":"ap_sn_doth_scn","type":"scenario","q":"‘This City now doth, like a garment, wear’. What does doth stand for?","a":"Does","opts":["Does","Was","Is","Dares"],"explain":"<b>Doth</b> is the old form of does."} ] },
+  ] },
+
+/* ================= 12 SONNET WORDS: SONNET 18 =================
+   Meanings, word-parts and origins are the ones in the S18 vocab block of
+   Sonnets.html, so the two pages cannot disagree. The old forms (thou, thee, thy,
+   thine, art, hath) are type "plain": no parts and no build step, but they are in
+   Meet the words, the word list and Use the words (buildCounts skips them). Eternal
+   is not repeated here: it is already in set 10. Each eg is the poem line as
+   printed in Sonnets.html, with the line number. The tasks were written for this hub.
+   Translations are the Sonnets.html helper's own; possession and thine are not in
+   it, so those show English only. */
+{ id:"12", topic:"Part 7 · Sonnet words", title:"Sonnet words: Sonnet 18",
+  next:{ href:"Sonnets.html#s18", label:"Sonnet 18 in Sonnets", deck:"Sonnet18Deck.html" },
+  focus:"Sonnet 18, William Shakespeare, 1609.",
+  words:[
+  { w:"Temperate", pos:"adjective", domain:"sonnet", type:"morph",
+    meaning:"Mild and steady, not too hot and not too cold.",
+    eg:"Thou art more lovely and more **temperate**: (Sonnet 18, line 2)",
+    tiles:[["temper","mix in the right amounts; keep steady"],["-ate","having this quality"]],
+    decoys:[["-ment","the result of"],["-ly","in this way"],["un-","not"]],
+    note:"From Latin <i>temperare</i>, ‘to mix in the right amounts’. Related to <b>temperature</b>. The speaker says the person is gentler and more even than summer weather.",
+    apply:[
+      {"id":"ap_sn_temp_cloze","type":"cloze","before":"The town has a","after":"climate: warm summers, cool winters, and never a day of extreme heat or cold.","a":"temperate","opts":["temperate","temporary","temperamental","tempestuous"],"explain":"Mild and steady, never too hot or too cold, is <b>temperate</b> (<i>temper</i> + <i>-ate</i>). <i>Temporary</i> means lasting a short time."},
+      {"id":"ap_sn_temp_scn","type":"scenario","q":"One country has mild, steady weather all year. Another swings from freezing to scorching. Which word describes the first country’s weather?","a":"Temperate","opts":["Temperate","Changeable","Unpredictable","Freezing"],"explain":"Mild and steady is <b>temperate</b>. Changeable and unpredictable describe weather that swings about, and freezing is far from mild."} ] },
+
+  { w:"Complexion", pos:"noun", domain:"sonnet", type:"morph",
+    meaning:"The natural colour and look of a face. Here, the sun’s golden face.",
+    eg:"And often is his gold **complexion** dimm’d, (Sonnet 18, line 6)",
+    tiles:[["com-","together"],["plex","fold or weave (Latin)"],["-ion","the act or result of"]],
+    decoys:[["de-","down, away"],["-ive","tending to"],["pre-","before"]],
+    note:"The same <i>plex</i> is in <b>complex</b> and <b>complicated</b>. In the poem the sun is given a face, and cloud can dim its gold colour.",
+    apply:[
+      {"id":"ap_sn_comp_cloze","type":"cloze","before":"After a week at the beach, his pale","after":"had turned brown.","a":"complexion","opts":["complexion","competition","completion","complication"],"explain":"The colour and look of a face is its <b>complexion</b>. <i>Completion</i> means finishing something; a <i>complication</i> is a problem."},
+      {"id":"ap_sn_comp_scn","type":"scenario","q":"A friend says, ‘You have a lovely complexion.’ What is she talking about?","a":"The colour and look of your face","opts":["The colour and look of your face","The way you walk into a room","The way you speak to other people","How kind you are to your friends"],"explain":"<b>Complexion</b> is the natural colour and look of a face, not a walk, a voice or a kind nature."} ] },
+
+  { w:"Possession", pos:"noun", domain:"sonnet", type:"morph",
+    meaning:"Owning or holding something; the thing you own.",
+    eg:"Nor lose **possession** of that fair thou ow’st, (Sonnet 18, line 10)",
+    tiles:[["possess","own; hold as yours"],["-ion","the act or result of"]],
+    decoys:[["-ive","tending to"],["re-","again"],["-ness","the state of"]],
+    note:"The speaker says the person will not lose what they own: their beauty. Spelling: <i>possess</i> has a double <i>s</i> twice.",
+    apply:[
+      {"id":"ap_sn_poss_cloze","type":"cloze","before":"The bike is in my","after":", so please ask me before you borrow it.","a":"possession","opts":["possession","procession","profession","position"],"explain":"Owning or holding something is <b>possession</b> (<i>possess</i> + <i>-ion</i>). A <i>procession</i> is a line of people walking together."},
+      {"id":"ap_sn_poss_scn","type":"scenario","q":"A guard finds a stolen phone in a thief’s bag. The guard says the thief was in possession of it. What does that mean?","a":"The thief had it with him","opts":["The thief had it with him","The thief had already mended it","The thief had sold it","The thief had lost it somewhere"],"explain":"Being in <b>possession</b> of something means having it. Mending, selling and losing are different actions."} ] },
+
+  { w:"Untrimmed", pos:"adjective", domain:"sonnet", type:"morph",
+    meaning:"Stripped of its decoration; no longer neat or beautiful.",
+    eg:"By chance, or nature’s changing course **untrimm’d**: (Sonnet 18, line 8)",
+    tiles:[["un-","not; the opposite of"],["trimm","make neat and decorate"],["-ed","past tense"]],
+    decoys:[["re-","again"],["-ing","action in progress"],["-er","a person who does an action"]],
+    note:"The poem prints <i>untrimm’d</i>; the apostrophe shows <i>-ed</i> is not a syllable of its own. The <i>m</i> doubles before <i>-ed</i>, as in <b>stopped</b>.",
+    apply:[
+      {"id":"ap_sn_untr_cloze","type":"cloze","before":"Nobody had cut it for years, so the","after":"hedge had grown over the gate.","a":"untrimmed","opts":["untrimmed","untied","unlimited","unlit"],"explain":"Not cut back or made neat is <b>untrimmed</b> (<i>un-</i> not + <i>trimm</i> + <i>-ed</i>). <i>Unlimited</i> means without an end."},
+      {"id":"ap_sn_untr_scn","type":"scenario","q":"A dress had ribbons and lace down the front, and then all of it was cut off. How is the dress now?","a":"Untrimmed","opts":["Untrimmed","Decorated","Brand new","Tightened"],"explain":"A dress with its decoration taken off is <b>untrimmed</b>. Decorated is the opposite."} ] },
 
   { w:"Thou", pos:"pronoun", domain:"sonnet", type:"plain",
     meaning:"You, said to one person. The old form for the one doing the action.",
@@ -1908,14 +1928,6 @@ const LESSONS = [
     apply:[
       {"id":"ap_sn_hath_cloze","type":"cloze","before":"‘Summer’s lease","after":"all too short a date’ means ‘Summer’s lease has all too short a date.’","a":"hath","opts":["hath","doth","art","thou"],"explain":"<b>Hath</b> is the old form of has. <i>Doth</i> is the old form of does."},
       {"id":"ap_sn_hath_scn","type":"scenario","q":"Which modern word means hath?","a":"has","opts":["has","does","is","had"],"explain":"<b>Hath</b> is the old form of has."} ] },
-
-  { w:"Doth", pos:"verb", domain:"sonnet", type:"plain",
-    meaning:"Does. An old form.",
-    eg:"This City now **doth**, like a garment, wear (Composed upon Westminster Bridge, line 4)",
-    note:"Same -th ending as <b>hath</b>: doth is does. ‘This City now doth wear’ means the city now wears the morning.",
-    apply:[
-      {"id":"ap_sn_doth_cloze","type":"cloze","before":"In old poems, ‘he","after":"love’ means ‘he does love’.","a":"doth","opts":["doth","hath","art","thee"],"explain":"<b>Doth</b> is the old form of does. <i>Hath</i> is the old form of has."},
-      {"id":"ap_sn_doth_scn","type":"scenario","q":"‘This City now doth, like a garment, wear’. What does doth stand for?","a":"Does","opts":["Does","Was","Is","Dares"],"explain":"<b>Doth</b> is the old form of does."} ] },
   ] },
 ];
 
@@ -1998,7 +2010,7 @@ const TR = {
 "Repartee":{"zh":"机智的对答","yue":"機智的對答","vi":"đối đáp dí dỏm","fa":"جواب‌های سریع و شوخ‌طبعانه"},
 "Livid":{"zh":"青紫色的（像淤青）","yue":"青紫色的（像淤青）","vi":"tím tái; thâm như vết bầm","fa":"کبود و مایل به بنفش"},
 "Gloat":{"zh":"幸灾乐祸地得意","yue":"幸災樂禍地得意","vi":"hả hê trước khó khăn của người khác","fa":"از گرفتاری دیگری با بدجنسی لذت بردن"},
-/* Sonnet words (lesson 11): copied from the vocab blocks in Sonnets.html, with its
+/* Sonnet words (lessons 11 and 12): copied from the vocab blocks in Sonnets.html, with its
    Mandarin, Cantonese, Vietnamese and Farsi. It has no Arabic, so that language shows
    nothing for these words. Possession, Beautifully and Smokeless are not in that
    helper, so they have no translations. */
