@@ -660,7 +660,11 @@ const POEMS={ westminster:WEST, s18:S18 }, ORDER=["westminster","s18"];
 const MODES={ kew:"Kew at dawn", own:"Your own place at dawn" };
 const LETTERS="ABBAABBACDCDCD".split(""), FREE="ABABCDCDEFEFGG".split(""), TURN=9, N=14;
 const WL=WEST.stanzas.reduce((a,sec)=>a.concat(sec.lines.map(l=>strip(l.t))),[]);
-function startLines(){ const w=WL.slice(); w[0]=w[0].replace(/^Earth\b/,"Kew"); return w; }
+/* Line 1 starts remixed as a model. Earth is the comparison (nowhere is there
+   anything more beautiful), so it becomes a bigger place that holds Kew, not
+   Kew itself: "Kew has not any thing to show more fair" would invert it. */
+const KEW_LINE1 = "No suburb has a thing to show more fair:";
+function startLines(){ const w=WL.slice(); w[0]=KEW_LINE1; return w; }
 const KEY = "writingfolio.sonnet.v1";
 const PKEY = "bonesparrow.profile.v1";
 let store;
@@ -1349,7 +1353,7 @@ function check(s,qi){
 
 /* ====================== WRITE (student) ==================================
    Never locked. The student remixes Westminster Bridge line by line. Kew at
-   dawn starts from Wordsworth's own lines with Earth moved to Kew; Your own
+   dawn starts from Wordsworth's own lines with line 1 remixed as a model; Your own
    place at dawn starts blank. Both keep the 14-line pattern: octave ABBAABBA,
    sestet CDCDCD, the turn at line 9. Each mode keeps its own lines. Lines save
    as they are typed. The first rhyme check after something is written is the
@@ -1418,7 +1422,7 @@ function useClass(){
 function dropOffer(){ PENDING=null; BOARDHIDE=true; history.replaceState(null,"","#write"+(OPEN?"&open":"")); view.checked=null; renderWrite(); }
 function restart(){
   const m=modeNow();
-  if(!confirm(m==="own"?"Clear all 14 lines of Your own place at dawn?":"Put Wordsworth’s 14 lines back, with only Earth moved to Kew? Your lines in Kew at dawn will be replaced.")) return;
+  if(!confirm(m==="own"?"Clear all 14 lines of Your own place at dawn?":"Put Wordsworth’s 14 lines back, with only line 1 remixed? Your lines in Kew at dawn will be replaced.")) return;
   bumpD(d=>{ if(m==="own") d.own={ lines:new Array(N).fill(""), adj:new Array(N).fill(0) }; else d.kew=null; });
   view.checked=null; renderWrite();
 }
@@ -1500,7 +1504,7 @@ function frRestart(){
    The teacher's board: lines 1 to 4 of Kew at dawn (ABBA), written with the
    class beside Wordsworth's lines 1 to 4. No sign-in, and nothing here
    reaches a student's record or report: it lives under "class" in the same
-   storage key. It starts as Wordsworth's lines with Earth moved to Kew. The
+   storage key. It starts as Wordsworth's lines with line 1 remixed as a model. The
    class link carries the four lines. */
 function classState(){
   const c=S.class&&typeof S.class==="object"?S.class:{};
@@ -1539,7 +1543,7 @@ function classCards(){
 function classLine(k,v){ bumpClass(s=>{ s.lines=s.lines.slice(); s.adj=s.adj.slice(); s.lines[k]=v; s.adj[k]=0; }); fit($("ln"+k)); classMetric(k); classCards(); }
 function classNudge(k,dl){ bumpClass(s=>{ s.adj=s.adj.slice(); s.adj[k]+=dl; }); classMetric(k); }
 function classClear(){
-  if(!confirm("Clear the class lines? The four lines go back to Wordsworth’s, with Earth moved to Kew.")) return;
+  if(!confirm("Clear the class lines? The four lines go back to Wordsworth’s, with line 1 remixed.")) return;
   bumpNames(c=>{ c.class=null; }); renderClass();
 }
 function classLink(){
