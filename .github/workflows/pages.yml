@@ -34,6 +34,7 @@ on:
       - "BalladsDeck.pptx"
       - "ClancyDeck.html"
       - "ClancyDeck.pptx"
+      - "worksheets/*.pdf"
       - "BoneSparrowWagollSheets.html"
       - "BoneSparrowWagollWall.html"
       - "BoneSparrowClimbCards.html"
@@ -113,6 +114,8 @@ jobs:
           cp BalladsDeck.pptx dist/
           cp ClancyDeck.html dist/
           cp ClancyDeck.pptx dist/
+          mkdir -p dist/worksheets
+          cp worksheets/*.pdf dist/worksheets/
           cp BoneSparrowWagollSheets.html dist/
           cp BoneSparrowWagollWall.html dist/
           cp BoneSparrowClimbCards.html dist/
