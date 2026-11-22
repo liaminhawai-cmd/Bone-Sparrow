@@ -21,6 +21,7 @@ on:
       - "Ballads.html"
       - "FindAndFix.html"
       - "Sonnets.html"
+      - "PoetryCatchUp.html"
       - "SonnetsDeck.html"
       - "SonnetsDeck.pptx"
       - "Sonnet18Deck.html"
@@ -101,6 +102,7 @@ jobs:
           cp Ballads.html dist/
           cp FindAndFix.html dist/
           cp Sonnets.html dist/
+          cp PoetryCatchUp.html dist/
           cp SonnetsDeck.html dist/
           cp SonnetsDeck.pptx dist/
           cp Sonnet18Deck.html dist/

@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poetry catch-up: Writing Folio</title>
+<style>
+:root{
+  --bg:#f1efe8; --paper:#fbfaf6; --ink:#1f1f1f; --muted:#655f55;
+  --line:#d4cfc2; --line-soft:#e6e1d6; --accent:#2c5f7c;
+  --correct:#2f6a3e; --okbg:#eef5ee; --wrong:#a83232; --wrongbg:#fbeeee;
+  --warn:#8a5a12; --warnbg:#fdf4e3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;color:var(--ink);
+     display:flex;justify-content:center;padding:12px}
+.container{width:100%;max-width:1180px;background:var(--paper);border:1px solid var(--line);
+           border-radius:12px;padding:16px 22px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.55}
+.topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:0 0 8px;font-size:13px}
+.topbar .sp{margin-left:auto;display:flex;gap:14px;align-items:center}
+.menulink{color:var(--accent);font-weight:600;text-decoration:none;padding:10px 0;background:none;border:0;font:inherit;font-weight:600;cursor:pointer}
+.menulink:hover{text-decoration:underline}
+
+.btn{padding:10px 17px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:600;
+     cursor:pointer;background:var(--paper);color:var(--ink);font-family:inherit;transition:all .15s ease;
+     text-decoration:none;display:inline-block;min-height:40px;line-height:1.3}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#24506a}
+.btn-ghost{background:var(--bg);color:var(--muted)}
+.btn:disabled{opacity:.45;cursor:default}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.big{font-size:17px;padding:12px 26px}
+.fields{display:flex;flex-direction:column;gap:12px;max-width:420px}
+label{font-size:12px;font-weight:700;display:block;margin-bottom:4px}
+input,textarea{padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+      font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+.fields input{width:100%}
+textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;font-size:17px;min-height:70px}
+.err{color:var(--wrong);font-size:12.5px;min-height:17px;margin-top:3px}
+
+.fb{border-radius:9px;padding:10px 14px;margin:10px 0 0;font-size:14px;line-height:1.55;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--okbg);border:1px solid var(--correct)}
+.fb.bad{background:var(--wrongbg);border:1px solid var(--wrong)}
+.fb.warn{background:var(--warnbg);border:1px solid var(--warn)}
+.fb ul{margin:4px 0 0;padding-left:20px}
+.fb li{margin:3px 0}
+.fb .rule{display:block;font-weight:700;margin-bottom:2px}
+.fb a{color:var(--accent);font-weight:600}
+
+.deckbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:4px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted);min-height:48px}
+.deckbar b{color:var(--ink);font-size:14px}
+.pips{display:flex;gap:4px;flex-wrap:wrap}
+.pip{width:28px;height:28px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font:800 12px 'Segoe UI',Tahoma,sans-serif;
+     color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.pip.cur{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+.pip.clean{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
+.pip.retry{background:var(--warnbg);border:1px dashed var(--warn);color:var(--warn)}
+.cnt{font-weight:700;color:var(--ink)}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.side{max-height:calc(100vh - 118px);overflow:auto}
+.side .fb{margin:0 0 10px}
+.cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-height:calc(100vh - 118px);overflow:auto}
+.skill{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:0 0 6px}
+.prompt{font-size:17px;font-weight:700;margin:0 0 10px;line-height:1.4;border-left:4px solid var(--accent);padding:1px 0 1px 10px}
+.src{font-size:12px;color:var(--muted);margin:6px 0 0;font-style:italic}
+.poemline{font-family:Georgia,serif;font-size:20px;line-height:1.45;background:var(--bg);border-radius:8px;padding:10px 14px;margin:0 0 10px}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.num{width:90px;font-size:18px;text-align:center}
+.pat{width:260px;font-size:18px;letter-spacing:2px;text-transform:uppercase}
+.cutrow{display:flex;gap:12px;align-items:center;margin:0 0 8px}
+.cutrow .w{font-family:Georgia,serif;font-size:19px;min-width:110px}
+.cutrow input{width:220px;font-family:Georgia,serif;font-size:18px}
+.toks{display:flex;flex-wrap:wrap;gap:6px;font-family:Georgia,serif}
+.tok{font-family:Georgia,serif;font-size:19px;padding:6px 10px;min-height:44px;min-width:40px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);cursor:pointer}
+.tok[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent);font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.tok[aria-pressed="true"]::before{content:"\25B2 ";font-size:11px;vertical-align:2px}
+.tok.wrong{background:var(--wrongbg);border-color:var(--wrong)}
+.tok.right{background:var(--okbg);border-color:var(--correct)}
+.tok:disabled{cursor:default}
+.lines{display:flex;flex-direction:column;gap:6px}
+.lrow{display:flex;gap:10px;align-items:center;font-family:Georgia,serif;font-size:18px;line-height:1.35}
+.lrow .n{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;font:800 12px 'Segoe UI',Tahoma,sans-serif;
+         display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+.lrow.ind{padding-left:28px}
+.lt{width:44px;height:40px;text-align:center;font-size:18px;font-weight:700;text-transform:uppercase;padding:4px;font-family:'Segoe UI',Tahoma,sans-serif}
+.lt.wrong{border-color:var(--wrong);background:var(--wrongbg)}
+.pairs{display:flex;flex-direction:column;gap:8px}
+.prow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.prow .w{font-family:Georgia,serif;font-size:19px;min-width:190px}
+.yn{min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;font:600 14.5px 'Segoe UI',Tahoma,sans-serif;cursor:pointer;color:var(--ink)}
+.yn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}
+.yn[aria-pressed="true"]::before{content:"\2713 "}
+.yn:disabled{cursor:default}
+.prow.wrong .w{text-decoration:underline wavy var(--wrong);text-underline-offset:5px}
+.unit{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:var(--bg);border:2px solid transparent;
+      border-radius:9px;padding:4px 12px;margin:0 0 5px;min-height:42px;font-family:Georgia,serif;font-size:17px;line-height:1.3;
+      color:var(--ink);cursor:pointer}
+.unit.ind{padding-left:38px}
+.unit:hover:not(:disabled){border-color:var(--accent)}
+.unit .n{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;font:800 12px 'Segoe UI',Tahoma,sans-serif;
+         display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+.unit .tg{margin-left:auto;font:800 11px 'Segoe UI',Tahoma,sans-serif;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.unit.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(44,95,124,.2);background:#fff}
+.unit.wrong{border-color:var(--wrong);background:var(--wrongbg)}.unit.wrong .tg{color:var(--wrong)}
+.unit.right{border-color:var(--correct);background:var(--okbg)}.unit.right .tg{color:var(--correct)}
+.unit:disabled{cursor:default}
+.dim{color:#6f685c;font-size:12.5px;margin:8px 0 0;line-height:1.5}
+
+.card h2{font-family:Georgia,serif;font-size:18px;margin:0 0 4px}
+.card .rl{font-size:14px;line-height:1.45;margin:0 0 6px;font-weight:600}
+.card .prompt{font-size:16px;margin:0 0 8px}
+.ex{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:5px}
+.ex li{background:var(--bg);border-radius:8px;padding:4px 10px;font-size:13.5px;line-height:1.4}
+.ex .w{font-family:Georgia,serif;font-size:17px}
+.rs{font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.practice{border-top:1px solid var(--line-soft);padding-top:8px;margin-top:2px}
+.card .btnrow{margin-top:10px}
+.gate{max-width:760px}
+.gate .msg{font-size:19px;font-weight:700;line-height:1.45;margin:6px 0 4px}
+.gate ul{margin:6px 0 0;padding-left:20px;font-size:14.5px;line-height:1.7}
+.gate a:not(.btn){color:var(--accent);font-weight:600}
+#lock{position:fixed;inset:0;z-index:50;background:var(--accent);color:#fff;display:grid;place-items:center;padding:24px;text-align:center}
+#lock[hidden]{display:none}
+#lock h2{font-family:Georgia,serif;font-size:30px;margin:0 0 10px} #lock p{font-size:18px;max-width:34em;margin:0 auto 18px;line-height:1.5}
+#lock .btn{background:#fff;color:var(--accent);border-color:#fff;min-height:56px;font-size:20px}
+table.rpt{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+table.rpt th,table.rpt td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
+table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;width:210px}
+.rptwrap{max-height:calc(100vh - 250px);overflow:auto;margin:0 0 6px}
+.broken{background:var(--wrongbg);border:1px solid var(--wrong);border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.6}
+:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+@media screen and (max-width:860px){ .container{padding:14px} .cols{grid-template-columns:1fr} .cardbox{max-height:none} .pat{width:100%} }
+</style>
+</head>
+<body>
+<div class="container"><div id="body"></div></div>
+<div id="lock" hidden role="alertdialog" aria-modal="true" aria-labelledby="lockH">
+  <div><h2 id="lockH">You left full screen</h2>
+  <p id="lockP">Your work is saved. Leaving full screen is written in your report, and your teacher sees it.</p>
+  <button type="button" class="btn big" id="lockBack" onclick="lockBack()">Back to full screen</button></div>
+</div>
+
+<script>
+/* ============================================================================
+   CONTENT. Everything a teacher might change is in this block.
+
+   MODULES   The five poetry modules, in teaching order. On open the page reads
+             (never writes) each module's own storage on this device and lists
+             the ones not finished. Each module's "finished" rule is written
+             above its done() function below, with the parts it mirrors from
+             that module's code. If a module's questions change, update its
+             SHAPE here, or the page will call a finished module unfinished.
+   SLIDES    The deck slide that teaches each skill, by number. Decks open on a
+             slide with Deck.html#n. h is the slide's heading (or its question,
+             for a vote slide), kept here so a moved slide can be checked by eye.
+   SKILLS    The skill each item is reported under.
+   RETEACH   The short cards for a syllable or rhyme miss: the rule, worked
+             examples, and practice items (one is shown per card, in turn).
+             In examples, [x] marks the part shown bold and underlined.
+   ITEMS     The questions, in order. Every item has id, skill, type, short (its
+             name in the report), slide, module, answer (shown after two
+             misses) and optional reteach ("syl" or "rhyme").
+     form     lines (number) and pattern (accepted letter patterns).
+     count    line, n (syllables), high and low (said after a count that is
+              too high or too low; they name the trigger, not the answer).
+     cut      words: w, n (syllables).
+     beats    line, strong (word numbers from 0 that carry a beat).
+     letters  lines, key (one letter per line).
+     pairs    pairs: a, b, yes (do they rhyme), hint (said after a wrong call).
+     fix      units (the lines), bad (the broken line, from 0), rw (lines the
+              new end word must rhyme with), keepEnd (true if the old end word
+              may stay), len (accepted syllable range), find (said after a
+              wrong tap), name and why (shown once the line is found), checks
+              (what the machine checks) and model (a correct rewrite).
+     turn     lines, start (first line number), turn (index of the turn line),
+              words (accepted turn words).
+   No counting item uses a word an Australian accent squeezes (every, heaven,
+   temperate, theatre, towers, glittering), so a count is the same however a
+   student says it. The load-time check stops the page and lists the problem
+   if a key points at nothing or a model answer fails its own check.
+   ========================================================================== */
+
+/* Question shapes mirrored from Ballads.html (BALLAD and CLANCY stanzas) and
+   Sonnets.html (WEST and S18 sections). One array per stanza or section, one
+   entry per question: "q" is answered when it has a result, "own" (own words)
+   when it holds 3 or more words, exactly as each module's itemDone() decides. */
+const SHAPE = {
+  ironbark:   [[],["q","q"],["q","q","q","own"],["q","q","q","q"],["q","q","own"],["q","q","q","q"],["q","q","q","q"],["q","q","q","own"]],
+  clancy:     [[],["q","q"],["q","q","q","own"],["q","q","q","q"],["q","q","q","own"],["q","q","q","q"],["q","q","q","q"],["q","q","q","own"]],
+  westminster:[[],["q","q","q","q"],["q","q","q","q"]],
+  s18:        [["q","q","q","q"],["q","q","q","q"],["q","q","q","q"],["q","q","own"]]
+};
+/* Limericks.html: the two near-miss items on The model (NEARMISS has 2) and
+   the two Build tasks (LINE_SETS[0] is "june", END_SETS[0] is "bush"). */
+const LIM_DONE = ["nm.0","nm.1","b1.june","b2.bush"];
+
+const MODULES = [
+  { id:"lim",         name:"Limericks",                          href:"Limericks.html",         sheet:"",                                       key:"writingfolio.limerick.v1" },
+  { id:"ironbark",    name:"Ballads 1: The Man from Ironbark",   href:"Ballads.html#ironbark",  sheet:"worksheets/11p-man-from-ironbark.pdf",   key:"writingfolio.ballad.v2" },
+  { id:"clancy",      name:"Ballads 2: Clancy of the Overflow",  href:"Ballads.html#clancy",    sheet:"worksheets/12p-clancy-of-the-overflow.pdf", key:"writingfolio.ballad.v2" },
+  { id:"westminster", name:"Sonnets 1: Westminster Bridge",      href:"Sonnets.html#westminster", sheet:"worksheets/13p-westminster-bridge.pdf", key:"writingfolio.sonnet.v1" },
+  { id:"s18",         name:"Sonnets 2: Sonnet 18",               href:"Sonnets.html#s18",       sheet:"worksheets/14p-sonnet-18.pdf",           key:"writingfolio.sonnet.v1" }
+];
+
+const SLIDES = {
+  "lim":        { deck:"PoetryDeck.html",   name:"Limericks deck",   n:2,  h:"The Ealing limerick" },
+  "lim-rhyme":  { deck:"PoetryDeck.html",   name:"Limericks deck",   n:4,  h:"How many other lines rhyme with line 1?" },
+  "bal-letters":{ deck:"BalladsDeck.html",  name:"Ironbark deck",    n:5,  h:"Rhyme letters" },
+  "bal-syl":    { deck:"BalladsDeck.html",  name:"Ironbark deck",    n:6,  h:"Syllables" },
+  "beats":      { deck:"BalladsDeck.html",  name:"Ironbark deck",    n:7,  h:"Strong and weak" },
+  "bal-rhyme":  { deck:"BalladsDeck.html",  name:"Ironbark deck",    n:9,  h:"Rhyme" },
+  "son":        { deck:"SonnetsDeck.html",  name:"Westminster deck", n:3,  h:"What is a sonnet?" },
+  "son-syl":    { deck:"SonnetsDeck.html",  name:"Westminster deck", n:7,  h:"Syllables and beats" },
+  "turn":       { deck:"SonnetsDeck.html",  name:"Westminster deck", n:10, h:"The turn" },
+  "s18-letters":{ deck:"Sonnet18Deck.html", name:"Sonnet 18 deck",   n:8,  h:"Rhyme letters" }
+};
+
+const SKILLS = {
+  form:   { name:"Forms" },
+  syl:    { name:"Syllables" },
+  beat:   { name:"Strong beats" },
+  letters:{ name:"Rhyme letters" },
+  rhyme:  { name:"Rhyme pairs" },
+  fix:    { name:"Find and fix" },
+  turn:   { name:"The turn" }
+};
+
+const RETEACH = {
+  syl: { title:"Syllables",
+    rule:"A syllable is one beat of sound with one vowel sound in it. Clap each word, or put a hand under your chin: one drop is one syllable.",
+    ex:[ ["boat","1","oa is two letters but one vowel sound."],
+         ["pan / cake","2","The e on the end of cake is silent."],
+         ["I / ron / bark","3","Three claps, three vowel sounds."] ],
+    practice:[ { w:"banana", n:3, show:"ba / na / na" },
+               { w:"magpie", n:2, show:"mag / pie" },
+               { w:"Saturday", n:3, show:"Sat / ur / day" },
+               { w:"window", n:2, show:"win / dow" } ] },
+  rhyme: { title:"Rhyme",
+    rule:"Two words rhyme when they sound the same from the last strong vowel sound to the end. Listen to the sound, not the spelling.",
+    ex:[ ["n[ight], wh[ite]","rhyme","Different spelling, same sound."],
+         ["h[at], h[ate]","no rhyme","Short a and long a are different vowel sounds."],
+         ["W[A]ter, L[A]ter","no rhyme","The strong parts are WA and LA, and they differ. A weak ending like -er does not make a rhyme."] ],
+    letters:"Rhyme letters: the first line is A. A line that rhymes with an earlier line takes its letter. A new end sound takes the next letter.",
+    practice:[ { a:"mother", b:"brother", yes:true,  why:"MOTH-er and BROTH-er: from the strong vowel on, both say -other." },
+               { a:"cake",   b:"back",    yes:false, why:"cake has a long a, back has a short a." },
+               { a:"bear",   b:"chair",   yes:true,  why:"Different spelling, same sound: -air." },
+               { a:"pin",    b:"pine",    yes:false, why:"pin has a short i, pine has a long i." } ] }
+};
+
+const ITEMS = [
+ { id:"lim-form", skill:"form", type:"form", short:"Limerick form", slide:"lim", module:"lim",
+   ask:"A limerick. How many lines? What is the rhyme pattern?",
+   lines:5, pattern:["AABBA"],
+   hintLines:"A limerick has two long lines, two short lines, then one more long line for the joke.",
+   hintPat:"The three long lines share one rhyme. The two short lines share a different one.",
+   answer:"5 lines. AABBA: lines 1, 2 and 5 rhyme, lines 3 and 4 rhyme." },
+ { id:"bal-form", skill:"form", type:"form", short:"Ballad form", slide:"bal-letters", module:"ironbark",
+   ask:"One stanza of The Man from Ironbark. How many lines? What is the rhyme pattern?",
+   lines:6, pattern:["AABBCC"],
+   hintLines:"Each line of stanza 1 ends on one of these words: town, down, drop, shop, mark, Ironbark.",
+   hintPat:"Ironbark rhymes in pairs: each line rhymes with the line next to it.",
+   answer:"6 lines. AABBCC: town, down; drop, shop; mark, Ironbark." },
+ { id:"son-form", skill:"form", type:"form", short:"Sonnet form", slide:"son", module:"westminster",
+   ask:"A sonnet like Sonnet 18. How many lines? What is the rhyme pattern?",
+   lines:14, pattern:["ABABCDCDEFEFGG","ABBAABBACDCDCD"],
+   hintLines:"A sonnet is three quatrains (groups of four lines) and a couplet (two lines).",
+   hintPat:"In each quatrain, lines 1 and 3 rhyme and lines 2 and 4 rhyme, with new letters each time. The couplet rhymes with itself.",
+   answer:"14 lines. ABAB CDCD EFEF GG (Westminster Bridge uses ABBAABBA CDCDCD, which also counts)." },
+
+ { id:"son-count", skill:"syl", type:"count", reteach:"syl", short:"Sonnet 18 line 3, syllables", slide:"son-syl", module:"westminster",
+   src:"William Shakespeare, Sonnet 18, line 3",
+   line:"Rough winds do shake the darling buds of May,", n:10,
+   high:"That is more than the line has. Count vowel sounds, not vowel letters: shake has two vowel letters but one vowel sound.",
+   low:"That is fewer than the line has. One word here has two syllables. Say each word slowly and clap.",
+   answer:"10: Rough winds do shake the dar / ling buds of May." },
+ { id:"bal-count", skill:"syl", type:"count", reteach:"syl", short:"Ironbark stanza 1 line 3, syllables", slide:"bal-syl", module:"ironbark",
+   src:"A. B. Paterson, The Man from Ironbark, stanza 1, line 3",
+   line:"He loitered here, he loitered there, till he was like to drop,", n:14,
+   high:"That is more than the line has. Loitered is two claps: oi is one vowel sound, and the ed adds no syllable.",
+   low:"That is fewer than the line has. Some words here have two syllables. Clap each word.",
+   answer:"14: he loi / tered here, he loi / tered there, till he was like to drop." },
+ { id:"cut", skill:"syl", type:"cut", reteach:"syl", short:"Cut words into syllables", slide:"bal-syl", module:"ironbark",
+   words:[ { w:"kangaroo", n:3 }, { w:"overflow", n:3 } ],
+   answer:"kan/ga/roo and o/ver/flow: three syllables each." },
+
+ { id:"lim-beats", skill:"beat", type:"beats", short:"Limerick line 1, beats", slide:"beats", module:"lim",
+   src:"A limerick line written for this page",
+   line:"There once was a cat from Geelong", strong:[1,4,6],
+   answer:"there ONCE was a CAT from gee-LONG: once, cat, Geelong." },
+ { id:"bal-beats", skill:"beat", type:"beats", short:"Ironbark stanza 1 line 2, beats", slide:"beats", module:"ironbark",
+   src:"A. B. Paterson, The Man from Ironbark, stanza 1, line 2",
+   line:"He wandered over street and park, he wandered up and down.", strong:[1,2,3,5,7,8,10],
+   answer:"he WAN-dered O-ver STREET and PARK, he WAN-dered UP and DOWN: 7 beats." },
+
+ { id:"lim-letters", skill:"letters", type:"letters", reteach:"rhyme", short:"Limerick, rhyme letters", slide:"bal-letters", module:"lim",
+   src:"A limerick written for this page", indent:[2,3],
+   lines:["There once was a cook down in Kew","Who made pancakes as thick as a shoe.","She flipped one up high,","It stuck to the sky,","And it hangs there tonight, turning blue."],
+   key:"AABBA", answer:"A A B B A: Kew, shoe, blue rhyme; high, sky rhyme." },
+ { id:"quat-letters", skill:"letters", type:"letters", reteach:"rhyme", short:"Quatrain, rhyme letters", slide:"s18-letters", module:"s18",
+   src:"A quatrain written for this page",
+   lines:["The bins are out, the street is cold and grey,","The milk truck hums along the empty road,","A magpie starts to sing the dark away,","And down the hill a tram groans with its load."],
+   key:"ABAB", answer:"A B A B: grey, away rhyme; road, load rhyme." },
+
+ { id:"pairs", skill:"rhyme", type:"pairs", reteach:"rhyme", short:"Do they rhyme?", slide:"bal-rhyme", module:"ironbark",
+   pairs:[ { a:"night",   b:"white",  yes:true,  hint:"Say night and white aloud. Spelling can hide a rhyme." },
+           { a:"cough",   b:"though", yes:false, hint:"Say cough and though aloud. The same spelling can hide different sounds." },
+           { a:"brother", b:"sister", yes:false, hint:"Find the strong syllable in brother and in sister. Say each one from its strong vowel to the end." },
+           { a:"shoe",    b:"blue",   yes:true,  hint:"Say shoe and blue aloud. Spelling can hide a rhyme." } ],
+   answer:"night, white: rhyme. cough, though: no. brother, sister: no (BROTH and SIS differ; the weak -er does not count). shoe, blue: rhyme." },
+
+ { id:"fix-lim", skill:"fix", type:"fix", reteach:"rhyme", short:"Broken limerick", slide:"lim-rhyme", module:"lim",
+   src:"A limerick written for this page", indent:[2,3],
+   units:["A girl with a kite on the beach","Flew it up till it went out of reach.","The wind gave a tug,","She hung on like a bug,","And now she lives up in the clouds."],
+   bad:4, rw:[0,1], keepEnd:false, len:[7,11],
+   find:"Lines 1, 2 and 5 must rhyme, and lines 3 and 4 rhyme with each other. Say the end words aloud.",
+   name:"Lines 1, 2 and 5 rhyme", why:"Clouds does not rhyme with beach and reach.",
+   checks:"Checks: the last word rhymes with beach and reach, and the line has about 7 to 11 syllables. If the checker cannot hear the rhyme it says so, and you say it aloud. It does not check the joke.",
+   model:"And she sailed off to France with a screech.",
+   answer:"Line 5. One answer: And she sailed off to France with a screech." },
+ { id:"fix-son", skill:"fix", type:"fix", reteach:"syl", short:"Broken sonnet lines", slide:"son-syl", module:"westminster",
+   src:"Four sonnet lines written for this page",
+   units:["The trains still sleep, the sky is not yet bright,","The park is wet, the swings hang in the cold,","Then the sun climbs up above the houses and the gum trees into light,","And turns the grey wet roof tiles into gold."],
+   bad:2, rw:[0], keepEnd:true, len:[9,11],
+   find:"A sonnet line has about 10 syllables. Count each line.",
+   name:"A sonnet line has about 10 syllables", why:"Line 3 has about 17.",
+   checks:"Checks: about 9 to 11 syllables, and the last word rhymes with bright. Syllable counts are estimates. It does not check the beat or the sense.",
+   model:"The sun climbs up and fills the street with light,",
+   answer:"Line 3. One answer: The sun climbs up and fills the street with light," },
+
+ { id:"turn", skill:"turn", type:"turn", short:"Find the turn", slide:"turn", module:"westminster",
+   src:"A sonnet written for this page, lines 7 to 12",
+   ask:"Lines 1 to 6 set up a wet Saturday. Tap the line where the poem turns. Then type the word that shows the turn.",
+   start:7, turn:2, words:["but","but then"],
+   lines:["My phone is flat, and all I do is wait,","And watch the gutters choke and spill their flood.",
+          "But then Nan finds a pack of cards, and soon","The kitchen table roars with shouts and cheers,","We play past lunch, we play all afternoon,","And Nan has won more hands than I have years."],
+   answer:"Line 9, on But. Before it: the wet, dull day. After it: the card game that fixes it." }
+];
+
+/* Rhyme families, as in Limericks.html. */
+const FAMILIES = {
+  "-oo":    {ipa:"/ʉː/",   words:["Drew","zoo","blue","flew","too","stew","kangaroo","shampoo","threw","Sue","new","grew","true","crew","glue","chew","Lou"]},
+  "-ay":    {ipa:"/eɪ/",   words:["May","day","play","stay","away","tray","hooray","Ray","Jay","bay","say","way","pay","hay"]},
+  "-ight":  {ipa:"/aɪt/",  words:["light","night","bright","fright","kite","right","sight","flight","white","bite","write","might","quite"]},
+  "-y":     {ipa:"/aɪ/",   words:["sky","fly","my","why","try","cry","pie","tie","lie","dry","July"]},
+  "-ime":   {ipa:"/aɪm/",  words:["time","crime","lime","chime","dime","prime","slime"]},
+  "-ine":   {ipa:"/aɪn/",  words:["line","fine","mine","nine","wine","shine","dine","pine","spine"]},
+  "-at":    {ipa:"/æt/",   words:["cat","hat","bat","flat","mat","that","sat","rat","chat"]},
+  "-ot":    {ipa:"/ɒt/",   words:["hot","not","got","lot","pot","spot","dot","shot","forgot","plot"]},
+  "-ake":   {ipa:"/eɪk/",  words:["cake","lake","snake","shake","awake","mistake","Jake","take","make","wake","bake"]},
+  "-ore":   {ipa:"/ɔː/",   words:["more","roar","snore","shore","store","before","explore","saw","law","draw","straw","paw","jaw"]},
+  "-oon":   {ipa:"/ʉːn/",  words:["moon","spoon","soon","balloon","baboon","cartoon","June","noon"]},
+  "-ee":    {ipa:"/iː/",   words:["sea","tree","free","three","agree","knee","bee","Lee","see","tea"]},
+  "-ed":    {ipa:"/ed/",   words:["bed","red","shed","Fred","Ned","fed","led","sled"]},
+  "-og":    {ipa:"/ɔg/",   words:["dog","frog","log","jog","blog","fog"]},
+  "-eeling":{ipa:"/iːlɪŋ/", words:["Ealing","ceiling","feeling","kneeling","healing","dealing","stealing","peeling"]},
+  "-ow":    {ipa:"/aʊ/",   words:["cow","now","how","wow"]},
+  "-own":   {ipa:"/aʊn/",  words:["town","down","clown","brown","frown","crown","gown","drown"]},
+  "-oh":    {ipa:"/əʉ/",   words:["go","show","flow","snow","know","slow","grow","throw","blow","below","glow","low"]},
+  "-uff":   {ipa:"/ʌf/",   words:["stuff","puff","cuff"]},
+  "-off":   {ipa:"/ɒf/",   words:["off","scoff"]},
+  "-un":    {ipa:"/ʌn/",   words:["sun","fun","run","bun"]},
+  "-um":    {ipa:"/ʌm/",   words:["drum","plum","thumb"]},
+  "-ut":    {ipa:"/ʌt/",   words:["but","cut","hut","nut","shut"]},
+  "-oot":   {ipa:"/ʊt/",   words:["soot"]},
+  "-ohm":   {ipa:"/əʉm/",  words:["foam","roam"]},
+  "-awt":   {ipa:"/ɔːt/",  words:["caught","taught"]},
+  "-ird":   {ipa:"/ɜːd/",  words:["bird","third"]},
+  "-air":   {ipa:"/eː/",   words:["hair","chair","pair","care","stare"]},
+  "-ear":   {ipa:"/ɪə/",   words:["near","hear","deer","fear","clear","year"]},
+  "-ood":   {ipa:"/ʊd/",   words:["good","wood","could","would","should","stood","hood"]},
+  "-uv":    {ipa:"/ʌv/",   words:["love","glove","above","shove"]}
+};
+
+/* Words whose spelling hides their sound, and the family they rhyme with.
+   They count for their family, but the checker never learns a spelling from
+   them (paid does not rhyme with said). */
+const IRREGULAR = {
+  through:"-oo", two:"-oo", do:"-oo", you:"-oo", who:"-oo", shoe:"-oo", canoe:"-oo",
+  grey:"-ay", they:"-ay", weigh:"-ay", ballet:"-ay", buffet:"-ay",
+  height:"-ight", high:"-y", sigh:"-y", buy:"-y", bye:"-y", eye:"-y", goodbye:"-y",
+  rhyme:"-ime", climb:"-ime", sign:"-ine",
+  what:"-ot", yacht:"-ot",
+  break:"-ake", steak:"-ake",
+  door:"-ore", floor:"-ore", four:"-ore", pour:"-ore", your:"-ore",
+  me:"-ee", key:"-ee",
+  head:"-ed", said:"-ed", spread:"-ed", bread:"-ed", dead:"-ed", thread:"-ed", instead:"-ed", ahead:"-ed",
+  bough:"-ow", plough:"-ow",
+  though:"-oh", dough:"-oh", toe:"-oh", depot:"-oh",
+  rough:"-uff", tough:"-uff", enough:"-uff",
+  cough:"-off",
+  one:"-un", won:"-un", done:"-un", none:"-un",
+  come:"-um", some:"-um",
+  put:"-oot", foot:"-oot",
+  home:"-ohm", comb:"-ohm", dome:"-ohm",
+  thought:"-awt", bought:"-awt",
+  word:"-ird", heard:"-ird",
+  bear:"-air", where:"-air", there:"-air",
+  here:"-ear"
+};
+
+const AMBIGUOUS = ["ough","ought","ow","own","ows","ead","eath","ear","ears","eard","ere","ove","ood","ook","oot","one","ome","ose","ost","omb",
+                   "our","ord","ork","orse","ind","ild","ive","ave","int","ull","ush","ut","oll","ather","ou","ey","ea","eat","oe","e","o"];
+
+const SYLLABLES = { poem:2, poet:2, idea:3, area:3, beautiful:3, lion:2, cruel:2, science:2, diet:2, giant:2, piano:3,
+                    video:3, radio:3, museum:3, create:2, react:2, evening:2, every:3, violin:3, real:1, fire:1 };
+/* Two families added for this page: the rhymes its broken lines are fixed with. */
+FAMILIES["-each"] = { ipa:"/iːtʃ/", words:["beach","reach","teach","peach","each","speech","screech","bleach","leech","preach"] };
+FAMILIES["-old"]  = { ipa:"/əʉld/", words:["gold","cold","old","told","bold","hold","fold","sold","rolled"] };
+
+/* ========================== END OF CONTENT ================================ */
+
+const KEY = "writingfolio.poetrycatchup.v1";
+const PKEY = "bonesparrow.profile.v1";
+let store;
+try{ store=window.localStorage; store.getItem(KEY); }catch(e){ store={ getItem(){ return null; }, setItem(){} }; }
+function blank(){ return { fname:"", lname:"", sid:"", startedAt:null, checkStart:null, lastAt:null,
+  atOpen:null, claims:{}, cur:0, items:{}, skillMiss:{}, reteach:[], slides:[], unsure:[], card:null, pi:{ syl:0, rhyme:0 },
+  guard:{ exits:0, hidden:0, away:0, out:0, copies:0, pastes:0, pasted:[], fsMode:"", fsFailed:0 } }; }
+function load(){
+  try{ const s=JSON.parse(store.getItem(KEY)); if(!s||typeof s!=="object") return blank();
+    const o=Object.assign(blank(), s); o.pi=Object.assign(blank().pi, s.pi||{}); o.guard=Object.assign(blank().guard, s.guard||{}); return o;
+  }catch(e){ return blank(); }
+}
+let S = load();
+/* Read, change, write: another folio page may be open in a second tab. */
+function bump(fn){
+  const cur=load(); fn(cur); cur.lastAt=Date.now();
+  try{ store.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  S=cur;
+}
+function readProfile(){ try{ const p=JSON.parse(store.getItem(PKEY)); return (p&&p.sid)?p:null; }catch(e){ return null; } }
+function writeProfile(){
+  try{ const p=JSON.parse(store.getItem(PKEY))||{};
+    store.setItem(PKEY, JSON.stringify(Object.assign(p,{v:1,fname:S.fname,lname:S.lname,sid:S.sid}))); }catch(e){}
+}
+(function adopt(){ const p=readProfile(); if(!p || (S.fname && S.sid)) return;
+  bump(c=>{ c.fname=c.fname||p.fname||""; c.lname=c.lname||p.lname||""; c.sid=c.sid||p.sid||""; c.startedAt=c.startedAt||Date.now(); });
+})();
+
+function esc(t){ const d=document.createElement("div"); d.textContent=t==null?"":t; return d.innerHTML; }
+function $(id){ return document.getElementById(id); }
+function idOk(){ return S.fname && S.lname && S.sid && S.sid.length>=4 && S.sid.length<=8; }
+const ITEM={}; ITEMS.forEach((it,i)=>{ ITEM[it.id]=it; it.ix=i; });
+const MOD={}; MODULES.forEach(m=>{ MOD[m.id]=m; });
+
+/* ====================== OTHER MODULES: FINISHED? =========================
+   Read only. Each module keeps its own record on this device, so work done on
+   another computer or on paper never shows here; the student can say so, and
+   that claim goes in the report for the teacher to check against the work log.
+
+   The rules, from each module's own code:
+   Limericks      The model (both find-the-broken-line items) and Build (both
+                  tasks) are done, and the limerick on Write has at least one
+                  line typed. Plan, Rhyme bank and Purpose are support steps
+                  and are not required.
+   Ballads 1      Every question in stanzas 2 to 8 is answered (itemDone in
+                  Ballads.html: a result, or 3 or more words for own words),
+                  and the Boy from Kew remix is started: a stanza edited on the
+                  Kew side (it only gets a record once the student types) or a
+                  line typed in their own style.
+   Ballads 2      Every question in stanzas 2 to 8 is answered. The free ballad
+                  for this lesson is written on paper (planner 12w), so there
+                  is no on-screen writing to look for.
+   Sonnets 1      Every question in sections 2 and 3 is answered, and Kew at
+                  dawn is started: the Kew draft exists (it stays empty until
+                  the student types) or a line of their own place at dawn.
+   Sonnets 2      Every question in all four sections is answered, and the
+                  student's own sonnet has at least one line typed.
+   "Answered" counts any result, right or wrong, so a student is never sent
+   back for getting things wrong, only for leaving them out.
+   The Vocab Hub "Words first" step lives in another page's storage and is not
+   counted. Export is not counted either: it leaves no trace in storage. */
+function readKey(k){ try{ const o=JSON.parse(store.getItem(k)); return o&&typeof o==="object"?o:null; }catch(e){ return null; } }
+function wc(t){ return (String(t||"").match(/[A-Za-z]+(?:['’][A-Za-z]+)*/g)||[]).length; }
+function filled(a){ return Array.isArray(a) && a.some(x=>String(x||"").trim()); }
+function answered(rec, shape){
+  const items=(rec&&rec.items)||{}; let n=0, tot=0;
+  shape.forEach((qs,s)=>qs.forEach((t,qi)=>{ tot++; const it=items[s], r=it&&it[qi];
+    if(r && (t==="own" ? wc(r.text)>=3 : !!r.res)) n++; }));
+  return { n, tot };
+}
+/* Returns { done, todo:[what is left] } for one module. */
+function moduleState(m){
+  const s=readKey(m.key), todo=[];
+  if(m.id==="lim"){
+    const d=(s&&s.done)||{};
+    if(!(d["nm.0"]&&d["nm.1"])) todo.push("The model");
+    if(!(d["b1.june"]&&d["b2.bush"])) todo.push("Build");
+    if(!(s&&filled(s.lines))) todo.push("Write: your limerick, not started");
+  }else if(m.id==="ironbark"||m.id==="clancy"){
+    const p=s&&s.poems&&s.poems[m.id], a=answered(p, SHAPE[m.id]);
+    if(a.n<a.tot) todo.push(`Read and analyse: ${a.n} of ${a.tot} questions answered`);
+    if(m.id==="ironbark"){
+      const kew=p&&p.by&&Object.keys(p.by).some(k=>p.by[k]&&Array.isArray(p.by[k].lines));
+      const own=p&&Array.isArray(p.free)&&p.free.some(f=>f&&filled(f.lines));
+      if(!kew&&!own) todo.push("Write: The Boy from Kew, not started");
+    }
+  }else{
+    const p=s&&s.poems&&s.poems[m.id], a=answered(p, SHAPE[m.id]), d=(s&&s.draft)||{};
+    if(a.n<a.tot) todo.push(`Read and analyse: ${a.n} of ${a.tot} questions answered`);
+    if(m.id==="westminster"){
+      const started=(d.kew&&filled(d.kew.lines)) || (d.own&&filled(d.own.lines)) || filled(d.lines);
+      if(!started) todo.push("Write: Kew at dawn, not started");
+    }else if(!(d.free&&filled(d.free.lines))) todo.push("Write your own sonnet, not started");
+  }
+  return { done:!todo.length, todo };
+}
+function unfinished(){ return MODULES.filter(m=>!moduleState(m).done); }
+function gateList(){ return unfinished().filter(m=>!S.claims[m.id]); }
+
+/* ====================== RHYME CHECKER ====================================
+   Three answers: yes, no, or not sure. "No" is given only when the checker
+   can show the endings sound different, so a pair it cannot hear is never
+   wrongly marked as not rhyming.
+   1. Both words in FAMILIES or IRREGULAR: same family yes, different
+      families no.
+   2. Same spelling of the rhyming part: yes, unless that ending is in
+      AMBIGUOUS (cow, snow), then not sure.
+   3. A word not listed whose rhyming part is spelt like exactly one
+      family's FAMILIES words is treated as that family.
+   4. Otherwise compare the final sound: a vowel against a consonant, or two
+      different consonants, is a no (cat, blue). So are two different short
+      vowels before the same consonant (cat, cut), and the same short vowel
+      before the same consonant is a yes (rich, pitch).
+   5. Anything else: not sure.
+   Australian English is non-rhotic, so a final r is a vowel sound (door
+   rhymes with saw). */
+function norm(w){ return String(w||"").toLowerCase().replace(/[^a-z]/g,""); }
+const FAM = {};
+Object.keys(FAMILIES).forEach(k=>FAMILIES[k].words.forEach(w=>{ FAM[norm(w)]=k; }));
+Object.keys(IRREGULAR).forEach(w=>{ FAM[norm(w)]=IRREGULAR[w]; });
+const WEAK = ["ing","er","ers","y","ey","ies","ie","ed","es","en","ent","ion","ions","ous","ure","al","el","e","ly","ful","ul","on","an","ow"];
+const ODDV = ["pretty","any","many","says","said","friend","busy","women","been","was","what","want","wash","watch","son","won","ton",
+              "done","none","one","front","month","money","honey","love","come","some","does","put","push","pull","bull","full","sugar"];
+function isV(w,i){ const c=w[i]; if(c==="u" && w[i-1]==="q") return false; return "aeiou".indexOf(c)>=0 || (c==="y" && i>0); }
+function parts(w){
+  const g=[]; let i=0;
+  while(i<w.length){ if(isV(w,i)){ const s=i; while(i<w.length && isV(w,i)) i++; g.push([s,i]); } else i++; }
+  const L=w.length, cons=i=>i>=0 && i<L && !isV(w,i) && w[i]!=="y";
+  let magic=false;
+  /* A final e after a consonant is silent (cake, home), except in -le and -re
+     after another consonant (table, centre), where it is its own syllable. */
+  if(g.length>1 && g[g.length-1][0]===L-1 && w[L-1]==="e" && cons(L-2) &&
+     !((w[L-2]==="l"||w[L-2]==="r") && cons(L-3))){ g.pop(); magic=true; }
+  if(!g.length) return { rime:w, tail:w, coda:w, magic, multi:false, stress:"", after:"" };
+  const last=g[g.length-1], tail=w.slice(last[0]);
+  let from=last;
+  if(g.length>1 && WEAK.indexOf(tail)>=0) from=g[g.length-2];
+  const coda=w.slice(last[1], magic?L-1:L);
+  return { rime:w.slice(from[0]), tail, coda, magic, multi:g.length>1, stress:w.slice(from[0],from[1]),
+           after:w.slice(from[1], from===last?(magic?L-1:L):g[g.length-1][0]), before:w.slice(0,from[0]),
+           le:tail==="e" && w[L-2]==="l" };
+}
+/* The consonant sound a word ends on: "V" for a vowel sound, a short code
+   for a consonant, or null when the spelling cannot say (laugh, walk, -ed). */
+function endSound(w, p){
+  if(p.multi && p.tail==="ed") return null;
+  if(p.le) return "l";
+  let x=p.coda;
+  if(x==="") return "V";
+  x=x.replace(/^r+/,"");
+  if(x===""||x==="w") return "V";
+  if(/gh|l[kfm]|w/.test(x)) return null;
+  x=x.replace(/ck/g,"k").replace(/mb$|mn$/,"m").replace(/gn$/,"n").replace(/bt$/,"t").replace(/(.)\1/g,"$1");
+  if(p.magic){ x=x.replace(/dg$/,"j").replace(/g$/,"j").replace(/c$/,"s"); }
+  x=x.replace(/tch$/,"ch").replace(/ck$/,"k").replace(/c$/,"k").replace(/ph$/,"f").replace(/x$/,"ks").replace(/z$/,"s");
+  return /^(ch|sh|th|ng|nk|[bdfgjklmnpstv])+$/.test(x) ? x : null;
+}
+function ambiguous(r){ return AMBIGUOUS.indexOf(r)>=0; }
+const RIME = {};
+Object.keys(FAMILIES).forEach(k=>FAMILIES[k].words.forEach(w0=>{ const w=norm(w0); if(ODDV.indexOf(w)>=0) return;
+  const r=parts(w).rime; (RIME[r]=RIME[r]||{})[k]=1; }));
+function familyOf(w){
+  if(FAM[w]) return FAM[w];
+  if(ODDV.indexOf(w)>=0) return null;
+  const r=parts(w).rime; if(ambiguous(r) || !RIME[r]) return null;
+  const k=Object.keys(RIME[r]); return k.length===1?k[0]:null;
+}
+function heard(w){ if(IRREGULAR[w]===undefined) return w; const f=FAMILIES[IRREGULAR[w]].words; return f.length?norm(f[0]):w; }
+function sayEnd(c){ return c==="V"?"a vowel sound":`the sound “${c}”`; }
+function shortV(w,p){
+  if(p.magic || p.stress.length!==1 || "aeiou".indexOf(p.stress)<0) return false;
+  if(!p.after || /^[rwy]/.test(p.after)) return false;
+  if(p.multi && p.after.length<2) return false;
+  if(/(w|qu)$/.test(p.before)) return false;
+  if(p.stress==="a" && /^l/.test(p.after)) return false;
+  return ODDV.indexOf(w)<0;
+}
+/* The same pair always gets the same answer, so answers are kept. */
+const RHYMED = new Map();
+function rhyme(a0, b0){ const k=a0+"|"+b0; if(!RHYMED.has(k)) RHYMED.set(k, rhyme1(a0,b0)); return RHYMED.get(k); }
+function rhyme1(a0, b0){
+  const a=norm(a0), b=norm(b0);
+  if(!a||!b) return null;
+  const A=String(a0).replace(/[^A-Za-z’']/g,""), B=String(b0).replace(/[^A-Za-z’']/g,"");
+  if(a===b) return { r:"same", why:`“${A}” is the same word twice. A rhyme needs a different word.` };
+  const fa=familyOf(a), fb=familyOf(b);
+  const yes={ r:"yes", why:`“${A}” and “${B}” rhyme.` };
+  const unsure={ r:"unsure", why:`The checker can’t tell whether “${A}” and “${B}” rhyme. Say them aloud.` };
+  if(FAM[a] && FAM[b]) return FAM[a]===FAM[b] ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${FAM[a]}, ${FAM[b]}).` };
+  /* An IRREGULAR word is heard through a regular word of its family (high
+     through sky), since its own spelling says nothing about its sound. */
+  const pa=parts(heard(a)), pb=parts(heard(b));
+  if(pa.rime===pb.rime) return (ambiguous(pa.rime) || ODDV.indexOf(a)>=0 || ODDV.indexOf(b)>=0) ? unsure : yes;
+  if(fa && fb) return fa===fb ? yes : { r:"no", why:`“${A}” and “${B}” end with different sounds (${fa}, ${fb}).` };
+  const ca=endSound(heard(a),pa), cb=endSound(heard(b),pb);
+  if(ca && cb && ca!==cb) return { r:"no", why:`“${A}” ends with ${sayEnd(ca)} and “${B}” ends with ${sayEnd(cb)}.` };
+  if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress===pb.stress) return yes;
+  if(ca && ca===cb && ca!=="V" && shortV(a,pa) && shortV(b,pb) && pa.stress!==pb.stress &&
+     !(/[ou]/.test(pa.stress) && /[ou]/.test(pb.stress)))
+    return { r:"no", why:`“${A}” and “${B}” have different vowel sounds (${pa.stress}, ${pb.stress}).` };
+  return unsure;
+}
+function ipaOf(w){ const f=familyOf(norm(w)); return f?FAMILIES[f].ipa:""; }
+
+/* ====================== SYLLABLE ESTIMATE ================================
+   A spelling rule of thumb, so the screen says "about". SYLLABLES overrides
+   it word by word, and the student can correct any line with - and +. */
+function sylCore(w){
+  if(!w) return 0;
+  if(SYLLABLES[w]!=null) return SYLLABLES[w];
+  if(/n't$/.test(w)){
+    if(["don't","won't","can't","ain't","aren't","weren't","shan't"].indexOf(w)>=0) return 1;
+    return sylCore(w.slice(0,-3))+1;
+  }
+  w=w.replace(/'/g,"");
+  if(SYLLABLES[w]!=null) return SYLLABLES[w];
+  if(w.length>4 && /ing$/.test(w)) return sylCore(w.slice(0,-3))+1;
+  if(w.length<=3) return /[aeiouy]/.test(w)?1:0;
+  let x=w;
+  const keep=v=>/[aeiouy]/.test(v);
+  if(/[^td]ed$/.test(x) && keep(x.slice(0,-2))) x=x.slice(0,-2);
+  else if(/es$/.test(x) && !/([sxzcg]|ch|sh)es$/.test(x) && keep(x.slice(0,-2))) x=x.slice(0,-2);
+  else if((/[^laeiouy]e$/.test(x) || /[aeiouy]le$/.test(x)) && keep(x.slice(0,-1))) x=x.slice(0,-1);
+  x=x.replace(/^y/,"");
+  const m=x.match(/[aeiouy]{1,2}/g);
+  return m?m.length:0;
+}
+function sylWord(t){
+  const w=String(t).toLowerCase().replace(/’/g,"'").replace(/[^a-z']/g,"").replace(/^'+|'+$/g,"");
+  if(!w) return /[0-9]/.test(t)?1:0;
+  return Math.max(1, sylCore(w));
+}
+function sylLine(s){ return String(s).split(/[\s\-–]+/).reduce((n,t)=>n+sylWord(t),0); }
+function lastWord(s){ const t=String(s).trim().split(/\s+/).filter(x=>/[A-Za-z]/.test(x)); return t.length?t[t.length-1].replace(/^[^A-Za-z]+|[^A-Za-z]+$/g,""):""; }
+
+/* ====================== ITEM RECORDS ===================================== */
+function blankRec(){ return { d:{}, stage:"find", fm:0, xm:0, ok:null, done:false, rev:false, found:false, fb:null, log:[], tries:0 }; }
+function rec(id){ return Object.assign(blankRec(), S.items[id]||{}); }
+function recIn(s,id){ if(!s.items[id]) s.items[id]=blankRec(); return Object.assign(s.items[id], Object.assign(blankRec(), s.items[id])); }
+function setD(id, k, v){ bump(s=>{ recIn(s,id).d[k]=v; }); }
+function slideUrl(k){ const x=SLIDES[k]; return `${x.deck}#${x.n}`; }
+function slideName(k){ const x=SLIDES[k]; return `${x.name}, slide ${x.n}: ${x.h}`; }
+function lineWords(line){ return String(line).split(/\s+/).filter(Boolean); }
+function bare(w){ return String(w).replace(/^[^A-Za-z]+|[^A-Za-z’']+$/g,""); }
+function normPat(t){ return String(t||"").toUpperCase().replace(/[^A-Z]/g,""); }
+function shapeOf(p){ const m={}; let k=0; return p.split("").map(c=>m[c]!==undefined?m[c]:(m[c]=k++)).join(","); }
+function list(a){ return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" and "+a[a.length-1]; }
+function plural(n,w){ return `${n} ${w}${n===1?"":"s"}`; }
+
+/* ====================== JUDGES ===========================================
+   Each returns { ok, unsure, msgs (rule and trigger, never the answer), log
+   (what the student gave, for the report), empty (nothing to check yet) }. */
+function judge(it, r){
+  const d=r.d;
+  if(it.type==="form"){
+    const n=String(d.lines||"").trim(), p=normPat(d.pat);
+    if(!n||!p) return { empty:true, msgs:["Fill in both boxes."] };
+    const msgs=[]; let ok=true;
+    if(+n!==it.lines){ ok=false; msgs.push(`<b>Not ${esc(n)} lines.</b> ${esc(it.hintLines)}`); }
+    if(it.pattern.indexOf(p)<0){ ok=false;
+      if(p[0]!=="A") msgs.push(`<b>The pattern starts with ${esc(p[0])}.</b> The first line is always A.`);
+      else if(p.length!==it.pattern[0].length && +n===it.lines) msgs.push(`<b>Your pattern has ${p.length} letters.</b> One letter per line, so it needs one for each of the ${it.lines} lines.`);
+      else if(p.length!==it.pattern[0].length) msgs.push(`<b>Your pattern has ${p.length} letters.</b> One letter per line: the pattern needs as many letters as the form has lines.`);
+      else if(it.pattern.some(k=>shapeOf(k)===shapeOf(p))) msgs.push(`<b>The pairs are right, the letters are not.</b> A new end sound takes the next letter: A, then B, then C.`);
+      else msgs.push(`<b>Not ${esc(p)}.</b> ${esc(it.hintPat)}`);
+    }
+    return { ok, msgs, log:`${n} lines, ${p}` };
+  }
+  if(it.type==="count"){
+    const v=String(d.n||"").trim(); if(!v) return { empty:true, msgs:["Type a number."] };
+    const n=+v; if(!(n>0)) return { empty:true, msgs:["Type a number."] };
+    if(n===it.n) return { ok:true, log:v };
+    return { ok:false, msgs:[`<b>Not ${n}.</b> ${esc(n>it.n?it.high:it.low)}`], log:`said ${n}` };
+  }
+  if(it.type==="cut"){
+    const vals=it.words.map((w,i)=>String((d.cut||{})[i]||"").trim());
+    if(vals.some(v=>!v)) return { empty:true, msgs:["Cut both words."] };
+    const msgs=[]; let ok=true;
+    it.words.forEach((w,i)=>{
+      const parts=vals[i].toLowerCase().split(/[\/\-|·\s]+/).filter(Boolean);
+      if(parts.join("")!==w.w){ ok=false; msgs.push(`<b>${esc(w.w)}:</b> keep every letter and put a / between the syllables, like gar/den.`); return; }
+      const noV=parts.find(x=>!/[aeiouy]/.test(x));
+      if(noV){ ok=false; msgs.push(`<b>${esc(w.w)}:</b> “${esc(noV)}” has no vowel sound. Each syllable has one vowel sound.`); return; }
+      if(parts.length!==w.n){ ok=false; msgs.push(`<b>${esc(w.w)}:</b> you cut it into ${plural(parts.length,"part")}. Say it slowly and clap: one part for each clap.`); }
+    });
+    return { ok, msgs, log:vals.join(", ") };
+  }
+  if(it.type==="beats"){
+    const sel=(d.sel||[]).slice().sort((a,b)=>a-b), W=lineWords(it.line);
+    if(!sel.length) return { empty:true, msgs:["Tap the words that carry a beat."] };
+    const extra=sel.filter(i=>it.strong.indexOf(i)<0), miss=it.strong.filter(i=>sel.indexOf(i)<0);
+    if(!extra.length && !miss.length) return { ok:true, log:sel.map(i=>bare(W[i])).join(" ") };
+    const msgs=[];
+    if(extra.length) msgs.push(`<b>${list(extra.map(i=>"“"+esc(bare(W[i]))+"”"))} ${extra.length>1?"are":"is"} said quickly in this line, so ${extra.length>1?"they are":"it is"} weak.</b> A beat falls on a strong syllable.`);
+    if(miss.length) msgs.push(`<b>${plural(miss.length,"beat")} not tapped yet.</b> Say the line aloud with a steady da-DUM and tap the desk on each strong syllable.`);
+    return { ok:false, msgs, log:"marked "+sel.map(i=>bare(W[i])).join(" ") };
+  }
+  if(it.type==="letters"){
+    const L=it.lines.map((x,i)=>normPat((d.L||{})[i]).slice(0,1));
+    if(L.some(x=>!x)) return { empty:true, msgs:["Give every line a letter."] };
+    const got=L.join(""); if(got===it.key) return { ok:true, log:got };
+    const ends=it.lines.map(x=>lastWord(x)), msgs=[];
+    if(shapeOf(got)===shapeOf(it.key)) msgs.push(`<b>The pairs are right, the letters are not.</b> The first line is A, and each new end sound takes the next letter.`);
+    else{
+      for(let i=0;i<L.length && msgs.length<2;i++) for(let j=i+1;j<L.length && msgs.length<2;j++){
+        const same=it.key[i]===it.key[j], said=L[i]===L[j];
+        if(same && !said) msgs.push(`<b>Lines ${i+1} and ${j+1}:</b> “${esc(ends[i])}” and “${esc(ends[j])}” rhyme. Same end sound, same letter.`);
+        else if(!same && said) msgs.push(`<b>Lines ${i+1} and ${j+1}:</b> “${esc(ends[i])}” and “${esc(ends[j])}” do not rhyme. A different end sound takes a different letter.`);
+      }
+      if(!msgs.length && L[0]!=="A") msgs.push(`<b>Line 1 is ${esc(L[0])}.</b> The first line is always A.`);
+    }
+    return { ok:false, msgs, log:got };
+  }
+  if(it.type==="pairs"){
+    const yn=d.yn||{};
+    if(it.pairs.some((p,i)=>yn[i]===undefined)) return { empty:true, msgs:["Choose for every pair."] };
+    const wrong=it.pairs.map((p,i)=>i).filter(i=>(yn[i]===true)!==it.pairs[i].yes);
+    if(!wrong.length) return { ok:true, log:"all right" };
+    return { ok:false, wrong, msgs:[`<b>${plural(wrong.length,"pair")} to look at again.</b> Rhyme is the same sound from the last strong vowel to the end.`].concat(wrong.map(i=>esc(it.pairs[i].hint))),
+             log:wrong.map(i=>`${it.pairs[i].a}/${it.pairs[i].b} called ${yn[i]?"rhyme":"no rhyme"}`).join(", ") };
+  }
+  if(it.type==="fix"){
+    if(r.stage==="find"){
+      if(d.line===undefined||d.line===null) return { empty:true, msgs:["Tap a line first."] };
+      if(d.line===it.bad) return { ok:true, log:"" };
+      return { ok:false, msgs:[`<b>Line ${d.line+1} follows the pattern.</b> ${esc(it.find)}`], log:`find: tapped line ${d.line+1}` };
+    }
+    const t=String(d.text!=null?d.text:it.units[it.bad]).trim();
+    const W=String(t).toLowerCase().match(/[a-z']+/g)||[];
+    if(W.length<3) return { ok:false, msgs:["<b>That is too short to be a line.</b>"], log:`fix: "${t}"` };
+    const last=lastWord(t), old=lastWord(it.units[it.bad]), n=sylLine(t);
+    if(!it.keepEnd && norm(last)===norm(old)) return { ok:false, msgs:[`<b>The line still ends with “${esc(old)}”.</b> ${esc(it.why)} Change the end word.`], log:`fix: "${t}"` };
+    let unsure=false;
+    for(const k of it.rw){
+      const end=lastWord(it.units[k]), x=rhyme(last,end);
+      if(!x) return { ok:false, msgs:["<b>The line needs an end word.</b>"], log:`fix: "${t}"` };
+      if(x.r==="same") return { ok:false, msgs:[`<b>“${esc(last)}” is the end word of line ${k+1}.</b> A rhyme needs a different word.`], log:`fix: "${t}"` };
+      if(x.r==="no") return { ok:false, msgs:[`<b>${esc(x.why)}</b> Line ${k+1} ends with “${esc(end)}”, and the new line has to rhyme with it.`], log:`fix: "${t}"` };
+      if(x.r==="unsure") unsure=true;
+    }
+    if(n<it.len[0]||n>it.len[1]) return { ok:false, msgs:[`<b>About ${n} syllables.</b> ${it.len[1]>=11&&it.len[0]>=9?"A sonnet line has about 10.":"Lines 1, 2 and 5 of a limerick are the long lines, about 8 or 9."} Clap it and ${n>it.len[1]?"cut some words":"add a word or two"}.`], log:`fix: "${t}" (about ${n})` };
+    if(unsure) return { ok:true, unsure:true, word:last, msgs:[`<b>Not sure.</b> The checker cannot tell whether “${esc(last)}” rhymes with ${list(it.rw.map(k=>"“"+esc(lastWord(it.units[k]))+"”"))}. Say it aloud, and ask your teacher.`], log:t };
+    return { ok:true, msgs:[`“${esc(last)}” rhymes with ${list(it.rw.map(k=>"“"+esc(lastWord(it.units[k]))+"”"))}, and the line has about ${n} syllables.`], log:t };
+  }
+  if(it.type==="turn"){
+    const w=String(d.word||"").trim().toLowerCase().replace(/[^a-z ]/g,"").replace(/\s+/g," ");
+    if(d.line===undefined||d.line===null||!w) return { empty:true, msgs:["Tap a line and type the word."] };
+    const msgs=[]; let ok=true;
+    if(d.line!==it.turn){ ok=false;
+      msgs.push(d.line<it.turn ? `<b>Line ${it.start+d.line} still adds to the problem.</b> The turn is where the poem changes direction and starts to answer it.`
+                               : `<b>By line ${it.start+d.line} the poem has already changed direction.</b> Look for the line where the answer starts.`); }
+    if(it.words.indexOf(w)<0){ ok=false; msgs.push(`<b>Not “${esc(w)}”.</b> The turn word is a small word at the start of the turn line that points the other way.`); }
+    return { ok, msgs, log:`line ${it.start+d.line}, “${w}”` };
+  }
+  return { ok:false, msgs:["Unknown item."] };
+}
+
+/* ====================== CHECK ============================================ */
+function cardOpen(id){ return S.card && S.card.item===id; }
+function check(){
+  const it=ITEMS[S.cur], r0=rec(it.id); if(r0.done||cardOpen(it.id)) return;
+  readInputs(it);
+  const r=rec(it.id), j=judge(it, r);
+  if(j.empty){ bump(s=>{ recIn(s,it.id).fb={ cls:"warn", html:j.msgs.join("<br>") }; }); render(); return; }
+  bump(s=>{
+    const x=recIn(s,it.id); x.tries++;
+    const findStage=it.type==="fix"&&x.stage==="find";
+    if(j.ok){
+      if(findStage){ x.stage="fix"; x.found=true;
+        x.fb={ cls:"ok", html:`<span class="rule">Line ${it.bad+1}: ${esc(it.name)}.</span>${esc(it.why)}` }; }
+      else{ x.done=true; if(x.ok===null) x.ok=true;
+        if(j.unsure){ x.fb={ cls:"warn", html:j.msgs.join(" ") }; s.unsure.push(`${it.short}: ${j.word}`); }
+        else x.fb={ cls:"ok", html:`<span class="rule">${x.ok?"Right first time.":"Right."}</span>${j.msgs&&j.msgs.length?j.msgs.join(" "):esc(it.answer)}` }; }
+      if(S.card && S.card.item===it.id) s.card=null;
+      return;
+    }
+    const k=(it.type==="fix"&&!findStage)?"xm":"fm"; x[k]++; x.ok=false;
+    if(x[k]===1) x.log.push(j.log);
+    s.skillMiss[it.skill]=(s.skillMiss[it.skill]||0)+1;
+    const sm=s.skillMiss[it.skill], sent=s.slides.some(z=>z.skill===it.skill);
+    let html=`<span class="rule">Not yet.</span>`+(j.msgs.length>1?`<ul>${j.msgs.map(m=>`<li>${m}</li>`).join("")}</ul>`:j.msgs.join(""));
+    if(x[k]>=2){
+      if(findStage){ x.stage="fix"; x.found=false; x.rev=true;
+        html+=`<p style="margin:6px 0 0"><b>Missed. It is line ${it.bad+1}: ${esc(it.name)}.</b> ${esc(it.why)} Now fix it.</p>`; }
+      else{ x.done=true; x.rev=true; html+=`<p style="margin:6px 0 0"><b>Missed. The answer:</b> ${esc(it.answer)}</p>`; }
+    }
+    if(sent && sm>2) html+=`<p style="margin:6px 0 0"><a href="${slideUrl(it.slide)}" target="_blank" rel="noopener" data-out>The slide: ${esc(slideName(it.slide))}</a></p>`;
+    x.fb={ cls:"bad", html };
+    if(sm>=2 && !sent){
+      s.slides.push({ skill:it.skill, slide:it.slide, item:it.id });
+      s.card={ type:"slide", item:it.id, skill:it.skill, slide:it.slide };
+    }else if(x[k]===1 && it.reteach){
+      const kind=it.reteach, P=RETEACH[kind].practice, p=(s.pi[kind]||0)%P.length; s.pi[kind]=(s.pi[kind]||0)+1;
+      s.reteach.push({ kind, item:it.id, res:"skipped" });
+      s.card={ type:"reteach", kind, item:it.id, p, pick:null, res:null, ri:s.reteach.length-1 };
+    }
+  });
+  render();
+}
+/* Typed answers are saved as they are typed; this catches a value the browser
+   filled without an input event. */
+function readInputs(it){
+  const d=rec(it.id).d, up={};
+  if(it.type==="form"){ if($("f-lines")) up.lines=$("f-lines").value; if($("f-pat")) up.pat=$("f-pat").value; }
+  if(it.type==="count"&&$("f-n")) up.n=$("f-n").value;
+  if(it.type==="cut"){ const c=Object.assign({}, d.cut||{}); it.words.forEach((w,i)=>{ if($("f-c"+i)) c[i]=$("f-c"+i).value; }); up.cut=c; }
+  if(it.type==="letters"){ const c=Object.assign({}, d.L||{}); it.lines.forEach((w,i)=>{ if($("f-l"+i)) c[i]=$("f-l"+i).value; }); up.L=c; }
+  if(it.type==="fix"&&$("f-t")) up.text=$("f-t").value;
+  if(it.type==="turn"&&$("f-w")) up.word=$("f-w").value;
+  if(Object.keys(up).length) bump(s=>{ Object.assign(recIn(s,it.id).d, up); });
+}
+function tapToggle(i){ const it=ITEMS[S.cur]; if(rec(it.id).done) return;
+  bump(s=>{ const d=recIn(s,it.id).d, a=(d.sel||[]).slice(), k=a.indexOf(i); if(k>=0) a.splice(k,1); else a.push(i); d.sel=a; });
+  render(); const b=document.querySelector(`[data-t="${i}"]`); if(b) b.focus(); }
+function tapLine(i){ const it=ITEMS[S.cur], r=rec(it.id); if(r.done||(it.type==="fix"&&r.stage!=="find")) return;
+  readInputs(it); bump(s=>{ recIn(s,it.id).d.line=i; }); render(); const b=document.querySelector(`[data-u="${i}"]`); if(b) b.focus(); }
+function tapYN(i,v){ const it=ITEMS[S.cur]; if(rec(it.id).done) return;
+  bump(s=>{ const d=recIn(s,it.id).d; d.yn=Object.assign({}, d.yn||{}); d.yn[i]=v; }); render();
+  const b=document.querySelector(`[data-y="${i}-${v?1:0}"]`); if(b) b.focus(); }
+function nextItem(){
+  const n=ITEMS.length; let k=-1;
+  for(let a=1;a<=n;a++){ const i=(S.cur+a)%n; if(!rec(ITEMS[i].id).done){ k=i; break; } }
+  if(k<0){ bump(s=>{ s.card=null; }); go("done"); return; }
+  goItem(k);
+}
+function goItem(i){ bump(s=>{ s.cur=i; if(s.card && s.card.item!==ITEMS[i].id) s.card=null; }); view={ screen:"check" }; render(); }
+
+/* ====================== CARDS ============================================ */
+function closeCard(){ const id=S.card&&S.card.item; bump(s=>{ s.card=null; }); render();
+  const f=document.querySelector("#itembox input, #itembox textarea, #itembox button.tok, #itembox button.unit:not(:disabled)"); if(f&&id) f.focus(); }
+function practiceCheck(v){
+  const c=S.card; if(!c||c.type!=="reteach"||c.res) return;
+  const P=RETEACH[c.kind].practice[c.p]; let ok;
+  if(c.kind==="syl"){ const t=$("p-n"); const n=t?+String(t.value).trim():NaN; if(!(n>0)) return; ok=n===P.n; v=n; }
+  else ok=(v===P.yes);
+  bump(s=>{ s.card.res=ok?"right":"missed"; s.card.pick=v; if(s.reteach[s.card.ri]) s.reteach[s.card.ri].res=ok?"practice right":"practice missed"; });
+  render(); const b=$("backq"); if(b) b.focus();
+}
+function exampleHtml(t){ return esc(t).replace(/\[([^\]]+)\]/g,'<span class="rs">$1</span>'); }
+function renderCard(){
+  const c=S.card, it=ITEM[c.item];
+  if(c.type==="slide"){
+    const m=MOD[it.module];
+    return `<div class="card"><h2>Two misses on ${esc(SKILLS[c.skill].name.toLowerCase())}</h2>
+      <div class="btnrow" style="margin-top:4px"><a class="btn btn-primary" id="slidego" href="${slideUrl(c.slide)}" target="_blank" rel="noopener" data-out>Go back to the slide</a></div>
+      <p class="dim">${esc(slideName(c.slide))}</p>
+      <div class="btnrow"><a class="btn" href="${esc(m.href)}" target="_blank" rel="noopener" data-out>Open ${esc(m.name)}</a>
+        <button class="btn btn-ghost" id="backq" onclick="closeCard()">Carry on</button></div></div>`;
+  }
+  const R=RETEACH[c.kind], P=R.practice[c.p];
+  let ex=R.ex.map(e=>`<li><span class="w">${exampleHtml(e[0])}</span> &nbsp;<b>${esc(e[1])}</b>. ${esc(e[2])}</li>`).join("");
+  if(c.kind==="rhyme" && it.skill==="letters") ex+=`<li>${esc(R.letters)}</li>`;
+  let prac;
+  if(c.kind==="syl"){
+    prac=`<p class="prompt" id="ph">How many syllables in <span style="font-family:Georgia,serif">${esc(P.w)}</span>?</p>
+      <div class="row"><input class="num" id="p-n" inputmode="numeric" maxlength="2" autocomplete="off" aria-labelledby="ph" ${c.res?"disabled":""} value="${c.pick!=null?esc(c.pick):""}"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();practiceCheck();}">
+      ${c.res?"":`<button class="btn btn-primary" onclick="practiceCheck()">Check</button>`}</div>`;
+    if(c.res) prac+=`<div class="fb ${c.res==="right"?"ok":"bad"} on"><span class="rule">${c.res==="right"?"Right.":"Not "+esc(c.pick)+"."}</span>${esc(P.w)}: ${esc(P.show)}, ${P.n} syllables.</div>`;
+  }else{
+    prac=`<p class="prompt">Do <span style="font-family:Georgia,serif">${esc(P.a)}</span> and <span style="font-family:Georgia,serif">${esc(P.b)}</span> rhyme?</p>
+      <div class="row"><button class="yn" ${c.res?"disabled":""} aria-pressed="${c.pick===true}" onclick="practiceCheck(true)">Rhyme</button>
+        <button class="yn" ${c.res?"disabled":""} aria-pressed="${c.pick===false}" onclick="practiceCheck(false)">No rhyme</button></div>`;
+    if(c.res) prac+=`<div class="fb ${c.res==="right"?"ok":"bad"} on"><span class="rule">${c.res==="right"?"Right.":"Not quite."}</span>${esc(P.a)} and ${esc(P.b)}: ${P.yes?"rhyme":"no rhyme"}. ${esc(P.why)}</div>`;
+  }
+  return `<div class="card"><h2>${esc(R.title)}</h2><p class="rl">${esc(R.rule)}</p><ul class="ex">${ex}</ul>
+    <div class="practice">${prac}</div>
+    <div class="btnrow"><button class="btn ${c.res?"btn-primary":"btn-ghost"}" id="backq" onclick="closeCard()">Back to the question</button></div></div>`;
+}
+
+/* ====================== SCREENS =========================================== */
+let view={ screen:"check" };
+function go(screen){
+  if(!idOk() && screen!=="id") screen="id";
+  if(view.screen==="check" && screen!=="check") fsLeave();
+  view={ screen }; window.scrollTo(0,0); render();
+}
+function render(){ ({ id:renderId, gate:renderGate, check:renderCheck, done:renderDone, report:renderReport })[view.screen](); guardShow(); gStat(); }
+
+/* ====================== FULL-SCREEN LOCK =================================
+   Copied from the Year 7 history module (history/daily-life/module.js, the
+   full-screen lock with no password). It runs only on the questions. A browser
+   cannot stop a student leaving, so the page covers the questions until they
+   come back, and counts each time in the report:
+   - leaving full screen (fullscreenchange). F11 browser full screen is not the
+     Fullscreen API, so it counts as not full screen and the lock asks for the
+     real thing;
+   - the tab hidden (visibilitychange);
+   - the window losing focus. Alt+Tab leaves the page visible and in full
+     screen, so watch focus as well: on blur, check document.hasFocus() 200 ms
+     later, and check each second while visible, since once focus is inside a
+     frame the page gets no second blur. The student's own clicks start a short
+     grace period, so a click into the page does not count.
+   - Back to full screen works when the page is still in full screen after
+     Alt+Tab: the request resolves or fails, and the lock closes either way.
+   Opening a slide, module or worksheet from a card is the page sending the
+   student away, so it is counted on its own line, not as leaving.
+   Copy and paste are counted, never blocked. If the Fullscreen API is not
+   there, the report says so and nothing waits on it. */
+const FS = !!(document.documentElement.requestFullscreen && document.fullscreenEnabled !== false);
+let graceUntil = 0, outUntil = 0, leaving = false, lockWhy = "";
+function guardOn(){ return view.screen==="check" && idOk(); }
+function inFull(){ return !!document.fullscreenElement; }
+function fsLeave(){ if(!inFull()) return; leaving=true;
+  Promise.resolve(document.exitFullscreen()).catch(()=>{}).then(()=>{ setTimeout(()=>{ leaving=false; }, 100); }); }
+function guardShow(){
+  const L=$("lock"); if(!L) return;
+  if(!guardOn()){ L.hidden=true; lockWhy=""; $("body").inert=false; return; }
+  if(!lockWhy && FS && !inFull() && S.guard.fsMode!=="unavailable") lockWhy="start";
+  L.hidden=!lockWhy; $("body").inert=!!lockWhy;
+  if(lockWhy){ $("lockH").textContent = lockWhy==="start" ? "Poetry catch-up" : lockWhy==="hidden" ? "You left the page" : lockWhy==="away" ? "You switched away" : "You left full screen";
+    $("lockP").hidden = lockWhy==="start"; $("lockBack").textContent = lockWhy==="start" ? "Start in full screen" : "Back to full screen"; }
+}
+function showLock(what){
+  if(!guardOn() || lockWhy) return;
+  if(outUntil > Date.now()) bump(s=>{ s.guard.out++; });
+  else if(Date.now() > graceUntil) bump(s=>{ s.guard[what]++; });
+  lockWhy=what; guardShow(); gStat(); $("lockBack").focus();
+}
+/* A link the page itself offers (slide, module, worksheet) opens a new tab. */
+document.addEventListener("click", e=>{ const a=e.target.closest&&e.target.closest("a[data-out]"); if(a){ graceUntil=outUntil=Date.now()+3000; } }, true);
+document.addEventListener("pointerdown", ()=>{ graceUntil=Math.max(graceUntil, Date.now()+300); }, true);
+function lockBack(){
+  graceUntil=Date.now()+1500; outUntil=0;
+  const done=()=>{ lockWhy=""; guardShow(); const f=document.querySelector("#itembox input:not(:disabled), #itembox button:not(:disabled)"); if(f) f.focus(); };
+  if(!FS){ if(S.guard.fsMode!=="unavailable") bump(s=>{ s.guard.fsMode="unavailable"; }); done(); return; }
+  document.documentElement.requestFullscreen().then(()=>{ if(S.guard.fsMode!=="on") bump(s=>{ s.guard.fsMode="on"; }); done(); },
+    ()=>{ if(!inFull()) bump(s=>{ s.guard.fsFailed++; s.guard.fsMode="unavailable"; }); done(); });
+}
+document.addEventListener("fullscreenchange", ()=>{ if(FS && !inFull() && !leaving) showLock("exits"); });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") showLock("hidden"); });
+window.addEventListener("blur", ()=>setTimeout(()=>{ if(!document.hasFocus() && Date.now()>graceUntil) showLock("away"); }, 200));
+setInterval(()=>{ if(document.visibilityState==="visible" && !document.hasFocus() && Date.now()>graceUntil) showLock("away"); }, 1000);
+/* Copy and paste are counted and said out loud next to the box, never blocked.
+   What was pasted (first 80 characters) and where goes in the report. */
+document.addEventListener("copy", e=>{ if(!guardOn()) return; bump(s=>{ s.guard.copies++; }); cpNotice(e.target); });
+document.addEventListener("paste", e=>{ if(!guardOn()) return;
+  let txt=""; try{ txt=(e.clipboardData||window.clipboardData).getData("text")||""; }catch(x){}
+  const it=ITEMS[S.cur], where=it?it.short:"";
+  bump(s=>{ s.guard.pastes++; s.guard.pasted.push(`${where}: "${txt.replace(/\s+/g," ").trim().slice(0,80)}"`); });
+  cpNotice(e.target); });
+function cpNotice(target){
+  gStat();
+  const box=$("itembox"); if(!box) return;
+  let n=$("cpnote"); if(n) n.remove();
+  n=document.createElement("div"); n.id="cpnote"; n.className="fb warn on"; n.setAttribute("role","alert");
+  n.innerHTML='<span class="rule">Copy paste detected</span>It’s in your report.';
+  const el=target&&target.nodeType===1?target:(target&&target.parentElement);
+  const host=el&&box.contains(el)?(el.closest(".row,.cutrow,.lrow,.btnrow,textarea")||el):null;
+  if(host&&host.parentNode) host.parentNode.insertBefore(n, host.nextSibling); else box.insertBefore(n, box.children[2]||null);
+}
+function gStat(){ const g=$("gstat"); if(!g) return; const G=S.guard;
+  g.textContent=`Pasted ${G.pastes} · Copied ${G.copies} · Left the page ${G.exits+G.hidden+G.away}`; }
+function crumbs(){
+  return `<a class="menulink" href="index.html">&#8962; Year 7 English</a><span aria-hidden="true" style="color:#8a8378">&rsaquo;</span><a class="menulink" href="WritingFolio.html">Writing Folio</a>`;
+}
+function topbar(){ return `<div class="topbar">${idOk()&&view.screen!=="report"?`<button class="menulink" onclick="go('report')">Report for your teacher</button>`:""}<span class="sp">${crumbs()}</span></div>`; }
+
+function renderId(){
+  $("body").innerHTML=topbar()+`<h1>Poetry catch-up</h1>
+  <div class="fields">
+    <span><label for="idf">First name</label><input id="idf" autocomplete="off" value="${esc(S.fname)}"><div class="err" id="ef"></div></span>
+    <span><label for="idl">Last name</label><input id="idl" autocomplete="off" value="${esc(S.lname)}"><div class="err" id="el"></div></span>
+    <span><label for="ids">Student code</label><input id="ids" maxlength="8" autocomplete="off" value="${esc(S.sid)}"><div class="err" id="es"></div></span>
+  </div>
+  <div class="btnrow"><button class="btn btn-primary" onclick="idSubmit()">Start &rarr;</button></div>`;
+  $("ids").addEventListener("keydown", e=>{ if(e.key==="Enter") idSubmit(); });
+}
+function idSubmit(){
+  const f=$("idf").value.trim(), l=$("idl").value.trim(), s=$("ids").value.trim();
+  $("ef").textContent = f?"":"We need your first name.";
+  $("el").textContent = l?"":"We need your last name.";
+  $("es").textContent = (s.length>=4&&s.length<=8)?"":"That doesn't look right: check your student code and try again.";
+  if(!f||!l||s.length<4||s.length>8) return;
+  bump(c=>{ c.fname=f; c.lname=l; c.sid=s; c.startedAt=c.startedAt||Date.now(); });
+  writeProfile(); route();
+}
+/* The unfinished list is recorded the first time the page opens with a name,
+   so the report shows where the student started, whatever they do next. */
+function route(){
+  if(!idOk()){ go("id"); return; }
+  if(S.atOpen===null){ const u=unfinished().map(m=>m.id); bump(s=>{ s.atOpen=u; }); }
+  if(gateList().length){ go("gate"); return; }
+  go(ITEMS.every(it=>rec(it.id).done) ? "done" : "check");
+}
+function renderGate(){
+  const g=gateList(); if(!g.length){ route(); return; }
+  const m=g[0], st=moduleState(m), rest=g.slice(1);
+  $("body").innerHTML=topbar()+`<div class="gate"><h1>Poetry catch-up</h1>
+    <p class="msg">You haven't finished ${esc(m.name)}. Go back and complete that first.</p>
+    <ul>${st.todo.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+    <div class="btnrow"><a class="btn btn-primary big" href="${esc(m.href)}">Open ${esc(m.name)}</a>
+      ${m.sheet?`<a class="btn" href="${esc(m.sheet)}" target="_blank" rel="noopener" data-out>Paper worksheet</a>`:""}</div>
+    ${rest.length?`<p class="dim" style="font-size:14px;margin-top:16px">Also not finished:</p><ul>${rest.map(x=>`<li><a href="${esc(x.href)}">${esc(x.name)}</a>${x.sheet?` · <a href="${esc(x.sheet)}" target="_blank" rel="noopener" data-out>paper worksheet</a>`:""}</li>`).join("")}</ul>`:""}
+    <div class="btnrow" style="margin-top:20px"><button class="btn btn-ghost" onclick="claim('${m.id}')">I finished it at school or on paper</button></div>
+    <p class="dim">Progress is saved on each computer, so work done somewhere else does not show here.</p></div>`;
+}
+function claim(id){ bump(s=>{ s.claims[id]=Date.now(); }); route(); }
+
+function pipsHtml(){
+  return ITEMS.map((it,i)=>{
+    const r=rec(it.id), cur=i===S.cur;
+    const cls=r.done?(r.ok?"clean":"retry"):(cur?"cur":""), g=r.done?(r.ok?"✓":r.rev?"×":"~"):String(i+1);
+    const lab=`Question ${i+1}, ${SKILLS[it.skill].name}: ${r.done?(r.ok?"right first time":r.rev?"answer shown after two misses":"done after a miss"):"not done"}`;
+    return `<button class="pip ${cls} ${cur&&r.done?"cur":""}" title="${esc(lab)}" aria-label="${esc(lab)}" ${cur?'aria-current="step"':""} onclick="goItem(${i})">${g}</button>`;
+  }).join("");
+}
+function doneCount(){ return ITEMS.filter(it=>rec(it.id).done).length; }
+function renderCheck(){
+  if(!S.checkStart) bump(s=>{ s.checkStart=Date.now(); });
+  const it=ITEMS[Math.max(0,Math.min(ITEMS.length-1,S.cur||0))], r=rec(it.id), d=r.d, locked=r.done, card=cardOpen(it.id);
+  const bar=`<div class="deckbar"><b>Poetry catch-up</b><span class="pips">${pipsHtml()}</span>
+    <span class="cnt">${doneCount()} of ${ITEMS.length} done</span><span>✓ first go · ~ more goes · × shown</span><span class="cnt" id="gstat"></span>
+    <span style="margin-left:auto;display:flex;gap:14px;align-items:center"><button class="menulink" onclick="go('report')">Report</button>${crumbs()}</span></div>`;
+  let body="", prompt="", lead="";
+  const dis=locked?"disabled":"";
+  if(it.type==="form"){
+    prompt=it.ask;
+    body=`<div class="row"><span><label for="f-lines">Lines</label><input class="num" id="f-lines" inputmode="numeric" maxlength="2" autocomplete="off" ${dis} value="${esc(d.lines||"")}" oninput="setD('${it.id}','lines',this.value)"></span>
+      <span><label for="f-pat">Rhyme pattern (letters)</label><input class="pat" id="f-pat" maxlength="20" autocomplete="off" ${dis} value="${esc(d.pat||"")}" oninput="setD('${it.id}','pat',this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();check();}"></span></div>`;
+  }else if(it.type==="count"){
+    prompt="How many syllables are in this line?";
+    body=`<p class="poemline">${esc(it.line)}</p><p class="src">${esc(it.src)}</p>
+      <div class="row" style="margin-top:10px"><span><label for="f-n">Syllables</label><input class="num" id="f-n" inputmode="numeric" maxlength="2" autocomplete="off" ${dis} value="${esc(d.n||"")}" oninput="setD('${it.id}','n',this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();check();}"></span></div>`;
+  }else if(it.type==="cut"){
+    prompt="Cut each word into syllables. Put a / between them, like gar/den.";
+    body=it.words.map((w,i)=>`<div class="cutrow"><label class="w" for="f-c${i}" style="font-weight:400;margin:0">${esc(w.w)}</label>
+      <input id="f-c${i}" autocomplete="off" spellcheck="false" ${dis} value="${esc((d.cut||{})[i]!=null?d.cut[i]:w.w)}" oninput="bump(s=>{const x=recIn(s,'${it.id}').d;x.cut=Object.assign({},x.cut||{});x.cut[${i}]=this.value;})"></div>`).join("");
+  }else if(it.type==="beats"){
+    prompt="Say the line aloud. Tap every word that carries a beat.";
+    const sel=d.sel||[], W=lineWords(it.line);
+    body=`<div class="toks" role="group" aria-label="Words of the line">${W.map((w,i)=>{
+      const on=sel.indexOf(i)>=0; let cls="";
+      if(locked){ if(it.strong.indexOf(i)>=0) cls="right"; else if(on) cls="wrong"; }
+      return `<button class="tok ${cls}" data-t="${i}" aria-pressed="${locked?it.strong.indexOf(i)>=0:on}" ${dis} onclick="tapToggle(${i})">${esc(w)}</button>`; }).join("")}</div>
+      <p class="src">${esc(it.src)}</p>`;
+  }else if(it.type==="letters"){
+    prompt="Give each line its rhyme letter.";
+    body=`<div class="lines">${it.lines.map((l,i)=>{ const v=(d.L||{})[i]||""; const bad=locked&&normPat(v).slice(0,1)!==it.key[i];
+      return `<div class="lrow ${(it.indent||[]).indexOf(i)>=0?"ind":""}"><input class="lt ${bad?"wrong":""}" id="f-l${i}" maxlength="1" autocomplete="off" aria-label="Rhyme letter for line ${i+1}" ${dis} value="${esc(v)}"
+        oninput="bump(s=>{const x=recIn(s,'${it.id}').d;x.L=Object.assign({},x.L||{});x.L[${i}]=this.value;}); if(this.value){const n=document.getElementById('f-l${i+1}'); if(n) n.focus();}"><span class="n">${i+1}</span><span>${esc(l)}</span></div>`; }).join("")}</div>
+      <p class="src">${esc(it.src)}</p>`;
+  }else if(it.type==="pairs"){
+    prompt="Say each pair aloud. Do they rhyme?";
+    const yn=d.yn||{}, j=locked?null:(r.fb&&r.fb.cls==="bad"?judge(it,r):null), wrong=j&&j.wrong||[];
+    body=`<div class="pairs">${it.pairs.map((p,i)=>`<div class="prow ${wrong.indexOf(i)>=0?"wrong":""}"><span class="w">${esc(p.a)} &nbsp;/&nbsp; ${esc(p.b)}</span>
+      <button class="yn" data-y="${i}-1" aria-pressed="${yn[i]===true}" ${dis} onclick="tapYN(${i},true)">Rhyme</button>
+      <button class="yn" data-y="${i}-0" aria-pressed="${yn[i]===false}" ${dis} onclick="tapYN(${i},false)">No rhyme</button></div>`).join("")}</div>`;
+  }else if(it.type==="fix"){
+    const find=r.stage==="find"&&!locked;
+    prompt=find?"Tap the line that breaks the pattern.":`Rewrite line ${it.bad+1}.`;
+    body=it.units.map((u,i)=>{ let cls="", tg="";
+      if(find){ if(d.line===i) cls="sel"; }
+      else if(i===it.bad){ cls="right"; tg="Broken"; }
+      return `<button class="unit ${cls} ${(it.indent||[]).indexOf(i)>=0?"ind":""}" data-u="${i}" ${find?"":"disabled"} ${find?`aria-pressed="${d.line===i}"`:""} onclick="tapLine(${i})"><span class="n">${i+1}</span><span>${esc(u)}</span><span class="tg">${tg}</span></button>`; }).join("")
+      +`<p class="src">${esc(it.src)}</p>`;
+    if(!find){
+      body+=`<label for="f-t" style="margin-top:10px">New line ${it.bad+1}</label><textarea id="f-t" rows="2" ${dis} oninput="setD('${it.id}','text',this.value)"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();check();}">${esc(d.text!=null?d.text:it.units[it.bad])}</textarea>
+        <p class="dim">${esc(it.checks)}</p>`;
+    }
+  }else if(it.type==="turn"){
+    prompt=it.ask;
+    body=it.lines.map((u,i)=>{ let cls="", tg="";
+      if(!locked){ if(d.line===i) cls="sel"; }
+      else if(i===it.turn){ cls="right"; tg="Turn"; } else if(d.line===i){ cls="wrong"; }
+      return `<button class="unit ${cls}" data-u="${i}" ${locked?"disabled":""} aria-pressed="${d.line===i}" onclick="tapLine(${i})"><span class="n">${it.start+i}</span><span>${esc(u)}</span><span class="tg">${tg}</span></button>`; }).join("")
+      +`<p class="src">${esc(it.src)}</p>`;
+    lead=`<label for="f-w" style="margin:0;font-size:14px">Turn word</label><input id="f-w" style="width:180px;font-family:Georgia,serif;font-size:18px" autocomplete="off" ${dis} value="${esc(d.word||"")}" oninput="setD('${it.id}','word',this.value)"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();check();}">`;
+  }
+  const fb=r.fb?`<div class="fb ${r.fb.cls} on" role="status">${r.fb.html}</div>`:`<div class="fb" role="status"></div>`;
+  const next=ITEMS.some(x=>!rec(x.id).done&&x.id!==it.id)?"Next question":"Finish";
+  const btns=(lead||"")+(locked?`<button class="btn btn-primary" id="nextb" onclick="nextItem()">${next}</button>`
+    :`<button class="btn btn-primary" id="checkb" onclick="check()" ${card?"disabled":""}>Check</button>`);
+  const left=`<div class="cardbox" id="itembox"><p class="skill">${ITEMS.indexOf(it)+1}. ${esc(SKILLS[it.skill].name)}</p><p class="prompt">${esc(prompt)}</p>${body}
+    <div class="btnrow">${btns}</div></div>`;
+  /* Feedback and cards sit beside the question, so the question never moves. */
+  $("body").innerHTML=bar+`<div class="cols">${left}<div class="side">${fb}${card?`<div class="cardbox" id="cardbox">${renderCard()}</div>`:""}</div></div>`;
+  if(card && S.card.type==="reteach" && !S.card.res){ const p=$("p-n"); if(p) p.focus(); }
+  else if(card){ const b=$("slidego")||$("backq"); if(b) b.focus(); }
+  else if(locked){ const b=$("nextb"); if(b) b.focus(); }
+  if(["count","form"].indexOf(it.type)>=0 && !locked && !card && !r.fb){ const f=$(it.type==="count"?"f-n":"f-lines"); if(f) f.focus(); }
+}
+function renderDone(){
+  const clean=ITEMS.filter(it=>rec(it.id).ok===true).length;
+  $("body").innerHTML=topbar()+`<h1>Poetry catch-up</h1><p class="cnt" style="font-size:17px">All ${ITEMS.length} questions done. ${clean} of ${ITEMS.length} right first time.</p>
+    <div class="btnrow"><button class="btn btn-primary big" onclick="go('report')">Report for your teacher</button>
+      <button class="btn" onclick="goItem(0)">Look back over the questions</button></div>`;
+}
+
+/* ====================== REPORT ===========================================
+   One tab-separated row. Scores are first tries only: an item is right when
+   its first check was right (for find and fix, both steps). Misses are the
+   first wrong answer at each step, named by skill. */
+function ymd(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function reportData(){
+  const names=ids=>ids.map(id=>MOD[id]?MOD[id].name:id).join("; ");
+  const mins=(S.checkStart&&S.lastAt)?String(Math.max(1,Math.round((S.lastAt-S.checkStart)/60000))):"";
+  const sk=Object.keys(SKILLS);
+  const skillCells=sk.map(k=>{ const its=ITEMS.filter(it=>it.skill===k); let ok=0, tried=0;
+    its.forEach(it=>{ const r=rec(it.id); if(r.ok!==null){ tried++; if(r.ok) ok++; } });
+    return tried ? `${ok}/${its.length}`+(tried<its.length?` (${tried} tried)`:"") : "not tried"; });
+  const misses=sk.map(k=>{ const m=[]; ITEMS.filter(it=>it.skill===k).forEach(it=>{ const r=rec(it.id); if(r.log.length) m.push(`${it.short}: ${r.log.join(", then ")}${r.rev?" (answer shown)":""}`); });
+    return m.length?`${SKILLS[k].name}: ${m.join("; ")}`:""; }).filter(Boolean).join(" | ");
+  const claims=Object.keys(S.claims||{});
+  const reteach=S.reteach.map(x=>`${RETEACH[x.kind].title} (${ITEM[x.item]?ITEM[x.item].short:x.item}): ${x.res}`).join("; ");
+  const slides=S.slides.map(x=>`${SKILLS[x.skill].name}: ${slideUrl(x.slide)} ${SLIDES[x.slide].h}`).join("; ");
+  const anyTry=ITEMS.some(it=>rec(it.id).tries), G=S.guard;
+  return { cols:["Date","First name","Last name","Code","Minutes","Questions done","Modules unfinished at open","Said finished at school or on paper"]
+              .concat(sk.map(k=>SKILLS[k].name+", first try"),["Misses, by skill","Reteach cards","Slides sent to","Answers the checker was not sure about",
+                "Full screen exits","Left the page (tab hidden)","Switched away (focus lost)","Opened a slide, module or worksheet","Copies","Pastes","What was pasted","Full screen"]),
+           row:[ymd(),S.fname,S.lname,S.sid,mins,`${doneCount()}/${ITEMS.length}`,
+                S.atOpen===null?"":(S.atOpen.length?names(S.atOpen):"none"), claims.length?names(claims):"none"]
+              .concat(skillCells,[misses||(anyTry?"none":"not tried"), reteach||"none", slides||"none", S.unsure.join("; ")||"none",
+                String(G.exits), String(G.hidden), String(G.away), String(G.out), String(G.copies), String(G.pastes), (G.pasted||[]).join("; ")||"none",
+                (G.fsMode==="on"?"used":(G.fsMode==="unavailable"||!FS)?"unavailable, not enforced":"not started")+(G.fsFailed?` (refused ${G.fsFailed}x)`:"")]) };
+}
+function renderReport(){
+  const r=reportData();
+  $("body").innerHTML=topbar()+`<div class="rptwrap"><table class="rpt">${r.cols.map((c,i)=>`<tr><th>${esc(c)}</th><td>${esc(r.row[i])}</td></tr>`).join("")}</table></div>
+    <p class="dim" style="margin-top:0">First tries only: a question counts as right when its first check was right. Unfinished modules are read from this computer only; work on paper or another computer does not show, so check a "finished at school" claim against the work log. Syllable counts on typed lines are estimates, and the rhyme checker says when it is not sure. Full screen exits, focus losses, tab switches, copies and pastes are counted on the questions only, not prevented.</p>
+    <div class="btnrow" style="margin-top:8px"><button class="btn btn-primary" onclick="copyRow()">Copy the row</button>
+      <button class="btn btn-ghost" onclick="route()">Back</button></div>
+    <div class="fb" id="fb"></div>`;
+}
+function copyRow(){
+  const tsv=reportData().row.map(v=>String(v).replace(/[\t\n\r]+/g," ")).join("\t");
+  const done=()=>{ const fb=$("fb"); fb.className="fb ok on"; fb.textContent="Copied. Paste it into the class sheet."; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, ()=>fallback(tsv,done));
+  else fallback(tsv,done);
+}
+function fallback(t, done){
+  const a=document.createElement("textarea"); a.value=t; document.body.appendChild(a); a.select();
+  try{ document.execCommand("copy"); done(); }catch(e){} a.remove();
+}
+
+/* ====================== CONTENT CHECK ==================================== */
+function contentErrors(){
+  const e=[], seen={};
+  ITEMS.forEach(it=>{
+    const W=`Item ${it.id}`;
+    if(seen[it.id]) e.push(`${W} is used twice.`); seen[it.id]=1;
+    if(!SKILLS[it.skill]) e.push(`${W}: skill “${it.skill}” is not in SKILLS.`);
+    if(!SLIDES[it.slide]) e.push(`${W}: slide “${it.slide}” is not in SLIDES.`);
+    if(!MOD[it.module]) e.push(`${W}: module “${it.module}” is not in MODULES.`);
+    if(it.reteach && !RETEACH[it.reteach]) e.push(`${W}: reteach “${it.reteach}” is not in RETEACH.`);
+    if(!it.answer) e.push(`${W}: missing answer.`);
+    if(it.type==="form"){ if(!(it.lines>0)) e.push(`${W}: lines must be a number.`); if(!it.pattern||it.pattern.some(p=>normPat(p)!==p||p[0]!=="A")) e.push(`${W}: patterns must be capital letters starting with A.`);
+      else if(normPat(it.pattern[0]).length!==it.lines) e.push(`${W}: the first pattern needs one letter per line.`); }
+    if(it.type==="count" && sylLine(it.line)!==it.n) e.push(`${W}: the key says ${it.n}, the syllable estimate says ${sylLine(it.line)}. Check the line for a word said two ways.`);
+    if(it.type==="beats" && it.strong.some(i=>!(i>=0&&i<lineWords(it.line).length))) e.push(`${W}: strong points past the end of the line.`);
+    if(it.type==="letters"){ if(it.key.length!==it.lines.length) e.push(`${W}: one key letter per line.`);
+      for(let i=0;i<it.lines.length;i++) for(let j=i+1;j<it.lines.length;j++){ const x=rhyme(lastWord(it.lines[i]),lastWord(it.lines[j]));
+        if(it.key[i]===it.key[j] && (!x||x.r!=="yes")) e.push(`${W}: lines ${i+1} and ${j+1} share a letter but the checker says ${x?x.r:"nothing"}.`); } }
+    if(it.type==="fix"){
+      if(!(it.bad>=0&&it.bad<it.units.length)) e.push(`${W}: bad is not a line.`);
+      const fake={ d:{ text:it.model }, stage:"fix" }, jm=judge(it,fake);
+      if(!jm.ok||jm.unsure) e.push(`${W}: the model fails its own check (${jm.msgs.join(" ").replace(/<[^>]+>/g,"")}).`);
+      const jb=judge(it,{ d:{ text:it.units[it.bad] }, stage:"fix" }); if(jb.ok) e.push(`${W}: the broken line passes the check.`);
+      it.units.forEach((u,i)=>{ if(i!==it.bad && it.len[1]<=11 && it.len[0]>=9 && Math.abs(sylLine(u)-10)>1) e.push(`${W}: line ${i+1} is not about 10 syllables (about ${sylLine(u)}).`); });
+    }
+    if(it.type==="turn" && !(it.turn>=0&&it.turn<it.lines.length)) e.push(`${W}: turn is not a line.`);
+  });
+  Object.keys(RETEACH).forEach(k=>{ if(!RETEACH[k].practice.length) e.push(`RETEACH ${k}: no practice items.`); });
+  return e;
+}
+
+/* ---- boot ---- */
+(function boot(){
+  const bad=contentErrors();
+  if(bad.length){
+    $("body").innerHTML=`<h1>Poetry catch-up</h1><div class="broken"><b>This page will not run until its content is fixed.</b>
+      <ul>${bad.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  route();
+})();
+</script>
+</body>
+</html>
