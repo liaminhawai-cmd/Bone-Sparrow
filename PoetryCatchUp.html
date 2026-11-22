@@ -1055,7 +1055,7 @@ function renderCheck(){
     body=it.words.map((w,i)=>`<div class="cutrow"><label class="w" for="f-c${i}" style="font-weight:400;margin:0">${esc(w.w)}</label>
       <input id="f-c${i}" autocomplete="off" spellcheck="false" ${dis} value="${esc((d.cut||{})[i]!=null?d.cut[i]:w.w)}" oninput="bump(s=>{const x=recIn(s,'${it.id}').d;x.cut=Object.assign({},x.cut||{});x.cut[${i}]=this.value;})"></div>`).join("");
   }else if(it.type==="beats"){
-    prompt="Say the line aloud. Tap every word that carries a beat.";
+    prompt="Say the line aloud. Tap the strong beats.";
     const sel=d.sel||[], W=lineWords(it.line);
     body=`<div class="toks" role="group" aria-label="Words of the line">${W.map((w,i)=>{
       const on=sel.indexOf(i)>=0; let cls="";
