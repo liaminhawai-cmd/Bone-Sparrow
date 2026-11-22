@@ -51,11 +51,11 @@ textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;fo
 .fb .rule{display:block;font-weight:700;margin-bottom:2px}
 .fb a{color:var(--accent);font-weight:600}
 
-.deckbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
-         border-radius:10px;padding:4px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted);min-height:48px}
+.deckbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+         border-radius:10px;padding:4px 12px;margin:0 0 10px;font-size:11.5px;color:var(--muted);min-height:48px}
 .deckbar b{color:var(--ink);font-size:14px}
-.pips{display:flex;gap:3px;flex-wrap:wrap}
-.pip{width:28px;height:28px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font:800 12px 'Segoe UI',Tahoma,sans-serif;
+.pips{display:flex;gap:2px;flex-wrap:wrap}
+.pip{width:25px;height:25px;border-radius:13px;border:1px solid var(--line);background:var(--bg);font:800 12px 'Segoe UI',Tahoma,sans-serif;
      color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .pip.cur{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
 .pip.clean{background:var(--okbg);border-color:var(--correct);color:var(--correct)}
@@ -63,6 +63,7 @@ textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;fo
 .cnt{font-weight:700;color:var(--ink)}
 
 .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.cols.wide{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
 .side{max-height:calc(100vh - 118px);overflow:auto}
 .side .fb{margin:0 0 10px}
 .cardbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-height:calc(100vh - 118px);overflow:auto}
@@ -110,6 +111,17 @@ textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;fo
 .unit.wrong{border-color:var(--wrong);background:var(--wrongbg)}.unit.wrong .tg{color:var(--wrong)}
 .unit.right{border-color:var(--correct);background:var(--okbg)}.unit.right .tg{color:var(--correct)}
 .unit:disabled{cursor:default}
+.mentor{font-family:Georgia,serif;font-size:15px;line-height:1.4;background:var(--bg);border-radius:8px;padding:6px 12px;margin:0 0 8px;color:#3d3a34}
+.wrows{display:flex;flex-direction:column;gap:4px}
+.wrow{display:flex;gap:6px;align-items:center}
+.wrow.ind{padding-left:22px}
+.wrow .n{flex:0 0 24px;height:24px;border-radius:50%;border:1px solid var(--line);background:#fff;font:800 11px 'Segoe UI',Tahoma,sans-serif;display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+.wl{flex:0 0 28px;height:28px;border:2px solid var(--ink);border-radius:6px;font:800 14px 'Segoe UI',Tahoma,sans-serif;display:inline-flex;align-items:center;justify-content:center}
+.wrow.given .gt{font-family:Georgia,serif;font-size:17px;padding:6px 4px}
+.wt{flex:1;min-width:0;font-family:Georgia,serif;font-size:17px;padding:8px 10px}
+.nb{flex:0 0 40px;height:40px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:18px;cursor:pointer;color:var(--ink)}
+.wmet{flex:0 0 140px;font-size:12px;color:var(--muted);line-height:1.3}
+.wmet.good b{color:var(--correct)} .wmet.bad b{color:var(--wrong)}
 .dim{color:#6f685c;font-size:12.5px;margin:8px 0 0;line-height:1.5}
 
 .card h2{font-family:Georgia,serif;font-size:18px;margin:0 0 4px}
@@ -181,6 +193,16 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
               (what the machine checks) and model (a correct rewrite).
      turn     lines, start (first line number), turn (index of the turn line),
               words (accepted turn words).
+     write    the student writes lines. forms: one or more poems (the last
+              item offers a choice), each with label, rows and model. A row is
+              either given text (t) or a line to write (w, its number), with
+              its rhyme letter L; a line to write has lo and hi (accepted
+              syllables, by the estimate plus the student's - and +) and aim
+              (said beside the box). Every two rows with the same letter must
+              rhyme (checker: a "not sure" is accepted and listed, never a
+              wrong). need: a word that must appear. mentor: lines shown above
+              as a model. A miss names the rule; a rhyme miss opens the rhyme
+              card, a syllable miss the syllable card.
    No counting item uses a word an Australian accent squeezes (every, heaven,
    temperate, theatre, towers, glittering), so a count is the same however a
    student says it. The load-time check stops the page and lists the problem
@@ -219,7 +241,9 @@ const SLIDES = {
   "son":        { deck:"SonnetsDeck.html",  name:"Westminster deck", n:3,  h:"What is a sonnet?" },
   "son-syl":    { deck:"SonnetsDeck.html",  name:"Westminster deck", n:7,  h:"Syllables and beats" },
   "turn":       { deck:"SonnetsDeck.html",  name:"Westminster deck", n:10, h:"The turn" },
-  "s18-letters":{ deck:"Sonnet18Deck.html", name:"Sonnet 18 deck",   n:8,  h:"Rhyme letters" }
+  "s18-letters":{ deck:"Sonnet18Deck.html", name:"Sonnet 18 deck",   n:8,  h:"Rhyme letters" },
+  "bal-write":  { deck:"BalladsDeck.html",  name:"Ironbark deck",    n:13, h:"Your Kew stanza" },
+  "s18-write":  { deck:"Sonnet18Deck.html", name:"Sonnet 18 deck",   n:14, h:"Write your own sonnet" }
 };
 
 const SKILLS = {
@@ -229,7 +253,8 @@ const SKILLS = {
   letters:{ name:"Rhyme letters" },
   rhyme:  { name:"Rhyme pairs" },
   fix:    { name:"Find and fix" },
-  turn:   { name:"The turn" }
+  turn:   { name:"The turn" },
+  write:  { name:"Writing" }
 };
 
 const RETEACH = {
@@ -340,7 +365,50 @@ const ITEMS = [
    start:7, turn:2, words:["but","but then"],
    lines:["My phone is flat, and all I do is wait,","And watch the gutters choke and spill their flood.",
           "But then Nan finds a pack of cards, and soon","The kitchen table roars with shouts and cheers,","We play past lunch, we play all afternoon,","And Nan has won more hands than I have years."],
-   answer:"Line 9, on But. Before it: the wet, dull day. After it: the card game that fixes it." }
+   answer:"Line 9, on But. Before it: the wet, dull day. After it: the card game that fixes it." },
+
+ { id:"w-lim", skill:"write", type:"write", short:"Finish the limerick", slide:"lim", module:"lim",
+   ask:"Write line 5. It rhymes with lines 1 and 2, has about 8 or 9 syllables, and finishes the joke.",
+   checks:"Checks: the rhyme (lines with the same letter) and the syllable count only. Syllable counts are estimates: use − or + to correct one. It does not check the sense or the joke.",
+   forms:{ main:{ label:"Limerick", src:"A limerick written for this page", indent:[2,3],
+     rows:[ { t:"There once was a man with a nose", L:"A" }, { t:"That grew when he wiggled his toes.", L:"A" },
+            { t:"It grew past the door,", L:"B" }, { t:"Then on to the floor,", L:"B" },
+            { w:0, L:"A", lo:7, hi:10, aim:"8 or 9" } ],
+     model:["And it tickles the cat when he blows."] } },
+   answer:"One answer: And it tickles the cat when he blows." },
+ { id:"w-bal", skill:"write", type:"write", short:"Kew ballad pair", slide:"bal-write", module:"ironbark",
+   ask:"Write two lines that rhyme (AA) for a new ballad about someone from Kew. About 14 syllables each.",
+   checks:"Checks: the two last words rhyme, each line has about 12 to 16 syllables, and Kew is in it. Syllable counts are estimates: use − or + to correct one. It does not check the story.",
+   mentor:["It was the man from Ironbark who struck the Sydney town,","He wandered over street and park, he wandered up and down."],
+   mentorSrc:"A. B. Paterson, The Man from Ironbark, stanza 1",
+   need:"kew",
+   forms:{ main:{ label:"Ballad pair",
+     rows:[ { w:0, L:"A", lo:12, hi:16, aim:"14" }, { w:1, L:"A", lo:12, hi:16, aim:"14" } ],
+     model:["There was a girl from Kew who kept a magpie as a pet,","It stole her keys, her lunch, her hat, and it has not stopped yet."] } },
+   answer:"One answer: There was a girl from Kew who kept a magpie as a pet, / It stole her keys, her lunch, her hat, and it has not stopped yet." },
+ { id:"w-son", skill:"write", type:"write", short:"Sonnet quatrain", slide:"s18-write", module:"s18",
+   ask:"Write a quatrain (ABAB) for a sonnet, about 10 syllables a line. Your own subject, or a bus stop in the rain.",
+   checks:"Checks: the rhyme (lines with the same letter) and the syllable count only. Syllable counts are estimates: use − or + to correct one. It does not check the sense or the beat.",
+   forms:{ main:{ label:"Quatrain",
+     rows:[ { w:0, L:"A", lo:9, hi:11, aim:"10" }, { w:1, L:"B", lo:9, hi:11, aim:"10" },
+            { w:2, L:"A", lo:9, hi:11, aim:"10" }, { w:3, L:"B", lo:9, hi:11, aim:"10" } ],
+     model:["The rain comes down, the bus is running late,","My shoes are soaked, my socks have turned to grey,","We stand together, huddled by the gate,","And no one wants to be outside today."] } },
+   answer:"One answer: The rain comes down, the bus is running late, / My shoes are soaked, my socks have turned to grey, / We stand together, huddled by the gate, / And no one wants to be outside today." },
+ { id:"w-own", skill:"write", type:"write", short:"Your own poem", slide:"lim", module:"lim",
+   slides:{ lim:"lim", son:"s18-write" }, modules:{ lim:"lim", son:"s18" },
+   ask:"Write your own poem. Choose one. A limerick needs a twist in line 5; a sonnet needs a turn in the couplet.",
+   checks:"Checks: the rhyme (lines with the same letter) and the syllable count only. Syllable counts are estimates: use − or + to correct one. It does not check the sense or the joke or turn.",
+   forms:{ lim:{ label:"Limerick · AABBA", indent:[2,3],
+     rows:[ { w:0, L:"A", lo:7, hi:10, aim:"8 or 9" }, { w:1, L:"A", lo:7, hi:10, aim:"8 or 9" },
+            { w:2, L:"B", lo:4, hi:7, aim:"5 or 6" }, { w:3, L:"B", lo:4, hi:7, aim:"5 or 6" },
+            { w:4, L:"A", lo:7, hi:10, aim:"8 or 9" } ],
+     model:["A girl with a goat in the hall","Taught it to climb up the wall.","It fell on the cat,","Who sat on the mat,","And now it won't come when they call."] },
+           son:{ label:"Sonnet quatrain and couplet · ABAB GG",
+     rows:[ { w:0, L:"A", lo:9, hi:11, aim:"10" }, { w:1, L:"B", lo:9, hi:11, aim:"10" },
+            { w:2, L:"A", lo:9, hi:11, aim:"10" }, { w:3, L:"B", lo:9, hi:11, aim:"10" },
+            { w:4, L:"G", lo:9, hi:11, aim:"10" }, { w:5, L:"G", lo:9, hi:11, aim:"10" } ],
+     model:["The rain comes down, the bus is running late,","My shoes are soaked, my socks have turned to grey,","We stand together, huddled by the gate,","And no one wants to be outside today.","But then the bus comes splashing round the bend,","And all of us go cheering to the end."] } },
+   answer:"See the model under your poem." }
 ];
 
 /* Rhyme families, as in Limericks.html. */
@@ -410,9 +478,11 @@ const AMBIGUOUS = ["ough","ought","ow","own","ows","ead","eath","ear","ears","ea
 
 const SYLLABLES = { poem:2, poet:2, idea:3, area:3, beautiful:3, lion:2, cruel:2, science:2, diet:2, giant:2, piano:3,
                     video:3, radio:3, museum:3, create:2, react:2, evening:2, every:3, violin:3, real:1, fire:1 };
-/* Two families added for this page: the rhymes its broken lines are fixed with. */
+/* Families added for this page: rhymes its broken lines and writing items are likely to use. */
 FAMILIES["-each"] = { ipa:"/iːtʃ/", words:["beach","reach","teach","peach","each","speech","screech","bleach","leech","preach"] };
 FAMILIES["-old"]  = { ipa:"/əʉld/", words:["gold","cold","old","told","bold","hold","fold","sold","rolled"] };
+FAMILIES["-ouse"] = { ipa:"/æɔs/",  words:["house","mouse","spouse","grouse"] };
+FAMILIES["-oze"]  = { ipa:"/əʉz/",  words:["nose","toes","goes","rose","knows","blows","shows","grows","flows","glows","snows","throws","those","hose","froze","chose","doze"] };
 
 /* ========================== END OF CONTENT ================================ */
 
@@ -760,6 +830,7 @@ function judge(it, r){
     if(unsure) return { ok:true, unsure:true, word:last, msgs:[`<b>Not sure.</b> The checker cannot tell whether “${esc(last)}” rhymes with ${list(it.rw.map(k=>"“"+esc(lastWord(it.units[k]))+"”"))}. Say it aloud, and ask your teacher.`], log:t };
     return { ok:true, msgs:[`“${esc(last)}” rhymes with ${list(it.rw.map(k=>"“"+esc(lastWord(it.units[k]))+"”"))}, and the line has about ${n} syllables.`], log:t };
   }
+  if(it.type==="write") return judgeWrite(it,d);
   if(it.type==="turn"){
     const w=String(d.word||"").trim().toLowerCase().replace(/[^a-z ]/g,"").replace(/\s+/g," ");
     if(d.line===undefined||d.line===null||!w) return { empty:true, msgs:["Tap a line and type the word."] };
@@ -773,12 +844,67 @@ function judge(it, r){
   return { ok:false, msgs:["Unknown item."] };
 }
 
+/* ====================== WRITING ==========================================
+   Lines save as they are typed under d.w[form] and d.adj[form] (the - and +
+   corrections, cleared when the line changes, as in Sonnets.html). */
+function formKey(it,d){ const k=Object.keys(it.forms); return k.length===1?k[0]:(d.form&&it.forms[d.form]?d.form:null); }
+function wLines(d,key){ return (d.w&&d.w[key])||[]; }
+function wAdj(d,key){ return (d.adj&&d.adj[key])||[]; }
+function rowText(f,row,W){ return row.w!=null?String(W[row.w]||""):row.t; }
+function wSyl(t,a){ return Math.max(0, sylLine(t)+(a||0)); }
+function itemSlide(it,d){ return it.slides&&d&&d.form&&it.slides[d.form]?it.slides[d.form]:it.slide; }
+function itemModule(it,d){ return it.modules&&d&&d.form&&it.modules[d.form]?it.modules[d.form]:it.module; }
+function judgeWrite(it,d,lines){
+  const key=formKey(it,d); if(!key) return { empty:true, msgs:["Choose one."] };
+  const f=it.forms[key], W=lines||wLines(d,key), A=lines?[]:wAdj(d,key), rows=f.rows;
+  const written=rows.filter(r=>r.w!=null);
+  const blank=written.filter(r=>!String(W[r.w]||"").trim());
+  if(blank.length) return { empty:true, msgs:[blank.length===written.length?"Write your line"+(written.length>1?"s":"")+" first.":`Line ${rows.indexOf(blank[0])+1} is empty.`] };
+  const msgs=[], kinds={}; let unsure=[];
+  rows.forEach((r,i)=>{ if(r.w==null) return; const tx=W[r.w], n=wSyl(tx,A[r.w]);
+    if((String(tx).match(/[A-Za-z']+/g)||[]).length<3){ msgs.push(`<b>Line ${i+1} is too short to be a line.</b>`); kinds.syl=1; return; }
+    if(n<r.lo||n>r.hi){ kinds.syl=1; msgs.push(`<b>Line ${i+1} has about ${n} syllables.</b> This line needs about ${esc(r.aim)}. Clap it and ${n>r.hi?"cut a word or two":"add a word or two"}.`); } });
+  for(let i=0;i<rows.length;i++) for(let j=i+1;j<rows.length;j++){
+    const a=rows[i], b=rows[j]; if(a.L!==b.L || (a.w==null&&b.w==null)) continue;
+    const x=lastWord(rowText(f,a,W)), y=lastWord(rowText(f,b,W)), r=rhyme(x,y);
+    if(!r){ kinds.rhyme=1; msgs.push(`<b>Line ${(a.w==null?j:i)+1} needs an end word.</b>`); continue; }
+    if(r.r==="same"){ kinds.rhyme=1; msgs.push(`<b>Lines ${i+1} and ${j+1} both end with “${esc(x)}”.</b> A rhyme needs a different word.`); }
+    else if(r.r==="no"){ kinds.rhyme=1; msgs.push(`<b>Lines ${i+1} and ${j+1} have the letter ${a.L}, so they must rhyme.</b> ${esc(r.why)}`); }
+    else if(r.r==="unsure") unsure.push(`${x}/${y}`);
+  }
+  if(it.need && !written.some(r=>new RegExp("\\b"+it.need+"\\b","i").test(W[r.w]))){ msgs.push(`<b>Kew is not in it yet.</b> The ballad is about someone from Kew.`); }
+  const log=written.map(r=>String(W[r.w]).trim()).join(" / ");
+  if(msgs.length) return { ok:false, msgs, log, reteach:kinds.rhyme?"rhyme":kinds.syl?"syl":null };
+  if(unsure.length) return { ok:true, unsure:true, word:unsure.join(", "), msgs:[`<b>Not sure.</b> The checker cannot tell whether ${unsure.map(p=>"“"+esc(p.replace("/","” and “"))+"”").join(", ")} rhyme. Say them aloud, and ask your teacher. The syllables are about right.`], log };
+  return { ok:true, msgs:[`The lines with the same letter rhyme, and every line has about the right number of syllables. Read it aloud: is it ${key==="son"?"a turn in the couplet":it.need?"a story":"funny"}?`], log };
+}
+function wType(id,key,k,v,i){ bump(s=>{ const d=recIn(s,id).d; d.w=Object.assign({},d.w||{}); d.adj=Object.assign({},d.adj||{});
+  const a=(d.w[key]||[]).slice(); a[k]=v; d.w[key]=a; const b=(d.adj[key]||[]).slice(); b[k]=0; d.adj[key]=b; }); wMet(id,key,k,i); }
+function wNudge(id,key,k,dl,i){ bump(s=>{ const d=recIn(s,id).d; d.adj=Object.assign({},d.adj||{}); const b=(d.adj[key]||[]).slice(); b[k]=(b[k]||0)+dl; d.adj[key]=b; }); wMet(id,key,k,i); }
+function wMetHtml(it,d,key,row){ const t=wLines(d,key)[row.w]||""; if(!String(t).trim()) return `aim ${esc(row.aim)}`;
+  const n=wSyl(t,wAdj(d,key)[row.w]); const okn=n>=row.lo&&n<=row.hi;
+  return `≈ ${n} · aim ${esc(row.aim)} · <b>${okn?"✓ about right":n>row.hi?"too long":"too short"}</b>`; }
+function wMet(id,key,k,i){ const it=ITEM[id], row=it.forms[key].rows[i], el=$("wm"+i); if(!el) return;
+  const t=wLines(rec(id).d,key)[k]||"", n=wSyl(t,wAdj(rec(id).d,key)[k]);
+  el.innerHTML=wMetHtml(it,rec(id).d,key,row); el.className="wmet "+(!String(t).trim()?"":(n>=row.lo&&n<=row.hi)?"good":"bad"); }
+function setForm(id,f){ bump(s=>{ recIn(s,id).d.form=f; }); render(); }
+
 /* ====================== CHECK ============================================ */
 function cardOpen(id){ return S.card && S.card.item===id; }
 function check(){
-  const it=ITEMS[S.cur], r0=rec(it.id); if(r0.done||cardOpen(it.id)) return;
+  const it=ITEMS[S.cur], r0=rec(it.id); if(cardOpen(it.id)) return;
+  if(r0.done && it.type!=="write") return;
   readInputs(it);
   const r=rec(it.id), j=judge(it, r);
+  /* Writing stays open after it is settled: a later check is shown and kept
+     as the latest result, but the first-try score and misses do not change. */
+  if(r0.done && it.type==="write"){
+    if(j.empty){ bump(s=>{ recIn(s,it.id).fb={ cls:"warn", html:j.msgs.join("<br>") }; }); render(); return; }
+    bump(s=>{ const x=recIn(s,it.id); x.after=j.ok?(j.unsure?"not sure":"ok"):"not yet";
+      x.fb={ cls:j.ok?(j.unsure?"warn":"ok"):"bad", html:`<span class="rule">${j.ok?"Checked again.":"Not yet."}</span>`+(j.msgs.length>1?`<ul>${j.msgs.map(m=>`<li>${m}</li>`).join("")}</ul>`:j.msgs.join("")) }; });
+    render(); return;
+  }
+  const SL=itemSlide(it,r.d), MO=itemModule(it,r.d);
   if(j.empty){ bump(s=>{ recIn(s,it.id).fb={ cls:"warn", html:j.msgs.join("<br>") }; }); render(); return; }
   bump(s=>{
     const x=recIn(s,it.id); x.tries++;
@@ -800,15 +926,17 @@ function check(){
     if(x[k]>=2){
       if(findStage){ x.stage="fix"; x.found=false; x.rev=true;
         html+=`<p style="margin:6px 0 0"><b>Missed. It is line ${it.bad+1}: ${esc(it.name)}.</b> ${esc(it.why)} Now fix it.</p>`; }
+      else if(it.type==="write"){ x.done=true; x.rev=true; const f=it.forms[formKey(it,x.d)];
+        html+=`<p style="margin:6px 0 0"><b>Missed. One answer:</b> ${f.model.map(esc).join(" / ")}</p><p style="margin:4px 0 0">Your lines are kept. Fix them and check again.</p>`; }
       else{ x.done=true; x.rev=true; html+=`<p style="margin:6px 0 0"><b>Missed. The answer:</b> ${esc(it.answer)}</p>`; }
     }
-    if(sent && sm>2) html+=`<p style="margin:6px 0 0"><a href="${slideUrl(it.slide)}" target="_blank" rel="noopener" data-out>The slide: ${esc(slideName(it.slide))}</a></p>`;
+    if(sent && sm>2) html+=`<p style="margin:6px 0 0"><a href="${slideUrl(SL)}" target="_blank" rel="noopener" data-out>The slide: ${esc(slideName(SL))}</a></p>`;
     x.fb={ cls:"bad", html };
     if(sm>=2 && !sent){
-      s.slides.push({ skill:it.skill, slide:it.slide, item:it.id });
-      s.card={ type:"slide", item:it.id, skill:it.skill, slide:it.slide };
-    }else if(x[k]===1 && it.reteach){
-      const kind=it.reteach, P=RETEACH[kind].practice, p=(s.pi[kind]||0)%P.length; s.pi[kind]=(s.pi[kind]||0)+1;
+      s.slides.push({ skill:it.skill, slide:SL, item:it.id });
+      s.card={ type:"slide", item:it.id, skill:it.skill, slide:SL, module:MO };
+    }else if(x[k]===1 && (j.reteach!==undefined?j.reteach:it.reteach)){
+      const kind=j.reteach!==undefined?j.reteach:it.reteach, P=RETEACH[kind].practice, p=(s.pi[kind]||0)%P.length; s.pi[kind]=(s.pi[kind]||0)+1;
       s.reteach.push({ kind, item:it.id, res:"skipped" });
       s.card={ type:"reteach", kind, item:it.id, p, pick:null, res:null, ri:s.reteach.length-1 };
     }
@@ -825,6 +953,9 @@ function readInputs(it){
   if(it.type==="letters"){ const c=Object.assign({}, d.L||{}); it.lines.forEach((w,i)=>{ if($("f-l"+i)) c[i]=$("f-l"+i).value; }); up.L=c; }
   if(it.type==="fix"&&$("f-t")) up.text=$("f-t").value;
   if(it.type==="turn"&&$("f-w")) up.word=$("f-w").value;
+  if(it.type==="write"){ const key=formKey(it,d); if(key){ const a=wLines(d,key).slice(); let ch=false;
+    it.forms[key].rows.forEach((r,i)=>{ const el=$("w"+i); if(r.w!=null&&el&&el.value!==(a[r.w]||"")){ a[r.w]=el.value; ch=true; } });
+    if(ch){ up.w=Object.assign({}, d.w||{}); up.w[key]=a; } } }
   if(Object.keys(up).length) bump(s=>{ Object.assign(recIn(s,it.id).d, up); });
 }
 function tapToggle(i){ const it=ITEMS[S.cur]; if(rec(it.id).done) return;
@@ -858,7 +989,7 @@ function exampleHtml(t){ return esc(t).replace(/\[([^\]]+)\]/g,'<span class="rs"
 function renderCard(){
   const c=S.card, it=ITEM[c.item];
   if(c.type==="slide"){
-    const m=MOD[it.module];
+    const m=MOD[c.module||it.module];
     return `<div class="card"><h2>Two misses on ${esc(SKILLS[c.skill].name.toLowerCase())}</h2>
       <div class="btnrow" style="margin-top:4px"><a class="btn btn-primary" id="slidego" href="${slideUrl(c.slide)}" target="_blank" rel="noopener" data-out>Go back to the slide</a></div>
       <p class="dim">${esc(slideName(c.slide))}</p>
@@ -1097,14 +1228,30 @@ function renderCheck(){
     lead=`<label for="f-w" style="margin:0;font-size:14px">Turn word</label><input id="f-w" style="width:180px;font-family:Georgia,serif;font-size:18px" autocomplete="off" ${dis} value="${esc(d.word||"")}" oninput="setD('${it.id}','word',this.value)"
         onkeydown="if(event.key==='Enter'){event.preventDefault();check();}">`;
   }
+  if(it.type==="write"){
+    prompt=it.ask; const key=formKey(it,d);
+    if(it.mentor) body+=`<div class="mentor">${it.mentor.map(l=>`<div>${esc(l)}</div>`).join("")}<p class="src" style="margin:2px 0 0">${esc(it.mentorSrc)}</p></div>`;
+    const fk=Object.keys(it.forms);
+    if(fk.length>1) body+=`<div class="row" style="margin:0 0 8px" role="group" aria-label="Choose one">${fk.map(k=>`<button class="yn" aria-pressed="${key===k}" onclick="setForm('${it.id}','${k}')">${esc(it.forms[k].label)}</button>`).join("")}</div>`;
+    if(key){ const f=it.forms[key], W=wLines(d,key);
+      body+=`<div class="wrows">`+f.rows.map((row,i)=>{ const ind=(f.indent||[]).indexOf(i)>=0?" ind":"";
+        if(row.w==null) return `<div class="wrow given${ind}"><span class="wl" aria-label="rhyme ${row.L}">${row.L}</span><span class="n">${i+1}</span><span class="gt">${esc(row.t)}</span></div>`;
+        const tx=W[row.w]||"", n=wSyl(tx,wAdj(d,key)[row.w]), cls=!String(tx).trim()?"":(n>=row.lo&&n<=row.hi)?"good":"bad";
+        return `<div class="wrow${ind}"><span class="wl" aria-hidden="true">${row.L}</span><span class="n">${i+1}</span>
+          <input class="wt" id="w${i}" autocomplete="off" spellcheck="true" aria-label="Line ${i+1}, rhyme ${row.L}" value="${esc(tx)}" oninput="wType('${it.id}','${key}',${row.w},this.value,${i})">
+          <button type="button" class="nb" onclick="wNudge('${it.id}','${key}',${row.w},-1,${i})" aria-label="Line ${i+1}: one syllable fewer">−</button><button type="button" class="nb" onclick="wNudge('${it.id}','${key}',${row.w},1,${i})" aria-label="Line ${i+1}: one syllable more">+</button>
+          <span class="wmet ${cls}" id="wm${i}">${wMetHtml(it,d,key,row)}</span></div>`; }).join("")+`</div>`
+        +(f.src?`<p class="src">${esc(f.src)}</p>`:"")+`<p class="dim" style="margin-top:6px">${esc(it.checks)}</p>`;
+    }
+  }
   const fb=r.fb?`<div class="fb ${r.fb.cls} on" role="status">${r.fb.html}</div>`:`<div class="fb" role="status"></div>`;
   const next=ITEMS.some(x=>!rec(x.id).done&&x.id!==it.id)?"Next question":"Finish";
-  const btns=(lead||"")+(locked?`<button class="btn btn-primary" id="nextb" onclick="nextItem()">${next}</button>`
+  const btns=(lead||"")+(locked&&it.type==="write"?`<button class="btn" onclick="check()" ${card?"disabled":""}>Check again</button>`:"")+(locked?`<button class="btn btn-primary" id="nextb" onclick="nextItem()">${next}</button>`
     :`<button class="btn btn-primary" id="checkb" onclick="check()" ${card?"disabled":""}>Check</button>`);
   const left=`<div class="cardbox" id="itembox"><p class="skill">${ITEMS.indexOf(it)+1}. ${esc(SKILLS[it.skill].name)}</p><p class="prompt">${esc(prompt)}</p>${body}
     <div class="btnrow">${btns}</div></div>`;
   /* Feedback and cards sit beside the question, so the question never moves. */
-  $("body").innerHTML=bar+`<div class="cols">${left}<div class="side">${fb}${card?`<div class="cardbox" id="cardbox">${renderCard()}</div>`:""}</div></div>`;
+  $("body").innerHTML=bar+`<div class="cols${it.type==="write"?" wide":""}">${left}<div class="side">${fb}${card?`<div class="cardbox" id="cardbox">${renderCard()}</div>`:""}</div></div>`;
   if(card && S.card.type==="reteach" && !S.card.res){ const p=$("p-n"); if(p) p.focus(); }
   else if(card){ const b=$("slidego")||$("backq"); if(b) b.focus(); }
   else if(locked){ const b=$("nextb"); if(b) b.focus(); }
@@ -1125,7 +1272,7 @@ function ymd(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth
 function reportData(){
   const names=ids=>ids.map(id=>MOD[id]?MOD[id].name:id).join("; ");
   const mins=(S.checkStart&&S.lastAt)?String(Math.max(1,Math.round((S.lastAt-S.checkStart)/60000))):"";
-  const sk=Object.keys(SKILLS);
+  const sk=Object.keys(SKILLS).filter(k=>k!=="write");   /* writing has its own columns at the end */
   const skillCells=sk.map(k=>{ const its=ITEMS.filter(it=>it.skill===k); let ok=0, tried=0;
     its.forEach(it=>{ const r=rec(it.id); if(r.ok!==null){ tried++; if(r.ok) ok++; } });
     return tried ? `${ok}/${its.length}`+(tried<its.length?` (${tried} tried)`:"") : "not tried"; });
@@ -1135,14 +1282,25 @@ function reportData(){
   const reteach=S.reteach.map(x=>`${RETEACH[x.kind].title} (${ITEM[x.item]?ITEM[x.item].short:x.item}): ${x.res}`).join("; ");
   const slides=S.slides.map(x=>`${SKILLS[x.skill].name}: ${slideUrl(x.slide)} ${SLIDES[x.slide].h}`).join("; ");
   const anyTry=ITEMS.some(it=>rec(it.id).tries), G=S.guard;
+  /* Writing: every line verbatim, with how its checks went. */
+  const WI=ITEMS.filter(it=>it.type==="write");
+  const wTried=WI.filter(it=>rec(it.id).ok!==null), wScore=wTried.length?`${wTried.filter(it=>rec(it.id).ok).length}/${WI.length}`+(wTried.length<WI.length?` (${wTried.length} tried)`:""):"not tried";
+  const wMiss=WI.map(it=>{ const r=rec(it.id); return r.log.length?`${it.short}: ${r.log.join(", then ")}${r.rev?" (model shown)":""}`:""; }).filter(Boolean).join(" | ");
+  const wCell=it=>{ const r=rec(it.id), key=formKey(it,r.d); if(!key) return "not started";
+    const ls=it.forms[key].rows.filter(x=>x.w!=null).map(x=>String(wLines(r.d,key)[x.w]||"").trim());
+    if(!ls.some(Boolean)) return "not started";
+    const st=r.ok===true?"checks passed first try":r.done?(r.rev?"model shown after two misses":"passed after a miss"):r.tries?"not passed yet":"not checked";
+    return (Object.keys(it.forms).length>1?it.forms[key].label.split(" · ")[0]+": ":"")+ls.join(" / ")+` [${st}${r.after?", latest check: "+r.after:""}]`; };
   return { cols:["Date","First name","Last name","Code","Minutes","Questions done","Modules unfinished at open","Said finished at school or on paper"]
               .concat(sk.map(k=>SKILLS[k].name+", first try"),["Misses, by skill","Reteach cards","Slides sent to","Answers the checker was not sure about",
-                "Full screen exits","Left the page (tab hidden)","Switched away (focus lost)","Opened a slide, module or worksheet","Copies","Pastes","What was pasted","Full screen"]),
+                "Full screen exits","Left the page (tab hidden)","Switched away (focus lost)","Opened a slide, module or worksheet","Copies","Pastes","What was pasted","Full screen",
+                "Writing, first try","Writing misses"].concat(WI.map(it=>it.short))),
            row:[ymd(),S.fname,S.lname,S.sid,mins,`${doneCount()}/${ITEMS.length}`,
                 S.atOpen===null?"":(S.atOpen.length?names(S.atOpen):"none"), claims.length?names(claims):"none"]
               .concat(skillCells,[misses||(anyTry?"none":"not tried"), reteach||"none", slides||"none", S.unsure.join("; ")||"none",
                 String(G.exits), String(G.hidden), String(G.away), String(G.out), String(G.copies), String(G.pastes), (G.pasted||[]).join("; ")||"none",
-                (G.fsMode==="on"?"used":(G.fsMode==="unavailable"||!FS)?"unavailable, not enforced":"not started")+(G.fsFailed?` (refused ${G.fsFailed}x)`:"")]) };
+                (G.fsMode==="on"?"used":(G.fsMode==="unavailable"||!FS)?"unavailable, not enforced":"not started")+(G.fsFailed?` (refused ${G.fsFailed}x)`:""),
+                wScore, wMiss||(WI.some(it=>rec(it.id).tries)?"none":"not tried")].concat(WI.map(wCell))) };
 }
 function renderReport(){
   const r=reportData();
@@ -1168,6 +1326,9 @@ function contentErrors(){
   const e=[], seen={};
   ITEMS.forEach(it=>{
     const W=`Item ${it.id}`;
+    if(it.type==="write"){ Object.keys(it.forms).forEach(k=>{ const f=it.forms[k], dd={ form:k };
+      const jm=judgeWrite(it,dd,f.model.slice()); if(!jm.ok||jm.unsure) e.push(`${W} ${k}: the model fails its own check (${(jm.msgs||[]).join(" ").replace(/<[^>]+>/g,"")}).`);
+      f.rows.forEach((a,i)=>f.rows.forEach((b,j)=>{ if(j>i&&a.w==null&&b.w==null&&a.L===b.L){ const x=rhyme(lastWord(a.t),lastWord(b.t)); if(!x||x.r!=="yes") e.push(`${W}: given lines ${i+1} and ${j+1} should rhyme.`); } })); }); }
     if(seen[it.id]) e.push(`${W} is used twice.`); seen[it.id]=1;
     if(!SKILLS[it.skill]) e.push(`${W}: skill “${it.skill}” is not in SKILLS.`);
     if(!SLIDES[it.slide]) e.push(`${W}: slide “${it.slide}” is not in SLIDES.`);
