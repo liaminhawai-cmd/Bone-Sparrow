@@ -1076,7 +1076,7 @@ function renderCheck(){
       <button class="yn" data-y="${i}-0" aria-pressed="${yn[i]===false}" ${dis} onclick="tapYN(${i},false)">No rhyme</button></div>`).join("")}</div>`;
   }else if(it.type==="fix"){
     const find=r.stage==="find"&&!locked;
-    prompt=find?"Tap the line that breaks the pattern.":`Rewrite line ${it.bad+1}.`;
+    prompt=find?(it.id==="fix-lim"?"Find the error in the limerick. Tap the line.":"Find the error in the poem. Tap the line."):`Rewrite line ${it.bad+1}.`;
     body=it.units.map((u,i)=>{ let cls="", tg="";
       if(find){ if(d.line===i) cls="sel"; }
       else if(i===it.bad){ cls="right"; tg="Broken"; }
