@@ -54,7 +54,7 @@ textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;fo
 .deckbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
          border-radius:10px;padding:4px 14px;margin:0 0 10px;font-size:12.5px;color:var(--muted);min-height:48px}
 .deckbar b{color:var(--ink);font-size:14px}
-.pips{display:flex;gap:4px;flex-wrap:wrap}
+.pips{display:flex;gap:3px;flex-wrap:wrap}
 .pip{width:28px;height:28px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font:800 12px 'Segoe UI',Tahoma,sans-serif;
      color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .pip.cur{border-color:var(--accent);color:var(--accent);background:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
@@ -132,7 +132,7 @@ textarea{width:100%;resize:vertical;line-height:1.4;font-family:Georgia,serif;fo
 table.rpt{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 table.rpt th,table.rpt td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
 table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;width:210px}
-.rptwrap{max-height:calc(100vh - 250px);overflow:auto;margin:0 0 6px}
+.rptwrap{max-height:calc(100vh - 300px);overflow:auto;margin:0 0 6px}
 .broken{background:var(--wrongbg);border:1px solid var(--wrong);border-radius:9px;padding:12px 15px;font-size:14px;line-height:1.6}
 :focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -143,7 +143,7 @@ table.rpt th{background:var(--bg);font-size:10.5px;text-transform:uppercase;lett
 <div class="container"><div id="body"></div></div>
 <div id="lock" hidden role="alertdialog" aria-modal="true" aria-labelledby="lockH">
   <div><h2 id="lockH">You left full screen</h2>
-  <p id="lockP">Your work is saved. Leaving full screen is written in your report, and your teacher sees it.</p>
+  <p id="lockP">Your work is saved. Leaving the questions is written in your report, and your teacher sees it.</p>
   <button type="button" class="btn big" id="lockBack" onclick="lockBack()">Back to full screen</button></div>
 </div>
 
@@ -942,11 +942,21 @@ function lockBack(){
   graceUntil=Date.now()+1500; outUntil=0;
   const done=()=>{ lockWhy=""; guardShow(); const f=document.querySelector("#itembox input:not(:disabled), #itembox button:not(:disabled)"); if(f) f.focus(); };
   if(!FS){ if(S.guard.fsMode!=="unavailable") bump(s=>{ s.guard.fsMode="unavailable"; }); done(); return; }
-  document.documentElement.requestFullscreen().then(()=>{ if(S.guard.fsMode!=="on") bump(s=>{ s.guard.fsMode="on"; }); done(); },
-    ()=>{ if(!inFull()) bump(s=>{ s.guard.fsFailed++; s.guard.fsMode="unavailable"; }); done(); });
+  /* A browser that never answers the request must not leave the student stuck
+     (as in FindAndFix.html): after 2 seconds the lock closes, and the report
+     says full screen was refused. A late yes still turns it on. */
+  let settled=false;
+  const fail=()=>{ if(settled) return; settled=true; if(!inFull()) bump(s=>{ s.guard.fsFailed++; s.guard.fsMode="unavailable"; }); done(); };
+  const timer=setTimeout(fail, 2000);
+  let p; try{ p=document.documentElement.requestFullscreen(); }catch(e){ p=Promise.reject(e); }
+  Promise.resolve(p).then(()=>{ clearTimeout(timer); if(S.guard.fsMode!=="on") bump(s=>{ s.guard.fsMode="on"; }); if(!settled){ settled=true; done(); } },
+    ()=>{ clearTimeout(timer); fail(); });
 }
 document.addEventListener("fullscreenchange", ()=>{ if(FS && !inFull() && !leaving) showLock("exits"); });
-document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden") showLock("hidden"); });
+/* A reload or a link away from the page also hides it; that is not counted. */
+let unloading=false;
+window.addEventListener("beforeunload", ()=>{ unloading=true; });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden" && !unloading) showLock("hidden"); });
 window.addEventListener("blur", ()=>setTimeout(()=>{ if(!document.hasFocus() && Date.now()>graceUntil) showLock("away"); }, 200));
 setInterval(()=>{ if(document.visibilityState==="visible" && !document.hasFocus() && Date.now()>graceUntil) showLock("away"); }, 1000);
 /* Copy and paste are counted and said out loud next to the box, never blocked.
@@ -1027,8 +1037,8 @@ function doneCount(){ return ITEMS.filter(it=>rec(it.id).done).length; }
 function renderCheck(){
   if(!S.checkStart) bump(s=>{ s.checkStart=Date.now(); });
   const it=ITEMS[Math.max(0,Math.min(ITEMS.length-1,S.cur||0))], r=rec(it.id), d=r.d, locked=r.done, card=cardOpen(it.id);
-  const bar=`<div class="deckbar"><b>Poetry catch-up</b><span class="pips">${pipsHtml()}</span>
-    <span class="cnt">${doneCount()} of ${ITEMS.length} done</span><span>✓ first go · ~ more goes · × shown</span><span class="cnt" id="gstat"></span>
+  const bar=`<div class="deckbar"><span class="pips">${pipsHtml()}</span>
+    <span>✓ first go · ~ retried · × shown</span><span class="cnt" id="gstat"></span>
     <span style="margin-left:auto;display:flex;gap:14px;align-items:center"><button class="menulink" onclick="go('report')">Report</button>${crumbs()}</span></div>`;
   let body="", prompt="", lead="";
   const dis=locked?"disabled":"";
